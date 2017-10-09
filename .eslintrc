@@ -1,0 +1,13 @@
+{
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "plugins": ["import"],
+  "rules": {
+    "linebreak-style": [ "error", "windows" ],
+    "comma-dangle": ["error", "never"],
+    "global-require": "off",
+    "react/prop-types": "off"
+  }
+}
