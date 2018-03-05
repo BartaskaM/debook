@@ -1,4 +1,4 @@
-#DBG Sourcery Todo App-React
+#DBG Sourcery Seed Project
 
 To load:
 
