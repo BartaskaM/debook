@@ -75,9 +75,22 @@ function orderByDate(){
     }
     renderHTML();
 }
+function log(){
+    console.log("!!!");
+    this.pa
+}
+
+function showInfo(event){
+    const parent=event.path[1];
+    var info={
+        title: parent.children[0].innerHTML,
+        date: parent.children[1].innerHTML
+    }
+    console.log(info);
+}
 function formHTML(){
     var htmlString=data.map( x => {
-        return '<li class="list-group-item"><div class="row" ><div class="col-6">'+x.title+'</div><div class="col-2">'+x.date+'</div><div class="col-2">Preview</div><div class="col-2">Download</div></div></div></li>'
+        return '<li class="list-group-item"><div class="row"><div class="col-6">'+x.title+'</div><div class="col-2">'+x.date+'</div><div class="col-2" onclick="showInfo(event)">Preview</div><div class="col-2" onclick="showInfo(event)">Download</div></div></div></li>'
     }).join("");
 
     return htmlString;
