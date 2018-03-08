@@ -115,12 +115,11 @@ document.onload=renderHTML();
 const allTitleLabels=document.querySelectorAll('.label-title');
 for (let index = 0; index < allTitleLabels.length; index++) {
     const element = allTitleLabels[index];
-    element.onclick=orderByTitle;
+    element.onclick = orderByTitle;
 }
 const allDateLabels=document.querySelectorAll('.label-date');
 for (let index = 0; index < allDateLabels.length; index++) {
     const element = allDateLabels[index];
-    element.onclick=orderByDate;
+    element.onclick = orderByDate;
 }
 
-//document.getElementById('label_date').onclick=orderByDate;
