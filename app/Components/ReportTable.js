@@ -21,7 +21,7 @@ let data = [{
 {
     title: 'title3225',
     date: '1975-08-19T22:30:30.000Z'  
-}]
+}];
 
 let sortedByTitle = false;
 let sortedByDate = false;
@@ -81,7 +81,7 @@ function showInfo(event){
     let info = {
         title: parent.children[0].innerHTML,
         date: parent.children[1].innerHTML
-    }
+    };
     console.log(info);
 }
 
@@ -101,7 +101,7 @@ function formDateString(date){
 
 function formHTML(){
     let htmlString = data.map( x => {
-        return '<li class="list-group-item"><div class="row"><div class="col-5">'+x.title+'</div><div class="col-3">'+formDateString(new Date(x.date))+'</div><div class="col-2" onclick="showInfo(event)">Preview</div><div class="col-2" onclick="showInfo(event)">Download</div></div></div></li>'
+        return '<li class="list-group-item"><div class="row"><div class="col-5">'+x.title+'</div><div class="col-3">'+formDateString(new Date(x.date))+'</div><div class="col-2" onclick="showInfo(event)">Preview</div><div class="col-2" onclick="showInfo(event)">Download</div></div></div></li>';
     }).join('');
 
     return htmlString;
