@@ -56,9 +56,11 @@ function orderByDate(){
   if(!sortedByDate){
     sortedByDate = true;
     data.sort((x, y) => {
-      if(x.date>y.date){
+      const firstDate = new Date(x.date);
+      const secondDate = new Date(y.date);
+      if(firstDate > secondDate){
         return 1;
-      } else if (x.date<y.date){
+      } else if (firstDate < secondDate){
         return -1;
       } else return 0;
     });
@@ -66,9 +68,11 @@ function orderByDate(){
   else{
     sortedByDate = false;
     data.sort((x, y) => {
-      if(x.date > y.date){
+      const firstDate = new Date(x.date);
+      const secondDate = new Date(y.date);
+      if(firstDate > secondDate){
         return -1;
-      } else if (x.date < y.date){
+      } else if (firstDate < secondDate){
         return 1;
       } else return 0;
     });
