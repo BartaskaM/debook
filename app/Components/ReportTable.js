@@ -1,4 +1,4 @@
-var data = [{
+let data = [{
     title: 'title14242',
     date: '1975-08-19T22:15:30.000Z'
 },
@@ -23,8 +23,8 @@ var data = [{
     date: '1975-08-19T22:30:30.000Z'  
 }]
 
-var sortedByTitle = false;
-var sortedByDate = false;
+let sortedByTitle = false;
+let sortedByDate = false;
 
 function orderByTitle(){
     sortedByDate = false;
@@ -78,7 +78,7 @@ function orderByDate(){
 
 function showInfo(event){
     const parent = event.path[1];
-    var info = {
+    let info = {
         title: parent.children[0].innerHTML,
         date: parent.children[1].innerHTML
     }
@@ -94,13 +94,13 @@ function appendZeroIfNeeded(number){
 }
 
 function formDateString(date){
-    var fullDate = '';
+    let fullDate = '';
     return appendZeroIfNeeded(date.getDay().toString())+'.'+appendZeroIfNeeded(date.getMonth().toString())+'.'+
     date.getFullYear()+' '+appendZeroIfNeeded(date.getHours().toString())+':'+appendZeroIfNeeded(date.getMinutes().toString());
 }
 
 function formHTML(){
-    var htmlString = data.map( x => {
+    let htmlString = data.map( x => {
         return '<li class="list-group-item"><div class="row"><div class="col-5">'+x.title+'</div><div class="col-3">'+formDateString(new Date(x.date))+'</div><div class="col-2" onclick="showInfo(event)">Preview</div><div class="col-2" onclick="showInfo(event)">Download</div></div></div></li>'
     }).join('');
 
@@ -112,5 +112,15 @@ function renderHTML(){
 }
 
 document.onload=renderHTML();
-document.getElementById('label_title').onclick=orderByTitle;
-document.getElementById('label_date').onclick=orderByDate;
+const allTitleLabels=document.querySelectorAll('.label-title');
+for (let index = 0; index < allTitleLabels.length; index++) {
+    const element = allTitleLabels[index];
+    element.onclick=orderByTitle;
+}
+const allDateLabels=document.querySelectorAll('.label-date');
+for (let index = 0; index < allDateLabels.length; index++) {
+    const element = allDateLabels[index];
+    element.onclick=orderByDate;
+}
+
+//document.getElementById('label_date').onclick=orderByDate;
