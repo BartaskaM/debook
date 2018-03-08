@@ -1,26 +1,26 @@
 var data = [{
-    title: "title14242",
-    date: "1975-08-19T22:15:30.000Z"
+    title: 'title14242',
+    date: '1975-08-19T22:15:30.000Z'
 },
 {
-    title: "title2735",
-    date: "1979-08-19T23:15:30.000Z"  
+    title: 'title2735',
+    date: '1979-08-19T23:15:30.000Z'  
 },
 {
-    title: "title32427",
-    date: "1975-09-19T23:15:30.000Z"  
+    title: 'title32427',
+    date: '1975-09-19T23:15:30.000Z'  
 },
 {
-    title: "title1927",
-    date: "1975-08-22T23:15:30.000Z"
+    title: 'title1927',
+    date: '1975-08-22T23:15:30.000Z'
 },
 {
-    title: "title2732",
-    date: "1975-08-19T23:15:30.000Z"  
+    title: 'title2732',
+    date: '1975-08-19T23:15:30.000Z'  
 },
 {
-    title: "title3225",
-    date: "1975-08-19T22:30:30.000Z"  
+    title: 'title3225',
+    date: '1975-08-19T22:30:30.000Z'  
 }]
 
 var sortedByTitle=false;
@@ -75,10 +75,6 @@ function orderByDate(){
     }
     renderHTML();
 }
-function log(){
-    console.log("!!!");
-    this.pa
-}
 
 function showInfo(event){
     const parent=event.path[1];
@@ -88,31 +84,33 @@ function showInfo(event){
     }
     console.log(info);
 }
+
 function appendZeroIfNeeded(number){
     if(number.length>1){
         return number;
     } else {
-        return "0"+number;
+        return '0'+number;
     }
 }
+
 function formDateString(date){
     var fullDate='';
-    return appendZeroIfNeeded(date.getDay().toString())+"."+appendZeroIfNeeded(date.getMonth().toString())+"."+date.getFullYear()+" "+
-    appendZeroIfNeeded(date.getHours().toString())+":"+appendZeroIfNeeded(date.getMinutes().toString());
+    return appendZeroIfNeeded(date.getDay().toString())+'.'+appendZeroIfNeeded(date.getMonth().toString())+'.'+
+    date.getFullYear()+' '+appendZeroIfNeeded(date.getHours().toString())+':'+appendZeroIfNeeded(date.getMinutes().toString());
 }
+
 function formHTML(){
     var htmlString=data.map( x => {
         return '<li class="list-group-item"><div class="row"><div class="col-5">'+x.title+'</div><div class="col-3">'+formDateString(new Date(x.date))+'</div><div class="col-2" onclick="showInfo(event)">Preview</div><div class="col-2" onclick="showInfo(event)">Download</div></div></div></li>'
-    }).join("");
+    }).join('');
 
     return htmlString;
 }
+
 function renderHTML(){
-    document.getElementById("item_list").innerHTML=formHTML();
+    document.getElementById('item_list').innerHTML=formHTML();
 }
+
 document.onload=renderHTML();
-document.getElementById("label_title").onclick=orderByTitle;
-document.getElementById("label_date").onclick=orderByDate;
-function log(){
-    console.log("!!!");
-}
+document.getElementById('label_title').onclick=orderByTitle;
+document.getElementById('label_date').onclick=orderByDate;
