@@ -72,6 +72,7 @@ body {
 
 .signUp-button {
     background-color: #ce2b27;
+    margin-top: 15px;
     color: white;
     font-size: 32px;
     font-weight: 500;
