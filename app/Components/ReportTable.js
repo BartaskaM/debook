@@ -23,27 +23,27 @@ var data = [{
     date: '1975-08-19T22:30:30.000Z'  
 }]
 
-var sortedByTitle=false;
-var sortedByDate=false;
+var sortedByTitle = false;
+var sortedByDate = false;
 
 function orderByTitle(){
-    sortedByDate=false;
+    sortedByDate = false;
     if(!sortedByTitle){
-        sortedByTitle=true;
-        data.sort((x,y) => {
-            if(x.title>y.title){
+        sortedByTitle = true;
+        data.sort((x, y) => {
+            if(x.title > y.title){
                 return 1;
-            } else if (x.title<y.title){
+            } else if (x.title < y.title){
                 return -1;
             } else return 0;
         });
     }
     else{
-        sortedByTitle=false;
-        data.sort((x,y) => {
-            if(x.title>y.title){
+        sortedByTitle = false;
+        data.sort((x, y) => {
+            if(x.title > y.title){
                 return -1;
-            } else if (x.title<y.title){
+            } else if (x.title < y.title){
                 return 1;
             } else return 0;
         });
@@ -52,10 +52,10 @@ function orderByTitle(){
 }
 
 function orderByDate(){
-    sortedByTitle=false;
+    sortedByTitle = false;
     if(!sortedByDate){
-        sortedByDate=true;
-        data.sort((x,y) => {
+        sortedByDate = true;
+        data.sort((x, y) => {
             if(x.date>y.date){
                 return 1;
             } else if (x.date<y.date){
@@ -64,11 +64,11 @@ function orderByDate(){
         });
     }
     else{
-        sortedByDate=false;
-        data.sort((x,y) => {
-            if(x.date>y.date){
+        sortedByDate = false;
+        data.sort((x, y) => {
+            if(x.date > y.date){
                 return -1;
-            } else if (x.date<y.date){
+            } else if (x.date < y.date){
                 return 1;
             } else return 0;
         });
@@ -77,8 +77,8 @@ function orderByDate(){
 }
 
 function showInfo(event){
-    const parent=event.path[1];
-    var info={
+    const parent = event.path[1];
+    var info = {
         title: parent.children[0].innerHTML,
         date: parent.children[1].innerHTML
     }
@@ -86,7 +86,7 @@ function showInfo(event){
 }
 
 function appendZeroIfNeeded(number){
-    if(number.length>1){
+    if(number.length > 1){
         return number;
     } else {
         return '0'+number;
@@ -94,13 +94,13 @@ function appendZeroIfNeeded(number){
 }
 
 function formDateString(date){
-    var fullDate='';
+    var fullDate = '';
     return appendZeroIfNeeded(date.getDay().toString())+'.'+appendZeroIfNeeded(date.getMonth().toString())+'.'+
     date.getFullYear()+' '+appendZeroIfNeeded(date.getHours().toString())+':'+appendZeroIfNeeded(date.getMinutes().toString());
 }
 
 function formHTML(){
-    var htmlString=data.map( x => {
+    var htmlString = data.map( x => {
         return '<li class="list-group-item"><div class="row"><div class="col-5">'+x.title+'</div><div class="col-3">'+formDateString(new Date(x.date))+'</div><div class="col-2" onclick="showInfo(event)">Preview</div><div class="col-2" onclick="showInfo(event)">Download</div></div></div></li>'
     }).join('');
 
