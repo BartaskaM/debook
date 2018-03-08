@@ -1,0 +1,8 @@
+.report-table{
+    font-size: 8pt;
+}
+
+.report-table .list-group-flush .report-label{
+    background-color: darkslategrey; 
+    color: white;
+}
