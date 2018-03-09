@@ -91,3 +91,12 @@ body {
     color: grey;
     font-size: 16px;
 }
+
+.errorText {
+    color: red;
+}
+
+.form-group.required .control-label:after { 
+    content:"*";
+    color:red;
+ }
