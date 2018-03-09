@@ -21,8 +21,7 @@ const OfficeData = [
   },
 ];
 
-// Function to populate the office select options
-(function () {
+(function populateOfficeSelect() {
   const officeSelect = document.getElementById('office');
 
   OfficeData.forEach(element => {
@@ -34,8 +33,7 @@ const OfficeData = [
   });
 })();
 
-// Function to catch the submit action from the signUp-form element
-(function () {
+(function bindSignUpFormSubmit() {
   const form = document.getElementById('signUp-form');
 
   if (form.attachEvent) {
@@ -45,9 +43,8 @@ const OfficeData = [
   }
 })();
 
-// Function to process the signUp-form input and print it to console
 function processSignUpForm(e) {
-  if (e.preventDefault) e.preventDefault();
+  e.preventDefault();
 
   const result = {
     firstName: e.target.firstName.value,
