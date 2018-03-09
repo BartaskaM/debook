@@ -59,14 +59,14 @@ function processSignUpForm(e) {
 
     console.log(result);
   }
-  else
+  else {
     alert('Please fix form errors');
+  }
 
   // Return false to prevent the default form behavior
   return false;
 }
 
-// Email validation function
 function emailValidate() {
   if (document.getElementById('signUp-form').email.value === 'email@email.com') {
     document.getElementById('emailHelp').innerHTML = 'Email already in use';
@@ -78,7 +78,6 @@ function emailValidate() {
   }
 }
 
-// Password validation function
 function repeatPasswordValidate() {
   const signUpForm = document.getElementById('signUp-form');
 
