@@ -68,11 +68,13 @@ function processSignUpForm(e) {
 }
 
 function emailValidate() {
-  if (document.getElementById('signUp-form').email.value === 'email@email.com') {
-    document.getElementById('emailHelp').innerHTML = 'Email already in use';
+  const signUpForm = document.getElementById('signUp-form');
+
+  if (signUpForm.email.value === 'email@email.com') {
+    signUpForm.email.nextElementSibling.innerHTML = 'Email already in use';
   }
   else {
-    document.getElementById('emailHelp').innerHTML = '';
+    signUpForm.email.nextElementSibling.innerHTML = '';
 
     return true;
   }
@@ -82,10 +84,10 @@ function repeatPasswordValidate() {
   const signUpForm = document.getElementById('signUp-form');
 
   if (signUpForm.password.value !== signUpForm.repeatPassword.value) {
-    document.getElementById('repeatPasswordHelp').innerHTML = 'Passwords do not match';
+    signUpForm.repeatPassword.nextElementSibling.innerHTML = 'Passwords do not match';
   }
   else {
-    document.getElementById('repeatPasswordHelp').innerHTML = '';
+    signUpForm.repeatPassword.nextElementSibling.innerHTML = '';
 
     return true;
   }
