@@ -23,14 +23,12 @@ const LoginData = [
 function processLogInForm(e)
 {
   e.preventDefault();
-  if (confirmLoginData())
-  {
-    const result = {
-      email: e.target.email.value,
-      password: e.target.password.value,
-    };
-    console.log(result);
-  }
+  confirmLoginData();
+  const result = {
+    email: e.target.email.value,
+    password: e.target.password.value,
+  };
+  console.log(result);
   
   // Return false to prevent the default form behavior
   return false;
