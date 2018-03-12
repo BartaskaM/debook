@@ -1,3 +1,4 @@
+//Data for checking login data
 const LoginData = [
   {
     email: 'test@test.com',
@@ -8,7 +9,8 @@ const LoginData = [
     password: '123',
   }];
 
-(function bindSignUpFormSubmit()
+//Button event listener
+(function bindLogInFormSubmit()
 {
   const form = document.getElementById('logIn-form');
   if (form.attachEvent)
@@ -19,7 +21,8 @@ const LoginData = [
     form.addEventListener('submit', processLogInForm);
   }
 })();
-  
+
+//Prints data to console and calls confirmLoginData()
 function processLogInForm(e)
 {
   e.preventDefault();
@@ -30,10 +33,10 @@ function processLogInForm(e)
   };
   console.log(result);
   
-  // Return false to prevent the default form behavior
   return false;
 }
 
+//Basic check if entered data is correct
 function confirmLoginData()
 {
   const logInForm = document.getElementById('logIn-form');
