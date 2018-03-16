@@ -17,8 +17,8 @@ class MainContainer extends React.Component {
         <Route path='/login' component={LoginTabs}/>
         <Route path='/main' component={MainTabs}/>
         <Route path='/profile' component={Profile}/>
-        <Route path='/device/:id' component={DeviceDetails}/>
-        <Route path='/office/:id' component={OfficeDetails}/>
+        <Route path='/devices/:id' component={DeviceDetails}/>
+        <Route path='/offices/:id' component={OfficeDetails}/>
       </div>
     );
   }
