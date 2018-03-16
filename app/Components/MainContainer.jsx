@@ -2,18 +2,13 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import Header from './Header';
-
 import LoginTabs from './LoginTabs';
 import MainTabs from './MainTabs';
 import Profile from './Profile';
 import DeviceDetails from './DeviceDetails';
 import OfficeDetails from './OfficeDetails';
 
-export default class MainContainer extends React.Component {
-  constructor() {
-    super();
-  }
-
+class MainContainer extends React.Component {
   render() {
     return (
       <div>
@@ -28,3 +23,5 @@ export default class MainContainer extends React.Component {
     );
   }
 }
+
+export default MainContainer;
