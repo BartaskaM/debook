@@ -7,17 +7,36 @@ import {
   Typography,
   IconButton,
   Menu,
+  Divider,
+  Select,
+  Input,
 } from 'material-ui';
+import { InputLabel } from 'material-ui/Input';
+import { FormControl } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
 import { MenuItem } from 'material-ui/Menu';
 import { AccountCircle } from 'material-ui-icons';
+
+import Categories from '../Constants/Categories';
 
 const styles = {
   root: {
     flexGrow: 1,
   },
-  flex: {
+  leftMargin: {
+    marginLeft: 50,
+  },
+  text: {
+    marginLeft: 5,
+    fontSize: 18,
     flex: 1,
+  },
+  formControl: {
+    minWidth: 70,
+  },
+  input: {
+    minWidth: 200,
+    marginRight: 20,
   },
 };
 
@@ -28,10 +47,12 @@ class Header extends React.Component {
     this.state = {
       anchorEl: null,
       userMenuOpen: false,
+      category: '',
     };
 
     this.handleMenu = this.handleMenu.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleCategoryChange = this.handleCategoryChange.bind(this);
   }
 
   handleMenu(event) {
@@ -48,16 +69,56 @@ class Header extends React.Component {
     });
   }
 
+  handleCategoryChange(event) {
+    this.setState({
+      category: event.target.value,
+    });
+  }
+
   render() {
     const { classes } = this.props;
-
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
           <Toolbar>
-            <Typography variant="title" color="inherit" className={classes.flex}>
+            <img className={classes.leftMargin} src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'} height="40px" width='40px' />
+            <Typography variant="title" color="inherit" className={classes.text}>
               DEVBRIDGE <br /> GROUP
             </Typography>
+
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="search">Search</InputLabel>
+              <Input
+                className={classes.input}
+                inputProps={{
+                  name: 'search',
+                  id: 'search',
+                }}
+              />
+            </FormControl>
+
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="category-select">Category</InputLabel>
+              <Select
+                value={this.state.category}
+                autoWidth={true}
+                onChange={this.handleCategoryChange}
+                inputProps={{
+                  name: 'category',
+                  id: 'category-select',
+                }}
+              >
+                {Categories.map(category => (
+                  <MenuItem
+                    key={category}
+                    value={category}
+                  >
+                    {category}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
             <IconButton
               aria-owns={this.state.userMenuOpen ? 'menu-appbar' : null}
               aria-haspopup="true"
@@ -82,7 +143,8 @@ class Header extends React.Component {
               onClose={this.handleClose}
             >
               <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-              <MenuItem onClick={this.handleClose}>My account</MenuItem>
+              <Divider />
+              <MenuItem onClick={this.handleClose}>Logout</MenuItem>
             </Menu>
           </Toolbar>
         </AppBar>
