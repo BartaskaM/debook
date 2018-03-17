@@ -176,7 +176,9 @@ class Header extends React.Component {
                 open={this.state.userMenuOpen}
                 onClose={this.handleClose}
               >
-                <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                <Link to='/profile'>
+                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                </Link>
                 <Divider />
                 <MenuItem onClick={this.handleClose}>Logout</MenuItem>
               </Menu>
