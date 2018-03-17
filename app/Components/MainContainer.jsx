@@ -13,7 +13,7 @@ class MainContainer extends React.Component {
     return (
       <div>
         <Header />
-        <hr/>
+        
         <Route path='/login' component={LoginTabs}/>
         <Route path='/main' component={MainTabs}/>
         <Route path='/profile' component={Profile}/>
