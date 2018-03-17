@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Async App!</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="LogIn.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="icon" href="../favicon.ico" />
+</head>
+
+<body>
+    <nav class="navbar navbar-light fixed-top">
+        <a class="navbar-brand" href="#">
+            <img class="DB-logo" src="../favicon.ico" />
+            <div class="inline">
+                <div class="DB-text">
+                    DEVBRIDGE
+                    <br/>GROUP
+                </div>
+            </div>
+        </a>
+    </nav>
+    <div class="container logIn-form-container">
+        <div class="row">
+            <a class="offset-md-2 col-md-4 form-tab active" href="LogIn.html">
+                LOG IN
+            </a>
+            <a class="col-md-4 form-tab inactive" href="SignUp.html">
+                SIGN UP
+            </a>
+        </div>
+        <div class="row">
+            <div class="offset-md-2 col-md-8 box">
+
+                <p class="welcomeText">Welcome!</p>
+                <p class="subText">Enter details below to access your account:</p>
+
+                <form id="logIn-form" action="">
+                    <div class="form-group">
+                        <label for="email" class="control-label">E-mail:</label>
+                        <input type="email" class="form-control" id="email" placeholder="Email" maxlength="64" required>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="control-label">Password:</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password" required>
+                        <small class="form-text errorText"></small>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn logIn-button" value="LOG IN">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="LogIn.js"></script>
+</body>
+
+</html>
