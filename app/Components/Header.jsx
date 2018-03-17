@@ -32,13 +32,18 @@ const styles = {
     fontSize: 18,
   },
   formControl: {
-    minWidth: 70,
+    minWidth: 100,
   },
   input: {
     minWidth: 200,
     marginRight: 20,
+    fontSize: 14,
+  },
+  fontSize: {
+    fontSize: 14,
   },
   button: {
+    fontSize: 10,
     margin: 10,
   },
   rightMenu: {
@@ -121,7 +126,7 @@ class Header extends React.Component {
 
             <div className={classes.rightMenu}>
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="search">Search</InputLabel>
+                <InputLabel htmlFor="search" className={classes.fontSize}>Search</InputLabel>
                 <Input
                   className={classes.input}
                   inputProps={{
@@ -132,11 +137,12 @@ class Header extends React.Component {
               </FormControl>
 
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="category-select">Category</InputLabel>
+                <InputLabel htmlFor="category-select" className={classes.fontSize}>Category</InputLabel>
                 <Select
                   value={this.state.category}
                   autoWidth={true}
                   onChange={this.handleCategoryChange}
+                  className={classes.fontSize}
                   inputProps={{
                     name: 'category',
                     id: 'category-select',
@@ -146,6 +152,7 @@ class Header extends React.Component {
                     <MenuItem
                       key={category}
                       value={category}
+                      className={classes.fontSize}
                     >
                       {category}
                     </MenuItem>
