@@ -1,9 +1,4 @@
 
-h1 {
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.greeting {
-    text-align: center;
+body {
+    font-family: 'Roboto';
 }
