@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, Helvetica, sans-serif
+    
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+.Device_Component {
+    width:300px;
+}
+.colorText {
+    color:#B2B2B2;
+}
+.Device_Component h2 {
+    margin:2% 2% 2% 0;
+}
+.Device_Component p{
+    margin:1% 1% 1% 0;
+    font-size:10px;
+}
+.tablet {
+    width:125px;
+
+    display:block;
+    margin:auto;
+}
+#checkmark {
+    background-color: #3a9b5c;
+    border-radius: 15px 50px 30px 5px;
+    color: #e7f1ea;
+}
+
+.Device_Component button {
+    margin-top:10%;
+    width:47%;
+}
+.Device_Component button{
+      padding: 12px 24px;
+      text-align: center;
+      display: inline-block;
+      font-size: 12px;
+      margin-top:30px;
+      -webkit-transition-duration: 0.4s; /* Safari */
+      transition-duration: 0.4s;
+      text-decoration: none;
+      text-transform: uppercase;
+
+}
+#booking {
+    background-color: #336DCC;
+    color:#FFF;
+}
+.Reserve {
+    background-color:#FFF;
+    color:black;
+    border: 2px solid #E9E9E9; 
+}
