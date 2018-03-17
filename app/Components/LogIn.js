@@ -1,49 +1,38 @@
 //Data for checking login data
-const LoginData = [
-  {
-    email: 'test@test.com',
-    password: '123',
-  },
-  {
-    email: 'email@email.com',
-    password: '123',
-  }];
+const LoginData = [{
+  email: 'test@test.com',
+  password: '123',
+},{
+  email: 'email@email.com',
+  password: '123',
+}];
 
 //Button event listener
-(function bindLogInFormSubmit()
-{
+(function bindLogInFormSubmit() {
   const form = document.getElementById('logIn-form');
-  if (form.attachEvent)
-  {
+  if (form.attachEvent){
     form.attachEvent('submit', processLogInForm);
-  } else
-  {
+  } else {
     form.addEventListener('submit', processLogInForm);
   }
 })();
 
 //Prints data to console and calls confirmLoginData()
-function processLogInForm(e)
-{
-  e.preventDefault();
+function processLogInForm(e) {
   confirmLoginData();
   const result = {
     email: e.target.email.value,
     password: e.target.password.value,
   };
   console.log(result);
-  
-  return false;
+  e.preventDefault();
 }
 
 //Basic check if entered data is correct
-function confirmLoginData()
-{
+function confirmLoginData() {
   const logInForm = document.getElementById('logIn-form');
-  for (let i = 0; i < LoginData.length; i++)
-  {
-    if (logInForm.email.value === LoginData[i].email && logInForm.password.value === LoginData[i].password)
-    {
+  for (let i = 0; i < LoginData.length; i++) {
+    if (logInForm.email.value === LoginData[i].email && logInForm.password.value === LoginData[i].password) {
       logInForm.password.nextElementSibling.innerHTML = '';
       return true;
     }
