@@ -99,27 +99,27 @@ class Header extends React.Component {
             </Typography>
 
             <Link to='/login'>
-              <Button variant="raised" color="primary" className={classes.button}>
+              <Button variant="raised" className={classes.button}>
                 LoginTabs
               </Button>
             </Link>
             <Link to='/main'>
-              <Button variant="raised" color="primary" className={classes.button}>
+              <Button variant="raised" className={classes.button}>
                 MainTabs
               </Button>
             </Link>
             <Link to='/profile'>
-              <Button variant="raised" color="primary" className={classes.button}>
+              <Button variant="raised" className={classes.button}>
                 Profile
               </Button>
             </Link>
             <Link to='/devices/1'>
-              <Button variant="raised" color="primary" className={classes.button}>
+              <Button variant="raised" className={classes.button}>
                 Device id 1
               </Button>
             </Link>
             <Link to='/offices/1'>
-              <Button variant="raised" color="primary" className={classes.button}>
+              <Button variant="raised"  className={classes.button}>
                 Office id 1
               </Button>
             </Link>
