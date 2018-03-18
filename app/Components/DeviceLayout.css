@@ -6,10 +6,9 @@ body {
     padding: 0;
 }
 .oneDevice {
-    width: 300px;
+    width: 280px;
     float:left;
-    margin-right:5%;
-    margin-top:2%;
+    margin: 2% 5% 0 1%;
 }
 .device_Component h2 {
     margin:2% 2% 2% 0;
@@ -19,7 +18,7 @@ body {
     font-size:12px;
     list-style-type: none;
 }
-.tablet {
+.device-Component img {
     width:125px;
     height:125px;
     display:block;
@@ -32,7 +31,7 @@ body {
 }
 .device-Component button{
       margin-top:10%;
-      width:45%;
+      width:49%;
       padding: 12px 24px;
       text-align: center;
       display: inline-block;

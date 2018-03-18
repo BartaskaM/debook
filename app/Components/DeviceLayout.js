@@ -1,5 +1,5 @@
-const checkmark = document.getElementsByClassName("checkmark");
-const button = document.getElementsByClassName("booking");
+const checkmark = document.getElementsByClassName('checkmark');
+const button = document.getElementsByClassName('booking');
 
 const DeviceData = [{
     image:'https://images-eu.ssl-images-amazon.com/images/I/612rXM6eMSL._SX385_.jpg',
@@ -30,7 +30,7 @@ const DeviceData = [{
 
 function formHTML(){
     const htmlString = DeviceData.map( x => {
-      return '<div class="oneDevice"><img class="tablet" src='+x.image+'><label class="checkmark">Available</label><h2>'
+      return '<div class="oneDevice"><img src='+x.image+'><label class="checkmark">Available</label><h2>'
       +x.name+'</h2><li>Identification number: '+x.identification_num+'</li><li>OS: '+x.os+'</li><li>Location: '
       +x.location+'</li><div><button class="reserve" type="button">Reserve</button> <button class="booking" type="button">Book Device</button></div></div>'
     }).join('');
@@ -51,10 +51,9 @@ $('.booking').click(function(){
 });
 
 function changeLabel(index) {
-    checkmark[index].innerHTML = "Unavailable";
-    checkmark[index].style.color="red";
-    checkmark[index].style.backgroundColor = "#FF7F50";
-    button[index].style.backgroundColor = "#E9E9E9";
-    console.log("works");
+    checkmark[index].innerHTML = 'Unavailable';
+    checkmark[index].style.color='red';
+    checkmark[index].style.backgroundColor = '#FF7F50';
+    button[index].style.backgroundColor = '#E9E9E9';
     button[index].disabled=true;
 }
