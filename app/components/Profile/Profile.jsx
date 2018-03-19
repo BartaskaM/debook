@@ -32,10 +32,37 @@ const styles = {
   table:{
     marginTop: 10,
     marginLeft: 10,
+    marginBottom: 10,
+  },
+  editButtonWrapper:{
+    textAlign: 'right',
+  },
+  editButton:{
+    display: 'inline-block',
   },
 };
 
 class Profile extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={
+      name:props.user.name,
+      email:props.user.email,
+      office:props.user.office,
+      slack:props.user.slack,
+      edit:false,
+    };
+    this.changeInfo=this.changeInfo.bind(this);
+    this.handleEditClick=this.handleEditClick.bind(this);
+  }
+  changeInfo(label, newInfo){
+    const newState={};
+    newState[label]=newInfo;
+    this.setState(newState);
+  }
+  handleEditClick(){
+    this.setState({edit:!this.state.edit});
+  }
   render() {
     const { classes } = this.props;
 
@@ -51,11 +78,16 @@ class Profile extends React.Component {
           <span className={classes.header}>Profile</span>
           <Divider className={classes.divider}/>
           <Grid container className={classes.table}>
-            <Row label="Name:" value="Matas" />
-            <Row label="Email:" value="mail@mail.mail" />
-            <Row label="Office:" value="Kaunas" />
-            <Row label="Slack name:" value="Matassss" />
+            <Row label="name" value={this.state.name} edit={this.state.edit} changeInfo={this.changeInfo}/>
+            <Row label="email" value={this.state.email} edit={this.state.edit} changeInfo={this.changeInfo}/>
+            <Row label="office" value={this.state.office} edit={this.state.edit} changeInfo={this.changeInfo}/>
+            <Row label="slack" value={this.state.slack} edit={this.state.edit} changeInfo={this.changeInfo}/>
           </Grid>
+          <div className={classes.editButtonWrapper}>
+            <Button variant="raised" color="primary" className={classes.editButton} onClick={this.handleEditClick}>        
+              <span>{this.state.edit?'Done':'Edit'}</span>
+            </Button>
+          </div>
         </Paper>
       </div>
     );
@@ -63,7 +95,8 @@ class Profile extends React.Component {
 }
 
 Profile.propTypes={
-  classes: PropTypes.object,
+  classes: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Profile);
