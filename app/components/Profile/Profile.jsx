@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Row from './Row';
+import { Link } from 'react-router-dom';
 
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
@@ -61,6 +62,7 @@ class Profile extends React.Component {
     this.setState(newState);
   }
   handleEditClick(){
+    //TODO: post changes if needed
     this.setState({edit:!this.state.edit});
   }
   render() {
@@ -68,10 +70,12 @@ class Profile extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Button variant="flat">        
-          <NavigateBefore />
-          <span className={classes.bigFont} >Back</span>
-        </Button>
+        <Link to="/main">
+          <Button variant="flat">        
+            <NavigateBefore />
+            <span className={classes.bigFont} >Back</span>
+          </Button>
+        </Link>
         <Divider className={classes.divider}/>
         <Paper className={classes.paper}>
           <Divider className={classes.divider}/>
