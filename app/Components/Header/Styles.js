@@ -2,6 +2,9 @@ const Styles = {
   root: {
     flexGrow: 1,
   },
+  appBar: {
+    backgroundColor: 'white',
+  },
   menuButton: {
     fontSize: 32,
   },
