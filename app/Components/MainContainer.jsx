@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 import Header from './Header';
 import LoginTabs from './LoginTabs';
 import MainTabs from './MainTabs';
-import Profile from './Profile';
+import Profile from './Profile/Profile';
 import DeviceDetails from './DeviceDetails';
 import OfficeDetails from './OfficeDetails';
 
