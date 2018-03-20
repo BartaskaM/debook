@@ -29,4 +29,8 @@ export const styles = {
   editButton:{
     display: 'inline-block',
   },
+  label:{
+    color: '#999',
+    textTransform: 'capitalize',
+  },
 };

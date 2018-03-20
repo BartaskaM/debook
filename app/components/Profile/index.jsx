@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
+import { Link } from 'react-router-dom';
 import Row from './Row';
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';

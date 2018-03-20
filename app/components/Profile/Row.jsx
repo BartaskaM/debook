@@ -4,16 +4,9 @@ import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import {withStyles} from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
+import { styles } from './Styles';
 
-const styles = {
-  label:{
-    color: '#999',
-    textTransform: 'capitalize',
-  },
-};
-
-
-function Row(props) {
+const Row=(props) => {
   function handleChange(e){
     props.changeInfo(props.label, e.target.value);
   }
