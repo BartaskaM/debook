@@ -1,7 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Grid from 'material-ui/Grid';
-import PropTypes from 'prop-types';
 import {withStyles} from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 
@@ -12,27 +12,27 @@ const styles = {
   },
 };
 
-class Row extends React.Component{
-  handleChange(e){
-    this.props.changeInfo(this.props.label, e.target.value);
+
+function Row(props) {
+  function handleChange(e){
+    props.changeInfo(props.label, e.target.value);
   }
-  createSecondField(){
-    if(this.props.edit){
+  function renderSecondField(){
+    if(props.edit){
       return (<TextField
-        value={this.props.value}
-        onChange={this.handleChange.bind(this)}
+        value={props.value}
+        onChange={handleChange.bind(this)}
       />);
     } else {
-      return <Grid item sm={10}>{this.props.value}</Grid>;
+      return <Grid item sm={10}>{props.value}</Grid>;
     }
   }
-  render(){
-    const {classes}=this.props;
-    return (<Grid container item>
-      <Grid item sm={2} className={classes.label}>{this.props.label}:</Grid>
-      {this.createSecondField()}
-    </Grid>);
-  }
+  const {classes}=props;
+  return (<Grid container item>
+    <Grid item sm={2} className={classes.label}>{props.label}:</Grid>
+    {renderSecondField()}
+  </Grid>);
+  
 }
 
 Row.propTypes={

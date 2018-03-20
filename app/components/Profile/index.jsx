@@ -1,53 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Row from './Row';
 import { Link } from 'react-router-dom';
 
+import Row from './Row';
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
 import NavigateBefore from 'material-ui-icons/NavigateBefore';
-
-const styles = {
-  root:{
-    margin:'50px 75px',
-  },
-  paper: {
-    padding: 20,
-    margin: 20,
-  },
-  divider: {
-    margin: '5px 0',
-  },
-  bigFont: {
-    fontSize: 18,
-  },
-  header:
-  {
-    fontSize: 18,
-    fontWeight: 'bold',
-    paddingLeft:10,
-  },
-  table:{
-    marginTop: 10,
-    marginLeft: 10,
-    marginBottom: 10,
-  },
-  editButtonWrapper:{
-    textAlign: 'right',
-  },
-  editButton:{
-    display: 'inline-block',
-  },
-};
+import { styles } from './Styles';
 
 class Profile extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      name:props.user.name,
+      name:(props.user.firstName+' '+props.user.lastName),
       email:props.user.email,
       office:props.user.office,
       slack:props.user.slack,
@@ -57,9 +25,7 @@ class Profile extends React.Component {
     this.handleEditClick=this.handleEditClick.bind(this);
   }
   changeInfo(label, newInfo){
-    const newState={};
-    newState[label]=newInfo;
-    this.setState(newState);
+    this.setState({[label]:newInfo});
   }
   handleEditClick(){
     //TODO: post changes if needed
@@ -100,7 +66,13 @@ class Profile extends React.Component {
 
 Profile.propTypes={
   classes: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    office: PropTypes.string.isRequired,
+    slack: PropTypes.string.isRequired,
+  }),
 };
 
 export default withStyles(styles)(Profile);
