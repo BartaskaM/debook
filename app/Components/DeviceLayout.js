@@ -48,12 +48,14 @@ document.onload = renderHTML();
 
 });
 */
-for(let i=0; i<Buttons.length; i++)
-{
-  Buttons[i].onclick=function()
+function findIndex() {
+  for(let i=0; i<Buttons.length; i++)
   {
-    changeLabel(i);
-  };
+    Buttons[i].onclick=function()
+    {
+      changeLabel(i);
+    };
+  }
 }
 function changeLabel(index) {
   Checkmark[index].innerHTML = 'Unavailable';
@@ -62,3 +64,4 @@ function changeLabel(index) {
   Buttons[index].style.backgroundColor = '#E9E9E9';
   Buttons[index].disabled = true;
 }
+findIndex();
