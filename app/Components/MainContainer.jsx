@@ -7,16 +7,16 @@ import MainTabs from './MainTabs';
 import Profile from './Profile';
 import DeviceDetails from './DeviceDetails';
 import OfficeDetails from './OfficeDetails';
+import User from '../Constants/User';
 
 class MainContainer extends React.Component {
   render() {
     return (
       <div>
-        <Header />
-        
+        <Header />    
         <Route path='/login' component={LoginTabs}/>
         <Route path='/main' component={MainTabs}/>
-        <Route path='/profile' component={Profile}/>
+        <Route path='/profile' render={()=><Profile user={User}/>}/>
         <Route path='/devices/:id' component={DeviceDetails}/>
         <Route path='/offices/:id' component={OfficeDetails}/>
       </div>
