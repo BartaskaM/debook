@@ -38,7 +38,7 @@ class LoginTabs extends React.Component {
     return (
       <div className={classes.root}>
         <Grid container spacing={16} justify='center'>
-          <Grid xs={3} />
+          <Grid item xs={3} />
           <Grid item xs={6}>
             <AppBar position="static" color="inherit">
               <Tabs
@@ -53,7 +53,7 @@ class LoginTabs extends React.Component {
               </Tabs>
             </AppBar>
           </Grid>
-          <Grid xs={3} />
+          <Grid item xs={3} />
 
           <Grid item xs={6}>
             <Paper>
@@ -63,7 +63,7 @@ class LoginTabs extends React.Component {
                 onChangeIndex={this.handleTabChange}
               >
                 <TabContainer dir={theme.direction}>Item One</TabContainer>
-                <TabContainer dir={theme.direction}>Item Two</TabContainer>
+                <TabContainer dir={theme.direction}><SignUp/></TabContainer>
               </SwipeableViews>
             </Paper>
           </Grid>
