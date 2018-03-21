@@ -24,7 +24,7 @@ body {
     display:block;
     margin:auto;
 }
-.checkmark {
+.checkMark {
     background-color: #3a9b5c;
     border-radius: 15px 50px 30px 5px;
     color: #e7f1ea;

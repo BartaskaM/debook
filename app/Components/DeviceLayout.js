@@ -1,7 +1,7 @@
-const Checkmark = document.getElementsByClassName('checkmark');
-const Buttons = document.getElementsByClassName('booking');
+const checkMark = document.getElementsByClassName('checkMark');
+const buttons = document.getElementsByClassName('booking');
 
-const DeviceData = [{
+const deviceData = [{
   image: 'https://images-eu.ssl-images-amazon.com/images/I/612rXM6eMSL._SX385_.jpg',
   name: 'Apple iPad Pro 10.5", 256GB',
   identification_num: '0000000497',
@@ -28,8 +28,8 @@ const DeviceData = [{
 },
 ];
 function formHTML() {
-  const htmlString = DeviceData.map(x => {
-    return '<div class="oneDevice"><img src=' + x.image + '><label class="checkmark">Available</label><h2>'
+  const htmlString = deviceData.map(x => {
+    return '<div class="oneDevice"><img src=' + x.image + '><label class="checkMark">Available</label><h2>'
       + x.name + '</h2><li>Identification number: ' + x.identification_num + '</li><li>OS: ' + x.os + '</li><li>Location: '
       + x.location + '</li><div><button class="reserve" type="button">Reserve</button> <button class="booking" type="button">Book Device</button></div></div>';
   }).join('');
@@ -42,26 +42,16 @@ function renderHTML() {
 }
 document.onload = renderHTML();
 
-/*$('.booking').click(function () {
-  const buttonIndex = $(this).closest('.booking').index('.booking');
-  changeLabel(buttonIndex);
-
-});
-*/
 function findIndex() {
-  for(let i=0; i<Buttons.length; i++)
-  {
-    Buttons[i].onclick=function()
-    {
-      changeLabel(i);
-    };
+  for(let i=0; i<buttons.length; i++) {
+    buttons[i].onclick=() => changeLabel(i);
   }
 }
 function changeLabel(index) {
-  Checkmark[index].innerHTML = 'Unavailable';
-  Checkmark[index].style.color = 'red';
-  Checkmark[index].style.backgroundColor = '#FF7F50';
-  Buttons[index].style.backgroundColor = '#E9E9E9';
-  Buttons[index].disabled = true;
+  checkMark[index].innerHTML = 'Unavailable';
+  checkMark[index].style.color = 'red';
+  checkMark[index].style.backgroundColor = '#FF7F50';
+  buttons[index].style.backgroundColor = '#E9E9E9';
+  buttons[index].disabled = true;
 }
 findIndex();
