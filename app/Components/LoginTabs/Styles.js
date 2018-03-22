@@ -9,6 +9,10 @@ const Styles = {
   fontSize: {
     fontSize: 14,
   },
+  menuItemWidth: {
+    fontSize: 14,
+    width: 420,
+  },
   signUpButton: {
     height: 50,
     fontSize: 14,
