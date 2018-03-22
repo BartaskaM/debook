@@ -161,7 +161,7 @@ class SignUp extends React.Component {
               <Select
                 value={this.state.office}
                 autoWidth={true}
-                onChange={this.handleOfficeChange}
+                onChange={this.handleFormChange}
                 className={classes.fontSize}
                 inputProps={{
                   name: 'office',
