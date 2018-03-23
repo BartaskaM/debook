@@ -24,7 +24,7 @@ class DeviceList extends React.Component{
         if(device.id==deviceId){
           device.available=!device.available;
           if(device.custody.length === 0){
-            device.custody = this.props.user.firstName + ' ' + this.props.user.lastName;
+            device.custody = this.props.user.id;
           } else {
             device.custody = '';
           }
@@ -55,9 +55,13 @@ class DeviceList extends React.Component{
                 </ul>
               </div>
             </Link>
-            <Button variant='raised' disabled={device.available? false : device.custody===(this.props.user.firstName+' '+this.props.user.lastName)? false : true} color={device.available?'primary':'secondary'} onClick={this.handleCheckClick(device.id)}>
+            <Button 
+              variant='raised'
+              disabled={device.available? false : device.custody==(this.props.user.id)? false : true} 
+              color={device.available?'primary':'secondary'} 
+              onClick={this.handleCheckClick(device.id)}>
               <Plus className={classes.leftIcon}/>
-              {device.available?'Book device': device.custody===(this.props.user.firstName+' '+this.props.user.lastName)? 'Return device':'Device is booked'}
+              {device.available?'Book device': device.custody==(this.props.user.id)? 'Return device':'Device is booked'}
             </Button>
           </Paper>
         </Grid>
@@ -87,6 +91,7 @@ DeviceList.propTypes={
   })).isRequired,
   classes:PropTypes.object.isRequired,
   user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,

@@ -46,7 +46,7 @@ const Devices =
         model: 'SM-G930F',
         os: 'Android 7.0',
         location: 'Wilno',
-        custody: 'John Snow',
+        custody: '1',
         available: false,
         active: true,
       },
