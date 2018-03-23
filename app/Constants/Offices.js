@@ -1,28 +1,23 @@
 const Offices = [
   {
     id: 0,
-    title: 'Kaunas',
-    value: 'kaunas',
+    city: 'Kaunas',
   },
   {
     id: 1,
-    title: 'Vilnius',
-    value: 'vilnius',
+    city: 'Vilnius',
   },
   {
     id: 2,
-    title: 'Chicago',
-    value: 'shicago',
+    city: 'Chicago',
   },
   {
     id: 3,
-    title: 'toronto',
-    value: 'toronto',
+    city: 'toronto',
   },
   {
     id: 4,
-    title: 'London',
-    value: 'london',
+    city: 'London',
   },
 ];
 

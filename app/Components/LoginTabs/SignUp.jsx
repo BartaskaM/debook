@@ -170,10 +170,10 @@ class SignUp extends React.Component {
                 {Offices.map(office => (
                   <MenuItem
                     key={office.id}
-                    value={office.value}
+                    value={office.city}
                     className={classes.menuItemWidth}
                   >
-                    {office.title}
+                    {office.city}
                   </MenuItem>
                 ))}
               </Select>
