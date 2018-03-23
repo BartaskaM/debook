@@ -15,7 +15,7 @@ import {
 import { withStyles } from 'material-ui/styles';
 
 import Styles from './Styles';
-import Offices from '../../Constants/Offices';
+import Offices from 'Constants/Offices';
 
 class SignUp extends React.Component {
   constructor() {
@@ -52,9 +52,9 @@ class SignUp extends React.Component {
         repeatPassword: event.target.repeatPassword.value,
       };
 
-      // TODO: link to device list
-
       console.log(result);
+
+      this.props.changeTab(null, 0);
     }
   }
 
@@ -122,7 +122,9 @@ class SignUp extends React.Component {
                   required: 'required',
                 }}
               />
-              <Typography variant='headline' className={classes.errorMessage}>{this.state.emailErrorMessage}</Typography>
+              <Typography variant='headline' className={classes.errorMessage}>
+                {this.state.emailErrorMessage}
+              </Typography>
             </FormControl>
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>Password</InputLabel>
@@ -151,7 +153,9 @@ class SignUp extends React.Component {
                   required: 'required',
                 }}
               />
-              <Typography variant='headline' className={classes.errorMessage}>{this.state.passwordErrorMessage}</Typography>
+              <Typography variant='headline' className={classes.errorMessage}>
+                {this.state.passwordErrorMessage}
+              </Typography>
             </FormControl>
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>First name</InputLabel>
@@ -211,7 +215,12 @@ class SignUp extends React.Component {
               />
             </FormControl>
             <FormControl className={classes.signUpFormField}>
-              <Button type='submit' variant="raised" color="primary" className={classes.signUpButton}>
+              <Button
+                type='submit'
+                variant="raised"
+                color="primary"
+                className={classes.signUpButton}
+              >
                 SIGN UP
               </Button>
             </FormControl>
@@ -224,6 +233,7 @@ class SignUp extends React.Component {
 
 SignUp.propTypes = {
   classes: PropTypes.object.isRequired,
+  changeTab: PropTypes.func.isRequired,
 };
 
 export default withStyles(Styles)(SignUp);
