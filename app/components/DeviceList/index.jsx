@@ -11,7 +11,8 @@ class DeviceList extends React.Component{
   constructor(props){
     super(props);
     this.state={
-      devices:props.devices.filter(device=>{return device.active===true;}),
+      devices:props.devices.filter(device=>
+        device.active&&(device.available||device.custody===(props.user.firstName+' '+props.user.lastName))),
     };
     this.renderDevices=this.renderDevices.bind(this);
     this.handleCheckClick=this.handleCheckClick.bind(this);
@@ -22,6 +23,12 @@ class DeviceList extends React.Component{
       const devices=this.state.devices.map(device=>{
         if(device.id==deviceId){
           device.available=!device.available;
+          if(device.custody.length === 0){
+            device.custody = this.props.user.firstName + ' ' + this.props.user.lastName;
+          } else {
+            device.custody = '';
+          }
+          device.location=this.props.user.office;
         }
         return device;
       });
@@ -43,7 +50,7 @@ class DeviceList extends React.Component{
               <li>Available: {device.available.toString()}</li>
               <li>Active: {device.active.toString()}</li>
             </ul>
-            <Button variant='raised' color={device.available?'primary':'secondary'} onClick={this.handleCheckClick(device.id)}>{device.available?'Check out':'Check in'}</Button>
+            <Button variant='raised' color={device.available?'primary':'secondary'} onClick={this.handleCheckClick(device.id)}>{device.available?'Book device':'Return device'}</Button>
           </Paper>
         </Grid>
       );
@@ -71,6 +78,13 @@ DeviceList.propTypes={
     id:PropTypes.number.isRequired,
   })).isRequired,
   classes:PropTypes.object.isRequired,
+  user: PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    office: PropTypes.string.isRequired,
+    slack: PropTypes.string.isRequired,
+  }),
 };
 
 export default withStyles(Styles)(DeviceList);
