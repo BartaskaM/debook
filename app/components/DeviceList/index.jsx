@@ -8,6 +8,7 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import Plus from 'material-ui-icons/Add';
+
 class DeviceList extends React.Component{
   constructor(props){
     super(props);
@@ -19,22 +20,21 @@ class DeviceList extends React.Component{
   }
 
   handleCheckClick(deviceId){
-    return () => {
-      const devices=this.state.devices.map(device=>{
-        if(device.id==deviceId){
-          device.available=!device.available;
-          if(device.custody.length === 0){
-            device.custody = this.props.user.id;
-          } else {
-            device.custody = '';
-          }
-          device.location=this.props.user.office;
+    const devices=this.state.devices.map(device=>{
+      if(device.id==deviceId){
+        device.available=!device.available;
+        if(device.custody.length === 0){
+          device.custody = this.props.user.id;
+        } else {
+          device.custody = '';
         }
-        return device;
-      });
-      this.setState({devices});
-    };
+        device.location=this.props.user.office;
+      }
+      return device;
+    });
+    this.setState({devices}); 
   }
+
   renderDevices(classes){
     return this.state.devices.map((device,index)=>{
       return (
@@ -59,7 +59,7 @@ class DeviceList extends React.Component{
               variant='raised'
               disabled={device.available? false : device.custody==(this.props.user.id)? false : true} 
               color={device.available?'primary':'secondary'} 
-              onClick={this.handleCheckClick(device.id)}>
+              onClick={()=>this.handleCheckClick(device.id)}>
               <Plus className={classes.leftIcon}/>
               {device.available?'Book device': device.custody==(this.props.user.id)? 'Return device':'Device is booked'}
             </Button>
@@ -68,6 +68,7 @@ class DeviceList extends React.Component{
       );
     });
   }
+
   render(){
     const { classes } = this.props;
     return (
