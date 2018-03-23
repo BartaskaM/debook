@@ -56,7 +56,7 @@ class DeviceList extends React.Component{
             </Link>
             <Button variant='raised' disabled={device.available? false : device.custody===(this.props.user.firstName+' '+this.props.user.lastName)? false : true} color={device.available?'primary':'secondary'} onClick={this.handleCheckClick(device.id)}>
               <Plus className={classes.leftIcon}/>
-              {device.available?'Book device':'Return device'}
+              {device.available?'Book device': device.custody===(this.props.user.firstName+' '+this.props.user.lastName)? 'Return device':'Device is booked'}
             </Button>
           </Paper>
         </Grid>
