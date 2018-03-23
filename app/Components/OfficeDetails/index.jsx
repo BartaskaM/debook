@@ -27,17 +27,15 @@ class OfficeDetails extends React.Component {
               <br />
               <Typography variant='display2'><b>Address:</b> {office.address}</Typography>
               <br />
-              <Typography variant='display2'><b>Lat:</b> {office.lat}</Typography>
-              <br />
-              <Typography variant='display2'><b>Lng:</b> {office.lng}</Typography>
-              <br/>
               {/* TODO: Implement button functionality */}
-              <Button variant="raised" color="secondary" className={classes.backButton}>
-                BACK TO LIST
-              </Button>
-              <Button variant="raised" color="primary" className={classes.editButton}>
-                EDIT
-              </Button>
+              <span>
+                <Button variant="raised" color="secondary" className={classes.backButton}>
+                  BACK TO LIST
+                </Button>
+                <Button variant="raised" color="primary" className={classes.editButton}>
+                  EDIT
+                </Button>
+              </span>
             </Paper>
           </Grid>
           <Grid item xs={5}>
@@ -45,7 +43,8 @@ class OfficeDetails extends React.Component {
               <Map
                 lat={office.lat}
                 lng={office.lng}
-                googleMapURL='https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places'
+                googleMapURL={'https://maps.googleapis.com/' +
+                  'maps/api/js?v=3.exp&libraries=geometry,drawing,places'}
                 loadingElement={<div style={{ height: '100%' }} />}
                 containerElement={<div style={{ height: 400 }} />}
                 mapElement={<div style={{ height: '100%' }} />}

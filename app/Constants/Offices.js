@@ -1,6 +1,6 @@
 const Offices = [
   {
-    id: 0,
+    id: 1,
     country: 'Lithuania',
     city: 'Kaunas',
     address: '11D A. Juozapavičiaus pr.',
@@ -8,7 +8,7 @@ const Offices = [
     lng: 23.945239,
   },
   {
-    id: 1,
+    id: 2,
     country: 'Lithuania',
     city: 'Vilnius',
     address: '135 Zalgirio g.',
@@ -16,7 +16,7 @@ const Offices = [
     lng: 25.271658,
   },
   {
-    id: 2,
+    id: 3,
     country: 'United States of America',
     city: 'Chicago',
     address: '343 W. Erie St. Suite 600',
@@ -24,7 +24,7 @@ const Offices = [
     lng: -87.637532,
   },
   {
-    id: 3,
+    id: 4,
     country: 'Canada',
     city: 'toronto',
     address: '36 Toronto Street Suite 260',
@@ -32,7 +32,7 @@ const Offices = [
     lng: -79.376536,
   },
   {
-    id: 4,
+    id: 5,
     country: 'United Kingdom',
     city: 'London',
     address: '1 Mark Square',
