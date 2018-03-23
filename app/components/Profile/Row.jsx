@@ -25,8 +25,7 @@ const Row=(props) => {
     <Grid item sm={2} className={classes.label}>{props.label}:</Grid>
     {renderSecondField()}
   </Grid>);
-  
-}
+};
 
 Row.propTypes={
   label: PropTypes.string.isRequired,
