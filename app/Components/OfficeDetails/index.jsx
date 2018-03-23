@@ -10,11 +10,12 @@ import { withStyles } from 'material-ui/styles';
 
 import Styles from './Styles';
 import Map from './Map';
-import Offices from '../../Constants/Offices';
+import Offices from 'Constants/Offices';
 
 class OfficeDetails extends React.Component {
   render() {
-    const office = Offices[this.props.match.params.id];
+    console.log(Offices);
+    const office = Offices.find(office => office.id == this.props.match.params.id);
     const { classes } = this.props;
     return (
       <div className={classes.root}>
