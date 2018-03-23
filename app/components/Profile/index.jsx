@@ -12,7 +12,7 @@ import NavigateBefore from 'material-ui-icons/NavigateBefore';
 import { styles } from './Styles';
 
 class Profile extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       name: (props.user.firstName + ' ' + props.user.lastName),
@@ -24,12 +24,12 @@ class Profile extends React.Component {
     this.changeInfo = this.changeInfo.bind(this);
     this.handleEditClick = this.handleEditClick.bind(this);
   }
-  changeInfo(label, newInfo){
-    this.setState({[label]: newInfo});
+  changeInfo(label, newInfo) {
+    this.setState({ [label]: newInfo });
   }
-  handleEditClick(){
+  handleEditClick() {
     //TODO: post changes if needed
-    this.setState({edit: !this.state.edit});
+    this.setState({ edit: !this.state.edit });
   }
   render() {
     const { classes } = this.props;
@@ -37,7 +37,7 @@ class Profile extends React.Component {
     return (
       <div className={classes.root}>
         <Link to="/main">
-          <Button variant="flat">        
+          <Button variant="flat">
             <NavigateBefore />
             <span className={classes.bigFont} >Back</span>
           </Button>
@@ -70,11 +70,12 @@ class Profile extends React.Component {
               changeInfo={this.changeInfo}/>
           </Grid>
           <div className={classes.editButtonWrapper}>
-            <Button 
-              variant="raised" 
-              color="primary" 
-              className={classes.editButton} 
-              onClick={this.handleEditClick}>        
+            <Button
+              variant="raised"
+              color="primary"
+              className={classes.editButton}
+              onClick={this.handleEditClick}
+            >
               <span>{this.state.edit ? 'Done' : 'Edit'}</span>
             </Button>
           </div>
