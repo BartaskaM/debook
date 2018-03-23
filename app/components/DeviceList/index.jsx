@@ -6,13 +6,13 @@ import Styles from './Styles';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
-
+import { Link } from 'react-router-dom';
+import Plus from 'material-ui-icons/Add';
 class DeviceList extends React.Component{
   constructor(props){
     super(props);
     this.state={
-      devices:props.devices.filter(device=>
-        device.active&&(device.available||device.custody===(props.user.firstName+' '+props.user.lastName))),
+      devices:props.devices.filter(device=>device.active),
     };
     this.renderDevices=this.renderDevices.bind(this);
     this.handleCheckClick=this.handleCheckClick.bind(this);
@@ -35,22 +35,29 @@ class DeviceList extends React.Component{
       this.setState({devices});
     };
   }
-  renderDevices(){
+  renderDevices(classes){
     return this.state.devices.map((device,index)=>{
       return (
         <Grid item xs={4}key={index}>
           <Paper>
-            <ul>
-              <li>Id: {device.id}</li>
-              <li>Brand: {device.brand}</li>
-              <li>Model: {device.model}</li>
-              <li>OS: {device.os}</li>
-              <li>Location: {device.location}</li>
-              <li>Custody: {device.custody}</li>
-              <li>Available: {device.available.toString()}</li>
-              <li>Active: {device.active.toString()}</li>
-            </ul>
-            <Button variant='raised' color={device.available?'primary':'secondary'} onClick={this.handleCheckClick(device.id)}>{device.available?'Book device':'Return device'}</Button>
+            <Link to={'/devices/'+device.id.toString()}>
+              <div>
+                <ul>
+                  <li>Id: {device.id}</li>
+                  <li>Brand: {device.brand}</li>
+                  <li>Model: {device.model}</li>
+                  <li>OS: {device.os}</li>
+                  <li>Location: {device.location}</li>
+                  <li>Custody: {device.custody}</li>
+                  <li>Available: {device.available.toString()}</li>
+                  <li>Active: {device.active.toString()}</li>
+                </ul>
+              </div>
+            </Link>
+            <Button variant='raised' disabled={device.available? false : device.custody===(this.props.user.firstName+' '+this.props.user.lastName)? false : true} color={device.available?'primary':'secondary'} onClick={this.handleCheckClick(device.id)}>
+              <Plus className={classes.leftIcon}/>
+              {device.available?'Book device':'Return device'}
+            </Button>
           </Paper>
         </Grid>
       );
@@ -60,7 +67,7 @@ class DeviceList extends React.Component{
     const { classes } = this.props;
     return (
       <Grid container spacing={8} className={classes.root}>
-        {this.renderDevices()}
+        {this.renderDevices(classes)}
       </Grid>
     );
   }
