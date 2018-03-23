@@ -52,9 +52,9 @@ class SignUp extends React.Component {
         repeatPassword: event.target.repeatPassword.value,
       };
 
-      // TODO: link to device list
-
       console.log(result);
+
+      this.props.changeTab(null, 0);
     }
   }
 
@@ -224,6 +224,7 @@ class SignUp extends React.Component {
 
 SignUp.propTypes = {
   classes: PropTypes.object.isRequired,
+  changeTab: PropTypes.func.isRequired,
 };
 
 export default withStyles(Styles)(SignUp);
