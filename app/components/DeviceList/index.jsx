@@ -38,6 +38,7 @@ class DeviceList extends React.Component{
   renderDevices(classes){
     return this.state.devices.map((device,index)=>{
       return (
+        //Replace list with device component
         <Grid item xs={4}key={index}>
           <Paper>
             <Link to={'/devices/'+device.id.toString()}>
