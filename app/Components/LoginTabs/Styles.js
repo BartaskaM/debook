@@ -17,6 +17,9 @@ const Styles = {
     height: 50,
     fontSize: 14,
   },
+  errorMessage: {
+    color: 'red',
+  },
 };
 
 export default Styles;

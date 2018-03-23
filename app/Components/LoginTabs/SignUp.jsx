@@ -23,8 +23,10 @@ class SignUp extends React.Component {
 
     this.state = {
       email: '',
+      emailErrorMessage: '',
       password: '',
       repeatPassword: '',
+      passwordErrorMessage: '',
       office: '',
       validEmail: true,
       validPassword: true,
@@ -62,21 +64,35 @@ class SignUp extends React.Component {
 
   validateEmail() {
     if (this.state.email !== 'email@email.com') {
-      this.setState({ validEmail: true });
+      this.setState({
+        validEmail: true,
+        emailErrorMessage: '',
+      });
       return true;
     }
 
-    this.setState({ validEmail: false });
+    this.setState({
+      validEmail: false,
+      emailErrorMessage: 'Email is already in use.',
+    });
     return false;
   }
 
   validatePassword() {
     if (this.state.password === this.state.repeatPassword) {
-      this.setState({ validPassword: true });
+      this.setState({
+        validPassword: true,
+        passwordErrorMessage: '',
+      });
       return true;
     }
-
-    this.setState({ validPassword: false });
+    else if (this.state.repeatPassword != '') {
+      this.setState({
+        validPassword: false,
+        passwordErrorMessage: 'Passwords do not match.',
+      });
+      return false;
+    }
     return false;
   }
 
@@ -98,6 +114,7 @@ class SignUp extends React.Component {
                 className={classes.fontSize}
                 error={!this.state.validEmail}
                 onChange={this.handleFormChange}
+                onBlur={this.validateEmail}
                 inputProps={{
                   type: 'email',
                   name: 'email',
@@ -105,6 +122,7 @@ class SignUp extends React.Component {
                   required: 'required',
                 }}
               />
+              <Typography variant='headline' className={classes.errorMessage}>{this.state.emailErrorMessage}</Typography>
             </FormControl>
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>Password</InputLabel>
@@ -112,6 +130,7 @@ class SignUp extends React.Component {
                 className={classes.fontSize}
                 error={!this.state.validPassword}
                 onChange={this.handleFormChange}
+                onBlur={this.validatePassword}
                 inputProps={{
                   type: 'password',
                   name: 'password',
@@ -125,12 +144,14 @@ class SignUp extends React.Component {
                 className={classes.fontSize}
                 error={!this.state.validPassword}
                 onChange={this.handleFormChange}
+                onBlur={this.validatePassword}
                 inputProps={{
                   type: 'password',
                   name: 'repeatPassword',
                   required: 'required',
                 }}
               />
+              <Typography variant='headline' className={classes.errorMessage}>{this.state.passwordErrorMessage}</Typography>
             </FormControl>
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>First name</InputLabel>
