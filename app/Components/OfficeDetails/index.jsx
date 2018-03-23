@@ -14,7 +14,6 @@ import Offices from 'Constants/Offices';
 
 class OfficeDetails extends React.Component {
   render() {
-    console.log(Offices);
     const office = Offices.find(office => office.id == this.props.match.params.id);
     const { classes } = this.props;
     return (
