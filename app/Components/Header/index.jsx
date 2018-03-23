@@ -152,7 +152,7 @@ class Header extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <AppBar position="static" color="default">
+        <AppBar position="static" color='inherit'>
           <Toolbar>
             <img className={classes.leftMargin} src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'} height="40px" width='40px' />
             <Typography variant="title" color="inherit" className={classes.text}>
