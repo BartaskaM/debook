@@ -31,6 +31,7 @@ class OfficeDetails extends React.Component {
               <br />
               <Typography variant='display2'><b>Lng:</b> {office.lng}</Typography>
               <br/>
+              {/* TODO: Implement button functionality */}
               <Button variant="raised" color="secondary" className={classes.backButton}>
                 BACK TO LIST
               </Button>

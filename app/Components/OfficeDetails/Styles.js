@@ -13,14 +13,14 @@ const Styles = {
   },
   editButton: {
     float: 'right',
-    marginTop: 50,
+    marginTop: 40,
     height: 60,
     width: 180,
     fontSize: 20,
   },
   backButton: {
     float: 'left',
-    marginTop: 50,
+    marginTop: 40,
     height: 60,
     width: 180,
     fontSize: 20,
