@@ -65,7 +65,7 @@ class SignUp extends React.Component {
   validateEmail() {
     if (this.state.email !== 'email@email.com') {
       this.setState({
-        validEmail: false,
+        validEmail: true,
         emailErrorMessage: '',
       });
       return true;
