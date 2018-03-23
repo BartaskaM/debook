@@ -1,6 +1,6 @@
 export const styles = {
-  root:{
-    margin:'50px 75px',
+  root: {
+    margin: '50px 75px',
   },
   paper: {
     padding: 20,
@@ -16,20 +16,20 @@ export const styles = {
     {
       fontSize: 18,
       fontWeight: 'bold',
-      paddingLeft:10,
+      paddingLeft: 10,
     },
-  table:{
+  table: {
     marginTop: 10,
     marginLeft: 10,
     marginBottom: 10,
   },
-  editButtonWrapper:{
+  editButtonWrapper: {
     textAlign: 'right',
   },
-  editButton:{
+  editButton: {
     display: 'inline-block',
   },
-  label:{
+  label: {
     color: '#999',
     textTransform: 'capitalize',
   },

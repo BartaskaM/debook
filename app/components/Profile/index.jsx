@@ -42,28 +42,32 @@ class Profile extends React.Component {
             <span className={classes.bigFont} >Back</span>
           </Button>
         </Link>
-        <Divider className={classes.divider} />
+        <Divider className={classes.divider}/>
         <Paper className={classes.paper}>
-          <Divider className={classes.divider} />
+          <Divider className={classes.divider}/>
           <span className={classes.header}>Profile</span>
-          <Divider className={classes.divider} />
+          <Divider className={classes.divider}/>
           <Grid container className={classes.table}>
-            <Row label="name"
-              value={this.state.name}
-              edit={this.state.edit}
-              changeInfo={this.changeInfo} />
-            <Row label="email"
-              value={this.state.email}
-              edit={this.state.edit}
-              changeInfo={this.changeInfo} />
-            <Row label="office"
-              value={this.state.office}
-              edit={this.state.edit}
-              changeInfo={this.changeInfo} />
-            <Row label="slack"
-              value={this.state.slack}
-              edit={this.state.edit}
-              changeInfo={this.changeInfo} />
+            <Row 
+              label="name" 
+              value={this.state.name} 
+              edit={this.state.edit} 
+              changeInfo={this.changeInfo}/>
+            <Row 
+              label="email" 
+              value={this.state.email} 
+              edit={this.state.edit} 
+              changeInfo={this.changeInfo}/>
+            <Row 
+              label="office" 
+              value={this.state.office} 
+              edit={this.state.edit} 
+              changeInfo={this.changeInfo}/>
+            <Row 
+              label="slack" 
+              value={this.state.slack} 
+              edit={this.state.edit} 
+              changeInfo={this.changeInfo}/>
           </Grid>
           <div className={classes.editButtonWrapper}>
             <Button

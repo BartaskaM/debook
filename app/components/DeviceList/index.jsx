@@ -12,23 +12,23 @@ import Plus from 'material-ui-icons/Add';
 class DeviceList extends React.Component{
   constructor(props){
     super(props);
-    this.state={
-      devices:props.devices.filter(device=>device.active),
+    this.state = {
+      devices: props.devices.filter(device=>device.active),
     };
-    this.renderDevices=this.renderDevices.bind(this);
-    this.handleCheckClick=this.handleCheckClick.bind(this);
+    this.renderDevices = this.renderDevices.bind(this);
+    this.handleCheckClick = this.handleCheckClick.bind(this);
   }
 
   handleCheckClick(deviceId){
-    const devices=this.state.devices.map(device=>{
-      if(device.id==deviceId){
-        device.available=!device.available;
+    const devices = this.state.devices.map(device=>{
+      if(device.id == deviceId){
+        device.available = !device.available;
         if(device.custody.length === 0){
           device.custody = this.props.user.id;
         } else {
           device.custody = '';
         }
-        device.location=this.props.user.office;
+        device.location = this.props.user.office;
       }
       return device;
     });
@@ -41,7 +41,7 @@ class DeviceList extends React.Component{
         //Replace list with device component
         <Grid item xs={4}key={index}>
           <Paper>
-            <Link to={'/devices/'+device.id.toString()}>
+            <Link to={'/devices/' + device.id.toString()}>
               <div>
                 <ul>
                   <li>Id: {device.id}</li>
@@ -58,15 +58,15 @@ class DeviceList extends React.Component{
             <Button 
               variant='raised'
               disabled={
-                device.available? false : device.custody==(this.props.user.id)? false : true
+                device.available ? false : device.custody == (this.props.user.id) ? false : true
               } 
-              color={device.available?'primary':'secondary'} 
+              color={device.available ? 'primary' : 'secondary'} 
               onClick={()=>this.handleCheckClick(device.id)}>
               <Plus className={classes.leftIcon}/>
-              {device.available?
-                'Book device': 
-                device.custody==(this.props.user.id)? 
-                  'Return device':
+              {device.available ?
+                'Book device' : 
+                device.custody == (this.props.user.id) ? 
+                  'Return device' :
                   'Device is booked'}
             </Button>
           </Paper>
@@ -85,18 +85,18 @@ class DeviceList extends React.Component{
   }
 }
 
-DeviceList.propTypes={
-  devices:PropTypes.arrayOf(PropTypes.shape({
-    brand:PropTypes.string.isRequired,
-    model:PropTypes.string.isRequired,
-    os:PropTypes.string.isRequired,
-    location:PropTypes.string.isRequired,
-    custody:PropTypes.string.isRequired,
-    available:PropTypes.bool.isRequired,
-    active:PropTypes.bool.isRequired,
-    id:PropTypes.number.isRequired,
+DeviceList.propTypes = {
+  devices: PropTypes.arrayOf(PropTypes.shape({
+    brand: PropTypes.string.isRequired,
+    model: PropTypes.string.isRequired,
+    os: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired,
+    custody: PropTypes.string.isRequired,
+    available: PropTypes.bool.isRequired,
+    active: PropTypes.bool.isRequired,
+    id: PropTypes.number.isRequired,
   })).isRequired,
-  classes:PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
   user: PropTypes.shape({
     id: PropTypes.number.isRequired,
     firstName: PropTypes.string.isRequired,
