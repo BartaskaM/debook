@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const appDir = __dirname + '/app/';
 const buildDir = __dirname + '/app/dist/';
+const path = require('path');
 
 module.exports = {
   entry: appDir + 'index.jsx',
@@ -18,6 +19,7 @@ module.exports = {
     hot: true,
   },
   resolve: {
+    modules: [path.resolve(__dirname, 'app'), 'node_modules'],
     extensions: ['.js', '.jsx'],
   },
   module: {
