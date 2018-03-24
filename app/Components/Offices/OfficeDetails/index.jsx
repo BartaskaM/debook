@@ -29,7 +29,11 @@ class OfficeDetails extends React.Component {
               <Typography variant='display2'><b>Address:</b> {office.address}</Typography>
               <br />
               <span>
-                <Button variant="raised" color="secondary" className={classes.backButton} onClick={() => this.props.history.push('/offices')} >
+                <Button variant="raised"
+                  color="secondary"
+                  className={classes.backButton}
+                  onClick={() => this.props.history.push('/offices')}
+                >
                   BACK TO LIST
                 </Button>
                 {/* TODO: Implement button functionality */}

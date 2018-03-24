@@ -9,14 +9,20 @@ import { withRouter } from 'react-router-dom';
 import Styles from './Styles';
 
 const render = (props) => {
+  const { classes } = props;
   return (
     <Grid item xs={12}>
-      <Paper onClick={() => props.history.push('/offices/' + props.office.id)}>
-        <Typography variant='header'>{props.office.country}</Typography>
-        <Typography variant='header'>{props.office.city}</Typography>
-        <Typography variant='header'>{props.office.address}</Typography>
-        <Typography variant='header'>{props.office.lat}</Typography>
-        <Typography variant='header'>{props.office.lng}</Typography>
+      <Paper className={classes.officePaper}
+        onClick={() => props.history.push('/offices/' + props.office.id)}>
+        <Typography variant='display1'>
+          <Grid container>
+            <Grid item xs>{props.office.country}</Grid>
+            <Grid item xs={2}>{props.office.city}</Grid>
+            <Grid item xs={3}>{props.office.address}</Grid>
+            <Grid item xs={2}>LAT: {props.office.lat}</Grid>
+            <Grid item xs={2}>LNG: {props.office.lng}</Grid>
+          </Grid>
+        </Typography>
       </Paper>
     </Grid>
   );
@@ -24,6 +30,7 @@ const render = (props) => {
 
 render.propTypes = {
   history: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
   office: PropTypes.shape({
     id: PropTypes.number.isRequired,
     country: PropTypes.string.isRequired,

@@ -13,11 +13,12 @@ class Offices extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <Grid container spacing={16} justify='center'>
+        <Grid container spacing={16}>
           {OfficeList.map(office => (
             <OfficeItem key={office.id} office={office} />
           ))}
           <Grid item xs={12}>
+            {/* TODO: Implement button functionality */}
             <Button variant="raised" color="primary" className={classes.addNewButton}>
               ADD NEW
             </Button>

@@ -9,6 +9,9 @@ const Styles = {
     width: 180,
     fontSize: 20,
   },
+  officePaper: {
+    padding: 30,
+  },
 };
 
 export default Styles;
