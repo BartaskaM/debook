@@ -27,24 +27,28 @@ function formHTML(){
     '                <div class="col-md-6 list-unstyled ">'+
     '                    <h1>'+x.name+'</h1>'+
     '                    <div class="row custody "> '+
-    '                            <li><span class="detail-name">Custody of: </span><span class="detail-info">'+x.custody_of+' <i class="fas fa-flag"  style="color:red;"></i></span> </li>'+
-    '                            <li><span class="detail-name">Booked from:</span><span class="detail-info">'+x.booked_from+' </span></li>'+
+    '                    <table>'+
+    '                            <tr><td class="detail-name">Custody of: </td> <td class="detail-info">'+x.custody_of+'<a href="#" data-toggle="tooltip" data-placement="bottom"  title="Request custody update"><i class="fas fa-flag"  style="color:red;"></i></a></td></tr>'+
+    '                            <tr><td class="detail-name">Booked from:</td> <td class="detail-info">'+x.booked_from+' </td></tr>'+
+    '                     </table>'+
     '                    </div>'+
     '                    <hr>'+
     '                    <b>ITEM DETAILS</b>'+
     '                    <hr>'+
     '                    <div class="row details">'+
-    '                                <p><span class="detail-name">ID#: </span> <span class="detail-info">'+x.identification_num+'</span> </p>'+
-    '                                <p><span class="detail-name">Serial number: </span> <span class="detail-info">'+x.serial_num+'</span>  </p>'+
-    '                                <p><span class="detail-name">OS:</span> <span class="detail-info">'+x.os+'</span>  </p>'+
-    '                                <p><span class="detail-name">Group: </span> <span class="detail-info">'+x.group+'</span>  </p>'+
-    '                                <p><span class="detail-name">Subgroup: </span> <span class="detail-info">'+x.subgroup+'</span>  </p>'+
-    '                                <p><span class="detail-name">Description: </span> <span class="detail-info">'+x.description+'</span>  </p>'+
-    '                                <p><span class="detail-name">Check-in due: </span><span class="detail-info">'+x.check_in_due+'</span>  </p>'+
-    '                                <p><span class="detail-name">Location: </span> <span class="detail-info">'+x.location+'</span>  </p>'+
-    '                                <p><span class="detail-name">Purchased on: </span> <span class="detail-info">'+x.purchased+'</span>  </p>'+
-    '                                <p><span class="detail-name">Vendor: </span><span class="detail-info">'+x.vendor+'</span>  </p>'+
-    '                                <p><span class="detail-name">Tax Rate: </span><span class="detail-info">'+x.tax_rate+'</span>  </p>'+                                 
+    '                    <table>'+
+    '                                <tr><td class="detail-name">ID#: </td> <td class="detail-info">'+x.identification_num+'</td> </tr>'+
+    '                                <tr><td class="detail-name">Serial number: </td> <td class="detail-info">'+x.serial_num+'</td>  </tr>'+
+    '                                <tr><td class="detail-name">OS:</td> <td class="detail-info">'+x.os+'</td>  </tr>'+
+    '                                <tr><td class="detail-name">Group: </td> <td class="detail-info">'+x.group+'</td>  </tr>'+
+    '                                <tr><td class="detail-name">Subgroup: </td> <td class="detail-info">'+x.subgroup+'</td>  </tr>'+
+    '                                <tr><td class="detail-name">Description: </td> <td class="detail-info">'+x.description+'</td>  </tr>'+
+    '                                <tr><td class="detail-name">Check-in due: </td><td class="detail-info">'+x.check_in_due+'</td>  </tr>'+
+    '                                <tr><td class="detail-name">Location: </td> <td class="detail-info">'+x.location+'</td>  </tr>'+
+    '                                <tr><td class="detail-name">Purchased on: </td> <td class="detail-info">'+x.purchased+'</td>  </tr>'+
+    '                                <tr><td class="detail-name">Vendor: </td><td class="detail-info">'+x.vendor+'</td>  </tr>'+
+    '                                <tr><td class="detail-name">Tax Rate: </td><td class="detail-info">'+x.tax_rate+'</td>  </tr>'+                                 
+    '                     </table>'+
     '                    </div>'+
     ''+
     '                       '+

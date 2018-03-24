@@ -20,10 +20,9 @@
     margin-left: 1%;
 }
 .detail-name { 
-    width: auto;
+   
     color: grey;
-    display:inline-block;
- 
+    float: left;
    
  }
  .detail-info { 
@@ -31,3 +30,9 @@
     padding-left: 1%;
     float:right;
  }
+ 
+ .row > ul {
+	padding-left: 0 ;
+	list-style-type: none;
+ } 
+ 
