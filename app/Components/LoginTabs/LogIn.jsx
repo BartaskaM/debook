@@ -41,7 +41,7 @@ class LogIn extends React.Component {
   {
     //console.log(e.target.name);
     //console.log(e.target.value);
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({[e.target.name]: e.target.value });
     //console.log(this.state.email);
     //console.log(this.state.password);
   }
@@ -50,13 +50,21 @@ class LogIn extends React.Component {
     for (let i = 0; i < UserLoginData.length; i++) {
       console.log(this.state.email);
       console.log(this.state.password);
-      if (this.state.email === UserLoginData[i].email && this.state.password === UserLoginData[i].password) {
-        console.log('True');
-        this.setState({errorMessage: ''});
-        return;
+      if (this.state.email === UserLoginData[i].email) {
+        if (this.state.password === UserLoginData[i].password)
+        {
+          console.log('True');
+          this.setState({errorMessage: ''});
+          return;
+        }
+        else {
+          console.log('True');
+          this.setState({errorMessage: 'Check if you entered correct password'});
+          return;
+        }
       }
     }
-    this.setState({errorMessage: 'Check if you entered correct email and password'});
+    this.setState({errorMessage: 'Check if you entered correct email'});
     console.log(this.state.errorMessage);
     console.log('False');
     //return false;
