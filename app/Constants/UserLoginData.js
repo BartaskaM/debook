@@ -9,6 +9,6 @@ const UserLoginData = [
     email: 'email@email.com',
     password: '123',
   },
-  ];
+];
       
 export default UserLoginData;

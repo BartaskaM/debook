@@ -21,15 +21,37 @@ class LogIn extends React.Component {
       password: '',
     };
     this.submitLogInForm =  this.submitLogInForm.bind(this);
+    this.inputHandler = this.inputHandler.bind(this);
   }
 
   submitLogInForm(e)
   {
     e.preventDefault();
     console.log('Printing results');
+    this.validateLoginData();
   }
 
+  inputHandler(e)
+  {
+    //console.log(e.target.name);
+    //console.log(e.target.value);
+    this.setState({ [e.target.name]: e.target.value });
+    //console.log(this.state.email);
+    //console.log(this.state.password);
+  }
 
+  validateLoginData() {
+    for (let i = 0; i < UserLoginData.length; i++) {
+      console.log(this.state.email);
+      console.log(this.state.password);
+      if (this.state.email === UserLoginData[i].email && this.state.password === UserLoginData[i].password) {
+        console.log('True');
+        return true;
+      }
+    }
+    console.log('False');
+    return false;
+  }
 
   render() {
     const { classes } = this.props;
@@ -52,7 +74,8 @@ class LogIn extends React.Component {
                   maxLength: '64',
                   required: 'required',
                 }}
-                className={classes.fontSize}/> 
+                className={classes.fontSize}
+                onBlur={this.inputHandler}/> 
               <Typography variant='headline'></Typography>
             </FormControl>
             <FormControl className={classes.signUpFormField}>
@@ -63,7 +86,8 @@ class LogIn extends React.Component {
                   name: 'password',
                   required: 'required',
                 }}
-                className={classes.fontSize}/>
+                className={classes.fontSize}
+                onBlur={this.inputHandler}/>
             </FormControl>
             <FormControl className={classes.signUpFormField}>
               <Button
