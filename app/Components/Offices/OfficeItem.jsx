@@ -9,18 +9,18 @@ import { withRouter } from 'react-router-dom';
 import Styles from './Styles';
 
 const render = (props) => {
-  const { classes } = props;
+  const { classes, office } = props;
   return (
     <Grid item xs={12}>
       <Paper className={classes.officePaper}
-        onClick={() => props.history.push('/offices/' + props.office.id)}>
+        onClick={() => props.history.push(`/offices/${office.id}`)}>
         <Typography variant='display1'>
           <Grid container>
-            <Grid item xs>{props.office.country}</Grid>
-            <Grid item xs={2}>{props.office.city}</Grid>
-            <Grid item xs={3}>{props.office.address}</Grid>
-            <Grid item xs={2}>LAT: {props.office.lat}</Grid>
-            <Grid item xs={2}>LNG: {props.office.lng}</Grid>
+            <Grid item xs>{office.country}</Grid>
+            <Grid item xs={2}>{office.city}</Grid>
+            <Grid item xs={3}>{office.address}</Grid>
+            <Grid item xs={2}>LAT: {office.lat}</Grid>
+            <Grid item xs={2}>LNG: {office.lng}</Grid>
           </Grid>
         </Typography>
       </Paper>
