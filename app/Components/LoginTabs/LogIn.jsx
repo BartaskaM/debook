@@ -10,11 +10,25 @@ import {
 } from 'material-ui';
 import Styles from './Styles';
 import PropTypes from 'prop-types';
+import UserLoginData from '../../Constants/UserLoginData';
 
 class LogIn extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      email: '',
+      password: '',
+    };
+    this.submitLogInForm =  this.submitLogInForm.bind(this);
   }
+
+  submitLogInForm(e)
+  {
+    e.preventDefault();
+    console.log('Printing results');
+  }
+
 
 
   render() {
@@ -27,7 +41,7 @@ class LogIn extends React.Component {
         <Typography variant='headline' align='center'>
           Enter your login data
         </Typography>
-        <form method='POST'>
+        <form onSubmit={this.submitLogInForm}>
           <FormGroup>
             <FormControl className={classes.signUpFormField}>
               <InputLabel  className={classes.fontSize}>Email</InputLabel>
@@ -66,5 +80,8 @@ class LogIn extends React.Component {
     );
   }
 }
+LogIn.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
 export default withStyles(Styles)(LogIn);
