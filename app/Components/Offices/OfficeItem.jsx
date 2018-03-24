@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 
 import Styles from './Styles';
 
-const render = (props) => {
+const OfficeItem = (props) => {
   const { classes, office } = props;
   return (
     <Grid item xs={12}>
@@ -28,7 +28,7 @@ const render = (props) => {
   );
 };
 
-render.propTypes = {
+OfficeItem.propTypes = {
   history: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   office: PropTypes.shape({
@@ -42,4 +42,4 @@ render.propTypes = {
 };
 
 
-export default withStyles(Styles)(withRouter(render));
+export default withStyles(Styles)(withRouter(OfficeItem));
