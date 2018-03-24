@@ -19,15 +19,21 @@ class LogIn extends React.Component {
     this.state = {
       email: '',
       password: '',
+      errorMessage: '',
     };
     this.submitLogInForm =  this.submitLogInForm.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
+    this.validateLoginData = this.validateLoginData.bind(this);
   }
 
   submitLogInForm(e)
   {
     e.preventDefault();
-    console.log('Printing results');
+    const results = {
+      email: this.state.email,
+      password: this.state.password,
+    };
+    console.log(results);
     this.validateLoginData();
   }
 
@@ -46,11 +52,14 @@ class LogIn extends React.Component {
       console.log(this.state.password);
       if (this.state.email === UserLoginData[i].email && this.state.password === UserLoginData[i].password) {
         console.log('True');
-        return true;
+        this.setState({errorMessage: ''});
+        return;
       }
     }
+    this.setState({errorMessage: 'Check if you entered correct email and password'});
+    console.log(this.state.errorMessage);
     console.log('False');
-    return false;
+    //return false;
   }
 
   render() {
@@ -89,6 +98,10 @@ class LogIn extends React.Component {
                 className={classes.fontSize}
                 onBlur={this.inputHandler}/>
             </FormControl>
+            <Typography variant='headline' className={classes.errorMessage}>
+              Blah blah blah
+              {this.state.errorMessage}
+            </Typography>
             <FormControl className={classes.signUpFormField}>
               <Button
                 type='submit'
