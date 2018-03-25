@@ -10,7 +10,7 @@ import {
 } from 'material-ui';
 import Styles from './Styles';
 import PropTypes from 'prop-types';
-import UserLoginData from '../../Constants/UserLoginData';
+import UserLoginData from 'Constants/UserLoginData';
 
 class LogIn extends React.Component {
   constructor(props) {
