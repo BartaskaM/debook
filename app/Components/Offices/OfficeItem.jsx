@@ -6,24 +6,26 @@ import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import { withRouter } from 'react-router-dom';
 
+import { ListItem } from 'material-ui/List';
+
 import Styles from './Styles';
 
-const OfficeItem = (props) => {
-  const { classes, office } = props;
+const OfficeItem = ({ classes, office, history }) => {
   return (
     <Grid item xs={12}>
-      <Paper className={classes.officePaper}
-        onClick={() => props.history.push(`/offices/${office.id}`)}>
-        <Typography variant='display1'>
-          <Grid container>
-            <Grid item xs>{office.country}</Grid>
-            <Grid item xs={2}>{office.city}</Grid>
-            <Grid item xs={3}>{office.address}</Grid>
-            <Grid item xs={2}>LAT: {office.lat}</Grid>
-            <Grid item xs={2}>LNG: {office.lng}</Grid>
-          </Grid>
-        </Typography>
-      </Paper>
+      <ListItem button onClick={() => history.push(`/offices/${office.id}`)}>
+        <Paper className={classes.officePaper}>
+          <Typography variant='display1'>
+            <Grid container>
+              <Grid item xs>{office.country}</Grid>
+              <Grid item xs={2}>{office.city}</Grid>
+              <Grid item xs={3}>{office.address}</Grid>
+              <Grid item xs={2}>LAT: {office.lat}</Grid>
+              <Grid item xs={2}>LNG: {office.lng}</Grid>
+            </Grid>
+          </Typography>
+        </Paper>
+      </ListItem>
     </Grid>
   );
 };

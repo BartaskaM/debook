@@ -9,8 +9,12 @@ const Styles = {
     width: 180,
     fontSize: 20,
   },
+  officeList: {
+    width: '100%',
+  },
   officePaper: {
     padding: 30,
+    width: '100%',
   },
 };
 
