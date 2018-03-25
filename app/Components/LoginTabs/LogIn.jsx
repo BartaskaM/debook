@@ -11,7 +11,6 @@ import {
 import Styles from './Styles';
 import PropTypes from 'prop-types';
 import UserLoginData from 'Constants/UserLoginData';
-import MainTabs from '../MainTabs';
 import { Redirect } from 'react-router-dom';
 
 class Login extends React.Component {
@@ -45,22 +44,23 @@ class Login extends React.Component {
   }
 
   validateLoginData() {
-    for (let i = 0; i < UserLoginData.length; i++) {
-      if (this.state.email === UserLoginData[i].email) {
-        if (this.state.password === UserLoginData[i].password)
-        {
-          this.setState({errorMessage: ''});
-          this.setState({redirect: true});
-          return true;
-        }
-        else {
-          this.setState({errorMessage: 'Check if you entered correct password'});
-          return false;
-        }
+    const userLoginData = (UserLoginData.find(x => x.email === this.state.email));
+    if (userLoginData != null)
+    {
+      if (userLoginData.password === this.state.password) {
+        this.setState({errorMessage: ''});
+        this.setState({redirect: true});
+        return true;
+      }
+      else {
+        this.setState({errorMessage: 'Check if you entered correct password'});
+        return false;
       }
     }
-    this.setState({errorMessage: 'Check if you entered correct email'});
-    return false;
+    else {
+      this.setState({errorMessage: 'Check if you entered correct email'});
+      return false;
+    }
   }
 
   render() {
