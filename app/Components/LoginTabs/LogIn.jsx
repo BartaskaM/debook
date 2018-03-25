@@ -11,14 +11,17 @@ import {
 import Styles from './Styles';
 import PropTypes from 'prop-types';
 import UserLoginData from 'Constants/UserLoginData';
+import MainTabs from '../MainTabs';
+import { Redirect } from 'react-router-dom';
 
-class LogIn extends React.Component {
+class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
       password: '',
       errorMessage: '',
+      redirect: false,
     };
     this.submitLogInForm =  this.submitLogInForm.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
@@ -47,19 +50,25 @@ class LogIn extends React.Component {
         if (this.state.password === UserLoginData[i].password)
         {
           this.setState({errorMessage: ''});
-          return;
+          this.setState({redirect: true});
+          return true;
         }
         else {
           this.setState({errorMessage: 'Check if you entered correct password'});
-          return;
+          return false;
         }
       }
     }
     this.setState({errorMessage: 'Check if you entered correct email'});
+    return false;
   }
 
   render() {
     const { classes } = this.props;
+    const { redirect } = this.state;
+    if (redirect) {
+      return (<Redirect to='/main'/>);
+    }
     return (
       <div>
         <Typography variant='display3' align='center'>
@@ -112,8 +121,8 @@ class LogIn extends React.Component {
     );
   }
 }
-LogIn.propTypes = {
+Login.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(Styles)(LogIn);
+export default withStyles(Styles)(Login);

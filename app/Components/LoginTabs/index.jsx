@@ -13,7 +13,7 @@ import { Tab } from 'material-ui/Tabs';
 import Styles from './Styles';
 import TabContainer from './TabContainer';
 import SignUp from './SignUp';
-import LogIn from './LogIn';
+import Login from './Login';
 
 
 class LoginTabs extends React.Component {
@@ -64,7 +64,7 @@ class LoginTabs extends React.Component {
                 onChangeIndex={this.handleTabChange}
               >
                 <TabContainer dir={theme.direction}>
-                 <LogIn changeTab={this.handleTabChange} />
+                  <Login changeTab={this.handleTabChange} />
                 </TabContainer>
                 <TabContainer dir={theme.direction}>
                   <SignUp changeTab={this.handleTabChange} />
