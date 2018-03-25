@@ -6,7 +6,7 @@ import {withStyles} from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 import { styles } from './Styles';
 
-const Row=(props) => {
+const Row = (props) => {
   function handleChange(e){
     props.changeInfo(props.label, e.target.value);
   }
@@ -20,14 +20,14 @@ const Row=(props) => {
       return <Grid item sm={10}>{props.value}</Grid>;
     }
   }
-  const {classes}=props;
+  const {classes} = props;
   return (<Grid container item>
     <Grid item sm={2} className={classes.label}>{props.label}:</Grid>
     {renderSecondField()}
   </Grid>);
 };
 
-Row.propTypes={
+Row.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
