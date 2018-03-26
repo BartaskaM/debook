@@ -26,7 +26,7 @@ const Offices = [
   {
     id: 4,
     country: 'Canada',
-    city: 'toronto',
+    city: 'Toronto',
     address: '36 Toronto Street Suite 260',
     lat: 43.650579,
     lng: -79.376536,

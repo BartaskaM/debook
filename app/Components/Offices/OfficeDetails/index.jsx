@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Grid,
-  Paper,
-  Typography,
-  Button,
-} from 'material-ui';
+import Grid from 'material-ui/Grid';
+import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
+import { withRouter } from 'react-router-dom';
 
 import Styles from './Styles';
 import Map from './Map';
@@ -27,11 +26,15 @@ class OfficeDetails extends React.Component {
               <br />
               <Typography variant='display2'><b>Address:</b> {office.address}</Typography>
               <br />
-              {/* TODO: Implement button functionality */}
               <span>
-                <Button variant="raised" color="secondary" className={classes.backButton}>
+                <Button variant="raised"
+                  color="secondary"
+                  className={classes.backButton}
+                  onClick={() => this.props.history.push('/offices')}
+                >
                   BACK TO LIST
                 </Button>
+                {/* TODO: Implement button functionality */}
                 <Button variant="raised" color="primary" className={classes.editButton}>
                   EDIT
                 </Button>
@@ -58,8 +61,9 @@ class OfficeDetails extends React.Component {
 }
 
 OfficeDetails.propTypes = {
+  history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(Styles)(OfficeDetails);
+export default withStyles(Styles)(withRouter(OfficeDetails));
