@@ -69,8 +69,4 @@ function formHTML(){
   return htmlString;
 }
 
-function renderHTML(){
-  document.querySelector('.item-container').innerHTML=formHTML();
-}
-document.onload=renderHTML();
-
+(function renderHTMl(){document.querySelector('.item-container').innerHTML=formHTML();})();
