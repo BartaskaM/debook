@@ -1,13 +1,13 @@
 import React from 'react';
+import Input from 'material-ui/Input';
+import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
+import { InputLabel } from 'material-ui/Input';
 import {
-  Input,
-  Typography,
-  Button,
   FormControl,
   FormGroup,
-  InputLabel,
-  withStyles,
-} from 'material-ui';
+} from 'material-ui/Form';
+import { withStyles } from 'material-ui/styles';
 import Styles from './Styles';
 import PropTypes from 'prop-types';
 import UserLoginData from 'Constants/UserLoginData';
