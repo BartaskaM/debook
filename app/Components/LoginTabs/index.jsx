@@ -64,7 +64,7 @@ class LoginTabs extends React.Component {
                 onChangeIndex={this.handleTabChange}
               >
                 <TabContainer dir={theme.direction}>
-                  <Login changeTab={this.handleTabChange} />
+                  <Login/>
                 </TabContainer>
                 <TabContainer dir={theme.direction}>
                   <SignUp changeTab={this.handleTabChange} />

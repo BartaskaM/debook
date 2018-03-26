@@ -22,13 +22,12 @@ class Login extends React.Component {
       errorMessage: '',
       redirect: false,
     };
-    this.submitLogInForm =  this.submitLogInForm.bind(this);
+    this.submitLogInForm = this.submitLogInForm.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
     this.validateLoginData = this.validateLoginData.bind(this);
   }
 
-  submitLogInForm(e)
-  {
+  submitLogInForm(e) {
     e.preventDefault();
     const results = {
       email: this.state.email,
@@ -38,27 +37,25 @@ class Login extends React.Component {
     this.validateLoginData();
   }
 
-  inputHandler(e)
-  {
-    this.setState({[e.target.name]: e.target.value });
+  inputHandler(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   validateLoginData() {
     const userLoginData = (UserLoginData.find(x => x.email === this.state.email));
-    if (userLoginData != null)
-    {
+    if (userLoginData != null) {
       if (userLoginData.password === this.state.password) {
-        this.setState({errorMessage: ''});
-        this.setState({redirect: true});
+        this.setState({ errorMessage: '' });
+        this.setState({ redirect: true });
         return true;
       }
       else {
-        this.setState({errorMessage: 'Check if you entered correct password'});
+        this.setState({ errorMessage: 'Check if you entered correct password' });
         return false;
       }
     }
     else {
-      this.setState({errorMessage: 'Check if you entered correct email'});
+      this.setState({ errorMessage: 'Check if you entered correct email' });
       return false;
     }
   }
@@ -67,7 +64,7 @@ class Login extends React.Component {
     const { classes } = this.props;
     const { redirect } = this.state;
     if (redirect) {
-      return (<Redirect to='/main'/>);
+      return (<Redirect to='/main' />);
     }
     return (
       <div>
@@ -80,7 +77,7 @@ class Login extends React.Component {
         <form onSubmit={this.submitLogInForm}>
           <FormGroup>
             <FormControl className={classes.signUpFormField}>
-              <InputLabel  className={classes.fontSize}>Email</InputLabel>
+              <InputLabel className={classes.fontSize}>Email</InputLabel>
               <Input
                 inputProps={{
                   type: 'email',
@@ -89,7 +86,7 @@ class Login extends React.Component {
                   required: 'required',
                 }}
                 className={classes.fontSize}
-                onBlur={this.inputHandler}/> 
+                onBlur={this.inputHandler} />
               <Typography variant='headline'></Typography>
             </FormControl>
             <FormControl className={classes.signUpFormField}>
@@ -101,7 +98,7 @@ class Login extends React.Component {
                   required: 'required',
                 }}
                 className={classes.fontSize}
-                onBlur={this.inputHandler}/>
+                onBlur={this.inputHandler} />
             </FormControl>
             <Typography variant='headline' className={classes.errorMessage}>
               {this.state.errorMessage}
