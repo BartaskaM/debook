@@ -16,3 +16,9 @@ export const addOfficeFilter = (filter) => {
 export const removeOfficeFilter = (filterIndex) => {
   return { type: 'REMOVE_OFFICE_FILTER', payload: filterIndex };
 };
+export const setShowAvailable = (bool) => {
+  return { type: 'SET_SHOW_AVAILABLE', payload: bool };
+};
+export const setShowUnavailable = (bool) => {
+  return { type: 'SET_SHOW_UNAVAILABLE', payload: bool };
+};

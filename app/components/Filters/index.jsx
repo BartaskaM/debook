@@ -10,6 +10,11 @@ import {
   FormControlLabel,
 } from 'material-ui/Form';
 import Checkbox from 'material-ui/Checkbox';
+import Drawer from 'material-ui/Drawer';
+import { withStyles } from 'material-ui/styles';
+import Styles from './Styles';
+import Divider from 'material-ui/Divider';
+
 class Filters extends React.Component{
   constructor(props){
     super(props);
@@ -80,13 +85,49 @@ class Filters extends React.Component{
     );
   }
 
-  render() {
-    
+  renderAvailabilityFilter(){
     return (
-      <FormControl>
-        {this.renderBrandFilter()}
-        {this.renderOfficeFilter()}
-      </FormControl>
+      <div>
+        <FormLabel >Availability</FormLabel>
+        <FormGroup>
+          <FormControlLabel 
+            control={
+              <Checkbox
+                onChange={() => this.props.setShowAvailable(!this.props.showAvailable)}
+                checked={this.props.showAvailable}
+                value='Available'
+              />
+            }
+            label='Available'
+          />
+          <FormControlLabel 
+            control={
+              <Checkbox
+                onChange={() => this.props.setShowUnavailable(!this.props.showUnavailable)}
+                checked={this.props.showUnavailable}
+                value='Unavailable'
+              />
+            }
+            label='Unavailable'
+          />
+        </FormGroup>
+      </div>
+    );
+  }
+
+  render() {
+    const { classes } = this.props;
+    return (
+      <Drawer variant="permanent" className={classes.root}>
+        <div className={classes.toolbar} />
+        <FormControl className={classes.toolbar}>
+          {this.renderBrandFilter()}
+          <Divider/>
+          {this.renderOfficeFilter()}
+          <Divider/>
+          {this.renderAvailabilityFilter()}
+        </FormControl>
+      </Drawer>
     );
   }
 }
@@ -108,12 +149,19 @@ Filters.propTypes = {
   officeFilter: PropTypes.array.isRequired,
   addOfficeFilter: PropTypes.func.isRequired,
   removeOfficeFilter: PropTypes.func.isRequired,
+  showAvailable: PropTypes.bool.isRequired,
+  showUnavailable: PropTypes.bool.isRequired,
+  setShowUnavailable: PropTypes.func.isRequired,
+  setShowAvailable: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 const mapStateToProps = state => {
   return {
     devices: state.devices.devices,
     brandFilter: state.devices.brandFilter,
     officeFilter: state.devices.officeFilter,
+    showAvailable: state.devices.showAvailable,
+    showUnavailable: state.devices.showUnavailable,
   };
 };
-export default connect(mapStateToProps,devicesActions)(Filters);
+export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Filters));

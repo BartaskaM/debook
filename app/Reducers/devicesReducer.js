@@ -3,6 +3,8 @@ const defaultState = {
   modelFilter: '',
   brandFilter: [],
   officeFilter: [],
+  showAvailable: false,
+  showUnavailable: false,
 };
 
 export default (state = defaultState, action) => {
@@ -33,6 +35,12 @@ export default (state = defaultState, action) => {
       newOffices.splice(action.payload, 1);
       console.log(newOffices);
       return {...state, officeFilter: newOffices};
+    }
+    case 'SET_SHOW_AVAILABLE': {
+      return {...state, showAvailable: action.payload};
+    }
+    case 'SET_SHOW_UNAVAILABLE': {
+      return {...state, showUnavailable: action.payload};
     }
     default: return state;
   }

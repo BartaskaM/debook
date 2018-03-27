@@ -151,28 +151,26 @@ class Header extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.root}>
-        <AppBar position="static" color='inherit'>
-          <Toolbar>
-            <img
-              className={classes.leftMargin}
-              src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'}
-              height="40px"
-              width='40px'
-            />
-            <Typography variant="title" color="inherit" className={classes.text}>
+      <AppBar position="absolute" color='inherit' className={classes.root}>
+        <Toolbar>
+          <img
+            className={classes.leftMargin}
+            src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'}
+            height="40px"
+            width='40px'
+          />
+          <Typography variant="title" color="inherit" className={classes.text}>
               DEVBRIDGE <br /> GROUP
-            </Typography>
+          </Typography>
 
-            {this.renderNavigationBarLinks()}
+          {this.renderNavigationBarLinks()}
 
-            <div className={classes.rightMenu}>
-              {this.renderSearchForm()}
-              {this.renderProfileMenu()}
-            </div>
-          </Toolbar>
-        </AppBar>
-      </div >
+          <div className={classes.rightMenu}>
+            {this.renderSearchForm()}
+            {this.renderProfileMenu()}
+          </div>
+        </Toolbar>
+      </AppBar>
     );
   }
 }
