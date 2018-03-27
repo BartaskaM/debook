@@ -10,7 +10,7 @@ import Filters from './Filters';
 
 
 class MainTabs extends React.Component {
-  componentWillMount(){
+  componentDidMount(){
     //TODO: Fetch devices
     this.props.setDevices(Devices);
   }
