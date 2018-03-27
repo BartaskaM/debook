@@ -2,6 +2,7 @@ const defaultState = {
   devices: [],
   modelFilter: '',
   brandFilter: [],
+  officeFilter: [],
 };
 
 export default (state = defaultState, action) => {
@@ -19,8 +20,19 @@ export default (state = defaultState, action) => {
       return {...state, brandFilter: [...state.brandFilter,action.payload]};
     }
     case 'REMOVE_BRAND_FILTER': {
-      const newBrands = state.brandFilter.splice(action.payload);
+      const newBrands = [...state.brandFilter];
+      newBrands.splice(action.payload, 1);
+      console.log(newBrands);
       return {...state, brandFilter: newBrands};
+    }
+    case 'ADD_OFFICE_FILTER': {
+      return {...state, officeFilter: [...state.officeFilter,action.payload]};
+    }
+    case 'REMOVE_OFFICE_FILTER': {
+      const newOffices = [...state.officeFilter];
+      newOffices.splice(action.payload, 1);
+      console.log(newOffices);
+      return {...state, officeFilter: newOffices};
     }
     default: return state;
   }

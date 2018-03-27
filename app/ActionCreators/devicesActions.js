@@ -10,3 +10,9 @@ export const addBrandFilter = (filter) => {
 export const removeBrandFilter = (filterIndex) => {
   return { type: 'REMOVE_BRAND_FILTER', payload: filterIndex };
 };
+export const addOfficeFilter = (filter) => {
+  return { type: 'ADD_OFFICE_FILTER', payload: filter };
+};
+export const removeOfficeFilter = (filterIndex) => {
+  return { type: 'REMOVE_OFFICE_FILTER', payload: filterIndex };
+};
