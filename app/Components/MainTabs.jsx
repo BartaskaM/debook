@@ -6,7 +6,6 @@ import DeviceList from './DeviceList';
 import Devices from 'Constants/Devices';
 import User from 'Constants/User';
 import * as devicesActions from 'ActionCreators/devicesActions';
-import Filters from './Filters';
 
 
 class MainTabs extends React.Component {
@@ -17,7 +16,6 @@ class MainTabs extends React.Component {
   render() {
     return( 
       <div>
-        <Filters />
         <DeviceList user={User}/>
       </div>);
   }
