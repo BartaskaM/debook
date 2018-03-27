@@ -15,7 +15,7 @@ const Devices =
         brand: 'Sony',
         model: 'Ipad Pro 10.5", 256GB',
         os: 'macOS High Sierra (version 10.13)',
-        location: 'Kawns',
+        location: 'Murrica',
         custody: 'Bronius',
         available: false,
         active: true,

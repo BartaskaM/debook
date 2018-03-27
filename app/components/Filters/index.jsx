@@ -118,7 +118,7 @@ class Filters extends React.Component{
   render() {
     const { classes } = this.props;
     return (
-      <Drawer variant="permanent" className={classes.root}>
+      <Drawer variant="permanent" className={classes.root} classes={{paper: classes.drawerPaper}}>
         <div className={classes.toolbar} />
         <FormControl className={classes.toolbar}>
           {this.renderBrandFilter()}
