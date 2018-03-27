@@ -1,13 +1,28 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import DeviceList from './DeviceList';
-import Devices from '../Constants/Devices';
-import User from '../Constants/User';
+import Devices from 'Constants/Devices';
+import User from 'Constants/User';
+import * as devicesActions from 'ActionCreators/devicesActions';
+import Filters from './Filters';
+
 
 class MainTabs extends React.Component {
+  componentDidMount(){
+    //TODO: Fetch devices
+    this.props.setDevices(Devices);
+  }
   render() {
-    return <DeviceList devices={Devices} user={User}/>;
+    return( 
+      <div>
+        <Filters />
+        <DeviceList user={User}/>
+      </div>);
   }
 }
-
-export default MainTabs;
+MainTabs.propTypes = {
+  setDevices: PropTypes.func.isRequired,
+};
+export default connect(null,devicesActions)(MainTabs);

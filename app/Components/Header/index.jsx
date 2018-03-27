@@ -1,25 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Menu,
-  Divider,
-  Select,
-  Input,
-} from 'material-ui';
-import { InputLabel } from 'material-ui/Input';
+import Select from 'material-ui/Select';
+import Divider from 'material-ui/Divider';
+import IconButton from 'material-ui/IconButton';
+import Typography from 'material-ui/Typography';
+import Toolbar from 'material-ui/Toolbar';
+import AppBar from 'material-ui/AppBar';
+import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
-import { MenuItem } from 'material-ui/Menu';
+import Menu, { MenuItem } from 'material-ui/Menu';
 import { AccountCircle } from 'material-ui-icons';
 
 import Styles from './Styles';
 import Categories from '../../Constants/Categories';
 import LinkButton from './LinkButton';
+import { connect } from 'react-redux';
+import * as devicesActions from '../../ActionCreators/devicesActions';
 
 class Header extends React.Component {
   constructor() {
@@ -78,6 +76,8 @@ class Header extends React.Component {
           <InputLabel htmlFor="search" className={classes.fontSize}>Search</InputLabel>
           <Input
             className={classes.input}
+            value={this.props.modelFilter}
+            onChange={(e) => this.props.setModelFilter(e.target.value)}
             inputProps={{
               name: 'search',
               id: 'search',
@@ -179,6 +179,13 @@ class Header extends React.Component {
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
+  setModelFilter: PropTypes.func.isRequired,
+  modelFilter: PropTypes.string.isRequired,
 };
 
-export default withStyles(Styles)(Header);
+const mapStateToProps = state => {
+  return {
+    modelFilter: state.devices.modelFilter,
+  };
+};
+export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Header));
