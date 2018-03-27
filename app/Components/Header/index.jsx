@@ -76,7 +76,8 @@ class Header extends React.Component {
           <InputLabel htmlFor="search" className={classes.fontSize}>Search</InputLabel>
           <Input
             className={classes.input}
-            onChange={(e)=>this.props.setModelFilter(e.target.value)}
+            value={this.props.modelFilter}
+            onChange={(e) => this.props.setModelFilter(e.target.value)}
             inputProps={{
               name: 'search',
               id: 'search',
@@ -179,6 +180,12 @@ class Header extends React.Component {
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
   setModelFilter: PropTypes.func.isRequired,
+  modelFilter: PropTypes.string.isRequired,
 };
 
-export default connect(null, devicesActions)(withStyles(Styles)(Header));
+const mapStateToProps = state => {
+  return {
+    modelFilter: state.devices.modelFilter,
+  };
+};
+export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Header));
