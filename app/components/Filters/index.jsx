@@ -24,6 +24,10 @@ class Filters extends React.Component{
     this.handleBrandChange = this.handleBrandChange.bind(this);
     this.handleOfficeChange = this.handleOfficeChange.bind(this);
   }
+
+  componentWillUnmount(){
+    this.props.resetFilters();
+  }
   handleBrandChange(brand){
     const indexOfBrand = this.props.brandFilter.indexOf(brand);
     if(indexOfBrand === -1){
