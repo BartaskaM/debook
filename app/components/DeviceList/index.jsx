@@ -18,6 +18,7 @@ class DeviceList extends React.Component{
     };
     this.renderDevices = this.renderDevices.bind(this);
     this.handleCheckClick = this.handleCheckClick.bind(this);
+    this.renderDevices = this.renderDevices.bind(this);
   }
 
   handleCheckClick(deviceId){
@@ -36,46 +37,68 @@ class DeviceList extends React.Component{
     this.setState({devices}); 
   }
 
-  renderDevices(classes){
-    return this.state.devices
-      .filter(device => device.model.toLowerCase().includes(this.props.modelFilter.toLowerCase()))
-      .map((device, index)=>{
-        return (
+  filterDevices(){
+    let devicesToRender = this.state.devices
+      .filter(device => device.model.toLowerCase().includes(this.props.modelFilter.toLowerCase()));
+    if(this.props.brandFilter.length > 0)
+    {
+      devicesToRender = devicesToRender.filter(device => 
+        this.props.brandFilter.includes(device.brand));
+    }
+    if(this.props.officeFilter.length > 0){
+      devicesToRender = devicesToRender.filter(device => 
+        this.props.officeFilter.includes(device.location));
+    }
+    if(this.props.showAvailable != this.props.showUnavailable)
+    {
+      if(this.props.showAvailable){
+        devicesToRender = devicesToRender.filter(device => device.available);
+      }
+      if(this.props.showUnavailable){
+        devicesToRender = devicesToRender.filter(device => !device.available);
+      }
+    }
+    return devicesToRender;
+  }
+
+  renderDevices(classes){      
+    return this.filterDevices().map((device, index)=>{
+      return (
         //Replace list with device component
-          <Grid item xs={4}key={index}>
-            <Paper>
-              <Link to={`/devices/${device.id.toString()}`}>
-                <div>
-                  <ul>
-                    <li>Id: {device.id}</li>
-                    <li>Brand: {device.brand}</li>
-                    <li>Model: {device.model}</li>
-                    <li>OS: {device.os}</li>
-                    <li>Location: {device.location}</li>
-                    <li>Custody: {device.custody}</li>
-                    <li>Available: {device.available.toString()}</li>
-                    <li>Active: {device.active.toString()}</li>
-                  </ul>
-                </div>
-              </Link>
-              <Button 
-                variant='raised'
-                disabled={
-                  device.available ? false : device.custody == (this.props.user.id) ? false : true
-                } 
-                color={device.available ? 'primary' : 'secondary'} 
-                onClick={()=>this.handleCheckClick(device.id)}>
-                <Plus className={classes.leftIcon}/>
-                {device.available ?
-                  'Book device' : 
-                  device.custody == (this.props.user.id) ? 
-                    'Return device' :
-                    'Device is booked'}
-              </Button>
-            </Paper>
-          </Grid>
-        );
-      });
+        <Grid item xs={4}key={index}>
+          <Paper>
+            <Link to={`/devices/${device.id.toString()}`}>
+              <div>
+                <ul>
+                  <li>Id: {device.id}</li>
+                  <li>Brand: {device.brand}</li>
+                  <li>Model: {device.model}</li>
+                  <li>OS: {device.os}</li>
+                  <li>Location: {device.location}</li>
+                  <li>Custody: {device.custody}</li>
+                  <li>Available: {device.available.toString()}</li>
+                  <li>Active: {device.active.toString()}</li>
+                </ul>
+              </div>
+            </Link>
+            <Button 
+              variant='raised'
+              disabled={
+                device.available ? false : device.custody == (this.props.user.id) ? false : true
+              } 
+              color={device.available ? 'primary' : 'secondary'} 
+              onClick={()=>this.handleCheckClick(device.id)}>
+              <Plus className={classes.leftIcon}/>
+              {device.available ?
+                'Book device' : 
+                device.custody == (this.props.user.id) ? 
+                  'Return device' :
+                  'Device is booked'}
+            </Button>
+          </Paper>
+        </Grid>
+      );
+    });
   }
 
   render(){
@@ -109,11 +132,19 @@ DeviceList.propTypes = {
     slack: PropTypes.string.isRequired,
   }),
   modelFilter: PropTypes.string.isRequired,
+  brandFilter: PropTypes.array.isRequired,
+  officeFilter: PropTypes.array.isRequired,
+  showAvailable: PropTypes.bool.isRequired,
+  showUnavailable: PropTypes.bool.isRequired,
 };
 const mapStateToProps = state => {
   return {
     devices: state.devices.devices,
     modelFilter: state.devices.modelFilter,
+    brandFilter: state.devices.brandFilter,
+    officeFilter: state.devices.officeFilter,
+    showAvailable: state.devices.showAvailable,
+    showUnavailable: state.devices.showUnavailable,
   };
 };
 export default connect(mapStateToProps, null)(withStyles(Styles)(DeviceList));

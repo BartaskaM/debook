@@ -2,7 +2,7 @@ const Devices =
     [
       {
         id: 1,
-        brand: 'Samsung',
+        brand: 'Huawei',
         model: 'SM-G930F',
         os: 'Android 7.0',
         location: 'Wilno',
@@ -12,10 +12,10 @@ const Devices =
       },
       {
         id: 2,
-        brand: 'Apple',
+        brand: 'Sony',
         model: 'Ipad Pro 10.5", 256GB',
         os: 'macOS High Sierra (version 10.13)',
-        location: 'Kawns',
+        location: 'Murrica',
         custody: 'Bronius',
         available: false,
         active: true,
