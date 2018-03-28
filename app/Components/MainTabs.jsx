@@ -16,7 +16,7 @@ class MainTabs extends React.Component {
   render() {
     return( 
       <div>
-        <DeviceList user={User}/>
+        <DeviceList user={User[0]}/>
       </div>);
   }
 }

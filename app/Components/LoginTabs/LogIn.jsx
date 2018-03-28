@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import Input from 'material-ui/Input';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
@@ -9,9 +12,8 @@ import {
 } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
 import Styles from './Styles';
-import PropTypes from 'prop-types';
-import UserLoginData from 'Constants/UserLoginData';
-import { Redirect } from 'react-router-dom';
+import UserLoginData from 'Constants/User';
+import * as auth from 'ActionCreators/authActions';
 
 class Login extends React.Component {
   constructor(props) {
@@ -20,13 +22,17 @@ class Login extends React.Component {
       email: '',
       password: '',
       errorMessage: '',
-      redirect: false,
     };
     this.submitLogInForm = this.submitLogInForm.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
     this.validateLoginData = this.validateLoginData.bind(this);
   }
-
+  
+  componentWillMount(){
+    if(Object.keys(this.props.user).length !== 0){
+      this.props.history.push('main');
+    }
+  }
   submitLogInForm(e) {
     e.preventDefault();
     const results = {
@@ -45,27 +51,20 @@ class Login extends React.Component {
     const userLoginData = (UserLoginData.find(x => x.email === this.state.email));
     if (userLoginData != null) {
       if (userLoginData.password === this.state.password) {
-        this.setState({ errorMessage: '' });
-        this.setState({ redirect: true });
-        return true;
+        this.props.setUserInfo(userLoginData);
+        this.props.history.push('/main');
       }
       else {
-        this.setState({ errorMessage: 'Check if you entered correct password' });
-        return false;
+        this.setState({ errorMessage: 'Check your credentials!' });
       }
     }
     else {
-      this.setState({ errorMessage: 'Check if you entered correct email' });
-      return false;
+      this.setState({ errorMessage: 'Check your credentials!' });
     }
   }
 
   render() {
     const { classes } = this.props;
-    const { redirect } = this.state;
-    if (redirect) {
-      return (<Redirect to='/main' />);
-    }
     return (
       <div>
         <Typography variant='display3' align='center'>
@@ -86,7 +85,7 @@ class Login extends React.Component {
                   required: 'required',
                 }}
                 className={classes.fontSize}
-                onBlur={this.inputHandler} />
+                onChange={this.inputHandler} />
               <Typography variant='headline'></Typography>
             </FormControl>
             <FormControl className={classes.signUpFormField}>
@@ -98,7 +97,7 @@ class Login extends React.Component {
                   required: 'required',
                 }}
                 className={classes.fontSize}
-                onBlur={this.inputHandler} />
+                onChange={this.inputHandler} />
             </FormControl>
             <Typography variant='headline' className={classes.errorMessage}>
               {this.state.errorMessage}
@@ -120,6 +119,12 @@ class Login extends React.Component {
 }
 Login.propTypes = {
   classes: PropTypes.object.isRequired,
+  setUserInfo: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
-export default withStyles(Styles)(Login);
+const mapStateToProps = state => ({
+  user: state.auth.user,
+});
+export default withRouter(connect(mapStateToProps,auth)(withStyles(Styles)(Login)));
