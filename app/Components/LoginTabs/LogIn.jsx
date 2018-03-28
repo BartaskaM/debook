@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import Input from 'material-ui/Input';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
@@ -9,11 +12,8 @@ import {
 } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
 import Styles from './Styles';
-import PropTypes from 'prop-types';
 import UserLoginData from 'Constants/User';
-import { connect } from 'react-redux';
 import * as auth from 'ActionCreators/authActions';
-import { withRouter } from 'react-router-dom';
 
 class Login extends React.Component {
   constructor(props) {
@@ -49,8 +49,6 @@ class Login extends React.Component {
 
   validateLoginData() {
     const userLoginData = (UserLoginData.find(x => x.email === this.state.email));
-    console.log(userLoginData.password);
-    console.log(this.state.password);
     if (userLoginData != null) {
       if (userLoginData.password === this.state.password) {
         this.props.setUserInfo(userLoginData);
