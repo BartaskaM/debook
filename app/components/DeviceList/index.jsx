@@ -18,6 +18,7 @@ class DeviceList extends React.Component{
     };
     this.renderDevices = this.renderDevices.bind(this);
     this.handleCheckClick = this.handleCheckClick.bind(this);
+    this.renderDevices = this.renderDevices.bind(this);
   }
 
   handleCheckClick(deviceId){
@@ -36,7 +37,7 @@ class DeviceList extends React.Component{
     this.setState({devices}); 
   }
 
-  renderDevices(classes){
+  filterDevices(){
     let devicesToRender = this.state.devices
       .filter(device => device.model.toLowerCase().includes(this.props.modelFilter.toLowerCase()));
     if(this.props.brandFilter.length > 0)
@@ -57,8 +58,11 @@ class DeviceList extends React.Component{
         devicesToRender = devicesToRender.filter(device => !device.available);
       }
     }
-      
-    return devicesToRender.map((device, index)=>{
+    return devicesToRender;
+  }
+
+  renderDevices(classes){      
+    return this.filterDevices().map((device, index)=>{
       return (
         //Replace list with device component
         <Grid item xs={4}key={index}>

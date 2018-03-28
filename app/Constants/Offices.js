@@ -2,7 +2,7 @@ const Offices = [
   {
     id: 1,
     country: 'Lithuania',
-    city: 'Kaunas',
+    city: 'Kawns',
     address: '11D A. Juozapavičiaus pr.',
     lat: 54.864296,
     lng: 23.945239,
@@ -10,7 +10,7 @@ const Offices = [
   {
     id: 2,
     country: 'Lithuania',
-    city: 'Vilnius',
+    city: 'Wilno',
     address: '135 Zalgirio g.',
     lat: 54.704881,
     lng: 25.271658,

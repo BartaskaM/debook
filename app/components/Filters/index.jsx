@@ -11,9 +11,12 @@ import {
 } from 'material-ui/Form';
 import Checkbox from 'material-ui/Checkbox';
 import Drawer from 'material-ui/Drawer';
+import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
 import Styles from './Styles';
 import Divider from 'material-ui/Divider';
+import Brands from 'Constants/Brands';
+import Offices from 'Constants/Offices';
 
 class Filters extends React.Component{
   constructor(props){
@@ -42,7 +45,7 @@ class Filters extends React.Component{
   }
 
   renderBrandFilter(){
-    const brands = [...new Set(this.props.devices.map(device => device.brand))]
+    const brands = Brands
       .map((brand, i) => <FormControlLabel key={i}
         control={
           <Checkbox
@@ -64,16 +67,16 @@ class Filters extends React.Component{
   }
 
   renderOfficeFilter(){
-    const offices = [...new Set(this.props.devices.map(device => device.location))]
+    const offices = Offices
       .map((office, i) => <FormControlLabel key={i}
         control={
           <Checkbox
-            onChange={() => this.handleOfficeChange(office)}
-            checked={this.props.officeFilter.includes(office) ? true : false}
-            value={office}
+            onChange={() => this.handleOfficeChange(office.city)}
+            checked={this.props.officeFilter.includes(office.city) ? true : false}
+            value={office.city}
           />
         }
-        label={office}
+        label={office.city}
       />);
     return (
       <div>
@@ -121,6 +124,9 @@ class Filters extends React.Component{
       <Drawer variant="permanent" className={classes.root} classes={{paper: classes.drawerPaper}}>
         <div className={classes.toolbar} />
         <FormControl className={classes.toolbar}>
+          <Button variant='flat' color='secondary' onClick={() => this.props.resetFilters()}>
+          Clear filters
+          </Button>
           {this.renderBrandFilter()}
           <Divider/>
           {this.renderOfficeFilter()}
@@ -154,6 +160,7 @@ Filters.propTypes = {
   setShowUnavailable: PropTypes.func.isRequired,
   setShowAvailable: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
+  resetFilters: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {

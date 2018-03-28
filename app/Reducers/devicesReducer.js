@@ -24,7 +24,6 @@ export default (state = defaultState, action) => {
     case 'REMOVE_BRAND_FILTER': {
       const newBrands = [...state.brandFilter];
       newBrands.splice(action.payload, 1);
-      console.log(newBrands);
       return {...state, brandFilter: newBrands};
     }
     case 'ADD_OFFICE_FILTER': {
@@ -33,7 +32,6 @@ export default (state = defaultState, action) => {
     case 'REMOVE_OFFICE_FILTER': {
       const newOffices = [...state.officeFilter];
       newOffices.splice(action.payload, 1);
-      console.log(newOffices);
       return {...state, officeFilter: newOffices};
     }
     case 'SET_SHOW_AVAILABLE': {
@@ -41,6 +39,13 @@ export default (state = defaultState, action) => {
     }
     case 'SET_SHOW_UNAVAILABLE': {
       return {...state, showUnavailable: action.payload};
+    }
+    case 'RESET_FILTERS': {
+      return {...state, 
+        officeFilter: [], 
+        brandFilter: [], 
+        showAvailable: false, 
+        showUnavailable: false};
     }
     default: return state;
   }

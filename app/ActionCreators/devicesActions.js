@@ -22,3 +22,6 @@ export const setShowAvailable = (bool) => {
 export const setShowUnavailable = (bool) => {
   return { type: 'SET_SHOW_UNAVAILABLE', payload: bool };
 };
+export const resetFilters = () => {
+  return { type: 'RESET_FILTERS'};
+};
