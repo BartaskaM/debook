@@ -5,6 +5,11 @@ const defaultState = {
   officeFilter: [],
   showAvailable: false,
   showUnavailable: false,
+  showBookModal: false,
+  currentDate: new Date(Date.now()),
+  returnDate: new Date(Date.now()),
+  showReturnDateError: false,
+  returnDateError: '',
 };
 
 export default (state = defaultState, action) => {
@@ -46,6 +51,22 @@ export default (state = defaultState, action) => {
         brandFilter: [], 
         showAvailable: false, 
         showUnavailable: false};
+    }
+    case 'SHOW_BOOK_MODAL': {
+      return {...state, showBookModal: action.payload}; 
+    }
+    case 'SET_CURRENT_DATE': {
+      return {...state, currentDate: new Date(Date.now())};
+    }
+    case 'SET_RETURN_DATE': {
+      return {...state, returnDate: action.payload};
+    }
+    case 'SET_RETURN_DATE_ERROR': {
+      return {
+        ...state, 
+        showReturnDateError: action.payload.show, 
+        returnDateError: action.payload.message,
+      };
     }
     default: return state;
   }

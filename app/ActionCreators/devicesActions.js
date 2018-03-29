@@ -25,3 +25,19 @@ export const setShowUnavailable = (bool) => {
 export const resetFilters = () => {
   return { type: 'RESET_FILTERS'};
 };
+export const showBookModal = (bool) => {
+  return { type: 'SHOW_BOOK_MODAL', payload: bool};
+};
+export const setCurrentDate = () => {
+  return { type: 'SET_CURRENT_DATE'};
+};
+export const setReturnDate = (date) => {
+  return { type: 'SET_RETURN_DATE', payload: date};
+};
+export const setReturnDateError = (bool, message) => {
+  if(bool){
+    return { type: 'SET_RETURN_DATE_ERROR', payload: {show: true, message}};
+  } else {
+    return { type: 'SET_RETURN_DATE_ERROR', payload: {show: false, message: ''}};
+  }
+};

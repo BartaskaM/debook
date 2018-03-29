@@ -9,7 +9,7 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import Plus from 'material-ui-icons/Add';
-
+import BookModal from 'components/BookModal';
 class DeviceList extends React.Component{
   constructor(props){
     super(props);
@@ -106,6 +106,7 @@ class DeviceList extends React.Component{
     return (
       <Grid container spacing={8} className={classes.root}>
         {this.renderDevices(classes)}
+        <BookModal />
       </Grid>
     );
   }
