@@ -1,5 +1,4 @@
 const Styles = theme=>({
-  
   root: {
     paddingTop: 10,
     paddingRight: 10,
