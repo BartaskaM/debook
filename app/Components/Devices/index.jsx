@@ -8,7 +8,7 @@ import * as devicesActions from 'ActionCreators/devicesActions';
 import Filters from 'components/Filters';
 
 class Devices extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     //TODO: Fetch devices
     this.props.setDevices(DevicesList);
   }
