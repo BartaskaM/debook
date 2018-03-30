@@ -27,13 +27,16 @@ class UserDetails extends React.Component {
     this.changeInfo = this.changeInfo.bind(this);
     this.handleEditClick = this.handleEditClick.bind(this);
   }
+
   changeInfo(label, newInfo) {
     this.setState({ [label]: newInfo });
   }
+
   handleEditClick() {
     //TODO: post changes if needed
     this.setState({ edit: !this.state.edit });
   }
+  
   render() {
     const { classes } = this.props;
     return (

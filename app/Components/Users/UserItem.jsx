@@ -10,7 +10,7 @@ import { ListItem } from 'material-ui/List';
 
 import Styles from './Styles';
 
-const OfficeItem = ({ classes, user, history }) => {
+const UserItem = ({ classes, user, history }) => {
   return (
     <Grid item xs={12}>
       <ListItem button onClick={() => history.push(`/users/${user.id}`)}>
@@ -30,7 +30,7 @@ const OfficeItem = ({ classes, user, history }) => {
   );
 };
 
-OfficeItem.propTypes = {
+UserItem.propTypes = {
   history: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   user: PropTypes.shape({
@@ -44,5 +44,4 @@ OfficeItem.propTypes = {
   }).isRequired,
 };
 
-
-export default withStyles(Styles)(withRouter(OfficeItem));
+export default withStyles(Styles)(withRouter(UserItem));
