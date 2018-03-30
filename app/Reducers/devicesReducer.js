@@ -10,6 +10,7 @@ const defaultState = {
   returnDate: new Date(Date.now()),
   showReturnDateError: false,
   returnDateError: '',
+  selectedDevice: -1,
 };
 
 export default (state = defaultState, action) => {
@@ -67,6 +68,9 @@ export default (state = defaultState, action) => {
         showReturnDateError: action.payload.show, 
         returnDateError: action.payload.message,
       };
+    }
+    case 'SET_SELECTED_DEVICE': {
+      return {...state, selectedDevice: action.payload};
     }
     default: return state;
   }

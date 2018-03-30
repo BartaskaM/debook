@@ -41,3 +41,6 @@ export const setReturnDateError = (bool, message) => {
     return { type: 'SET_RETURN_DATE_ERROR', payload: {show: false, message: ''}};
   }
 };
+export const setSelectedDevice = (id) => {
+  return { type: 'SET_SELECTED_DEVICE', payload: id};
+};
