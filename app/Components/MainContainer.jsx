@@ -4,7 +4,8 @@ import { Route } from 'react-router-dom';
 import Header from './Header';
 import LoginTabs from './LoginTabs';
 import MainTabs from './MainTabs';
-import Profile from './Profile';
+import Users from './Users';
+import UserDetails from './Users/UserDetails';
 import Devices from './Devices';
 import DeviceDetails from './Devices/DeviceDetails';
 import Offices from './Offices';
@@ -17,7 +18,16 @@ class MainContainer extends React.Component {
       <div>
         <Header />
         <Route path='/login' component={LoginTabs} />
-        <Route path='/profile' render={() => <Profile user={User[0]} />} />
+        <Route path='/profile' render={() => <UserDetails user={User[0]} />} />
+        <Route exact path='/users' render={() => {
+          return (
+            <div>
+              <MainTabs tabIndex='/users' />
+              <Users />
+            </div>
+          );
+        }} />
+        <Route path='/users/:id' component={UserDetails} />
         <Route exact path='/devices' render={() => {
           return (
             <div>

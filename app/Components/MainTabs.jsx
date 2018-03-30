@@ -29,7 +29,7 @@ class MainTabs extends React.Component {
           >
             <Tab value='/devices' label='DEVICE LIST' />
             <Tab value='/users' label='USER LIST' />
-            <Tab value='/offices' label='OFFICES LIST' />
+            <Tab value='/offices' label='OFFICE LIST' />
             <Tab value='/events' label='EVENT LIST' />
           </Tabs>
         </Paper>
