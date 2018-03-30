@@ -21,6 +21,14 @@ class DeviceList extends React.Component{
     this.renderDevices = this.renderDevices.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.devices != this.state.devices) {
+      this.setState({
+        devices: nextProps.devices,
+      });
+    }
+  }
+
   handleCheckClick(deviceId){
     const devices = this.state.devices.map(device=>{
       if(device.id == deviceId){

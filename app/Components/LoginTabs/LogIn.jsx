@@ -30,7 +30,7 @@ class Login extends React.Component {
   
   componentWillMount(){
     if(Object.keys(this.props.user).length !== 0){
-      this.props.history.push('main');
+      this.props.history.push('/devices');
     }
   }
   submitLogInForm(e) {

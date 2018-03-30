@@ -59,7 +59,6 @@ class Header extends React.Component {
   renderNavigationBarLinks() {
     return (
       <span>
-        <LinkButton to='/main' title='MainTabs' />
         <LinkButton to='/login' title='LoginTabs' />
         <LinkButton to='/profile' title='Profile' />
         <LinkButton to='/devices' title='Devices' />

@@ -17,7 +17,6 @@ class MainContainer extends React.Component {
       <div>
         <Header />
         <Route path='/login' component={LoginTabs} />
-        <Route path='/main' component={MainTabs} />
         <Route path='/profile' render={() => <Profile user={User[0]} />} />
         <Route exact path='/devices' render={() => {
           return (
