@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import Select from 'material-ui/Select';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
@@ -145,15 +145,19 @@ class Header extends React.Component {
     return (
       <AppBar position="sticky" color='inherit' className={classes.root}>
         <Toolbar>
-          <img
-            className={classes.leftMargin}
-            src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'}
-            height="40px"
-            width='40px'
-          />
-          <Typography variant="title" color="inherit" className={classes.text}>
-            DEVBRIDGE <br /> GROUP
-          </Typography>
+          <span className={classes.homeButton} onClick={() => this.props.history.push('/devices')}>
+            <img
+              className={classes.leftMargin}
+              src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'}
+              height="40px"
+              width='40px'
+            />
+            <Typography variant="title" color="inherit" className={classes.text}>
+              DEVBRIDGE
+              <br />
+              GROUP
+            </Typography>
+          </span>
 
           <div className={classes.rightMenu}>
             {this.renderSearchForm()}
