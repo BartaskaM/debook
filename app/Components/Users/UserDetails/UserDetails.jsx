@@ -36,7 +36,7 @@ class UserDetails extends React.Component {
     //TODO: post changes if needed
     this.setState({ edit: !this.state.edit });
   }
-  
+
   render() {
     const { classes } = this.props;
     return (
@@ -52,12 +52,12 @@ class UserDetails extends React.Component {
           <Divider className={classes.divider} />
           <Grid container className={classes.table}>
             <Row
-              label="first name"
+              label="firstname"
               value={this.state.firstName}
               edit={this.state.edit}
               changeInfo={this.changeInfo} />
             <Row
-              label="last name"
+              label="lastname"
               value={this.state.lastName}
               edit={this.state.edit}
               changeInfo={this.changeInfo} />
@@ -103,7 +103,6 @@ UserDetails.propTypes = {
     office: PropTypes.string.isRequired,
     slack: PropTypes.string.isRequired,
   }).isRequired,
-  match: PropTypes.object,
 };
 
 export default withStyles(styles)(withRouter(UserDetails));
