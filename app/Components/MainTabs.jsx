@@ -28,9 +28,13 @@ class MainTabs extends React.Component {
             centered
           >
             <Tab value='/devices' label='DEVICE LIST' />
-            <Tab value='/users' label='USER LIST' />
-            <Tab value='/offices' label='OFFICE LIST' />
             <Tab value='/events' label='EVENT LIST' />
+            {this.props.user.admin &&
+              <span>
+                <Tab value='/users' label='USER LIST' />
+                <Tab value='/offices' label='OFFICE LIST' />
+              </span>
+            }
           </Tabs>
         </Paper>
       </div>
@@ -41,6 +45,20 @@ class MainTabs extends React.Component {
 MainTabs.propTypes = {
   tabIndex: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
+  user: PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    office: PropTypes.string.isRequired,
+    slack: PropTypes.string.isRequired,
+    admin: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 
-export default connect(null, devicesActions)(withRouter(MainTabs));
+const mapStateToProps = state => {
+  return {
+    user: state.auth.user,
+  };
+};
+
+export default connect(mapStateToProps, devicesActions)(withRouter(MainTabs));
