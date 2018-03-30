@@ -15,7 +15,6 @@ import { AccountCircle } from 'material-ui-icons';
 
 import Styles from './Styles';
 import Categories from '../../Constants/Categories';
-import LinkButton from './LinkButton';
 import { connect } from 'react-redux';
 import * as devicesActions from '../../ActionCreators/devicesActions';
 
@@ -54,17 +53,6 @@ class Header extends React.Component {
     this.setState({
       category: event.target.value,
     });
-  }
-
-  renderNavigationBarLinks() {
-    return (
-      <span>
-        <LinkButton to='/login' title='LoginTabs' />
-        <LinkButton to='/profile' title='Profile' />
-        <LinkButton to='/devices' title='Devices' />
-        <LinkButton to='/offices' title='Offices' />
-      </span>
-    );
   }
 
   renderSearchForm() {
@@ -161,8 +149,6 @@ class Header extends React.Component {
           <Typography variant="title" color="inherit" className={classes.text}>
               DEVBRIDGE <br /> GROUP
           </Typography>
-
-          {this.renderNavigationBarLinks()}
 
           <div className={classes.rightMenu}>
             {this.renderSearchForm()}

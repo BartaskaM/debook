@@ -22,11 +22,6 @@ class UserDetailsHandler extends React.Component {
     }
     else {
       // Is in /profile
-      // Temporary fix while there is no client side authorization
-      if(Object.keys(this.props.currentUser).length === 0) {
-        this.props.history.push('/login');
-      }
-
       this.setState({
         user: this.props.currentUser,
       });

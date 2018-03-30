@@ -1,6 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
+import AdminRoute from './Routes/AdminRoute';
+import LoggedInRoute from './Routes/LoggedInRoute';
 import Header from './Header';
 import LoginTabs from './LoginTabs';
 import MainTabs from './MainTabs';
@@ -10,6 +12,7 @@ import Devices from './Devices';
 import DeviceDetails from './Devices/DeviceDetails';
 import Offices from './Offices';
 import OfficeDetails from './Offices/OfficeDetails';
+import ErrorComponent from './Error';
 
 class MainContainer extends React.Component {
   render() {
@@ -17,17 +20,11 @@ class MainContainer extends React.Component {
       <div>
         <Header />
         <Route path='/login' component={LoginTabs} />
-        <Route path='/profile' component={UserDetails} />
-        <Route exact path='/users' render={() => {
-          return (
-            <div>
-              <MainTabs tabIndex='/users' />
-              <Users />
-            </div>
-          );
-        }} />
-        <Route path='/users/:id' component={UserDetails} />
-        <Route exact path='/devices' render={() => {
+        <Route exact path='/error' component={ErrorComponent} />
+        
+        <LoggedInRoute path='/profile' component={UserDetails} />
+        <LoggedInRoute path='/users/:id' component={UserDetails} />
+        <LoggedInRoute exact path='/devices' component={() => {
           return (
             <div>
               <MainTabs tabIndex='/devices' />
@@ -35,8 +32,18 @@ class MainContainer extends React.Component {
             </div>
           );
         }} />
-        <Route path='/devices/:id' component={DeviceDetails} />
-        <Route exact path='/offices' render={() => {
+        <LoggedInRoute path='/devices/:id' component={DeviceDetails} />
+        <LoggedInRoute path='/offices/:id' component={OfficeDetails} />
+
+        <AdminRoute exact path='/users' component={() => {
+          return (
+            <div>
+              <MainTabs tabIndex='/users' />
+              <Users />
+            </div>
+          );
+        }} />
+        <AdminRoute exact path='/offices' component={() => {
           return (
             <div>
               <MainTabs tabIndex='/offices' />
@@ -44,7 +51,6 @@ class MainContainer extends React.Component {
             </div>
           );
         }} />
-        <Route path='/offices/:id' component={OfficeDetails} />
       </div>
     );
   }
