@@ -10,7 +10,6 @@ import Devices from './Devices';
 import DeviceDetails from './Devices/DeviceDetails';
 import Offices from './Offices';
 import OfficeDetails from './Offices/OfficeDetails';
-import User from '../Constants/User';
 
 class MainContainer extends React.Component {
   render() {
@@ -18,7 +17,7 @@ class MainContainer extends React.Component {
       <div>
         <Header />
         <Route path='/login' component={LoginTabs} />
-        <Route path='/profile' render={() => <UserDetails user={User[0]} />} />
+        <Route path='/profile' render={() => <UserDetails />} />
         <Route exact path='/users' render={() => {
           return (
             <div>

@@ -1,5 +1,5 @@
-const User =
-  [{
+const User = [
+  {
     id: 1,
     firstName: 'John',
     lastName: 'Snow',
@@ -7,7 +7,7 @@ const User =
     office: 'Wilno',
     slack: 'LordCommander2',
     admin: true,
-    password: 'admin',   
+    password: 'admin',
   },
   {
     id: 2,
@@ -17,8 +17,18 @@ const User =
     office: 'Kawnas',
     slack: 'pStandsForPeasant',
     admin: false,
-    password: 'user', 
+    password: 'user',
   },
-  ];
+  {
+    id: 3,
+    firstName: 'Augustas Nojus',
+    lastName: 'Grebliauskas',
+    email: 'noah.grebliauskas@gmail.com',
+    office: 'Kawnas',
+    slack: 'Humpero',
+    admin: true,
+    password: 'password',
+  },
+];
 
 export default User;

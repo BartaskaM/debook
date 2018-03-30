@@ -52,7 +52,7 @@ class Login extends React.Component {
     if (userLoginData != null) {
       if (userLoginData.password === this.state.password) {
         this.props.setUserInfo(userLoginData);
-        this.props.history.push('/main');
+        this.props.history.push('/devices');
       }
       else {
         this.setState({ errorMessage: 'Check your credentials!' });

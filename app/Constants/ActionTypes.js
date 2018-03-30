@@ -2,6 +2,14 @@ export const auth = {
   SET_USER_INFO: 'SET_USER_INFO',
 };
 
+export const users = {
+  SET_USERS: 'SET_USERS',
+};
+
+export const userDetails = {
+  SET_USER_DETAILS: 'SET_USER_DETAILS',
+};
+
 export const devices = {
   SET_DEVICES: 'SET_DEVICES',
   SET_MODEL_FILTER: 'SET_MODEL_FILTER',
