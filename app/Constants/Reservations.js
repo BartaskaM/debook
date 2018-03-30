@@ -5,7 +5,7 @@ const time2 = new Date(Date.now());
 time2.setHours(18);
 time2.setMinutes(15);
 const time3 = new Date(Date.now());
-time3.setHours(12);
+time3.setHours(15);
 time3.setMinutes(30);
 const time4 = new Date(Date.now());
 time4.setHours(16);
