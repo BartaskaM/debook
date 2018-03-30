@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 import Select from 'material-ui/Select';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
@@ -15,7 +16,6 @@ import { AccountCircle } from 'material-ui-icons';
 
 import Styles from './Styles';
 import Categories from '../../Constants/Categories';
-import { connect } from 'react-redux';
 import * as devicesActions from '../../ActionCreators/devicesActions';
 
 class Header extends React.Component {
@@ -125,9 +125,14 @@ class Header extends React.Component {
           open={this.state.userMenuOpen}
           onClose={this.handleClose}
         >
-          <Link to='/profile'>
-            <MenuItem className={classes.fontSize} onClick={this.handleClose}>Profile</MenuItem>
-          </Link>
+          <MenuItem
+            className={classes.fontSize}
+            onClick={() => {
+              this.handleClose();
+              this.props.history.push('/profile');
+            }}>
+            Profile
+          </MenuItem>
           <Divider />
           <MenuItem className={classes.fontSize} onClick={this.handleClose}>Logout</MenuItem>
         </Menu>
@@ -147,7 +152,7 @@ class Header extends React.Component {
             width='40px'
           />
           <Typography variant="title" color="inherit" className={classes.text}>
-              DEVBRIDGE <br /> GROUP
+            DEVBRIDGE <br /> GROUP
           </Typography>
 
           <div className={classes.rightMenu}>
@@ -164,6 +169,7 @@ Header.propTypes = {
   classes: PropTypes.object.isRequired,
   setModelFilter: PropTypes.func.isRequired,
   modelFilter: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -171,4 +177,4 @@ const mapStateToProps = state => {
     modelFilter: state.devices.modelFilter,
   };
 };
-export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Header));
+export default withRouter(connect(mapStateToProps, devicesActions)(withStyles(Styles)(Header)));

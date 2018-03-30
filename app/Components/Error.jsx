@@ -1,16 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-const Error = Props => {
+const Error = () => {
   return (
-    <div>
-      <h1>{Props.title ? Props.title : 'unknown error'}</h1>
-    </div>
+    <div style={{ textAlign: 'center' }}>
+      <p><h1>An error has occured.</h1></p>
+      <p><Link to='/devices'>Go home</Link></p>
+    </div >
   );
-};
-
-Error.propTypes = {
-  title: PropTypes.string,
 };
 
 export default Error;
