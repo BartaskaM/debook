@@ -15,7 +15,6 @@ import TabContainer from './TabContainer';
 import SignUp from './SignUp';
 import Login from './Login';
 
-
 class LoginTabs extends React.Component {
   constructor() {
     super();

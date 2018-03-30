@@ -1,28 +1,46 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
-import DeviceList from './DeviceList';
-import Devices from 'Constants/Devices';
+import { withRouter } from 'react-router-dom';
+import Tabs, { Tab } from 'material-ui/Tabs';
+import Paper from 'material-ui/Paper';
 import * as devicesActions from 'ActionCreators/devicesActions';
-import Filters from 'components/Filters';
-
 
 class MainTabs extends React.Component {
-  componentWillMount(){
-    //TODO: Fetch devices
-    this.props.setDevices(Devices);
+  constructor() {
+    super();
+    this.handleTabChange = this.handleTabChange.bind(this);
   }
+
+  handleTabChange(e, val) {
+    this.props.history.push(val);
+  }
+
   render() {
     return (
       <div>
-        <Filters />
-        <DeviceList/>
+        <Paper>
+          <Tabs
+            value={this.props.tabIndex}
+            onChange={this.handleTabChange}
+            indicatorColor='primary'
+            textColor='primary'
+            centered
+          >
+            <Tab value='/devices' label='DEVICE LIST' />
+            <Tab value='/users' label='USER LIST' />
+            <Tab value='/offices' label='OFFICES LIST' />
+            <Tab value='/events' label='EVENT LIST' />
+          </Tabs>
+        </Paper>
       </div>
     );
   }
 }
+
 MainTabs.propTypes = {
-  setDevices: PropTypes.func.isRequired,
+  tabIndex: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired,
 };
-export default connect(null,devicesActions)(MainTabs);
+
+export default connect(null, devicesActions)(withRouter(MainTabs));
