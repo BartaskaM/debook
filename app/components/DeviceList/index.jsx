@@ -107,7 +107,10 @@ class DeviceList extends React.Component{
   open(deviceId){
     this.props.setCurrentDate();
     const currentDate = new Date();
-    currentDate.setHours(currentDate.getHours() + 1);
+    if(currentDate.getHours() !== 23)
+    {
+      currentDate.setHours(currentDate.getHours() + 1);
+    } 
     this.props.setReturnDate(currentDate);
     this.props.setSelectedDevice(deviceId);
     this.props.showBookModal(true);

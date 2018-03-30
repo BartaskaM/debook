@@ -6,11 +6,23 @@ const Styles = theme=>({
     width: '40%',
   },
   topRow: {
-    fontSize: 8,
+    fontSize: 12,
     color: '#999',
   },
   row: {
-    fontSize: 8,
+    fontSize: 12,
+  },
+  title: {
+    fontSize: 30,
+  },
+  description: {
+    fontSize: 16,
+  },
+  label: {
+    fontSize: 14,
+  },
+  helperText: {
+    fontSize: 10,
   },
 });
   

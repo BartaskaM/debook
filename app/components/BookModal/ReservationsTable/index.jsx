@@ -11,7 +11,7 @@ import dateToValue from '../dateConvert';
 
 class ReservationsTable extends React.Component {
   renderRows(){
-    return Reservations.filter(res => res.device === this.props.selectedDevice)
+    return Reservations
       .map((res, i) => {
         const { from, to, user } = res;
         return <Row key={i} first={`${dateToValue(from)} - ${dateToValue(to)}`} 

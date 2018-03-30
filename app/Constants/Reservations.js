@@ -23,18 +23,6 @@ const reservations = [
     from: time3,
     to: time4,
   },
-  {
-    user: 1,
-    device: 3,
-    from: time1,
-    to: time2,
-  },
-  {
-    user: 2,
-    device: 3,
-    from: time3,
-    to: time4,
-  },
 ];
 
 export default reservations;

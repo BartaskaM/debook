@@ -75,7 +75,7 @@ class BookModal extends React.Component{
 
   checkForErrors(nextDate){
     let err = false;
-    if(nextDate - this.props.currentDate < 890000){
+    if(nextDate - this.props.currentDate < 900000){
       err = true;
       this.props.setReturnDateError(true, 'Book for minimum 15 minutes!');
     } else if(this.checkForReservation(this.props.currentDate, nextDate)){
@@ -87,7 +87,7 @@ class BookModal extends React.Component{
     return err;
   }
   checkForReservation(from, to){
-    const extraMins = 850000;
+    const extraMins = 900000;
     return Reservations.filter(res => res.device === this.props.selectedDevice 
       && (((res.to > to && res.from - extraMins < to) 
       || (res.to > from && res.from - extraMins < from)) 
@@ -124,9 +124,9 @@ class BookModal extends React.Component{
           onClose={() => this.props.showBookModal(false)}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle>Book device</DialogTitle>
+          <DialogTitle className={classes.title} disableTypography>Book device</DialogTitle>
           <DialogContent>
-            <DialogContentText>
+            <DialogContentText className={classes.description}>
               To book this device, please select return time. 
               You cannot book device if it is reserved, or if there is less than 15 minutes until 
               next reservation or midnight.
@@ -136,10 +136,12 @@ class BookModal extends React.Component{
               label="Pick up time"
               type="time"
               error={this.checkIfLate()}
-              helperText={this.checkIfLate ? 'It\'s too late!' : ''}
+              helperText={this.checkIfLate() ? 'It\'s too late!' : ''}
               disabled={true}
               value={dateToValue(currentDate)}
               className={classes.inputField}
+              InputLabelProps={{classes: {root: classes.label}}}
+              FormHelperTextProps={{classes: {root: classes.helperText}}}
             />
             <TextField
               autoFocus
@@ -154,6 +156,8 @@ class BookModal extends React.Component{
                 step: 900,
               }}
               className={classes.inputField}
+              InputLabelProps={{classes: {root: classes.label}}}
+              FormHelperTextProps={{classes: {root: classes.helperText}}}
             />
             <ReservationsTable />
           </DialogContent>
