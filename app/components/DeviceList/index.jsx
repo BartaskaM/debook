@@ -27,7 +27,7 @@ class DeviceList extends React.Component{
     const devices = this.state.devices.map(device=>{
       if(device.id == deviceId){
         if(device.custody.length === 0){
-          this.open(deviceId);
+          this.open(device.id);
         } else {
           //Handle device return
           device.available = !device.available;
@@ -106,7 +106,7 @@ class DeviceList extends React.Component{
 
   open(deviceId){
     this.props.setCurrentDate();
-    const currentDate = new Date(Date.now());
+    const currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 1);
     this.props.setReturnDate(currentDate);
     this.props.setSelectedDevice(deviceId);
@@ -130,7 +130,7 @@ DeviceList.propTypes = {
     model: PropTypes.string.isRequired,
     os: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    custody: PropTypes.isRequired,
+    custody: PropTypes.string.isRequired,
     available: PropTypes.bool.isRequired,
     active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,

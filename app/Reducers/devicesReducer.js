@@ -6,8 +6,8 @@ const defaultState = {
   showAvailable: false,
   showUnavailable: false,
   showBookModal: false,
-  currentDate: new Date(Date.now()),
-  returnDate: new Date(Date.now()),
+  currentDate: new Date(),
+  returnDate: new Date(),
   showReturnDateError: false,
   returnDateError: '',
   selectedDevice: -1,
@@ -57,7 +57,7 @@ export default (state = defaultState, action) => {
       return {...state, showBookModal: action.payload}; 
     }
     case 'SET_CURRENT_DATE': {
-      return {...state, currentDate: new Date(Date.now())};
+      return {...state, currentDate: new Date()};
     }
     case 'SET_RETURN_DATE': {
       return {...state, returnDate: action.payload};

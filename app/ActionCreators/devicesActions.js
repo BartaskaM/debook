@@ -35,7 +35,7 @@ export const setReturnDate = (date) => {
   return { type: 'SET_RETURN_DATE', payload: date};
 };
 export const setReturnDateError = (bool, message) => {
-  if(bool){
+  if (bool) {
     return { type: 'SET_RETURN_DATE_ERROR', payload: {show: true, message}};
   } else {
     return { type: 'SET_RETURN_DATE_ERROR', payload: {show: false, message: ''}};

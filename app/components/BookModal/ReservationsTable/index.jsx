@@ -7,21 +7,21 @@ import Reservations from 'Constants/Reservations';
 import Row from './row';
 import { withStyles } from 'material-ui/styles';
 import Styles from '../Styles';
-
+import dateToValue from '../dateConvert';
 
 class ReservationsTable extends React.Component {
-  dateToValue(date){
-    return date.toLocaleTimeString().split(':').slice(0,2).join(':');
-  }
   renderRows(){
     return Reservations.filter(res => res.device === this.props.selectedDevice)
-      .map((res, i) => 
-        <Row key={i} first={this.dateToValue(res.from) + ' - ' + this.dateToValue(res.to)} 
-          second={'User with id' + res.user} 
+      .map((res, i) => {
+        const { from, to, user } = res;
+        return <Row key={i} first={`${dateToValue(from)} - ${dateToValue(to)}`} 
+          second={`User with id' ${user}`} 
           styleClass={this.props.classes.row}
-          addDivider={true}/>
+          addDivider={true}/>;
+      }
       );
   }
+
   render(){
     const { classes } = this.props;
     return (
@@ -40,6 +40,7 @@ ReservationsTable.propTypes = {
   classes: PropsTypes.object.isRequired,
   selectedDevice: PropsTypes.number.isRequired,
 };
+
 const mapStateToProps = state => ({
   selectedDevice: state.devices.selectedDevice,
 });

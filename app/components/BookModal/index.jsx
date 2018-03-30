@@ -14,12 +14,12 @@ import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
 import ReservationsTable from './ReservationsTable';
 import Reservations from 'Constants/Reservations';
+import dateToValue from './dateConvert';
 
 class BookModal extends React.Component{
   constructor(props){
     super(props);
     this.roundTime = this.roundTime.bind(this);
-    this.dateToValue = this.dateToValue.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.checkForReservation = this.checkForReservation.bind(this);
     this.bookDevice = this.bookDevice.bind(this);
@@ -35,40 +35,40 @@ class BookModal extends React.Component{
     currentDate.setHours(h);
     return currentDate;
   }
-
-  dateToValue(date){
-    return date.toLocaleTimeString().split(':').slice(0,2).join(':');
-  }
-
-  handleDateChange(e){
-    console.log(e.target.value);
-    const [h,m] = e.target.value.split(':').map( x => parseInt(x));
+  handleMinuteChange(h, m, nextDate){
     const previousDate = this.props.returnDate;
-    const nextDate = new Date(previousDate.getTime());
-    if(h === previousDate.getHours()){
-      if(m === 0){
-        if(previousDate.getMinutes() === 45){
-          if(previousDate.getHours() === 23){
-            nextDate.setHours(0);
-          } else {
-            nextDate.setHours(h + 1);
-          }
-        } 
-      } else if(m === 45){
-        if(previousDate.getMinutes() === 0){
-          if(previousDate.getHours() === 0){
-            nextDate.setHours(23);
-          } else {
-            nextDate.setHours(h - 1);
-          }
-        } 
-      } else {
-        nextDate.setHours(h);
-      }
+    if(m === 0){
+      //Handle hour increment
+      if(previousDate.getMinutes() === 45){
+        if(previousDate.getHours() === 23){
+          nextDate.setHours(0);
+        } else {
+          nextDate.setHours(h + 1);
+        }
+      } 
+    } else if(m === 45){
+      //Handle hour decrement
+      if(previousDate.getMinutes() === 0){
+        if(previousDate.getHours() === 0){
+          nextDate.setHours(23);
+        } else {
+          nextDate.setHours(h - 1);
+        }
+      } 
     } else {
       nextDate.setHours(h);
     }
     nextDate.setMinutes(m);
+  }
+  handleDateChange(e){
+    const [h,m] = e.target.value.split(':').map( x => parseInt(x));
+    const previousDate = this.props.returnDate;
+    const nextDate = new Date(previousDate.getTime());
+    if(h === previousDate.getHours()){
+      this.handleMinuteChange(h, m, nextDate);
+    } else {
+      nextDate.setHours(h);
+    }
     this.props.setReturnDate(nextDate);
     this.checkForErrors(nextDate);
   }
@@ -101,7 +101,7 @@ class BookModal extends React.Component{
       const updatedDevices = [...this.props.devices];
       updatedDevices.map(device => {
         if(device.id == this.props.selectedDevice){
-          device.custody = this.props.user.id;
+          device.custody = this.props.user.id.toString();
           device.available = false;
         }
       });
@@ -116,9 +116,7 @@ class BookModal extends React.Component{
     && this.props.currentDate.getMinutes() >= 45;
   }
   render() {
-    const currentDate = this.props.currentDate;
-    const returnDate = this.props.returnDate;
-    const { classes } = this.props;
+    const { classes, currentDate, returnDate } = this.props;
     return (
       <div>
         <Dialog
@@ -140,7 +138,7 @@ class BookModal extends React.Component{
               error={this.checkIfLate()}
               helperText={this.checkIfLate ? 'It\'s too late!' : ''}
               disabled={true}
-              value={this.dateToValue(currentDate)}
+              value={dateToValue(currentDate)}
               className={classes.inputField}
             />
             <TextField
@@ -149,7 +147,7 @@ class BookModal extends React.Component{
               type="time"
               error={this.props.showReturnDateError}
               helperText={this.props.returnDateError}
-              value={this.dateToValue(this.roundTime(returnDate))}
+              value={dateToValue(this.roundTime(returnDate))}
               onChange={this.handleDateChange}
               onFocus={() => this.checkForErrors(this.props.returnDate)}
               inputProps={{
@@ -189,7 +187,7 @@ BookModal.propTypes = {
     model: PropTypes.string.isRequired,
     os: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    custody: PropTypes.isRequired,
+    custody: PropTypes.string.isRequired,
     available: PropTypes.bool.isRequired,
     active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
