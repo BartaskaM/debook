@@ -17,6 +17,7 @@ import { AccountCircle } from 'material-ui-icons';
 import Styles from './Styles';
 import Categories from '../../Constants/Categories';
 import * as devicesActions from '../../ActionCreators/devicesActions';
+import * as authActions from '../../ActionCreators/authActions';
 
 class Header extends React.Component {
   constructor() {
@@ -31,6 +32,7 @@ class Header extends React.Component {
     this.handleMenu = this.handleMenu.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
+    this.renderBranding = this.renderBranding.bind(this);
     this.renderSearchForm = this.renderSearchForm.bind(this);
     this.renderProfileMenu = this.renderProfileMenu.bind(this);
   }
@@ -53,6 +55,25 @@ class Header extends React.Component {
     this.setState({
       category: event.target.value,
     });
+  }
+
+  renderBranding() {
+    const { classes } = this.props;
+    return (
+      <span className={classes.homeButton} onClick={() => this.props.history.push('/devices')}>
+        <img
+          className={classes.leftMargin}
+          src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'}
+          height="40px"
+          width='40px'
+        />
+        <Typography variant="title" color="inherit" className={classes.text}>
+          DEVBRIDGE
+          <br />
+          GROUP
+        </Typography>
+      </span>
+    );
   }
 
   renderSearchForm() {
@@ -101,7 +122,7 @@ class Header extends React.Component {
 
   renderProfileMenu() {
     const { classes } = this.props;
-    return (
+    return  Object.keys(this.props.user).length != 0 ? (
       <span>
         <IconButton
           aria-owns={this.state.userMenuOpen ? 'menu-appbar' : null}
@@ -130,14 +151,23 @@ class Header extends React.Component {
             onClick={() => {
               this.handleClose();
               this.props.history.push('/profile');
-            }}>
+            }}
+          >
             Profile
           </MenuItem>
           <Divider />
-          <MenuItem className={classes.fontSize} onClick={this.handleClose}>Logout</MenuItem>
+          <MenuItem
+            className={classes.fontSize}
+            onClick={() => {
+              this.handleClose();
+              this.props.logOutUser();
+            }}
+          >
+            Logout
+          </MenuItem>
         </Menu>
       </span>
-    );
+    ) : '';
   }
 
   render() {
@@ -145,19 +175,7 @@ class Header extends React.Component {
     return (
       <AppBar position="sticky" color='inherit' className={classes.root}>
         <Toolbar>
-          <span className={classes.homeButton} onClick={() => this.props.history.push('/devices')}>
-            <img
-              className={classes.leftMargin}
-              src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'}
-              height="40px"
-              width='40px'
-            />
-            <Typography variant="title" color="inherit" className={classes.text}>
-              DEVBRIDGE
-              <br />
-              GROUP
-            </Typography>
-          </span>
+          {this.renderBranding()}
 
           <div className={classes.rightMenu}>
             {this.renderSearchForm()}
@@ -174,11 +192,20 @@ Header.propTypes = {
   setModelFilter: PropTypes.func.isRequired,
   modelFilter: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
+  logOutUser: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
   return {
+    user: state.auth.user,
     modelFilter: state.devices.modelFilter,
   };
 };
-export default withRouter(connect(mapStateToProps, devicesActions)(withStyles(Styles)(Header)));
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { ...devicesActions, ...authActions }
+  )(withStyles(Styles)(Header))
+);

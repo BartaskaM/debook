@@ -1,5 +1,6 @@
 export const auth = {
   SET_USER_INFO: 'SET_USER_INFO',
+  LOG_OUT_USER: 'LOG_OUT_USER',
 };
 
 export const users = {
