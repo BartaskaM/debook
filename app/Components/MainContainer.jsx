@@ -9,6 +9,7 @@ import DeviceDetails from './DeviceDetails';
 import Offices from './Offices';
 import OfficeDetails from './Offices/OfficeDetails';
 import User from '../Constants/User';
+import BookingEvents from './BookingEvents';
 
 class MainContainer extends React.Component {
   render() {
@@ -21,6 +22,7 @@ class MainContainer extends React.Component {
         <Route path='/devices/:id' component={DeviceDetails} />
         <Route exact path='/offices' component={Offices} />
         <Route path='/offices/:id' component={OfficeDetails} />
+        <Route path='/events' component={BookingEvents} />
       </div>
     );
   }
