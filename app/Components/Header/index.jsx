@@ -15,7 +15,8 @@ import Menu, { MenuItem } from 'material-ui/Menu';
 import { AccountCircle } from 'material-ui-icons';
 
 import Styles from './Styles';
-import Categories from '../../Constants/Categories';
+import Categories from 'Constants/Categories';
+import PathsWithLists from 'Constants/PathsWithLists';
 import * as devicesActions from '../../ActionCreators/devicesActions';
 import * as authActions from '../../ActionCreators/authActions';
 
@@ -78,7 +79,7 @@ class Header extends React.Component {
 
   renderSearchForm() {
     const { classes } = this.props;
-    return (
+    return PathsWithLists.includes(this.props.location.pathname) ? (
       <span>
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor="search" className={classes.fontSize}>Search</InputLabel>
@@ -117,7 +118,7 @@ class Header extends React.Component {
           </Select>
         </FormControl>
       </span>
-    );
+    ) : '';
   }
 
   renderProfileMenu() {
@@ -194,6 +195,7 @@ Header.propTypes = {
   history: PropTypes.object.isRequired,
   logOutUser: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
