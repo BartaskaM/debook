@@ -15,7 +15,6 @@ import TabContainer from './TabContainer';
 import SignUp from './SignUp';
 import Login from './Login';
 
-
 class LoginTabs extends React.Component {
   constructor() {
     super();
@@ -49,8 +48,8 @@ class LoginTabs extends React.Component {
                 textColor='primary'
                 centered
               >
-                <Tab label='LOG IN' />
-                <Tab label='SIGN UP' />
+                <Tab label='LOG IN' classes={{label: classes.fontSize}}/>
+                <Tab label='SIGN UP' classes={{label: classes.fontSize}}/>
               </Tabs>
             </AppBar>
           </Grid>
