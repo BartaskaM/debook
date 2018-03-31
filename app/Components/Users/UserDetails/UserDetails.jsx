@@ -61,10 +61,12 @@ class UserDetails extends React.Component {
       validNewPassword,
       newPasswordMatch,
     } = this.state;
+    
     this.validateFirstName();
     this.validateLastName();
     this.validateEmail();
     this.validateAllPasswords();
+
     return validEmail && 
     validLastName && 
     validFirstName && 
@@ -287,6 +289,7 @@ class UserDetails extends React.Component {
       validNewPassword,
       validOldPassword,
       newPasswordMatch,
+      emailErrorMessage,
     } = this.state;
     const { email, firstName, lastName, slack, office, id } = user;
     console.log(this.state);
@@ -316,8 +319,8 @@ class UserDetails extends React.Component {
               </FormControl>
             </Grid>
           </Grid>
-          <FormControl className={classes.signUpFormField}>
-            <Grid container>
+          <Grid container>
+            <FormControl className={classes.signUpFormField}>
               <Grid item xs={2} className={classes.label}>Last name:</Grid>
               <Grid item xs={10}>
                 <Input
@@ -337,10 +340,10 @@ class UserDetails extends React.Component {
                   {!validLastName ? 'Fill this field.' : ''}
                 </FormHelperText>
               </Grid>
-            </Grid>
-          </FormControl>
-          <FormControl className={classes.signUpFormField}>
-            <Grid container>
+            </FormControl>
+          </Grid>   
+          <Grid container>
+            <FormControl className={classes.signUpFormField}>
               <Grid item xs={2} className={classes.label}>Email:</Grid>
               <Grid item xs={10}>
                 <Input
@@ -357,11 +360,11 @@ class UserDetails extends React.Component {
                   }}
                 />
                 <FormHelperText>
-                  {!validEmail ? this.state.emailErrorMessage : ''}
+                  {!validEmail ? emailErrorMessage : ''}
                 </FormHelperText>
               </Grid>
-            </Grid>
-          </FormControl>            
+            </FormControl> 
+          </Grid>         
           <Grid container>
             <Grid item xs={2} className={classes.label}>Office</Grid>
             <Grid item xs={10}>
@@ -524,4 +527,5 @@ const mapStateToProps = store => ({
   currentUser: store.auth.user,
   users: store.users.users,
 });
+
 export default withRouter(connect(mapStateToProps,usersActions)(withStyles(styles)(UserDetails)));
