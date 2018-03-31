@@ -105,4 +105,4 @@ UserDetails.propTypes = {
   }).isRequired,
 };
 
-export default withStyles(styles)(withRouter(UserDetails));
+export default withRouter(withStyles(styles)(UserDetails));
