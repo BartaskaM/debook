@@ -192,16 +192,17 @@ class UserDetails extends React.Component {
   handleEditClick() {
     if(this.state.edit){
       if(this.validateAll()){
-        this.props.setUsers([...this.props.users].map( user => {
-          if(user.id == this.state.user.id){
+        const { user, newPassword } = this.state;
+        this.props.setUsers([...this.props.users].map( usr => {
+          if(usr.id == user.id){
             if(this.shouldChangePassword()){
-              return {...this.state.user, password: this.store.newPassword};
+              return {...user, password: newPassword};
             }
             else {
-              return {...this.state.user};
+              return {...user};
             }           
           } else {
-            return user;
+            return usr;
           }
         }));
         
