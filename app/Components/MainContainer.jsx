@@ -38,7 +38,14 @@ class MainContainer extends React.Component {
           );
         }} />
         <Route path='/offices/:id' component={OfficeDetails} />
-        <Route path='/events' component={BookingEvents} />
+        <Route exact path='/events' render={() => {
+          return (
+            <div>
+              <MainTabs tabIndex='/events' />
+              <BookingEvents />
+            </div>
+          );
+        }} />
       </div>
     );
   }
