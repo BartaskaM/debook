@@ -9,7 +9,8 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import Plus from 'material-ui-icons/Add';
-
+import BookModal from 'components/BookModal';
+import * as devicesActions from 'ActionCreators/devicesActions';
 class DeviceList extends React.Component{
   constructor(props){
     super(props);
@@ -19,18 +20,20 @@ class DeviceList extends React.Component{
     this.renderDevices = this.renderDevices.bind(this);
     this.handleCheckClick = this.handleCheckClick.bind(this);
     this.renderDevices = this.renderDevices.bind(this);
+    this.open = this.open.bind(this);
   }
 
   handleCheckClick(deviceId){
     const devices = this.state.devices.map(device=>{
       if(device.id == deviceId){
-        device.available = !device.available;
         if(device.custody.length === 0){
-          device.custody = this.props.user.id;
+          this.open(device.id);
         } else {
+          //Handle device return
+          device.available = !device.available;
           device.custody = '';
+          device.location = this.props.user.office;
         }
-        device.location = this.props.user.office;
       }
       return device;
     });
@@ -101,11 +104,24 @@ class DeviceList extends React.Component{
     });
   }
 
+  open(deviceId){
+    this.props.setCurrentDate();
+    const currentDate = new Date();
+    if(currentDate.getHours() !== 23)
+    {
+      currentDate.setHours(currentDate.getHours() + 1);
+    } 
+    this.props.setReturnDate(currentDate);
+    this.props.setSelectedDevice(deviceId);
+    this.props.showBookModal(true);
+  }
+
   render(){
     const { classes } = this.props;
     return (
       <Grid container spacing={8} className={classes.root}>
         {this.renderDevices(classes)}
+        <BookModal />
       </Grid>
     );
   }
@@ -136,6 +152,10 @@ DeviceList.propTypes = {
   officeFilter: PropTypes.array.isRequired,
   showAvailable: PropTypes.bool.isRequired,
   showUnavailable: PropTypes.bool.isRequired,
+  setCurrentDate: PropTypes.func.isRequired,
+  setReturnDate: PropTypes.func.isRequired,
+  showBookModal: PropTypes.func.isRequired,
+  setSelectedDevice: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {
@@ -145,6 +165,7 @@ const mapStateToProps = state => {
     officeFilter: state.devices.officeFilter,
     showAvailable: state.devices.showAvailable,
     showUnavailable: state.devices.showUnavailable,
+    user: state.auth.user,
   };
 };
-export default connect(mapStateToProps, null)(withStyles(Styles)(DeviceList));
+export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(DeviceList));

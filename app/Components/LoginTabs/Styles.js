@@ -1,4 +1,4 @@
-const Styles = {
+const Styles = theme => ({
   root: {
     padding: 20,
     margin: 20,
@@ -7,7 +7,7 @@ const Styles = {
     marginTop: 25,
   },
   fontSize: {
-    fontSize: 14,
+    fontSize: theme.typography.pxToRem(20),
   },
   menuItemWidth: {
     fontSize: 14,
@@ -20,6 +20,6 @@ const Styles = {
   errorMessage: {
     color: 'red',
   },
-};
+});
 
 export default Styles;
