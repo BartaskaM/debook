@@ -29,12 +29,8 @@ class MainTabs extends React.Component {
           >
             <Tab value='/devices' label='DEVICE LIST' />
             <Tab value='/events' label='EVENT LIST' />
-            {this.props.user.admin &&
-              <span>
-                <Tab value='/users' label='USER LIST' />
-                <Tab value='/offices' label='OFFICE LIST' />
-              </span>
-            }
+            {this.props.user.admin ? <Tab value='/users' label='USER LIST' /> : null}
+            {this.props.user.admin ? <Tab value='/offices' label='OFFICE LIST' /> : null}         
           </Tabs>
         </Paper>
       </div>
