@@ -24,7 +24,7 @@ export const styles = {
     marginBottom: 10,
   },
   editButtonWrapper: {
-    textAlign: 'right',
+    float: 'right',
   },
   editButton: {
     display: 'inline-block',
