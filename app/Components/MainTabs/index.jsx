@@ -2,9 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import { withStyles } from 'material-ui';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
+
 import * as devicesActions from 'ActionCreators/devicesActions';
+import Styles from './Styles';
 
 class MainTabs extends React.Component {
   constructor() {
@@ -17,6 +20,7 @@ class MainTabs extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
         <Paper>
@@ -27,10 +31,14 @@ class MainTabs extends React.Component {
             textColor='primary'
             centered
           >
-            <Tab value='/devices' label='DEVICE LIST' />
-            <Tab value='/events' label='EVENT LIST' />
-            {this.props.user.admin ? <Tab value='/users' label='USER LIST' /> : null}
-            {this.props.user.admin ? <Tab value='/offices' label='OFFICE LIST' /> : null}         
+            <Tab value='/devices' label='DEVICE LIST' classes={{ label: classes.fontSize }} />
+            <Tab value='/events' label='EVENT LIST' classes={{ label: classes.fontSize }} />
+            {this.props.user.admin &&
+              <Tab value='/users' label='USER LIST' classes={{ label: classes.fontSize }} />
+            }
+            {this.props.user.admin &&
+              <Tab value='/offices' label='OFFICE LIST' classes={{ label: classes.fontSize }} />
+            }
           </Tabs>
         </Paper>
       </div>
@@ -41,6 +49,7 @@ class MainTabs extends React.Component {
 MainTabs.propTypes = {
   tabIndex: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
   user: PropTypes.shape({
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
@@ -57,4 +66,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, devicesActions)(withRouter(MainTabs));
+export default withRouter(connect(mapStateToProps, devicesActions)(withStyles(Styles)(MainTabs)));
