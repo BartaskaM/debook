@@ -123,7 +123,7 @@ class Header extends React.Component {
 
   renderProfileMenu() {
     const { classes } = this.props;
-    return  Object.keys(this.props.user).length != 0 ? (
+    return  this.props.user ? (
       <span>
         <IconButton
           aria-owns={this.state.userMenuOpen ? 'menu-appbar' : null}
@@ -194,8 +194,8 @@ Header.propTypes = {
   modelFilter: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
   logOutUser: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => {

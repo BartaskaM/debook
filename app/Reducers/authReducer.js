@@ -1,7 +1,7 @@
 import { auth }from 'Constants/ActionTypes';
 
 const defaultState = {
-  user: {},
+  user: null,
 };
 
 export default (state = defaultState, action) => {

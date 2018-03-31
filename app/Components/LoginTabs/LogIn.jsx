@@ -11,6 +11,7 @@ import {
   FormGroup,
 } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
+
 import Styles from './Styles';
 import UserLoginData from 'Constants/User';
 import * as auth from 'ActionCreators/authActions';
@@ -29,7 +30,7 @@ class Login extends React.Component {
   }
   
   componentWillMount(){
-    if(Object.keys(this.props.user).length !== 0){
+    if(this.props.user){
       this.props.history.push('/devices');
     }
   }
@@ -121,7 +122,7 @@ Login.propTypes = {
   classes: PropTypes.object.isRequired,
   setUserInfo: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => ({

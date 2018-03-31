@@ -7,15 +7,15 @@ const AdminRoute = ({ component: Component, user, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      user.admin ? (
-        <Component {...props} />
-      ) : Object.keys(user).length === 0 ? (
+      !user ? (
         <Redirect
           to={{
             pathname: '/login',
             state: { from: props.location },
           }}
         />
+      ) : user.admin ? (
+        <Component {...props} />
       ) : (
         <Redirect
           to={{
@@ -29,8 +29,8 @@ const AdminRoute = ({ component: Component, user, ...rest }) => (
 );
 
 AdminRoute.propTypes = {
-  user: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
+  user: PropTypes.object,
   component: PropTypes.oneOfType([
     PropTypes.func, 
     PropTypes.element,

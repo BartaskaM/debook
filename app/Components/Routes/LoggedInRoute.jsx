@@ -7,7 +7,7 @@ const LoggedInRoute = ({ component: Component, user, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      Object.keys(user).length !== 0 ? (
+      user ? (
         <Component {...props} />
       ) : (
         <Redirect
@@ -22,8 +22,8 @@ const LoggedInRoute = ({ component: Component, user, ...rest }) => (
 );
 
 LoggedInRoute.propTypes = {
-  user: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
+  user: PropTypes.object,
   component: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.element,
