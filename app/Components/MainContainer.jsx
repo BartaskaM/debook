@@ -5,20 +5,38 @@ import Header from './Header';
 import LoginTabs from './LoginTabs';
 import MainTabs from './MainTabs';
 import Profile from './Profile';
-import DeviceDetails from './DeviceDetails';
-import OfficeDetails from './OfficeDetails';
+import Devices from './Devices';
+import DeviceDetails from './Devices/DeviceDetails';
+import Offices from './Offices';
+import OfficeDetails from './Offices/OfficeDetails';
 import User from '../Constants/User';
 
 class MainContainer extends React.Component {
   render() {
     return (
       <div>
-        <Header />    
-        <Route path='/login' component={LoginTabs}/>
-        <Route path='/main' component={MainTabs}/>
-        <Route path='/profile' render={()=><Profile user={User}/>}/>
-        <Route path='/devices/:id' component={DeviceDetails}/>
-        <Route path='/offices/:id' component={OfficeDetails}/>
+        <Header />
+        <Route path='/login' component={LoginTabs} />
+        <Route path='/main' component={MainTabs} />
+        <Route path='/profile' render={() => <Profile user={User[0]} />} />
+        <Route exact path='/devices' render={() => {
+          return (
+            <div>
+              <MainTabs tabIndex='/devices' />
+              <Devices />
+            </div>
+          );
+        }} />
+        <Route path='/devices/:id' component={DeviceDetails} />
+        <Route exact path='/offices' render={() => {
+          return (
+            <div>
+              <MainTabs tabIndex='/offices' />
+              <Offices />
+            </div>
+          );
+        }} />
+        <Route path='/offices/:id' component={OfficeDetails} />
       </div>
     );
   }

@@ -1,5 +1,4 @@
-const Styles = {
-  
+const Styles = theme=>({
   root: {
     paddingTop: 10,
     paddingRight: 10,
@@ -7,6 +6,9 @@ const Styles = {
     width: '80%',
     float: 'right',
   },
-};
+  leftIcon: {
+    marginRight: theme.spacing.unit,
+  },
+});
   
 export default Styles;

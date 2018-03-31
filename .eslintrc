@@ -17,6 +17,9 @@
   },
   "plugins": ["react"],
   "rules": {
+    "space-infix-ops": ["error"],
+    "key-spacing": ["error"],
+    "max-len": ["error",{"code": 100}],
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
@@ -24,6 +27,8 @@
     "no-var": "error",
     "prefer-const": "error",
     "react/jsx-uses-react": "error",
-    "react/jsx-uses-vars": "error"
+    "react/jsx-uses-vars": "error",
+    "no-console": "warn",
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 0 }]
   }
 }

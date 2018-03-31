@@ -1,25 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Menu,
-  Divider,
-  Select,
-  Input,
-} from 'material-ui';
-import { InputLabel } from 'material-ui/Input';
+import Select from 'material-ui/Select';
+import Divider from 'material-ui/Divider';
+import IconButton from 'material-ui/IconButton';
+import Typography from 'material-ui/Typography';
+import Toolbar from 'material-ui/Toolbar';
+import AppBar from 'material-ui/AppBar';
+import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
-import { MenuItem } from 'material-ui/Menu';
+import Menu, { MenuItem } from 'material-ui/Menu';
 import { AccountCircle } from 'material-ui-icons';
 
 import Styles from './Styles';
 import Categories from '../../Constants/Categories';
 import LinkButton from './LinkButton';
+import { connect } from 'react-redux';
+import * as devicesActions from '../../ActionCreators/devicesActions';
 
 class Header extends React.Component {
   constructor() {
@@ -64,8 +62,8 @@ class Header extends React.Component {
         <LinkButton to='/main' title='MainTabs' />
         <LinkButton to='/login' title='LoginTabs' />
         <LinkButton to='/profile' title='Profile' />
-        <LinkButton to='/devices/1' title='Device id 1' />
-        <LinkButton to='/offices/1' title='Office id 1' />
+        <LinkButton to='/devices' title='Devices' />
+        <LinkButton to='/offices' title='Offices' />
       </span>
     );
   }
@@ -78,6 +76,8 @@ class Header extends React.Component {
           <InputLabel htmlFor="search" className={classes.fontSize}>Search</InputLabel>
           <Input
             className={classes.input}
+            value={this.props.modelFilter}
+            onChange={(e) => this.props.setModelFilter(e.target.value)}
             inputProps={{
               name: 'search',
               id: 'search',
@@ -122,7 +122,7 @@ class Header extends React.Component {
           onClick={this.handleMenu}
           color="inherit"
         >
-          <AccountCircle className={classes.menuButton}/>
+          <AccountCircle className={classes.menuButton} />
         </IconButton>
         <Menu
           id="menu-appbar"
@@ -151,29 +151,39 @@ class Header extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.root}>
-        <AppBar position="static" color="default">
-          <Toolbar>
-            <img className={classes.leftMargin} src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'} height="40px" width='40px' />
-            <Typography variant="title" color="inherit" className={classes.text}>
+      <AppBar position="sticky" color='inherit' className={classes.root}>
+        <Toolbar>
+          <img
+            className={classes.leftMargin}
+            src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'}
+            height="40px"
+            width='40px'
+          />
+          <Typography variant="title" color="inherit" className={classes.text}>
               DEVBRIDGE <br /> GROUP
-            </Typography>
+          </Typography>
 
-            {this.renderNavigationBarLinks()}
+          {this.renderNavigationBarLinks()}
 
-            <div className={classes.rightMenu}>
-              {this.renderSearchForm()}
-              {this.renderProfileMenu()}
-            </div>
-          </Toolbar>
-        </AppBar>
-      </div >
+          <div className={classes.rightMenu}>
+            {this.renderSearchForm()}
+            {this.renderProfileMenu()}
+          </div>
+        </Toolbar>
+      </AppBar>
     );
   }
 }
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
+  setModelFilter: PropTypes.func.isRequired,
+  modelFilter: PropTypes.string.isRequired,
 };
 
-export default withStyles(Styles)(Header);
+const mapStateToProps = state => {
+  return {
+    modelFilter: state.devices.modelFilter,
+  };
+};
+export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Header));

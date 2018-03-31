@@ -1,6 +1,10 @@
-const Styles = {
+const Styles = theme => ({
   root: {
     flexGrow: 1,
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  appBar: {
+    backgroundColor: 'white',
   },
   menuButton: {
     fontSize: 32,
@@ -31,6 +35,6 @@ const Styles = {
     position: 'absolute',
     right: 10,
   },
-};
+});
 
 export default Styles;
