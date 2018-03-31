@@ -1,5 +1,5 @@
-import { users } from 'Constants/ActionTypes';
+import * as at from 'Constants/ActionTypes';
 
 export const setUsers = (usersArray) => {
-  return { type: users.SET_USERS, payload: usersArray };
+  return { type: at.users.SET_USERS, payload: usersArray };
 };
