@@ -5,7 +5,6 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import { withRouter } from 'react-router-dom';
-
 import { ListItem } from 'material-ui/List';
 
 import Styles from './Styles';
@@ -42,6 +41,5 @@ OfficeItem.propTypes = {
     lng: PropTypes.number.isRequired,
   }).isRequired,
 };
-
 
 export default withStyles(Styles)(withRouter(OfficeItem));

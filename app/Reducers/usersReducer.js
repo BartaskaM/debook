@@ -1,4 +1,4 @@
-import { users } from 'Constants/ActionTypes';
+import * as at from 'Constants/ActionTypes';
 
 const defaultState = {
   users: [],
@@ -6,7 +6,7 @@ const defaultState = {
 
 export default (state = defaultState, action) => {
   switch (action.type) {
-    case users.SET_USERS: {
+    case at.users.SET_USERS: {
       return { ...state, users: [...action.payload] };
     }
     default: return state;

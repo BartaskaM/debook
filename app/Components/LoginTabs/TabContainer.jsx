@@ -15,5 +15,4 @@ TabContainer.propTypes = {
   dir: PropTypes.string.isRequired,
 };
 
-
 export default TabContainer;

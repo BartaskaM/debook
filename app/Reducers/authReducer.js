@@ -1,4 +1,4 @@
-import { auth } from 'Constants/ActionTypes';
+import * as at from 'Constants/ActionTypes';
 
 const defaultState = {
   user: {},
@@ -6,10 +6,10 @@ const defaultState = {
 
 export default (state = defaultState, action) => {
   switch (action.type){
-    case auth.SET_USER_INFO: {
+    case at.auth.SET_USER_INFO: {
       return {...state, user: action.payload};
     }
-    case auth.LOG_OUT_USER: {
+    case at.auth.LOG_OUT_USER: {
       return {...state, user: {}};
     }
     default: return state;

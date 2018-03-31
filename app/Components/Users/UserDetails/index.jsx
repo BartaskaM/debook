@@ -74,4 +74,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, userDetailsActions)(withRouter(UserDetailsHandler));
+export default withRouter(connect(mapStateToProps, userDetailsActions)(UserDetailsHandler));
