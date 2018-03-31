@@ -16,11 +16,6 @@ const EventItem = ({ classes, event }) => {
         <Typography variant='display1'>
           <Grid container>
             <Grid item xs>{event.action} {event.device} {event.user} {event.office} {event.datetime}</Grid>
-            {/* <Grid item xs>{event.action}</Grid> */}
-            {/* <Grid item xs={4}>{event.device}</Grid>
-            <Grid item xs={4}>{event.user}</Grid>
-            <Grid item xs={4}>{event.office}</Grid>
-            <Grid item xs={4}>{event.datetime}</Grid> */}
           </Grid>
         </Typography>
       </Paper>

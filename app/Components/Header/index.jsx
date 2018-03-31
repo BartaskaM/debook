@@ -64,7 +64,6 @@ class Header extends React.Component {
         <LinkButton to='/profile' title='Profile' />
         <LinkButton to='/devices' title='Devices' />
         <LinkButton to='/offices' title='Offices' />
-        <LinkButton to='/events' title='Events' />
       </span>
     );
   }
