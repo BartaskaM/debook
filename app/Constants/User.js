@@ -1,13 +1,13 @@
-const User =
-  [{
+const User = [
+  {
     id: 1,
     firstName: 'John',
     lastName: 'Snow',
     email: 'admin@admin.com',
     office: 'Wilno',
     slack: 'LordCommander2',
-    admin: true,
-    password: 'admin',   
+    role: 'admin',
+    password: 'admin',
   },
   {
     id: 2,
@@ -16,9 +16,19 @@ const User =
     email: 'user@user.com',
     office: 'Kawnas',
     slack: 'pStandsForPeasant',
-    admin: false,
-    password: 'user', 
+    role: 'user',
+    password: 'user',
   },
-  ];
+  {
+    id: 3,
+    firstName: 'Augustas Nojus',
+    lastName: 'Grebliauskas',
+    email: 'noah.grebliauskas@gmail.com',
+    office: 'Kawnas',
+    slack: 'Humpero',
+    role: 'admin',
+    password: 'password',
+  },
+];
 
 export default User;
