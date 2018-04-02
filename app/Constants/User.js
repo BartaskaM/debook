@@ -6,7 +6,7 @@ const User = [
     email: 'admin@admin.com',
     office: 'Wilno',
     slack: 'LordCommander2',
-    admin: true,
+    role: 'admin',
     password: 'admin',
   },
   {
@@ -16,7 +16,7 @@ const User = [
     email: 'user@user.com',
     office: 'Kawnas',
     slack: 'pStandsForPeasant',
-    admin: false,
+    role: 'user',
     password: 'user',
   },
   {
@@ -26,7 +26,7 @@ const User = [
     email: 'noah.grebliauskas@gmail.com',
     office: 'Kawnas',
     slack: 'Humpero',
-    admin: true,
+    role: 'admin',
     password: 'password',
   },
 ];

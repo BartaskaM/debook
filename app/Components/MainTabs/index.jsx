@@ -33,10 +33,10 @@ class MainTabs extends React.Component {
           >
             <Tab value='/devices' label='DEVICE LIST' classes={{ label: classes.fontSize }} />
             <Tab value='/events' label='EVENT LIST' classes={{ label: classes.fontSize }} />
-            {this.props.user.admin &&
+            {this.props.user.role === 'admin' &&
               <Tab value='/users' label='USER LIST' classes={{ label: classes.fontSize }} />
             }
-            {this.props.user.admin &&
+            {this.props.user.role === 'admin' &&
               <Tab value='/offices' label='OFFICE LIST' classes={{ label: classes.fontSize }} />
             }
           </Tabs>
@@ -56,7 +56,7 @@ MainTabs.propTypes = {
     email: PropTypes.string.isRequired,
     office: PropTypes.string.isRequired,
     slack: PropTypes.string.isRequired,
-    admin: PropTypes.bool.isRequired,
+    role: PropTypes.string.isRequired,
   }).isRequired,
 };
 

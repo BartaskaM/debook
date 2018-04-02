@@ -250,7 +250,7 @@ class UserDetails extends React.Component {
   renderButtons(){
     const { edit } = this.state;
     const { currentUser, user } = this.props;
-    return ( (user.id === currentUser.id || currentUser.admin) &&
+    return ( (user.id === currentUser.id || currentUser.role === 'admin') &&
       <Grid item xs={12}>
         <Grid container >
           <Grid item xs={8}></Grid>
@@ -519,6 +519,7 @@ UserDetails.propTypes = {
     email: PropTypes.string.isRequired,
     office: PropTypes.string.isRequired,
     slack: PropTypes.string.isRequired,
+    role: PropTypes.string.isRequired,
   }).isRequired,
   match: PropTypes.object,
   currentUser: PropTypes.shape({
