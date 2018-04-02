@@ -6,8 +6,11 @@ const Styles = {
   list: {
     width: '100%',
   },
-  heading: {
+  paper: {
+    padding: 10,
+    marginTop: 25,
     marginBottom: 25,
+    width: '100%',
   },
 };
 

@@ -15,11 +15,10 @@ const EventItem = ({ event }) => {
           <Grid item xs>{event.device}</Grid>
           <Grid item xs> {event.user} </Grid>
           <Grid item xs>{event.office}</Grid>
-          <Grid item xs>{event.datetime}</Grid>
+          <Grid item xs>{new Date(+event.datetime).toLocaleString()}</Grid>
         </Grid>
       </Typography>
     </Grid>
-
   );
 };
 
