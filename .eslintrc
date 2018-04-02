@@ -28,6 +28,7 @@
     "prefer-const": "error",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
-    "no-console": "off"
+    "no-console": "warn",
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 0 }]
   }
 }
