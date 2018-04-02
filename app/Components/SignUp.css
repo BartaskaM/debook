@@ -1,0 +1,102 @@
+body {
+    background-color: #f6f6f6;
+}
+
+.navbar {
+    background-color: #ffffff;
+    height: 80px;
+
+    -webkit-box-shadow: 0px 4px 10px -4px rgba(92,92,92,1);
+    -moz-box-shadow: 0px 4px 10px -4px rgba(92,92,92,1);
+    box-shadow: 0px 4px 10px -4px rgba(92,92,92,1);
+}
+
+.DB-text {
+    font-size: 27px;
+    font-weight: 500;
+    line-height: 26px;
+    height: 30px;
+    width: 200px;
+}
+
+.DB-logo {
+    height: 52px;
+    width: 52px;
+    margin: 0;
+    margin-right: 8px;
+    margin-left: 100px;
+    padding: 0;
+}
+
+.inline {
+    position: absolute;
+    margin-top: -2px;
+    display: inline-block;
+    overflow: visible;
+    height: 60px;
+    width: 200px;
+}
+
+.signUp-form-container {
+    margin-top: 180px;
+}
+
+.form-tab {
+    text-align: center;
+    padding: 25px;
+    font-size: 27px;
+    font-weight: 500;
+    letter-spacing: 0.05px;
+    height: 90px;
+    color: black;
+    background-color: #ffffff;
+}
+
+.active {
+    border-bottom: 5px solid #ce2b27;
+}
+
+.inactive {
+    background-color: #e2e1e1;
+}
+
+.box {
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.signUp-button:hover {
+    background-color: #d9534f;
+    color: white;
+}
+
+.signUp-button {
+    background-color: #ce2b27;
+    margin-top: 15px;
+    color: white;
+    font-size: 32px;
+    font-weight: 500;
+    width: 100%;
+}
+
+.welcomeText {
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 0;
+    margin-left: 10;
+}
+
+.subText {
+    margin-left: 10px;
+    color: grey;
+    font-size: 16px;
+}
+
+.errorText {
+    color: red;
+}
+
+.form-group.required .control-label:after { 
+    content:"*";
+    color:red;
+ }
