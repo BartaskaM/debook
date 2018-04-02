@@ -29,7 +29,7 @@ class Login extends React.Component {
     this.validateLoginData = this.validateLoginData.bind(this);
   }
   
-  componentWillMount(){
+  componentDidMount(){
     if(this.props.user){
       this.props.history.push('/devices');
     }
