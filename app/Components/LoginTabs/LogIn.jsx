@@ -11,6 +11,7 @@ import {
   FormGroup,
 } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
+
 import Styles from './Styles';
 import UserLoginData from 'Constants/User';
 import * as auth from 'ActionCreators/authActions';
@@ -28,9 +29,9 @@ class Login extends React.Component {
     this.validateLoginData = this.validateLoginData.bind(this);
   }
   
-  componentWillMount(){
-    if(Object.keys(this.props.user).length !== 0){
-      this.props.history.push('main');
+  componentDidMount(){
+    if(this.props.user){
+      this.props.history.push('/devices');
     }
   }
   submitLogInForm(e) {
@@ -52,7 +53,7 @@ class Login extends React.Component {
     if (userLoginData != null) {
       if (userLoginData.password === this.state.password) {
         this.props.setUserInfo(userLoginData);
-        this.props.history.push('/main');
+        this.props.history.push('/devices');
       }
       else {
         this.setState({ errorMessage: 'Check your credentials!' });
@@ -121,7 +122,7 @@ Login.propTypes = {
   classes: PropTypes.object.isRequired,
   setUserInfo: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
