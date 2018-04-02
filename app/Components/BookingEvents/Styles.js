@@ -3,12 +3,11 @@ const Styles = {
     padding: 20,
     margin: 20,
   },
-  eventList: {
+  list: {
     width: '100%',
   },
-  eventPaper: {
-    padding: 30,
-    width: '100%',
+  heading: {
+    marginBottom: 25,
   },
 };
 
