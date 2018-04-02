@@ -101,12 +101,13 @@ class BookModal extends React.Component{
       const updatedDevices = [...this.props.devices];
       updatedDevices.map(device => {
         if(device.id == this.props.selectedDevice){
-          device.custody = this.props.user.id.toString();
+          device.custody = this.props.user.id;
           device.available = false;
         }
       });
       this.props.setDevices(updatedDevices);
       this.props.showBookModal(false);
+      console.log('works');
       //Post booking info
     }
   }

@@ -9,7 +9,9 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import Plus from 'material-ui-icons/Add';
+import IconReserve from 'material-ui-icons/Event';
 import BookModal from 'components/BookModal';
+import Device from '../Device/Device';
 import * as devicesActions from 'ActionCreators/devicesActions';
 class DeviceList extends React.Component{
   constructor(props){
@@ -71,24 +73,25 @@ class DeviceList extends React.Component{
         <Grid item xs={4}key={index}>
           <Paper>
             <Link to={`/devices/${device.id.toString()}`}>
-              <div>
-                <ul>
-                  <li>Id: {device.id}</li>
-                  <li>Brand: {device.brand}</li>
-                  <li>Model: {device.model}</li>
-                  <li>OS: {device.os}</li>
-                  <li>Location: {device.location}</li>
-                  <li>Custody: {device.custody}</li>
-                  <li>Available: {device.available.toString()}</li>
-                  <li>Active: {device.active.toString()}</li>
-                </ul>
-              </div>
+              <Device image={device.image} brand={device.brand} model={device.model} id={device.id} os={device.os} location= {device.location}
+                custody={device.custody} available={device.available} />
             </Link>
-            <Button 
+            <Button
               variant='raised'
+              style={{
+                width: '50%',
+              
+              }}
+            ><IconReserve className={classes.leftIcon}/>Reserve </Button>
+            <Button 
+              
+              style={{
+                width: '50%',
+              }}
               disabled={
                 device.available ? false : device.custody == (this.props.user.id) ? false : true
               } 
+              variant='raised'
               color={device.available ? 'primary' : 'secondary'} 
               onClick={()=>this.handleCheckClick(device.id)}>
               <Plus className={classes.leftIcon}/>
@@ -97,7 +100,7 @@ class DeviceList extends React.Component{
                 device.custody == (this.props.user.id) ? 
                   'Return device' :
                   'Device is booked'}
-            </Button>
+            </Button>          
           </Paper>
         </Grid>
       );
