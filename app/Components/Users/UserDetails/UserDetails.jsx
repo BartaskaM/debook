@@ -524,7 +524,7 @@ UserDetails.propTypes = {
   match: PropTypes.object,
   currentUser: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    admin: PropTypes.bool.isRequired,
+    role: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
   }).isRequired,
   users: PropTypes.array.isRequired,
