@@ -7,9 +7,7 @@ const Styles = {
     width: '100%',
   },
   paper: {
-    padding: 10,
-    marginTop: 25,
-    marginBottom: 25,
+    padding: 30,
     width: '100%',
   },
 };

@@ -5,19 +5,25 @@ import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import { withRouter } from 'react-router-dom';
 import Styles from './Styles';
+import Paper from 'material-ui/Paper';
+import { ListItem } from 'material-ui/List';
 
-const EventItem = ({ event }) => {
+const EventItem = ({ event, classes }) => {
   return (
     <Grid item xs>
-      <Typography variant='display1'>
-        <Grid container>
-          <Grid item xs>{event.action}</Grid>
-          <Grid item xs>{event.device}</Grid>
-          <Grid item xs> {event.user} </Grid>
-          <Grid item xs>{event.office}</Grid>
-          <Grid item xs>{new Date(+event.datetime).toLocaleString()}</Grid>
-        </Grid>
-      </Typography>
+      <ListItem>
+        <Paper className={classes.paper}>
+          <Typography variant='display1'>
+            <Grid container>
+              <Grid item xs>{event.action}</Grid>
+              <Grid item xs>{event.device}</Grid>
+              <Grid item xs> {event.user} </Grid>
+              <Grid item xs>{event.office}</Grid>
+              <Grid item xs>{new Date(+event.datetime).toLocaleString()}</Grid>
+            </Grid>
+          </Typography>
+        </Paper>
+      </ListItem>
     </Grid>
   );
 };

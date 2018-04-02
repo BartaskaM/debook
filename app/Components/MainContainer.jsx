@@ -12,7 +12,6 @@ import Devices from './Devices';
 import DeviceDetails from './Devices/DeviceDetails';
 import Offices from './Offices';
 import OfficeDetails from './Offices/OfficeDetails';
-//import User from '../Constants/User';
 import BookingEvents from './BookingEvents';
 import ErrorComponent from './Error';
 
