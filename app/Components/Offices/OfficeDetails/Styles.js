@@ -3,6 +3,9 @@ const Styles = {
     padding: 20,
     margin: 20,
   },
+  officedetailsContainer: {
+    marginTop: 20,
+  },
   officeLocationInfo: {
     position: 'relative',
     padding: 32,
@@ -27,6 +30,12 @@ const Styles = {
     height: 60,
     width: 180,
     fontSize: 20,
+  },
+  divider: {
+    margin: '5px 0',
+  },
+  bigFont: {
+    fontSize: 18,
   },
 };
 
