@@ -78,7 +78,7 @@ class UserDetails extends React.Component {
   checkIfEmail(string){
     return validator.validate(string);
   }
-  
+
   validateEmail() {
     const email = this.state.user.email;
     if(!this.checkIfEmail(email)){
@@ -120,7 +120,7 @@ class UserDetails extends React.Component {
       });
     }
   }
- 
+
   validateNewPassword(){
     const { newPassword } = this.state;
     if(this.shouldChangePassword())
@@ -220,8 +220,8 @@ class UserDetails extends React.Component {
   }
 
   renderProfileInfo(){
-    const { classes, user } = this.props;
-    const { firstName, lastName, email, slack, office } = user;
+    const { classes } = this.props;
+    const { firstName, lastName, email, slack, office } = this.state.user;
     return (
       <Grid item xs={12}>
         <Grid container>
@@ -291,8 +291,14 @@ class UserDetails extends React.Component {
       newPasswordMatch,
       emailErrorMessage,
     } = this.state;
-    const { email, firstName, lastName, slack, office, id } = user;
-    console.log(this.state);
+    const { 
+      email, 
+      firstName, 
+      lastName, 
+      slack, 
+      office, 
+      id, 
+    } = user;
     return (          
       <Grid item xs={12}>
         <FormGroup>
@@ -303,7 +309,7 @@ class UserDetails extends React.Component {
                 <Input
                   value={firstName}
                   className={classes.fontSize}
-                  error={!this.state.validFirstName}
+                  error={!validFirstName}
                   onChange={this.handleFormChange}
                   onBlur={this.validateFirstName}
                   inputProps={{
@@ -320,9 +326,9 @@ class UserDetails extends React.Component {
             </Grid>
           </Grid>
           <Grid container>
-            <FormControl className={classes.signUpFormField}>
-              <Grid item xs={2} className={classes.label}>Last name:</Grid>
-              <Grid item xs={10}>
+            <Grid item xs={2} className={classes.label}>Last name:</Grid>
+            <Grid item xs={10}>
+              <FormControl className={classes.signUpFormField}>
                 <Input
                   className={classes.fontSize}
                   value={lastName}
@@ -339,13 +345,13 @@ class UserDetails extends React.Component {
                 <FormHelperText>
                   {!validLastName ? 'Fill this field.' : ''}
                 </FormHelperText>
-              </Grid>
-            </FormControl>
+              </FormControl>
+            </Grid>
           </Grid>   
           <Grid container>
-            <FormControl className={classes.signUpFormField}>
-              <Grid item xs={2} className={classes.label}>Email:</Grid>
-              <Grid item xs={10}>
+            <Grid item xs={2} className={classes.label}>Email:</Grid>
+            <Grid item xs={10}>
+              <FormControl className={classes.signUpFormField}>
                 <Input
                   value={email}
                   className={classes.fontSize}
@@ -362,8 +368,8 @@ class UserDetails extends React.Component {
                 <FormHelperText>
                   {!validEmail ? emailErrorMessage : ''}
                 </FormHelperText>
-              </Grid>
-            </FormControl> 
+              </FormControl>
+            </Grid> 
           </Grid>         
           <Grid container>
             <Grid item xs={2} className={classes.label}>Office</Grid>
@@ -479,6 +485,7 @@ class UserDetails extends React.Component {
       </Grid>           
     );
   }
+
   render() {
     const { classes, history } = this.props;
     return (
