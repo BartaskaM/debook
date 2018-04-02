@@ -14,7 +14,7 @@ class BookingEvents extends React.Component {
     return (
       <div className={classes.root}>
         <Grid container spacing={16}>
-          <List className={classes.bookingEvents}>
+          <List className={classes.eventList}>
             {BookingEventsList.map(event => (
               <EventItem key={event.id} event={event} />
             ))}

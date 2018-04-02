@@ -5,6 +5,7 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import { withRouter } from 'react-router-dom';
+import { ListItem } from 'material-ui/List';
 
 import Styles from './Styles';
 import {GridList, GridTile} from 'material-ui/GridList';
@@ -14,10 +15,11 @@ const EventItem = ({ classes, event }) => {
     // <GridList className={classes.eventPaper}>
     //   <GridTile>{event.action} </GridTile>
     // </GridList>
-    <Grid item xs>
+    <Grid item xs={12}>
+          {/* <ListItem> */}
       {/* <Paper className={classes.eventPaper}> */}
         <Typography variant='display1'>
-          <Grid container>
+          <Grid container padding={20}>
             <Grid item xs>{event.action}</Grid>
             <Grid item xs>{event.device}</Grid>
             <Grid item xs>{event.user}</Grid>
@@ -26,6 +28,7 @@ const EventItem = ({ classes, event }) => {
           </Grid>
         </Typography>
       {/* </Paper> */}
+      {/* </ListItem> */}
     </Grid>
 
   );

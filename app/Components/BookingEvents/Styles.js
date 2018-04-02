@@ -10,9 +10,6 @@ const Styles = {
     padding: 30,
     width: '100%',
   },
-  test: {
-    width: '1000',
-  },
 };
 
 export default Styles;
