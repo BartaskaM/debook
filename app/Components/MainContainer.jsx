@@ -13,7 +13,7 @@ import DeviceDetails from './Devices/DeviceDetails';
 import Offices from './Offices';
 import OfficeDetails from './Offices/OfficeDetails';
 //import User from '../Constants/User';
-//import BookingEvents from './BookingEvents';
+import BookingEvents from './BookingEvents';
 import ErrorComponent from './Error';
 
 class MainContainer extends React.Component {
@@ -62,14 +62,14 @@ class MainContainer extends React.Component {
         <Route path='/offices/:id' render={() =>
           <Auth component={OfficeDetails} allowedRoles={RouteRoles.OfficeDetails} />
         } />
-        {/* <Route exact path='/events' render={() =>
+        <Route exact path='/events' render={() =>
           <Auth component={() => (
             <div>
               <MainTabs tabIndex='/events' />
               <BookingEvents />
             </div>
-          );
-        }} /> */}
+          )} allowedRoles={RouteRoles.Offices} />
+        } />
       </div>
     );
   }
