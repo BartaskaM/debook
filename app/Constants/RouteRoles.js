@@ -1,8 +1,3 @@
-export const Profile = [
-  'admin',
-  'user', 
-];
-
 export const Users = [
   'admin',
 ];
