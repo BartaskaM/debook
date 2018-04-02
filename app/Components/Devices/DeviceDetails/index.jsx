@@ -35,7 +35,7 @@ class DeviceDetails extends React.Component {
     super(props);
     this.props.setDevices(DevicesList);
     this.state = {
-      device: props.devices.filter(device=>device.id == this.props.match.params.id),
+      device: {},
     };
     //  this.renderWindow = this.renderWindow.bind(this);
     this.changeInfo = this.changeInfo.bind(this);
@@ -44,6 +44,12 @@ class DeviceDetails extends React.Component {
   componentDidMount() {
     //TODO: Fetch devices
     this.props.setDevices(DevicesList);
+  }
+  static getDerivedStateFromProps(nextProps, prevState){
+    const device = nextProps.devices.find(device=>device.id == nextProps.match.params.id);
+    if(device != prevState.device){
+      return {device};
+    }
   }
   changeInfo(label, newInfo) {
     this.setState({ [label]: newInfo });
@@ -54,8 +60,8 @@ class DeviceDetails extends React.Component {
   }
   render(){
     const { classes } = this.props;
-    console.log(this.props.devices);
-    return (      
+    console.log(this.state);
+    return (this.state.device ?      
       <div className={classes.root}>   
         <Link to="/main">
           <Button variant="flat">
@@ -189,10 +195,9 @@ class DeviceDetails extends React.Component {
             <Button variant="raised" size="large" color="secondary" className={classes.button}>
                 CHANGE LOCATION
             </Button>
-
           </Grid>
         </Grid>
-      </div>
+      </div> : null
     );
   }
 }
