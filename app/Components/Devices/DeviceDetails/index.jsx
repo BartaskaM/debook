@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
 import { Link } from 'react-router-dom';
-import Row from './Row';
+
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
-import { withStyles/*, MuiThemeProvider, createMuiTheme*/ } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Plus from 'material-ui-icons/Add';
 import Divider from 'material-ui/Divider';
@@ -14,20 +13,11 @@ import Paper from 'material-ui/Paper';
 import Tooltip from 'material-ui/Tooltip';
 import Flag from 'material-ui-icons/Flag';
 import NavigateBefore from 'material-ui-icons/NavigateBefore';
+
+import Row from './Row';
 import { styles } from './Styles';
 import DevicesList from 'Constants/Devices';
 import * as devicesActions from 'ActionCreators/devicesActions';
-
-/* Ateities planams su teisingoms spalvoms.
-const theme = createMuiTheme({
-  palette: {
-    primary: purple,
-    secondary: blue,
-    third: 
-    error: red,
-  },
-});
-*/ 
 
 class DeviceDetails extends React.Component {
 
@@ -39,9 +29,9 @@ class DeviceDetails extends React.Component {
     };
     this.handleEditClick = this.handleCheckClick.bind(this);
     this.getParsedDate =  this.getParsedDate.bind(this);
+    this.renderError =  this.renderError.bind(this);
   }
   componentDidMount() {
-    //TODO: Fetch devices
     this.props.setDevices(DevicesList);
   }
   static getDerivedStateFromProps(nextProps, prevState){
@@ -49,6 +39,9 @@ class DeviceDetails extends React.Component {
     if(device != prevState.device){
       return {device};
     }
+  }
+  renderError() {
+    return <div><h1>Something went WRONG. Please try again. </h1></div>;
   }
   getParsedDate(){
     const currentDate = new Date(), 
@@ -116,9 +109,7 @@ class DeviceDetails extends React.Component {
                     </Grid>
                     <Row 
                       label="Booked from" 
-                      value={this.state.device.booked_from} 
-                      edit={false} 
-                      changeInfo={this.changeInfo}/>
+                      value={this.state.device.booked_from}/>
                   </Grid>
                   <Grid item md={11}>
                     <Divider className={classes.divider} />
@@ -129,59 +120,37 @@ class DeviceDetails extends React.Component {
                   </Grid>
                   <Row 
                     label="ID#" 
-                    value={this.state.device.identification_num} 
-                    edit={false} 
-                    changeInfo={this.changeInfo}/>
+                    value={this.state.device.identification_num}/>
                   <Row 
                     label="Serial number" 
-                    value={this.state.device.serial_num} 
-                    edit={false} 
-                    changeInfo={this.changeInfo}/>
+                    value={this.state.device.serial_num}/>
                   <Row 
                     label="OS" 
-                    value={this.state.device.os} 
-                    edit={false} 
-                    changeInfo={this.changeInfo}/>
+                    value={this.state.device.os}/>
                   <Row 
                     label="Group" 
-                    value={this.state.device.group} 
-                    edit={false} 
-                    changeInfo={this.changeInfo}/>
+                    value={this.state.device.group}/>
                   <Row 
                     label="Subgroup" 
-                    value={this.state.device.subgroup} 
-                    edit={false} 
-                    changeInfo={this.changeInfo}/>
+                    value={this.state.device.subgroup}/>
                   <Row 
                     label="Description" 
-                    value={this.state.device.description} 
-                    edit={false} 
-                    changeInfo={this.changeInfo}/>
+                    value={this.state.device.description}/>
                   <Row 
                     label="Check-in due" 
-                    value={this.state.device.check_in_due} 
-                    edit={false} 
-                    changeInfo={this.changeInfo}/>
+                    value={this.state.device.check_in_due}/>
                   <Row 
                     label="Location" 
-                    value={this.state.device.location} 
-                    edit={false} 
-                    changeInfo={this.changeInfo}/>
+                    value={this.state.device.location}/>
                   <Row 
                     label="Purchased on:" 
-                    value={this.state.device.purchased} 
-                    edit={false} 
-                    changeInfo={this.changeInfo}/>
+                    value={this.state.device.purchased}/>
                   <Row 
                     label="Vendor" 
-                    value={this.state.device.vendor} 
-                    edit={false} 
-                    changeInfo={this.changeInfo}/>
+                    value={this.state.device.vendor}/>
                   <Row 
                     label="Tax rate" 
-                    value={this.state.device.tax_rate} 
-                    edit={false} 
-                    changeInfo={this.changeInfo}/>
+                    value={this.state.device.tax_rate}/>
                 </Grid> 
               </Paper>
             </Grid> 
@@ -216,7 +185,7 @@ class DeviceDetails extends React.Component {
             </Grid>
           </Grid>
         </div>
-        : null
+        : this.renderError()
     );
   }
 }
