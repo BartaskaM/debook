@@ -14,6 +14,7 @@ import Offices from './Offices';
 import OfficeDetails from './Offices/OfficeDetails';
 import BookingEvents from './BookingEvents';
 import ErrorComponent from './Error';
+import AddOffice from './Offices/AddOffice';
 
 class MainContainer extends React.Component {
   render() {
@@ -50,14 +51,24 @@ class MainContainer extends React.Component {
           <Auth component={DeviceDetails} allowedRoles={RouteRoles.DeviceDetails} />
         } />
 
-        <Route exact path='/offices' render={() =>
+        {/* <Route exact path='/offices' render={() =>
           <Auth component={() => (
             <div>
               <MainTabs tabIndex='/offices' />
               <Offices />
             </div>
           )} allowedRoles={RouteRoles.Offices} />
+        } /> */}
+        <Route exact path='/offices' render={() =>
+          <Auth component={() => (
+            <div>
+              <MainTabs tabIndex='/offices' />
+              <AddOffice />
+            </div>
+          )} allowedRoles={RouteRoles.Offices} />
         } />
+
+
         <Route path='/offices/:id' render={() =>
           <Auth component={OfficeDetails} allowedRoles={RouteRoles.OfficeDetails} />
         } />
