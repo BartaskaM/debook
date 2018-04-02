@@ -4,20 +4,17 @@ import PropTypes from 'prop-types';
 
 const device = (props) => {
   return (
-    <div className="grid__item device-card">
-    
+    <div className="grid__item device-card"> 
       <div className="device-card__image">
         <img src={props.image} />
       </div> 
       
       {props.available ?
-        <div className="device-card__tag availability-tag availability-tag--available">
-      
+        <div className="device-card__tag availability-tag availability-tag--available">     
           <span>Available</span>
         </div>
         :
         <div className="device-card__tag availability-tag availability-tag--unavailable">
-      
           <span>Unavailable</span>
         </div>
       }
@@ -30,7 +27,6 @@ const device = (props) => {
           <dt>Identification number: </dt>
           <dd>{props.id}</dd>
         </dl>
-        
         <dl>
           <dt>OS: </dt>
           <dd>{props.os}</dd>
