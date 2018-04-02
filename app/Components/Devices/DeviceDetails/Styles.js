@@ -12,33 +12,14 @@ export const styles = {
   bigFont: {
     fontSize: 18,
   },
-  header:
-    {
-      fontSize: 18,
-      fontWeight: 'bold',
-      paddingLeft: 10,
-    },
   table: {
     marginTop: 10,
     marginLeft: 10,
     marginBottom: 10,
   },
-  editButtonWrapper: {
-    textAlign: 'right',
-  },
-  editButton: {
-    display: 'inline-block',
-  },
   label: {
     color: '#999',
     textTransform: 'capitalize',
-  },
-  card: {
-    maxWidth: 345,
-  },
-  media: {
-    width: 300, 
-    height: 'auto',
   },
   image: {
     flex: 1,
