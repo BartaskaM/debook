@@ -12,12 +12,9 @@ import Devices from './Devices';
 import DeviceDetails from './Devices/DeviceDetails';
 import Offices from './Offices';
 import OfficeDetails from './Offices/OfficeDetails';
-<<<<<<< HEAD
-import User from '../Constants/User';
-import BookingEvents from './BookingEvents';
-=======
+//import User from '../Constants/User';
+//import BookingEvents from './BookingEvents';
 import ErrorComponent from './Error';
->>>>>>> develop
 
 class MainContainer extends React.Component {
   render() {
@@ -60,25 +57,19 @@ class MainContainer extends React.Component {
               <MainTabs tabIndex='/offices' />
               <Offices />
             </div>
-<<<<<<< HEAD
-          );
-        }} />
-        <Route path='/offices/:id' component={OfficeDetails} />
-        <Route exact path='/events' render={() => {
-          return (
-            <div>
-              <MainTabs tabIndex='/events' />
-              <BookingEvents />
-            </div>
-          );
-        }} />
-=======
           )} allowedRoles={RouteRoles.Offices} />
         } />
         <Route path='/offices/:id' render={() =>
           <Auth component={OfficeDetails} allowedRoles={RouteRoles.OfficeDetails} />
         } />
->>>>>>> develop
+        {/* <Route exact path='/events' render={() =>
+          <Auth component={() => (
+            <div>
+              <MainTabs tabIndex='/events' />
+              <BookingEvents />
+            </div>
+          );
+        }} /> */}
       </div>
     );
   }
