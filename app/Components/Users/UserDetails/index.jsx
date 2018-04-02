@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import * as userDetailsActions from 'ActionCreators/userDetailsActions';
+import * as usersActions from 'ActionCreators/usersActions';
 import UserDetails from './UserDetails';
+import Users from 'Constants/User';
 
 class UserDetailsHandler extends React.Component {
   constructor(props) {
@@ -16,6 +18,7 @@ class UserDetailsHandler extends React.Component {
   }
 
   componentDidMount() {
+    this.props.setUsers(Users);
     if (this.props.match.params.id) {
       // Is in /user/:id
       this.props.getUserWithID(this.props.match.params.id);
@@ -65,6 +68,7 @@ UserDetailsHandler.propTypes = {
     slack: PropTypes.string.isRequired,
   }),
   match: PropTypes.object,
+  setUsers: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -74,4 +78,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, userDetailsActions)(UserDetailsHandler));
+export default connect(mapStateToProps, {
+  ...usersActions,
+  ...userDetailsActions})(withRouter(UserDetailsHandler));
