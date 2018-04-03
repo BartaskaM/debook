@@ -25,6 +25,7 @@ class DeviceList extends React.Component{
     this.renderDevices = this.renderDevices.bind(this);
     this.openBookDialog = this.openBookDialog.bind(this);
     this.openReserveDialog = this.openReserveDialog.bind(this);
+    this.cancelReservation = this.cancelReservation.bind(this);
   }
 
   componentDidMount() {
@@ -83,7 +84,19 @@ class DeviceList extends React.Component{
     return devicesToRender;
   }
 
-  renderDevices(classes){      
+  cancelReservation(){
+    const { reservations, user, setReservations } = this.props;
+    const newReservations = reservations.filter(res => res.user != user.id);
+    setReservations(newReservations);
+  }
+
+  renderDevices(classes){
+    const { reservations, user } = this.props;     
+    const hasReservation = reservations.map(res => res.user).includes(user.id);
+    let reservedDevice;
+    if(hasReservation){
+      reservedDevice = reservations.find(res => res.user == user.id).device;
+    }
     return this.filterDevices().map((device, index)=>{
       return (
         //Replace list with device component
@@ -106,7 +119,7 @@ class DeviceList extends React.Component{
             <Button 
               variant='raised'
               disabled={
-                device.available ? false : device.custody == (this.props.user.id) ? false : true
+                device.available ? false : device.custody == (user.id) ? false : true
               } 
               color={device.available ? 'primary' : 'secondary'} 
               className={classes.button}
@@ -114,16 +127,20 @@ class DeviceList extends React.Component{
               <Plus className={classes.leftIcon}/>
               {device.available ?
                 'Book device' : 
-                device.custody == (this.props.user.id) ? 
+                device.custody == (user.id) ? 
                   'Return device' :
                   'Device is booked'}
             </Button>
             <Button
               variant="raised"
               className={classes.button}
-              onClick={ () => this.openReserveDialog(device.id)}>
+              disabled={hasReservation && device.id != reservedDevice}
+              onClick={ 
+                hasReservation && device.id == reservedDevice ?
+                  this.cancelReservation :
+                  () => this.openReserveDialog(device.id)}>
               <Clock className={classes.leftIcon}/>
-              Reserve
+              {hasReservation && device.id == reservedDevice ? 'Cancel reservation' : 'Reserve'}
             </Button>
           </Paper>
         </Grid>
@@ -199,7 +216,14 @@ DeviceList.propTypes = {
   showBookModal: PropTypes.func.isRequired,
   setSelectedDevice: PropTypes.func.isRequired,
   showReserveModal: PropTypes.func.isRequired,
-  reservations: PropTypes.array.isRequired,
+  reservations: PropTypes.arrayOf(
+    PropTypes.shape({
+      device: PropTypes.number.isRequired,
+      user: PropTypes.number.isRequired,
+      from: PropTypes.object.isRequired,
+      to: PropTypes.object.isRequired,
+    })
+  ),
   setReservations: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {

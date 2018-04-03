@@ -13,8 +13,7 @@ import { withStyles } from 'material-ui/styles';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
 import ReservationsTable from '../ReservationsTable';
-import Reservations from 'Constants/Reservations';
-import { dateToValue, toUnixTimeStamp } from 'Utils/dateUtils';
+import { dateToValue } from 'Utils/dateUtils';
 
 class ReserveModal extends React.Component{
   constructor(props){
@@ -123,7 +122,8 @@ class ReserveModal extends React.Component{
   
   checkForReservation(from, to){
     const extraMins = 900000;
-    return Reservations.filter(res => res.device === this.props.selectedDevice 
+    const { reservations, selectedDevice } = this.props;
+    return reservations.filter(res => res.device === selectedDevice 
       && (((res.to > to && res.from - extraMins < to) 
       || (res.to > from && res.from - extraMins < from)) 
       || (res.to < to && res.from > from)))
@@ -137,16 +137,20 @@ class ReserveModal extends React.Component{
       returnDate,
       user,
       showReserveModal,
+      setReservations,
+      reservations,
     } = this.props;
 
     if(!this.checkForErrors(returnDate, currentDate) && !this.checkIfLate()){
       const reservation = {
-        deviceId: selectedDevice,
-        from: toUnixTimeStamp(currentDate),
-        to: toUnixTimeStamp(returnDate),
-        userId: user.id,
+        device: selectedDevice,
+        from: currentDate,
+        to: returnDate,
+        user: user.id,
       };
-      console.log(reservation);
+      const newReservations = [...reservations];
+      newReservations.push(reservation);
+      setReservations(newReservations);
       showReserveModal(false);
       //Post booking info
     }
@@ -197,7 +201,7 @@ class ReserveModal extends React.Component{
               label="Pick up time"
               type="time"
               error={this.checkIfLate()}
-              helperText={this.checkIfLate() ? 'It\'s too late!' : ''}
+              helperText={this.checkIfLate() ? 'It\'s too late!' : ' '}
               value={dateToValue(this.roundTime(currentDate))}
               onChange={this.handleStartChange}
               inputProps={{
@@ -270,6 +274,15 @@ ReserveModal.propTypes = {
   setCurrentDate: PropTypes.func.isRequired,
   showReserveModal: PropTypes.func.isRequired,
   showReserveDialog: PropTypes.bool.isRequired,
+  reservations: PropTypes.arrayOf(
+    PropTypes.shape({
+      device: PropTypes.number.isRequired,
+      user: PropTypes.number.isRequired,
+      from: PropTypes.object.isRequired,
+      to: PropTypes.object.isRequired,
+    })
+  ),
+  setReservations: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -281,6 +294,7 @@ const mapStateToProps = (state) => ({
   selectedDevice: state.devices.selectedDevice,
   devices: state.devices.devices,
   user: state.auth.user,
+  reservations: state.devices.reservations,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(ReserveModal));

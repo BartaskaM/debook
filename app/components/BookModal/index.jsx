@@ -158,7 +158,7 @@ class BookModal extends React.Component{
               label="Pick up time"
               type="time"
               error={this.checkIfLate()}
-              helperText={this.checkIfLate() ? 'It\'s too late!' : ''}
+              helperText={this.checkIfLate() ? 'It\'s too late!' : ' '}
               disabled={true}
               value={dateToValue(currentDate)}
               className={classes.inputField}
