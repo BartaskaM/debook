@@ -19,6 +19,7 @@ class UserDetailsHandler extends React.Component {
 
   componentDidMount() {
     this.props.setUsers(Users);
+    
     if (this.props.match.params.id) {
       // Is in /user/:id
       this.props.getUserWithID(this.props.match.params.id);

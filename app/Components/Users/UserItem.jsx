@@ -40,7 +40,7 @@ UserItem.propTypes = {
     email: PropTypes.string.isRequired,
     office: PropTypes.string.isRequired,
     slack: PropTypes.string.isRequired,
-    admin: PropTypes.bool.isRequired,
+    role: PropTypes.string.isRequired,
   }).isRequired,
 };
 

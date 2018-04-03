@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import AdminRoute from './Routes/AdminRoute';
-import LoggedInRoute from './Routes/LoggedInRoute';
+import * as RouteRoles from 'Constants/RouteRoles';
+import Auth from './Authorization';
 import Header from './Header';
 import LoginTabs from './LoginTabs';
 import MainTabs from './MainTabs';
@@ -21,36 +21,45 @@ class MainContainer extends React.Component {
         <Header />
         <Route path='/login' component={LoginTabs} />
         <Route exact path='/error' component={ErrorComponent} />
-        
-        <LoggedInRoute path='/profile' component={UserDetails} />
-        <LoggedInRoute path='/users/:id' component={UserDetails} />
-        <LoggedInRoute exact path='/devices' component={() => {
-          return (
-            <div>
-              <MainTabs tabIndex='/devices' />
-              <Devices />
-            </div>
-          );
-        }} />
-        <LoggedInRoute path='/devices/:id' component={DeviceDetails} />
-        <LoggedInRoute path='/offices/:id' component={OfficeDetails} />
 
-        <AdminRoute exact path='/users' component={() => {
-          return (
+        <Route path='/profile' render={() =>
+          <Auth component={UserDetails} allowedRoles={RouteRoles.UserDetails} />
+        } />
+        <Route exact path='/users' render={() =>
+          <Auth component={() => (
             <div>
               <MainTabs tabIndex='/users' />
               <Users />
             </div>
-          );
-        }} />
-        <AdminRoute exact path='/offices' component={() => {
-          return (
+          )} allowedRoles={RouteRoles.Users} />
+        } />
+        <Route path='/users/:id' render={() =>
+          <Auth component={UserDetails} allowedRoles={RouteRoles.UserDetails} />
+        } />
+
+        <Route exact path='/devices' render={() =>
+          <Auth component={() => (
+            <div>
+              <MainTabs tabIndex='/devices' />
+              <Devices />
+            </div>
+          )} allowedRoles={RouteRoles.Devices} />
+        } />
+        <Route path='/devices/:id' render={() =>
+          <Auth component={DeviceDetails} allowedRoles={RouteRoles.DeviceDetails} />
+        } />
+
+        <Route exact path='/offices' render={() =>
+          <Auth component={() => (
             <div>
               <MainTabs tabIndex='/offices' />
               <Offices />
             </div>
-          );
-        }} />
+          )} allowedRoles={RouteRoles.Offices} />
+        } />
+        <Route path='/offices/:id' render={() =>
+          <Auth component={OfficeDetails} allowedRoles={RouteRoles.OfficeDetails} />
+        } />
       </div>
     );
   }

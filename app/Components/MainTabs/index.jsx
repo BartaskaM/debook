@@ -7,6 +7,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 
 import * as devicesActions from 'ActionCreators/devicesActions';
+import * as RouteRoles from 'Constants/RouteRoles';
 import Styles from './Styles';
 
 class MainTabs extends React.Component {
@@ -33,10 +34,10 @@ class MainTabs extends React.Component {
           >
             <Tab value='/devices' label='DEVICE LIST' classes={{ label: classes.fontSize }} />
             <Tab value='/events' label='EVENT LIST' classes={{ label: classes.fontSize }} />
-            {this.props.user.admin &&
+            {RouteRoles.Users.includes(this.props.user.role) &&
               <Tab value='/users' label='USER LIST' classes={{ label: classes.fontSize }} />
             }
-            {this.props.user.admin &&
+            {RouteRoles.Offices.includes(this.props.user.role) &&
               <Tab value='/offices' label='OFFICE LIST' classes={{ label: classes.fontSize }} />
             }
           </Tabs>
@@ -56,7 +57,7 @@ MainTabs.propTypes = {
     email: PropTypes.string.isRequired,
     office: PropTypes.string.isRequired,
     slack: PropTypes.string.isRequired,
-    admin: PropTypes.bool.isRequired,
+    role: PropTypes.string.isRequired,
   }).isRequired,
 };
 
