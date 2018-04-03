@@ -30,8 +30,8 @@ export const resetFilters = () => {
 export const showBookModal = (bool) => {
   return { type: devices.SHOW_BOOK_MODAL, payload: bool };
 };
-export const setCurrentDate = () => {
-  return { type: devices.SET_CURRENT_DATE };
+export const setCurrentDate = (date) => {
+  return { type: devices.SET_CURRENT_DATE, payload: date };
 };
 export const setReturnDate = (date) => {
   return { type: devices.SET_RETURN_DATE, payload: date };
@@ -45,4 +45,7 @@ export const setReturnDateError = (bool, message) => {
 };
 export const setSelectedDevice = (id) => {
   return { type: devices.SET_SELECTED_DEVICE, payload: id };
+};
+export const showReserveModal = (bool) => {
+  return { type: devices.SHOW_RESERVE_MODAL, payload: bool };
 };

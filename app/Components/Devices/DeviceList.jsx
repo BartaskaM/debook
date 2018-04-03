@@ -9,8 +9,11 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import Plus from 'material-ui-icons/Add';
+import Clock from 'material-ui-icons/Schedule';
 import BookModal from 'components/BookModal';
+import ReserveModal from 'components/ReserveModal';
 import * as devicesActions from 'ActionCreators/devicesActions';
+
 class DeviceList extends React.Component{
   constructor(props){
     super(props);
@@ -20,7 +23,8 @@ class DeviceList extends React.Component{
     this.renderDevices = this.renderDevices.bind(this);
     this.handleCheckClick = this.handleCheckClick.bind(this);
     this.renderDevices = this.renderDevices.bind(this);
-    this.open = this.open.bind(this);
+    this.openBookDialog = this.openBookDialog.bind(this);
+    this.openReserveDialog = this.openReserveDialog.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -35,7 +39,7 @@ class DeviceList extends React.Component{
     const devices = this.state.devices.map(device=>{
       if(device.id == deviceId){
         if(device.custody.length === 0){
-          this.open(device.id);
+          this.openBookDialog(device.id);
         } else {
           //Handle device return
           device.available = !device.available;
@@ -98,6 +102,7 @@ class DeviceList extends React.Component{
                 device.available ? false : device.custody == (this.props.user.id) ? false : true
               } 
               color={device.available ? 'primary' : 'secondary'} 
+              className={classes.button}
               onClick={()=>this.handleCheckClick(device.id)}>
               <Plus className={classes.leftIcon}/>
               {device.available ?
@@ -106,14 +111,21 @@ class DeviceList extends React.Component{
                   'Return device' :
                   'Device is booked'}
             </Button>
+            <Button
+              variant="raised"
+              className={classes.button}
+              onClick={ () => this.openReserveDialog(device.id)}>
+              <Clock className={classes.leftIcon}/>
+              Reserve
+            </Button>
           </Paper>
         </Grid>
       );
     });
   }
 
-  open(deviceId){
-    this.props.setCurrentDate();
+  openBookDialog(deviceId){
+    this.props.setCurrentDate(new Date());
     const currentDate = new Date();
     if(currentDate.getHours() !== 23)
     {
@@ -124,12 +136,27 @@ class DeviceList extends React.Component{
     this.props.showBookModal(true);
   }
 
+  openReserveDialog(deviceId){
+    const date = new Date();
+    date.setDate(date.getDate() + 1);
+    this.props.setCurrentDate(date);
+    const currentDate = new Date(date);
+    if(currentDate.getHours() !== 23)
+    {
+      currentDate.setHours(currentDate.getHours() + 1);
+    } 
+    this.props.setReturnDate(currentDate);
+    this.props.setSelectedDevice(deviceId);
+    this.props.showReserveModal(true);
+  }
+
   render(){
     const { classes } = this.props;
     return (
       <Grid container spacing={8} className={classes.root}>
         {this.renderDevices(classes)}
         <BookModal />
+        <ReserveModal />
       </Grid>
     );
   }
@@ -164,6 +191,7 @@ DeviceList.propTypes = {
   setReturnDate: PropTypes.func.isRequired,
   showBookModal: PropTypes.func.isRequired,
   setSelectedDevice: PropTypes.func.isRequired,
+  showReserveModal: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {

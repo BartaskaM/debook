@@ -6,8 +6,8 @@ import Grid from 'material-ui/Grid';
 import Reservations from 'Constants/Reservations';
 import Row from './row';
 import { withStyles } from 'material-ui/styles';
-import Styles from '../Styles';
-import dateToValue from '../dateConvert';
+import Styles from './Styles';
+import { dateToValue } from 'Utils/dateUtils';
 
 class ReservationsTable extends React.Component {
   renderRows(){

@@ -13,6 +13,7 @@ const defaultState = {
   showReturnDateError: false,
   returnDateError: '',
   selectedDevice: -1,
+  showReserveModal: false,
 };
 
 export default (state = defaultState, action) => {
@@ -59,7 +60,7 @@ export default (state = defaultState, action) => {
       return {...state, showBookModal: action.payload}; 
     }
     case devices.SET_CURRENT_DATE: {
-      return {...state, currentDate: new Date()};
+      return {...state, currentDate: action.payload};
     }
     case devices.SET_RETURN_DATE: {
       return {...state, returnDate: action.payload};
@@ -73,6 +74,9 @@ export default (state = defaultState, action) => {
     }
     case devices.SET_SELECTED_DEVICE: {
       return {...state, selectedDevice: action.payload};
+    }
+    case devices.SHOW_RESERVE_MODAL: {
+      return {...state, showReserveModal: action.payload};
     }
     default: return state;
   }
