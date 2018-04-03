@@ -14,6 +14,7 @@ const defaultState = {
   returnDateError: '',
   selectedDevice: -1,
   showReserveModal: false,
+  reservations: [],
 };
 
 export default (state = defaultState, action) => {
@@ -77,6 +78,9 @@ export default (state = defaultState, action) => {
     }
     case devices.SHOW_RESERVE_MODAL: {
       return {...state, showReserveModal: action.payload};
+    }
+    case devices.SET_RESERVATIONS: {
+      return {...state, reservations: action.payload};
     }
     default: return state;
   }

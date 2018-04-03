@@ -49,3 +49,6 @@ export const setSelectedDevice = (id) => {
 export const showReserveModal = (bool) => {
   return { type: devices.SHOW_RESERVE_MODAL, payload: bool };
 };
+export const setReservations = (reservations) => {
+  return { type: devices.SET_RESERVATIONS, payload: reservations };
+};

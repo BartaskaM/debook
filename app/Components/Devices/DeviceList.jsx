@@ -13,7 +13,7 @@ import Clock from 'material-ui-icons/Schedule';
 import BookModal from 'components/BookModal';
 import ReserveModal from 'components/ReserveModal';
 import * as devicesActions from 'ActionCreators/devicesActions';
-
+import Reservations from 'Constants/Reservations';
 class DeviceList extends React.Component{
   constructor(props){
     super(props);
@@ -25,6 +25,13 @@ class DeviceList extends React.Component{
     this.renderDevices = this.renderDevices.bind(this);
     this.openBookDialog = this.openBookDialog.bind(this);
     this.openReserveDialog = this.openReserveDialog.bind(this);
+  }
+
+  componentDidMount() {
+    const { reservations, setReservations } = this.props;
+    if(reservations.length === 0){
+      setReservations(Reservations);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -192,6 +199,8 @@ DeviceList.propTypes = {
   showBookModal: PropTypes.func.isRequired,
   setSelectedDevice: PropTypes.func.isRequired,
   showReserveModal: PropTypes.func.isRequired,
+  reservations: PropTypes.array.isRequired,
+  setReservations: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {
@@ -202,6 +211,7 @@ const mapStateToProps = state => {
     showAvailable: state.devices.showAvailable,
     showUnavailable: state.devices.showUnavailable,
     user: state.auth.user,
+    reservations: state.devices.reservations,
   };
 };
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(DeviceList));
