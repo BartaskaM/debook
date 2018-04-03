@@ -10,14 +10,15 @@ import { dateToValue } from 'Utils/dateUtils';
 
 class ReservationsTable extends React.Component {
   renderRows(){
-    const { classes, selectedDevice, reservations, currentDate } = this.props;
+    const { classes, selectedDevice, reservations, currentDate, users } = this.props;
     return reservations.filter(res => res.device == selectedDevice && 
     res.from.getDate() === currentDate.getDate())
       .sort(res => res.from)
       .map((res, i) => {
         const { from, to, user } = res;
+        const userInfo = users.find(usr => usr.id == user);
         return <Row key={i} first={`${dateToValue(from)} - ${dateToValue(to)}`} 
-          second={`User with id ${user}`} 
+          second={`${userInfo.firstName} ${userInfo.lastName}`} 
           styleClass={classes.row}
           addDivider={true}/>;
       }
@@ -57,12 +58,14 @@ ReservationsTable.propTypes = {
     })
   ),
   currentDate: PropTypes.object.isRequired,
+  users: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
   selectedDevice: state.devices.selectedDevice,
   reservations: state.devices.reservations,
   currentDate: state.devices.currentDate,
+  users: state.users.users,
 });
 
 export default connect(mapStateToProps,null)(withStyles(Styles)(ReservationsTable));
