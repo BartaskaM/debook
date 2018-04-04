@@ -18,7 +18,7 @@ const EventItem = ({ event, classes }) => {
             <Grid container>
               <Grid item xs>{event.action}</Grid>
               <Grid item xs>{event.device}</Grid>
-              <Grid item xs> {event.user} </Grid>
+              <Grid item xs>{event.user}</Grid>
               <Grid item xs>{event.office}</Grid>
               <Grid item xs>{event.datetime.toLocaleString()}</Grid>
             </Grid>
