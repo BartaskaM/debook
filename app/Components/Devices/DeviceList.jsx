@@ -28,7 +28,7 @@ class DeviceList extends React.Component{
     this.renderDevices = this.renderDevices.bind(this);
     this.openBookDialog = this.openBookDialog.bind(this);
     this.openReserveDialog = this.openReserveDialog.bind(this);
-    this.cancelReservation = this.cancelReservation.bind(this);
+    this.openReservationDetails = this.openReservationDetails.bind(this);
   }
 
   componentDidMount() {
@@ -95,17 +95,11 @@ class DeviceList extends React.Component{
     return devicesToRender;
   }
 
-  cancelReservation(){
-    const { reservations, user, setReservations } = this.props;
-    const newReservations = reservations.filter(res => res.user != user.id);
-    setReservations(newReservations);
-  }
-
   renderDevices(classes){
-    const { reservations, user } = this.props;     
-    const userReservedDevices = reservations
-      .filter(res => res.user == user.id)
-      .map(res => res.device);
+    const { reservations, user } = this.props; 
+    const userReservations = reservations
+      .filter(res => res.user == user.id);
+    const userReservedDevices = userReservations.map(res => res.device);
     return this.filterDevices().map((device, index)=>{
       return (
         //Replace list with device component
@@ -145,7 +139,8 @@ class DeviceList extends React.Component{
               className={classes.button}
               onClick={ 
                 userReservedDevices.includes(device.id) ?
-                  this.cancelReservation :
+                  () => this.openReservationDetails(userReservations
+                    .find(res => res.device == device.id)) :
                   () => this.openReserveDialog(device.id)}>
               <Clock className={classes.leftIcon}/>
               {userReservedDevices.includes(device.id) ? 'Reservation details' : 'Reserve'}
@@ -162,6 +157,11 @@ class DeviceList extends React.Component{
 
   openReserveDialog(deviceId){
     this.props.showReserveModal(true, deviceId);
+  }
+
+  openReservationDetails(reservation){
+    const { from, to, device } = reservation;
+    this.props.showReservationDetails(true, from, to, device);
   }
 
   render(){
@@ -217,6 +217,7 @@ DeviceList.propTypes = {
   setReservations: PropTypes.func.isRequired,
   users: PropTypes.array.isRequired,
   setUsers: PropTypes.func.isRequired,
+  showReservationDetails: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {

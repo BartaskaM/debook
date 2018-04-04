@@ -24,6 +24,7 @@ class ReserveModal extends React.Component{
     this.reserveDevice = this.reserveDevice.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
+    this.cancelReservation = this.cancelReservation.bind(this);
   }
 
   handleDateChange(e){
@@ -80,16 +81,17 @@ class ReserveModal extends React.Component{
   }
 
   handleReturnChange(e){
+    const { currentDate, returnDate, setReturnDate } = this.props;
     const [h,m] = e.target.value.split(':').map( x => parseInt(x));
-    const previousDate = this.props.returnDate;
+    const previousDate = returnDate;
     const nextDate = new Date(previousDate.getTime());
     if(h === previousDate.getHours()){
       this.handleMinuteChange(h, m, nextDate, previousDate);
     } else {
       nextDate.setHours(h);
     }
-    this.props.setReturnDate(nextDate);
-    this.checkForErrors(nextDate, this.props.currentDate);
+    setReturnDate(nextDate);
+    this.checkForErrors(nextDate, currentDate);
   }
 
   handleStartChange(e){
@@ -161,6 +163,21 @@ class ReserveModal extends React.Component{
     return currentDate.getHours() == 23 
     && currentDate.getMinutes() >= 45;
   }
+
+  cancelReservation(){
+    const { 
+      reservations, 
+      user, 
+      setReservations, 
+      selectedDevice, 
+      showReservationDetails,
+    } = this.props;
+    const newReservations = reservations
+      .filter(res => !(res.user == user.id && res.device == selectedDevice));
+    setReservations(newReservations);
+    showReservationDetails(false);
+  }
+
   render() {
     const { 
       classes, 
@@ -170,6 +187,8 @@ class ReserveModal extends React.Component{
       showReserveModal,
       showReturnDateError,
       returnDateError,
+      showReservationDetails,
+      showDetails,
     } = this.props;
     return (
       <div>
@@ -178,14 +197,20 @@ class ReserveModal extends React.Component{
           onClose={() => showReserveModal(false)}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle className={classes.title} disableTypography>Book device</DialogTitle>
+          <DialogTitle className={classes.title} disableTypography>
+            {showDetails ? 'Reservation details' : 'Reserve device'}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText className={classes.description}>
-              To reserve this device, please select the reservation day and required time span. 
-              You reserve book device if it is already reserved, or if there is less than 15 
-              minutes until next reservation or midnight.
+              {showDetails ? 
+                'This is your reservation details. You can cancel your reservation any time.' : 
+                'To reserve this device, please select the reservation day and required time ' + 
+                'span. You cannot reserve device if it is already reserved, or if there is ' +
+                'less than 15 minutes until next reservation or midnight.'
+              }
             </DialogContentText>
             <TextField
+              disabled={showDetails}
               autoFocus
               label="Reservation day"
               value={currentDate.toLocaleDateString()}
@@ -197,6 +222,7 @@ class ReserveModal extends React.Component{
               FormHelperTextProps={{classes: {root: classes.helperText}}}
             />
             <TextField
+              disabled={showDetails}
               autoFocus
               label="Pick up time"
               type="time"
@@ -212,6 +238,7 @@ class ReserveModal extends React.Component{
               FormHelperTextProps={{classes: {root: classes.helperText}}}
             />
             <TextField
+              disabled={showDetails}
               autoFocus
               label="Drop off time"
               type="time"
@@ -227,14 +254,25 @@ class ReserveModal extends React.Component{
               InputLabelProps={{classes: {root: classes.label}}}
               FormHelperTextProps={{classes: {root: classes.helperText}}}
             />
-            <ReservationsTable />
+            {!showDetails && <ReservationsTable />}
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => showReserveModal(false)} color="primary">
-              Cancel
+            <Button 
+              onClick={
+                showDetails ? 
+                  () => showReservationDetails(false) :
+                  () => showReserveModal(false)} 
+              color="primary">
+              Close
             </Button>
-            <Button onClick={this.reserveDevice} color="primary">
-              Reserve
+            <Button 
+              onClick={
+                showDetails ? 
+                  this.cancelReservation : 
+                  this.reserveDevice
+              } 
+              color="primary">
+              {showDetails ? 'Cancel reservation' : 'Reserve'}
             </Button>
           </DialogActions>
         </Dialog>
@@ -283,6 +321,8 @@ ReserveModal.propTypes = {
     })
   ),
   setReservations: PropTypes.func.isRequired,
+  showDetails: PropTypes.bool.isRequired,
+  showReservationDetails: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -295,6 +335,7 @@ const mapStateToProps = (state) => ({
   devices: state.devices.devices,
   user: state.auth.user,
   reservations: state.devices.reservations,
+  showDetails: state.devices.showReservationDetails,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(ReserveModal));

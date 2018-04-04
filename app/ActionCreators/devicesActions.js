@@ -41,7 +41,7 @@ export const showBookModal = (showBookModal, selectedDevice = -1) => {
       currentDate: new Date(),
       returnDate,
       selectedDevice,
-    } ,
+    },
   };
 };
 export const setCurrentDate = (date) => {
@@ -81,13 +81,15 @@ export const showReserveModal = (showReserveModal, selectedDevice = -1) => {
 export const setReservations = (reservations) => {
   return { type: devices.SET_RESERVATIONS, payload: reservations };
 };
-export const showReservationDetails = (bool, from, to) => {
+export const showReservationDetails = 
+(bool, from = new Date(), to = new Date(), selectedDevice = -1) => {
   return { 
     type: devices.SHOW_RESERVATION_DETAILS, 
     payload: {
       showReservationDetails: bool,
       from,
       to,
+      selectedDevice,
     },
   };
 };

@@ -108,13 +108,19 @@ export default (state = defaultState, action) => {
       return {...state, reservations: action.payload};
     }
     case devices.SHOW_RESERVATION_DETAILS: {
-      const { showReservationDetails, from, to } = action.payload;
+      const { 
+        showReservationDetails, 
+        from, 
+        to,
+        selectedDevice, 
+      } = action.payload;
       return {
         ...state,
         showReserveModal: showReservationDetails,
         showReservationDetails,
         currentDate: from,
         returnDate: to,
+        selectedDevice,
       };
     }
     default: return state;

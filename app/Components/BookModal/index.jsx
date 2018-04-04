@@ -185,7 +185,7 @@ class BookModal extends React.Component{
           </DialogContent>
           <DialogActions>
             <Button onClick={() => showBookModal(false)} color="primary">
-              Cancel
+              Close
             </Button>
             <Button onClick={this.bookDevice} color="primary">
               Book
