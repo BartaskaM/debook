@@ -16,6 +16,7 @@ import * as devicesActions from 'ActionCreators/devicesActions';
 import * as usersActions from 'ActionCreators/usersActions';
 import Reservations from 'Constants/Reservations';
 import Users from 'Constants/User';
+import Devices from 'Constants/Devices';
 
 class DeviceList extends React.Component{
   constructor(props){
@@ -34,12 +35,17 @@ class DeviceList extends React.Component{
       setReservations, 
       users, 
       setUsers, 
+      devices,
+      setDevices,
     } = this.props;
     if(reservations.length === 0){
       setReservations(Reservations);
     }
     if(users.length === 0){
       setUsers(Users);
+    }
+    if(devices.length === 0){
+      setDevices(Devices);
     }
   }
 
@@ -58,24 +64,32 @@ class DeviceList extends React.Component{
   }
 
   filterDevices(){
-    let devicesToRender = this.props.devices
+    const { 
+      devices, 
+      modelFilter,
+      brandFilter, 
+      showAvailable, 
+      showUnavailable, 
+      officeFilter,
+    } = this.props;
+    let devicesToRender = devices
       .filter(device => device.active && 
-        device.model.toLowerCase().includes(this.props.modelFilter.toLowerCase()));
-    if(this.props.brandFilter.length > 0)
+        device.model.toLowerCase().includes(modelFilter.toLowerCase()));
+    if(brandFilter.length > 0)
     {
       devicesToRender = devicesToRender.filter(device => 
-        this.props.brandFilter.includes(device.brand));
+        brandFilter.includes(device.brand));
     }
-    if(this.props.officeFilter.length > 0){
+    if(officeFilter.length > 0){
       devicesToRender = devicesToRender.filter(device => 
-        this.props.officeFilter.includes(device.location));
+        officeFilter.includes(device.location));
     }
-    if(this.props.showAvailable != this.props.showUnavailable)
+    if(showAvailable != showUnavailable)
     {
-      if(this.props.showAvailable){
+      if(showAvailable){
         devicesToRender = devicesToRender.filter(device => device.available);
       }
-      if(this.props.showUnavailable){
+      if(showUnavailable){
         devicesToRender = devicesToRender.filter(device => !device.available);
       }
     }
@@ -85,7 +99,7 @@ class DeviceList extends React.Component{
   renderDevices(classes){
     const { reservations, user } = this.props; 
     const userReservations = reservations
-      .filter(res => res.user == user.id);
+      .filter(res => res.user === user.id);
     const userReservedDevices = userReservations.map(res => res.device);
     return this.filterDevices().map((device, index)=>{
       return (
@@ -119,7 +133,7 @@ class DeviceList extends React.Component{
               <Plus className={classes.leftIcon}/>
               {device.available ?
                 'Book device' : 
-                device.custody == (user.id) ? 
+                device.custody === user.id ? 
                   'Return device' :
                   'Device is booked'}
             </Button>
@@ -129,7 +143,7 @@ class DeviceList extends React.Component{
               onClick={ 
                 userReservedDevices.includes(device.id) ?
                   () => this.openReservationDetails(userReservations
-                    .find(res => res.device == device.id)) :
+                    .find(res => res.device === device.id)) :
                   () => this.openReserveDialog(device.id)}>
               <Clock className={classes.leftIcon}/>
               {userReservedDevices.includes(device.id) ? 'Reservation details' : 'Reserve'}
