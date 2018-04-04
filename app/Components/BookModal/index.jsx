@@ -15,9 +15,10 @@ import Styles from './Styles';
 import ReservationsTable from '../ReservationsTable';
 import Reservations from 'Constants/Reservations';
 import { dateToValue } from 'Utils/dateUtils';
+import { fifteenMinutes } from 'Constants/Values';
 
-class BookModal extends React.Component{
-  constructor(props){
+class BookModal extends React.Component {
+  constructor(props) {
     super(props);
     this.roundTime = this.roundTime.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
@@ -25,7 +26,7 @@ class BookModal extends React.Component{
     this.bookDevice = this.bookDevice.bind(this);
   }
 
-  roundTime(date){
+  roundTime(date) {
     const currentDate = date;
     const minutes = currentDate.getMinutes();
     const hours = currentDate.getHours();
@@ -36,37 +37,37 @@ class BookModal extends React.Component{
     return currentDate;
   }
 
-  handleMinuteChange(h, m, nextDate){
+  handleMinuteChange(h, m, nextDate) {
     const previousDate = this.props.returnDate;
-    if(m === 0){
+    if (m === 0) {
       //Handle hour increment
-      if(previousDate.getMinutes() === 45){
-        if(previousDate.getHours() === 23){
+      if (previousDate.getMinutes() === 45) {
+        if (previousDate.getHours() === 23) {
           nextDate.setHours(0);
         } else {
           nextDate.setHours(h + 1);
         }
-      } 
-    } else if(m === 45){
+      }
+    } else if (m === 45) {
       //Handle hour decrement
-      if(previousDate.getMinutes() === 0){
-        if(previousDate.getHours() === 0){
+      if (previousDate.getMinutes() === 0) {
+        if (previousDate.getHours() === 0) {
           nextDate.setHours(23);
         } else {
           nextDate.setHours(h - 1);
         }
-      } 
+      }
     } else {
       nextDate.setHours(h);
     }
     nextDate.setMinutes(m);
   }
 
-  handleDateChange(e){
-    const [h,m] = e.target.value.split(':').map( x => parseInt(x));
+  handleDateChange(e) {
+    const [h, m] = e.target.value.split(':').map(x => parseInt(x));
     const previousDate = this.props.returnDate;
     const nextDate = new Date(previousDate.getTime());
-    if(h === previousDate.getHours()){
+    if (h === previousDate.getHours()) {
       this.handleMinuteChange(h, m, nextDate);
     } else {
       nextDate.setHours(h);
@@ -75,36 +76,35 @@ class BookModal extends React.Component{
     this.checkForErrors(nextDate);
   }
 
-  checkForErrors(nextDate){
+  checkForErrors(nextDate) {
     let err = false;
-    const { 
-      currentDate, 
-      setReturnDateError, 
+    const {
+      currentDate,
+      setReturnDateError,
       showReturnDateError,
     } = this.props;
-    if(nextDate - currentDate < 900000){
+    if (nextDate - currentDate < fifteenMinutes) {
       err = true;
       setReturnDateError(true, 'Book for minimum 15 minutes!');
-    } else if(this.checkForReservation(currentDate, nextDate)){
+    } else if (this.checkForReservation(currentDate, nextDate)) {
       err = true;
       setReturnDateError(true, 'This time is reserved!');
-    }else if(showReturnDateError){
+    } else if (showReturnDateError) {
       setReturnDateError(false);
     }
     return err;
   }
 
-  checkForReservation(from, to){
-    const extraMins = 900000;
-    return Reservations.filter(res => res.device === this.props.selectedDevice 
-      && (((res.to > to && res.from - extraMins < to) 
-      || (res.to > from && res.from - extraMins < from)) 
-      || (res.to < to && res.from > from)))
-      .length !== 0 ;
+  checkForReservation(from, to) {
+    return Reservations.filter(res => res.device === this.props.selectedDevice
+      && (((res.to > to && res.from - fifteenMinutes < to)
+        || (res.to > from && res.from - fifteenMinutes < from))
+        || (res.to < to && res.from > from)))
+      .length !== 0;
   }
 
-  bookDevice(){
-    if(!this.checkForErrors() && !this.checkIfLate()){
+  bookDevice() {
+    if (!this.checkForErrors() && !this.checkIfLate()) {
       const {
         devices,
         selectedDevice,
@@ -115,7 +115,7 @@ class BookModal extends React.Component{
       //Update device
       const updatedDevices = [...devices];
       updatedDevices.map(device => {
-        if(device.id == selectedDevice){
+        if (device.id == selectedDevice) {
           device.custody = user.id;
           device.available = false;
         }
@@ -126,18 +126,18 @@ class BookModal extends React.Component{
     }
   }
 
-  checkIfLate(){
+  checkIfLate() {
     const { currentDate } = this.props;
-    return currentDate.getHours() == 23 
-    && currentDate.getMinutes() >= 45;
+    return currentDate.getHours() == 23
+      && currentDate.getMinutes() >= 45;
   }
-  
+
   render() {
-    const { 
-      classes, 
-      currentDate, 
+    const {
+      classes,
+      currentDate,
       returnDate,
-      showBookDialog, 
+      showBookDialog,
       showBookModal,
       showReturnDateError,
       returnDateError,
@@ -152,8 +152,8 @@ class BookModal extends React.Component{
           <DialogTitle className={classes.title} disableTypography>Book device</DialogTitle>
           <DialogContent>
             <DialogContentText className={classes.description}>
-              To book this device, please select return time. 
-              You cannot book device if it is reserved, or if there is less than 15 minutes until 
+              To book this device, please select return time.
+              You cannot book device if it is reserved, or if there is less than 15 minutes until
               next reservation or midnight.
             </DialogContentText>
             <TextField
@@ -165,8 +165,8 @@ class BookModal extends React.Component{
               disabled={true}
               value={dateToValue(currentDate)}
               className={classes.inputField}
-              InputLabelProps={{classes: {root: classes.label}}}
-              FormHelperTextProps={{classes: {root: classes.helperText}}}
+              InputLabelProps={{ classes: { root: classes.label } }}
+              FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
             <TextField
               autoFocus
@@ -181,8 +181,8 @@ class BookModal extends React.Component{
                 step: 900,
               }}
               className={classes.inputField}
-              InputLabelProps={{classes: {root: classes.label}}}
-              FormHelperTextProps={{classes: {root: classes.helperText}}}
+              InputLabelProps={{ classes: { root: classes.label } }}
+              FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
             <ReservationsTable />
           </DialogContent>
@@ -216,7 +216,7 @@ BookModal.propTypes = {
     model: PropTypes.string.isRequired,
     os: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    custody: PropTypes.number.isRequired,
+    custody: PropTypes.number,
     available: PropTypes.bool.isRequired,
     active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,

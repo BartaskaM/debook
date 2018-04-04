@@ -11,12 +11,12 @@ import { dateToValue } from 'Utils/dateUtils';
 class ReservationsTable extends React.Component {
   renderRows(){
     const { classes, selectedDevice, reservations, currentDate, users } = this.props;
-    return reservations.filter(res => res.device == selectedDevice && 
+    return reservations.filter(res => res.device === selectedDevice && 
     res.from.getDate() === currentDate.getDate())
       .sort(res => res.from)
       .map((res, i) => {
         const { from, to, user } = res;
-        const userInfo = users.find(usr => usr.id == user);
+        const userInfo = users.find(usr => usr.id === user);
         return <Row key={i} first={`${dateToValue(from)} - ${dateToValue(to)}`} 
           second={`${userInfo.firstName} ${userInfo.lastName}`} 
           styleClass={classes.row}
@@ -36,7 +36,7 @@ class ReservationsTable extends React.Component {
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <List className={classes.officeList}>
-            {reservations.filter( res => res.device == selectedDevice &&
+            {reservations.filter( res => res.device === selectedDevice &&
             res.from.getDate() === currentDate.getDate()).length > 0 && 
             <Row first="TIME" second="RESERVED BY" styleClass={classes.topRow}/>}
             {this.renderRows()}

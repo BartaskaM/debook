@@ -14,9 +14,10 @@ import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
 import ReservationsTable from '../ReservationsTable';
 import { dateToValue } from 'Utils/dateUtils';
+import { fifteenMinutes } from 'Constants/Values';
 
-class ReserveModal extends React.Component{
-  constructor(props){
+class ReserveModal extends React.Component {
+  constructor(props) {
     super(props);
     this.roundTime = this.roundTime.bind(this);
     this.handleReturnChange = this.handleReturnChange.bind(this);
@@ -27,12 +28,12 @@ class ReserveModal extends React.Component{
     this.cancelReservation = this.cancelReservation.bind(this);
   }
 
-  handleDateChange(e){
-    const [ year, month, day ] = e.target.value.split('-').map( x => parseInt(x));
-    const { 
-      setReturnDate, 
-      setCurrentDate, 
-      currentDate, 
+  handleDateChange(e) {
+    const [year, month, day] = e.target.value.split('-').map(x => parseInt(x));
+    const {
+      setReturnDate,
+      setCurrentDate,
+      currentDate,
       returnDate,
     } = this.props;
     const endDate = new Date(returnDate);
@@ -44,7 +45,7 @@ class ReserveModal extends React.Component{
     this.checkForErrors(endDate, startDate);
   }
 
-  roundTime(date){
+  roundTime(date) {
     const currentDate = date;
     const minutes = currentDate.getMinutes();
     const hours = currentDate.getHours();
@@ -55,37 +56,37 @@ class ReserveModal extends React.Component{
     return currentDate;
   }
 
-  handleMinuteChange(h, m, nextDate, previousDate){
-    if(m === 0){
+  handleMinuteChange(h, m, nextDate, previousDate) {
+    if (m === 0) {
       //Handle hour increment
-      if(previousDate.getMinutes() === 45){
-        if(previousDate.getHours() === 23){
+      if (previousDate.getMinutes() === 45) {
+        if (previousDate.getHours() === 23) {
           nextDate.setHours(0);
         } else {
           nextDate.setHours(h + 1);
         }
-      } 
-    } else if(m === 45){
+      }
+    } else if (m === 45) {
       //Handle hour decrement
-      if(previousDate.getMinutes() === 0){
-        if(previousDate.getHours() === 0){
+      if (previousDate.getMinutes() === 0) {
+        if (previousDate.getHours() === 0) {
           nextDate.setHours(23);
         } else {
           nextDate.setHours(h - 1);
         }
-      } 
+      }
     } else {
       nextDate.setHours(h);
     }
     nextDate.setMinutes(m);
   }
 
-  handleReturnChange(e){
+  handleReturnChange(e) {
     const { currentDate, returnDate, setReturnDate } = this.props;
-    const [h,m] = e.target.value.split(':').map( x => parseInt(x));
+    const [h, m] = e.target.value.split(':').map(x => parseInt(x));
     const previousDate = returnDate;
     const nextDate = new Date(previousDate.getTime());
-    if(h === previousDate.getHours()){
+    if (h === previousDate.getHours()) {
       this.handleMinuteChange(h, m, nextDate, previousDate);
     } else {
       nextDate.setHours(h);
@@ -94,12 +95,12 @@ class ReserveModal extends React.Component{
     this.checkForErrors(nextDate, currentDate);
   }
 
-  handleStartChange(e){
+  handleStartChange(e) {
     const { currentDate, returnDate, setCurrentDate } = this.props;
-    const [h,m] = e.target.value.split(':').map( x => parseInt(x));
+    const [h, m] = e.target.value.split(':').map(x => parseInt(x));
     const previousDate = currentDate;
     const nextDate = new Date(previousDate.getTime());
-    if(h === previousDate.getHours()){
+    if (h === previousDate.getHours()) {
       this.handleMinuteChange(h, m, nextDate, previousDate);
     } else {
       nextDate.setHours(h);
@@ -108,32 +109,31 @@ class ReserveModal extends React.Component{
     this.checkForErrors(returnDate, nextDate);
   }
 
-  checkForErrors(startDate, currentDate){
+  checkForErrors(startDate, currentDate) {
     let err = false;
     const { setReturnDateError, showReturnDateError } = this.props;
-    if(startDate - currentDate < 900000){
+    if (startDate - currentDate < fifteenMinutes) {
       err = true;
       setReturnDateError(true, 'Book for minimum 15 minutes!');
-    } else if(this.checkForReservation(currentDate, startDate)){
+    } else if (this.checkForReservation(currentDate, startDate)) {
       err = true;
       setReturnDateError(true, 'This time is reserved!');
-    }else if(showReturnDateError){
+    } else if (showReturnDateError) {
       setReturnDateError(false);
     }
     return err;
   }
-  
-  checkForReservation(from, to){
-    const extraMins = 900000;
+
+  checkForReservation(from, to) {
     const { reservations, selectedDevice } = this.props;
-    return reservations.filter(res => res.device === selectedDevice 
-      && (((res.to > to && res.from - extraMins < to) 
-      || (res.to > from && res.from - extraMins < from)) 
-      || (res.to < to && res.from > from)))
-      .length !== 0 ;
+    return reservations.filter(res => res.device === selectedDevice
+      && (((res.to > to && res.from - fifteenMinutes < to)
+        || (res.to > from && res.from - fifteenMinutes < from))
+        || (res.to < to && res.from > from)))
+      .length !== 0;
   }
 
-  reserveDevice(){
+  reserveDevice() {
     const {
       selectedDevice,
       currentDate,
@@ -144,7 +144,7 @@ class ReserveModal extends React.Component{
       reservations,
     } = this.props;
 
-    if(!this.checkForErrors(returnDate, currentDate) && !this.checkIfLate()){
+    if (!this.checkForErrors(returnDate, currentDate) && !this.checkIfLate()) {
       const reservation = {
         device: selectedDevice,
         from: currentDate,
@@ -159,18 +159,17 @@ class ReserveModal extends React.Component{
     }
   }
 
-  checkIfLate(){
+  checkIfLate() {
     const currentDate = this.props.currentDate;
-    return currentDate.getHours() == 23 
-    && currentDate.getMinutes() >= 45;
+    return currentDate.getHours() === 23 && currentDate.getMinutes() >= 45;
   }
 
-  cancelReservation(){
-    const { 
-      reservations, 
-      user, 
-      setReservations, 
-      selectedDevice, 
+  cancelReservation() {
+    const {
+      reservations,
+      user,
+      setReservations,
+      selectedDevice,
       showReservationDetails,
     } = this.props;
     const newReservations = reservations
@@ -180,11 +179,11 @@ class ReserveModal extends React.Component{
   }
 
   render() {
-    const { 
-      classes, 
-      currentDate, 
-      returnDate, 
-      showReserveDialog, 
+    const {
+      classes,
+      currentDate,
+      returnDate,
+      showReserveDialog,
       showReserveModal,
       showReturnDateError,
       returnDateError,
@@ -203,11 +202,11 @@ class ReserveModal extends React.Component{
           </DialogTitle>
           <DialogContent>
             <DialogContentText className={classes.description}>
-              {showDetails ? 
-                'This is your reservation details. You can cancel your reservation any time.' : 
-                'To reserve this device, please select the reservation day and required time ' + 
-                'span. You cannot reserve device if it is already reserved, or if there is ' +
-                'less than 15 minutes until next reservation or midnight.'
+              {showDetails ?
+                'This is your reservation details. You can cancel your reservation any time.' :
+                `To reserve this device, please select the reservation day and required time 
+                span. You cannot reserve device if it is already reserved, or if there is 
+                less than 15 minutes until next reservation or midnight.`
               }
             </DialogContentText>
             <TextField
@@ -219,8 +218,8 @@ class ReserveModal extends React.Component{
               type="date"
               error={this.checkIfLate()}
               className={classes.inputField}
-              InputLabelProps={{classes: {root: classes.label}}}
-              FormHelperTextProps={{classes: {root: classes.helperText}}}
+              InputLabelProps={{ classes: { root: classes.label } }}
+              FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
             <TextField
               disabled={showDetails}
@@ -235,8 +234,8 @@ class ReserveModal extends React.Component{
                 step: 900,
               }}
               className={classes.inputField}
-              InputLabelProps={{classes: {root: classes.label}}}
-              FormHelperTextProps={{classes: {root: classes.helperText}}}
+              InputLabelProps={{ classes: { root: classes.label } }}
+              FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
             <TextField
               disabled={showDetails}
@@ -252,26 +251,26 @@ class ReserveModal extends React.Component{
                 step: 900,
               }}
               className={classes.inputField}
-              InputLabelProps={{classes: {root: classes.label}}}
-              FormHelperTextProps={{classes: {root: classes.helperText}}}
+              InputLabelProps={{ classes: { root: classes.label } }}
+              FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
             {!showDetails && <ReservationsTable />}
           </DialogContent>
           <DialogActions>
-            <Button 
+            <Button
               onClick={
-                showDetails ? 
+                showDetails ?
                   () => showReservationDetails(false) :
-                  () => showReserveModal(false)} 
+                  () => showReserveModal(false)}
               color="primary">
               Close
             </Button>
-            <Button 
+            <Button
               onClick={
-                showDetails ? 
-                  this.cancelReservation : 
+                showDetails ?
+                  this.cancelReservation :
                   this.reserveDevice
-              } 
+              }
               color="primary">
               {showDetails ? 'Cancel reservation' : 'Reserve'}
             </Button>
@@ -296,7 +295,7 @@ ReserveModal.propTypes = {
     model: PropTypes.string.isRequired,
     os: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    custody: PropTypes.number.isRequired,
+    custody: PropTypes.number,
     available: PropTypes.bool.isRequired,
     active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
