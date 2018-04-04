@@ -12,6 +12,7 @@ import Devices from './Devices';
 import DeviceDetails from './Devices/DeviceDetails';
 import Offices from './Offices';
 import OfficeDetails from './Offices/OfficeDetails';
+import BookingEvents from './BookingEvents';
 import ErrorComponent from './Error';
 import BrandList from './Brands';
 
@@ -59,6 +60,14 @@ class MainContainer extends React.Component {
         } />
         <Route path='/offices/:id' render={() =>
           <Auth component={OfficeDetails} allowedRoles={RouteRoles.OfficeDetails} />
+        } />
+        <Route exact path='/events' render={() =>
+          <Auth component={() => (
+            <div>
+              <MainTabs tabIndex='/events' />
+              <BookingEvents />
+            </div>
+          )} allowedRoles={RouteRoles.Offices} />
         } />
         <Route exact path='/brands' render={() =>
           <Auth component={() => (
