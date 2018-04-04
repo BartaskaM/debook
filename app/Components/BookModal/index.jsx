@@ -35,6 +35,7 @@ class BookModal extends React.Component{
     currentDate.setHours(h);
     return currentDate;
   }
+
   handleMinuteChange(h, m, nextDate){
     const previousDate = this.props.returnDate;
     if(m === 0){
@@ -92,6 +93,7 @@ class BookModal extends React.Component{
     }
     return err;
   }
+
   checkForReservation(from, to){
     const extraMins = 900000;
     return Reservations.filter(res => res.device === this.props.selectedDevice 
@@ -129,6 +131,7 @@ class BookModal extends React.Component{
     return currentDate.getHours() == 23 
     && currentDate.getMinutes() >= 45;
   }
+  
   render() {
     const { 
       classes, 
