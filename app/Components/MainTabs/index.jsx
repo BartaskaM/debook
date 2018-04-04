@@ -40,6 +40,9 @@ class MainTabs extends React.Component {
             {RouteRoles.Offices.includes(this.props.user.role) &&
               <Tab value='/offices' label='OFFICE LIST' classes={{ label: classes.fontSize }} />
             }
+            {RouteRoles.Brands.includes(this.props.user.role) &&
+            <Tab value='/brands' label='BRAND LIST'classes={{ label: classes.fontSize }} />
+            }
           </Tabs>
         </Paper>
       </div>
