@@ -95,16 +95,17 @@ class ReserveModal extends React.Component{
   }
 
   handleStartChange(e){
+    const { currentDate, returnDate, setCurrentDate } = this.props;
     const [h,m] = e.target.value.split(':').map( x => parseInt(x));
-    const previousDate = this.props.currentDate;
+    const previousDate = currentDate;
     const nextDate = new Date(previousDate.getTime());
     if(h === previousDate.getHours()){
       this.handleMinuteChange(h, m, nextDate, previousDate);
     } else {
       nextDate.setHours(h);
     }
-    this.props.setCurrentDate(nextDate);
-    this.checkForErrors(this.props.returnDate, nextDate);
+    setCurrentDate(nextDate);
+    this.checkForErrors(returnDate, nextDate);
   }
 
   checkForErrors(startDate, currentDate){
@@ -295,7 +296,7 @@ ReserveModal.propTypes = {
     model: PropTypes.string.isRequired,
     os: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    custody: PropTypes.string.isRequired,
+    custody: PropTypes.number.isRequired,
     available: PropTypes.bool.isRequired,
     active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,

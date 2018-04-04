@@ -114,7 +114,7 @@ class BookModal extends React.Component{
       const updatedDevices = [...devices];
       updatedDevices.map(device => {
         if(device.id == selectedDevice){
-          device.custody = user.id.toString();
+          device.custody = user.id;
           device.available = false;
         }
       });
@@ -213,7 +213,7 @@ BookModal.propTypes = {
     model: PropTypes.string.isRequired,
     os: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    custody: PropTypes.string.isRequired,
+    custody: PropTypes.number.isRequired,
     available: PropTypes.bool.isRequired,
     active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,

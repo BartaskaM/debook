@@ -20,15 +20,12 @@ import Users from 'Constants/User';
 class DeviceList extends React.Component{
   constructor(props){
     super(props);
-    this.state = {
-      devices: props.devices.filter(device=>device.active),
-    };
     this.renderDevices = this.renderDevices.bind(this);
-    this.handleCheckClick = this.handleCheckClick.bind(this);
     this.renderDevices = this.renderDevices.bind(this);
     this.openBookDialog = this.openBookDialog.bind(this);
     this.openReserveDialog = this.openReserveDialog.bind(this);
     this.openReservationDetails = this.openReservationDetails.bind(this);
+    this.returnDevice = this.returnDevice.bind(this);
   }
 
   componentDidMount() {
@@ -46,34 +43,24 @@ class DeviceList extends React.Component{
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.devices != this.state.devices) {
-      this.setState({
-        devices: nextProps.devices,
-      });
-    }
-  }
-
-  handleCheckClick(deviceId){
-    const devices = this.state.devices.map(device=>{
-      if(device.id == deviceId){
-        if(device.custody.length === 0){
-          this.openBookDialog(device.id);
-        } else {
-          //Handle device return
-          device.available = !device.available;
-          device.custody = '';
-          device.location = this.props.user.office;
-        }
+  returnDevice(deviceId){
+    const { devices, setDevices, user } = this.props;
+    const newDevices = [...devices].map(device => {
+      if(device.id === deviceId){
+        //Handle device return
+        device.available = true;
+        device.custody = -1;
+        device.location = user.office;
       }
       return device;
     });
-    this.setState({devices}); 
+    setDevices(newDevices);
   }
 
   filterDevices(){
-    let devicesToRender = this.state.devices
-      .filter(device => device.model.toLowerCase().includes(this.props.modelFilter.toLowerCase()));
+    let devicesToRender = this.props.devices
+      .filter(device => device.active && 
+        device.model.toLowerCase().includes(this.props.modelFilter.toLowerCase()));
     if(this.props.brandFilter.length > 0)
     {
       devicesToRender = devicesToRender.filter(device => 
@@ -122,11 +109,13 @@ class DeviceList extends React.Component{
             <Button 
               variant='raised'
               disabled={
-                device.available ? false : device.custody == (user.id) ? false : true
+                device.available ? false : device.custody === user.id ? false : true
               } 
               color={device.available ? 'primary' : 'secondary'} 
               className={classes.button}
-              onClick={()=>this.handleCheckClick(device.id)}>
+              onClick={device.custody === -1 ?  
+                () => this.openBookDialog(device.id) :
+                () => this.returnDevice(device.id)}>
               <Plus className={classes.leftIcon}/>
               {device.available ?
                 'Book device' : 
@@ -182,7 +171,7 @@ DeviceList.propTypes = {
     model: PropTypes.string.isRequired,
     os: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    custody: PropTypes.string.isRequired,
+    custody: PropTypes.number.isRequired,
     available: PropTypes.bool.isRequired,
     active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
@@ -218,6 +207,7 @@ DeviceList.propTypes = {
   users: PropTypes.array.isRequired,
   setUsers: PropTypes.func.isRequired,
   showReservationDetails: PropTypes.func.isRequired,
+  setDevices: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {
