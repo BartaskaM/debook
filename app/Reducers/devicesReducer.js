@@ -15,6 +15,7 @@ const defaultState = {
   selectedDevice: -1,
   showReserveModal: false,
   reservations: [],
+  showReservationDetails: false,
 };
 
 export default (state = defaultState, action) => {
@@ -58,7 +59,19 @@ export default (state = defaultState, action) => {
         showUnavailable: false};
     }
     case devices.SHOW_BOOK_MODAL: {
-      return {...state, showBookModal: action.payload}; 
+      const { 
+        showBookModal, 
+        selectedDevice, 
+        currentDate, 
+        returnDate, 
+      } = action.payload;
+      return {
+        ...state, 
+        showBookModal,
+        selectedDevice,
+        currentDate,
+        returnDate,
+      }; 
     }
     case devices.SET_CURRENT_DATE: {
       return {...state, currentDate: action.payload};
@@ -77,10 +90,32 @@ export default (state = defaultState, action) => {
       return {...state, selectedDevice: action.payload};
     }
     case devices.SHOW_RESERVE_MODAL: {
-      return {...state, showReserveModal: action.payload};
+      const { 
+        showReserveModal, 
+        selectedDevice, 
+        currentDate, 
+        returnDate, 
+      } = action.payload;
+      return {
+        ...state, 
+        showReserveModal,
+        selectedDevice,
+        currentDate,
+        returnDate,
+      }; 
     }
     case devices.SET_RESERVATIONS: {
       return {...state, reservations: action.payload};
+    }
+    case devices.SHOW_RESERVATION_DETAILS: {
+      const { showReservationDetails, from, to } = action.payload;
+      return {
+        ...state,
+        showReserveModal: showReservationDetails,
+        showReservationDetails,
+        currentDate: from,
+        returnDate: to,
+      };
     }
     default: return state;
   }

@@ -27,8 +27,22 @@ export const setShowUnavailable = (bool) => {
 export const resetFilters = () => {
   return { type: devices.RESET_FILTERS };
 };
-export const showBookModal = (bool) => {
-  return { type: devices.SHOW_BOOK_MODAL, payload: bool };
+export const showBookModal = (showBookModal, selectedDevice = -1) => {
+
+  const returnDate = new Date();
+  if(returnDate.getHours() !== 23)
+  {
+    returnDate.setHours(returnDate.getHours() + 1);
+  } 
+  return { 
+    type: devices.SHOW_BOOK_MODAL, 
+    payload: {
+      showBookModal,
+      currentDate: new Date(),
+      returnDate,
+      selectedDevice,
+    } ,
+  };
 };
 export const setCurrentDate = (date) => {
   return { type: devices.SET_CURRENT_DATE, payload: date };
@@ -46,9 +60,34 @@ export const setReturnDateError = (bool, message) => {
 export const setSelectedDevice = (id) => {
   return { type: devices.SET_SELECTED_DEVICE, payload: id };
 };
-export const showReserveModal = (bool) => {
-  return { type: devices.SHOW_RESERVE_MODAL, payload: bool };
+export const showReserveModal = (showReserveModal, selectedDevice = -1) => {
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 1);
+  const returnDate = new Date(currentDate);
+  if(returnDate.getHours() !== 23)
+  {
+    returnDate.setHours(returnDate.getHours() + 1);
+  } 
+  return { 
+    type: devices.SHOW_RESERVE_MODAL, 
+    payload: {
+      showReserveModal,
+      currentDate,
+      returnDate,
+      selectedDevice,
+    }, 
+  };
 };
 export const setReservations = (reservations) => {
   return { type: devices.SET_RESERVATIONS, payload: reservations };
+};
+export const showReservationDetails = (bool, from, to) => {
+  return { 
+    type: devices.SHOW_RESERVATION_DETAILS, 
+    payload: {
+      showReservationDetails: bool,
+      from,
+      to,
+    },
+  };
 };

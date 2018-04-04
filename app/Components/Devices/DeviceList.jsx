@@ -103,11 +103,9 @@ class DeviceList extends React.Component{
 
   renderDevices(classes){
     const { reservations, user } = this.props;     
-    const hasReservation = reservations.map(res => res.user).includes(user.id);
-    let reservedDevice;
-    if(hasReservation){
-      reservedDevice = reservations.find(res => res.user == user.id).device;
-    }
+    const userReservedDevices = reservations
+      .filter(res => res.user == user.id)
+      .map(res => res.device);
     return this.filterDevices().map((device, index)=>{
       return (
         //Replace list with device component
@@ -145,13 +143,12 @@ class DeviceList extends React.Component{
             <Button
               variant="raised"
               className={classes.button}
-              disabled={hasReservation && device.id != reservedDevice}
               onClick={ 
-                hasReservation && device.id == reservedDevice ?
+                userReservedDevices.includes(device.id) ?
                   this.cancelReservation :
                   () => this.openReserveDialog(device.id)}>
               <Clock className={classes.leftIcon}/>
-              {hasReservation && device.id == reservedDevice ? 'Cancel reservation' : 'Reserve'}
+              {userReservedDevices.includes(device.id) ? 'Reservation details' : 'Reserve'}
             </Button>
           </Paper>
         </Grid>
@@ -160,29 +157,11 @@ class DeviceList extends React.Component{
   }
 
   openBookDialog(deviceId){
-    this.props.setCurrentDate(new Date());
-    const currentDate = new Date();
-    if(currentDate.getHours() !== 23)
-    {
-      currentDate.setHours(currentDate.getHours() + 1);
-    } 
-    this.props.setReturnDate(currentDate);
-    this.props.setSelectedDevice(deviceId);
-    this.props.showBookModal(true);
+    this.props.showBookModal(true, deviceId);
   }
 
   openReserveDialog(deviceId){
-    const date = new Date();
-    date.setDate(date.getDate() + 1);
-    this.props.setCurrentDate(date);
-    const currentDate = new Date(date);
-    if(currentDate.getHours() !== 23)
-    {
-      currentDate.setHours(currentDate.getHours() + 1);
-    } 
-    this.props.setReturnDate(currentDate);
-    this.props.setSelectedDevice(deviceId);
-    this.props.showReserveModal(true);
+    this.props.showReserveModal(true, deviceId);
   }
 
   render(){
