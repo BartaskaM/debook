@@ -4,9 +4,10 @@ import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import { withRouter } from 'react-router-dom';
-import Styles from './Styles';
 import Paper from 'material-ui/Paper';
 import { ListItem } from 'material-ui/List';
+
+import Styles from './Styles';
 
 const EventItem = ({ event, classes }) => {
   return (
@@ -19,7 +20,7 @@ const EventItem = ({ event, classes }) => {
               <Grid item xs>{event.device}</Grid>
               <Grid item xs> {event.user} </Grid>
               <Grid item xs>{event.office}</Grid>
-              <Grid item xs>{new Date(+event.datetime).toLocaleString()}</Grid>
+              <Grid item xs>{event.datetime.toLocaleString()}</Grid>
             </Grid>
           </Typography>
         </Paper>
@@ -36,8 +37,8 @@ EventItem.propTypes = {
     device: PropTypes.string.isRequired,
     office: PropTypes.string.isRequired,
     user: PropTypes.string.isRequired,
-    datetime: PropTypes.string.isRequired,
+    datetime: PropTypes.instanceOf(Date).isRequired,
   }).isRequired,
 };
 
-export default withStyles(Styles)(withRouter(EventItem));
+export default withRouter(withStyles(Styles)(EventItem));

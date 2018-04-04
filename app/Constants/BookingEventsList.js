@@ -5,7 +5,7 @@ const BookingEventsList = [
     device: 'Device id: 1',
     office: 'Wilno',
     user: 'admin@admin.com',
-    datetime: Date.parse('2018-03-01 08:00').toString(),
+    datetime: new Date('2018-03-01 08:00'),
   },
   {
     id: 2,
@@ -13,7 +13,7 @@ const BookingEventsList = [
     device: 'Device id: 1',
     office: 'Wilno',
     user: 'admin@admin.com',
-    datetime: Date.parse('2018-03-02 12:00').toString(),
+    datetime: new Date('2018-03-02 12:00'),
   },
   {
     id: 3,
@@ -21,7 +21,7 @@ const BookingEventsList = [
     device: 'Device id: 1',
     office: 'Wilno',
     user: 'admin@admin.com',
-    datetime: Date.parse('2018-03-01 08:00').toString(),
+    datetime: new Date('2018-03-01 08:00'),
   },
   {
     id: 4,
@@ -29,7 +29,7 @@ const BookingEventsList = [
     device: 'Device id: 1',
     office: 'Kawns',
     user: 'admin@admin.com',
-    datetime: Date.parse('2018-03-05 12:00').toString(),
+    datetime: new Date('2018-03-05 12:00'),
   },
   {
     id: 5,
@@ -37,7 +37,7 @@ const BookingEventsList = [
     device: 'Device id: 1',
     office: 'Kawns',
     user: 'admin@admin.com',
-    datetime: Date.parse('2018-03-05 12:00').toString(),
+    datetime: new Date('2018-03-05 12:00'),
   },
   {
     id: 6,
@@ -45,7 +45,7 @@ const BookingEventsList = [
     device: 'Device id: 1',
     office: 'Kawns',
     user: 'admin@admin.com',
-    datetime: Date.parse('2018-03-05 12:00').toString(),
+    datetime: new Date('2018-03-05 12:00'),
   },
   {
     id: 7,
@@ -53,7 +53,7 @@ const BookingEventsList = [
     device: 'Device id: 1',
     office: 'Kawns',
     user: 'admin@admin.com',
-    datetime: Date.parse('2018-03-05 12:00').toString(),
+    datetime: new Date('2018-03-05 12:00'),
   },
   {
     id: 8,
@@ -61,7 +61,7 @@ const BookingEventsList = [
     device: 'Device id: 1',
     office: 'Kawns',
     user: 'admin@admin.com',
-    datetime: Date.parse('2018-03-05 12:00').toString(),
+    datetime: new Date('2018-03-05 12:00'),
   },
   {
     id: 9,
@@ -69,7 +69,7 @@ const BookingEventsList = [
     device: 'Device id: 1',
     office: 'Kawns',
     user: 'admin@admin.com',
-    datetime: Date.parse('2018-03-05 12:00').toString(),
+    datetime: new Date('2018-03-05 12:00'),
   },
   {
     id: 10,
@@ -77,7 +77,7 @@ const BookingEventsList = [
     device: 'Device id: 1',
     office: 'Kawns',
     user: 'admin@admin.com',
-    datetime: Date.parse('2018-03-05 12:00').toString(),
+    datetime: new Date('2018-03-05 12:00'),
   },
   {
     id: 11,
@@ -85,7 +85,7 @@ const BookingEventsList = [
     device: 'Device id: 1',
     office: 'Kawns',
     user: 'admin@admin.com',
-    datetime: Date.parse('2018-03-08 20:00:00').toString(),
+    datetime: new Date('2018-03-08 20:00:00'),
   },
 ];
 
