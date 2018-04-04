@@ -25,3 +25,6 @@ export const OfficeDetails = [
   'admin',
   'user',
 ];
+export const Brands = [
+  'admin',
+];

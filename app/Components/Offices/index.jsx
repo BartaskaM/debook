@@ -17,8 +17,8 @@ class Offices extends React.Component {
   }
 
   handleAddNewClick() {
-    //console.log('its working');
-    <AddOffice />;
+    console.log('its working');
+    
   }
 
   render() {
@@ -39,7 +39,7 @@ class Offices extends React.Component {
               color="primary"
               className={classes.addNewButton}
               onClick={this.handleAddNewClick}>
-              ADD NEW
+              ADD NEW<AddOffice />
             </Button>
           </Grid>
         </Grid>

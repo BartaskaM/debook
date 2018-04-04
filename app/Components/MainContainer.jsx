@@ -15,6 +15,7 @@ import OfficeDetails from './Offices/OfficeDetails';
 import BookingEvents from './BookingEvents';
 import ErrorComponent from './Error';
 import AddOffice from './Offices/AddOffice';
+import BrandList from './Brands';
 
 class MainContainer extends React.Component {
   render() {
@@ -23,7 +24,6 @@ class MainContainer extends React.Component {
         <Header />
         <Route path='/login' component={LoginTabs} />
         <Route exact path='/error' component={ErrorComponent} />
-
         <Route path='/profile' render={() =>
           <Auth component={UserDetails} allowedRoles={RouteRoles.UserDetails} />
         } />
@@ -51,24 +51,22 @@ class MainContainer extends React.Component {
           <Auth component={DeviceDetails} allowedRoles={RouteRoles.DeviceDetails} />
         } />
 
-        {/* <Route exact path='/offices' render={() =>
+        <Route exact path='/offices' render={() =>
           <Auth component={() => (
             <div>
               <MainTabs tabIndex='/offices' />
               <Offices />
             </div>
           )} allowedRoles={RouteRoles.Offices} />
-        } /> */}
-        <Route exact path='/offices' render={() =>
+        } />
+        {/* <Route exact path='/offices' render={() =>
           <Auth component={() => (
             <div>
               <MainTabs tabIndex='/offices' />
               <AddOffice />
             </div>
           )} allowedRoles={RouteRoles.Offices} />
-        } />
-
-
+        } /> */}
         <Route path='/offices/:id' render={() =>
           <Auth component={OfficeDetails} allowedRoles={RouteRoles.OfficeDetails} />
         } />
@@ -80,6 +78,15 @@ class MainContainer extends React.Component {
             </div>
           )} allowedRoles={RouteRoles.Offices} />
         } />
+        <Route exact path='/brands' render={() =>
+          <Auth component={() => (
+            <div>
+              <MainTabs tabIndex='/brands' />
+              <BrandList />
+            </div>
+          )} allowedRoles={RouteRoles.Brands} />
+        } />
+
       </div>
     );
   }
