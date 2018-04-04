@@ -110,7 +110,7 @@ class BookModal extends React.Component {
         selectedDevice,
         user,
         setDevices,
-        showBookModal,
+        hideBookModal,
       } = this.props;
       //Update device
       const updatedDevices = [...devices];
@@ -121,7 +121,7 @@ class BookModal extends React.Component {
         }
       });
       setDevices(updatedDevices);
-      showBookModal(false);
+      hideBookModal();
       //Post booking info
     }
   }
@@ -138,7 +138,7 @@ class BookModal extends React.Component {
       currentDate,
       returnDate,
       showBookDialog,
-      showBookModal,
+      hideBookModal,
       showReturnDateError,
       returnDateError,
     } = this.props;
@@ -146,7 +146,7 @@ class BookModal extends React.Component {
       <div>
         <Dialog
           open={showBookDialog}
-          onClose={() => showBookModal(false)}
+          onClose={hideBookModal}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle className={classes.title} disableTypography>Book device</DialogTitle>
@@ -187,7 +187,7 @@ class BookModal extends React.Component {
             <ReservationsTable />
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => showBookModal(false)} color="primary">
+            <Button onClick={hideBookModal} color="primary">
               Close
             </Button>
             <Button onClick={this.bookDevice} color="primary">
@@ -201,7 +201,6 @@ class BookModal extends React.Component {
 }
 
 BookModal.propTypes = {
-  showBookModal: PropTypes.func.isRequired,
   setReturnDate: PropTypes.func.isRequired,
   showBookDialog: PropTypes.bool.isRequired,
   returnDate: PropTypes.object.isRequired,
@@ -230,6 +229,7 @@ BookModal.propTypes = {
     slack: PropTypes.string.isRequired,
   }),
   setDevices: PropTypes.func.isRequired,
+  hideBookModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

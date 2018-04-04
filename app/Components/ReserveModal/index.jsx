@@ -139,7 +139,7 @@ class ReserveModal extends React.Component {
       currentDate,
       returnDate,
       user,
-      showReserveModal,
+      hideReserveModal,
       setReservations,
       reservations,
     } = this.props;
@@ -154,7 +154,7 @@ class ReserveModal extends React.Component {
       const newReservations = [...reservations];
       newReservations.push(reservation);
       setReservations(newReservations);
-      showReserveModal(false);
+      hideReserveModal();
       //Post booking info
     }
   }
@@ -170,12 +170,12 @@ class ReserveModal extends React.Component {
       user,
       setReservations,
       selectedDevice,
-      showReservationDetails,
+      hideReservationDetails,
     } = this.props;
     const newReservations = reservations
       .filter(res => !(res.user == user.id && res.device == selectedDevice));
     setReservations(newReservations);
-    showReservationDetails(false);
+    hideReservationDetails();
   }
 
   render() {
@@ -184,17 +184,17 @@ class ReserveModal extends React.Component {
       currentDate,
       returnDate,
       showReserveDialog,
-      showReserveModal,
+      hideReserveModal,
       showReturnDateError,
       returnDateError,
-      showReservationDetails,
+      hideReservationDetails,
       showDetails,
     } = this.props;
     return (
       <div>
         <Dialog
           open={showReserveDialog}
-          onClose={() => showReserveModal(false)}
+          onClose={hideReserveModal}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle className={classes.title} disableTypography>
@@ -260,8 +260,8 @@ class ReserveModal extends React.Component {
             <Button
               onClick={
                 showDetails ?
-                  () => showReservationDetails(false) :
-                  () => showReserveModal(false)}
+                  hideReservationDetails :
+                  hideReserveModal}
               color="primary">
               Close
             </Button>
@@ -310,7 +310,7 @@ ReserveModal.propTypes = {
   }),
   setDevices: PropTypes.func.isRequired,
   setCurrentDate: PropTypes.func.isRequired,
-  showReserveModal: PropTypes.func.isRequired,
+  hideReserveModal: PropTypes.func.isRequired,
   showReserveDialog: PropTypes.bool.isRequired,
   reservations: PropTypes.arrayOf(
     PropTypes.shape({
@@ -322,7 +322,7 @@ ReserveModal.propTypes = {
   ),
   setReservations: PropTypes.func.isRequired,
   showDetails: PropTypes.bool.isRequired,
-  showReservationDetails: PropTypes.func.isRequired,
+  hideReservationDetails: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

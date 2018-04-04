@@ -153,16 +153,16 @@ class DeviceList extends React.Component {
   }
 
   openBookDialog(deviceId) {
-    this.props.showBookModal(true, deviceId);
+    this.props.showBookModal(deviceId);
   }
 
   openReserveDialog(deviceId) {
-    this.props.showReserveModal(true, deviceId);
+    this.props.showReserveModal(deviceId);
   }
 
   openReservationDetails(reservation) {
     const { from, to, device } = reservation;
-    this.props.showReservationDetails(true, from, to, device);
+    this.props.showReservationDetails(from, to, device);
   }
 
   render() {
