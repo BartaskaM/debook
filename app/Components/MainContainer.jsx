@@ -14,6 +14,7 @@ import Offices from './Offices';
 import OfficeDetails from './Offices/OfficeDetails';
 import BookingEvents from './BookingEvents';
 import ErrorComponent from './Error';
+import BrandList from './Brands';
 
 class MainContainer extends React.Component {
   render() {
@@ -22,7 +23,6 @@ class MainContainer extends React.Component {
         <Header />
         <Route path='/login' component={LoginTabs} />
         <Route exact path='/error' component={ErrorComponent} />
-
         <Route path='/profile' render={() =>
           <Auth component={UserDetails} allowedRoles={RouteRoles.UserDetails} />
         } />
@@ -69,6 +69,15 @@ class MainContainer extends React.Component {
             </div>
           )} allowedRoles={RouteRoles.Offices} />
         } />
+        <Route exact path='/brands' render={() =>
+          <Auth component={() => (
+            <div>
+              <MainTabs tabIndex='/brands' />
+              <BrandList />
+            </div>
+          )} allowedRoles={RouteRoles.Brands} />
+        } />
+
       </div>
     );
   }
