@@ -5,7 +5,7 @@ import DeviceList from './DeviceList';
 import DevicesList from 'Constants/Devices';
 import User from 'Constants/User';
 import * as devicesActions from 'ActionCreators/devicesActions';
-import Filters from 'components/Filters';
+import Filters from 'Components/Filters';
 
 class Devices extends React.Component {
   componentDidMount() {

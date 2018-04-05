@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
@@ -15,13 +15,11 @@ import NavigateBefore from 'material-ui-icons/NavigateBefore';
 
 import Row from './Row';
 import { styles } from './Styles';
-//import DeviceDetailsList from 'Constants/DeviceDetails';
 import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
 
 class DeviceDetails extends React.Component {
 
   constructor(props) {
-    //  props.setDevices(DevicesList);
     super(props);
     this.state = {
       device: null,
@@ -31,8 +29,6 @@ class DeviceDetails extends React.Component {
     this.renderError = this.renderError.bind(this);
   }
   componentDidMount() {
-    //this.props.setDeviceDetails(DeviceDetailsList);
-
     if (this.props.match.params.id) {
       this.props.getDeviceWithId(this.props.match.params.id);
     }
@@ -199,7 +195,6 @@ class DeviceDetails extends React.Component {
 }
 
 DeviceDetails.propTypes = {
-  // setDeviceDetails: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   getDeviceWithId: PropTypes.func.isRequired,
   device: PropTypes.arrayOf(PropTypes.shape({
@@ -225,9 +220,15 @@ DeviceDetails.propTypes = {
   })).isRequired,
   match: PropTypes.object.isRequired,
 };
+
 const mapStateToProps = state => {
   return {
     device: state.deviceDetails.device,
   };
 };
-export default connect(mapStateToProps, deviceDetailsActions)(withStyles(styles)(DeviceDetails));
+
+export default withRouter(
+  connect(mapStateToProps, deviceDetailsActions)(
+    withStyles(styles)(DeviceDetails)
+  )
+);

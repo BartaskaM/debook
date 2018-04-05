@@ -11,10 +11,13 @@ const Styles = theme => ({
   },
   leftMargin: {
     marginLeft: 50,
+    display: 'inline',
   },
   text: {
     marginLeft: 5,
     fontSize: 18,
+    display: 'inline-block',
+    position: 'absolute',
   },
   formControl: {
     minWidth: 100,
@@ -34,6 +37,9 @@ const Styles = theme => ({
   rightMenu: {
     position: 'absolute',
     right: 10,
+  },
+  homeButton: {
+    cursor: 'pointer',
   },
 });
 
