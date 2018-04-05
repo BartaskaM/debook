@@ -95,8 +95,8 @@ class DeviceList extends React.Component {
     return devicesToRender;
   }
 
-  renderDevices(classes) {
-    const { reservations, user } = this.props;
+  renderDevices() {
+    const { reservations, user, classes } = this.props;
     const userReservations = reservations
       .filter(res => res.user === user.id);
     const userReservedDevices = userReservations.map(res => res.device);
@@ -104,38 +104,42 @@ class DeviceList extends React.Component {
       return (
         //Replace list with device component
         <Grid item xs={4} key={index}>
-          <Paper>
-            <Link to={`/devices/${device.id.toString()}`}>
-              <Device key={device.id} device={device}/>
-            </Link>
-            <Button
-              variant='raised'
-              disabled={
-                device.available ? false : device.custody === user.id ? false : true
-              }
-              color={device.available ? 'primary' : 'secondary'}
-              className={classes.button}
-              onClick={device.custody === null ?
-                () => this.openBookDialog(device.id) :
-                () => this.returnDevice(device.id)}>
-              <Plus className={classes.leftIcon} />
-              {device.available ?
-                'Book device' :
-                device.custody === user.id ?
-                  'Return device' :
-                  'Device is booked'}
-            </Button>
-            <Button
-              variant="raised"
-              className={classes.button}
-              onClick={
-                userReservedDevices.includes(device.id) ?
-                  () => this.openReservationDetails(userReservations
-                    .find(res => res.device === device.id)) :
-                  () => this.openReserveDialog(device.id)}>
-              <Clock className={classes.leftIcon} />
-              {userReservedDevices.includes(device.id) ? 'Reservation details' : 'Reserve'}
-            </Button>
+          <Paper className={classes.devicePaper}>
+            <div className={classes.deviceContainer}>
+              <Link to={`/devices/${device.id.toString()}`}>
+                <Device key={device.id} device={device}/>
+              </Link>
+            </div>
+            <div className={classes.buttonsContainer}>
+              <Button
+                variant='raised'
+                disabled={
+                  device.available ? false : device.custody === user.id ? false : true
+                }
+                color={device.available ? 'primary' : 'secondary'}
+                className={classes.button}
+                onClick={device.custody === null ?
+                  () => this.openBookDialog(device.id) :
+                  () => this.returnDevice(device.id)}>
+                <Plus className={classes.leftIcon} />
+                {device.available ?
+                  'Book device' :
+                  device.custody === user.id ?
+                    'Return device' :
+                    'Device is booked'}
+              </Button>
+              <Button
+                variant="raised"
+                className={classes.button}
+                onClick={
+                  userReservedDevices.includes(device.id) ?
+                    () => this.openReservationDetails(userReservations
+                      .find(res => res.device === device.id)) :
+                    () => this.openReserveDialog(device.id)}>
+                <Clock className={classes.leftIcon} />
+                {userReservedDevices.includes(device.id) ? 'Reservation details' : 'Reserve'}
+              </Button>
+            </div>
           </Paper>
         </Grid>
       );
@@ -159,7 +163,7 @@ class DeviceList extends React.Component {
     const { classes } = this.props;
     return (
       <Grid container spacing={8} className={classes.root}>
-        {this.renderDevices(classes)}
+        {this.renderDevices()}
         <BookModal />
         <ReserveModal />
       </Grid>

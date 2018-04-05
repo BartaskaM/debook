@@ -8,7 +8,7 @@ import Styles from './Styles';
 
 const device = ({classes, device}) => {
   return (
-    <List className={classes.root}>
+    <List>
       <ListItem><img className={classes.deviceCardImage} src={device.image}/></ListItem> 
       {device.available ?
         <Typography className={classes.availabilityTagAvailable}>Available</Typography>

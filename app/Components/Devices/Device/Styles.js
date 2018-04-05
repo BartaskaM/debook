@@ -1,7 +1,4 @@
 const Styles =  ({
-  root: {
-    marginBottom: 10,
-  },
   deviceCardImage: {
     width: 150,
     display: 'block',

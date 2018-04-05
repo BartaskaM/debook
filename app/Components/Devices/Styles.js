@@ -10,8 +10,18 @@ const Styles = theme=>({
     marginRight: theme.spacing.unit,
   },
   button: {
-    width: '46%',
-    margin: '2%',
+    width: '44%',
+    margin: '3%',
+  },
+  devicePaper: {
+    height: '100%',
+  },
+  deviceContainer: {
+    height: '86%',
+    margin: '0 3%',
+  },
+  buttonsContainer: {
+    height: '14%',
   },
 });
   
