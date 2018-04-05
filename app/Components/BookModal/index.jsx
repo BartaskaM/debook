@@ -13,28 +13,19 @@ import { withStyles } from 'material-ui/styles';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
 import ReservationsTable from '../ReservationsTable';
-import Reservations from 'Constants/Reservations';
-import { dateToValue } from 'Utils/dateUtils';
+import { 
+  dateToValue, 
+  checkIfLate, 
+  roundTime,
+  checkForReservation,
+} from 'Utils/dateUtils';
 import { fifteenMinutes } from 'Constants/Values';
 
 class BookModal extends React.Component {
   constructor(props) {
     super(props);
-    this.roundTime = this.roundTime.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
-    this.checkForReservation = this.checkForReservation.bind(this);
     this.bookDevice = this.bookDevice.bind(this);
-  }
-
-  roundTime(date) {
-    const currentDate = date;
-    const minutes = currentDate.getMinutes();
-    const hours = currentDate.getHours();
-    const m = (parseInt((minutes + 7.5) / 15) * 15) % 60;
-    const h = minutes > 52 ? (hours === 23 ? 0 : hours + 1) : hours;
-    currentDate.setMinutes(m);
-    currentDate.setHours(h);
-    return currentDate;
   }
 
   handleMinuteChange(h, m, nextDate) {
@@ -82,11 +73,13 @@ class BookModal extends React.Component {
       currentDate,
       setReturnDateError,
       showReturnDateError,
+      reservations,
+      selectedDevice,
     } = this.props;
     if (nextDate - currentDate < fifteenMinutes) {
       err = true;
       setReturnDateError(true, 'Book for minimum 15 minutes!');
-    } else if (this.checkForReservation(currentDate, nextDate)) {
+    } else if (checkForReservation(currentDate, nextDate, reservations, selectedDevice)) {
       err = true;
       setReturnDateError(true, 'This time is reserved!');
     } else if (showReturnDateError) {
@@ -95,23 +88,16 @@ class BookModal extends React.Component {
     return err;
   }
 
-  checkForReservation(from, to) {
-    return Reservations.filter(res => res.device === this.props.selectedDevice
-      && (((res.to > to && res.from - fifteenMinutes < to)
-        || (res.to > from && res.from - fifteenMinutes < from))
-        || (res.to < to && res.from > from)))
-      .length !== 0;
-  }
-
   bookDevice() {
-    if (!this.checkForErrors() && !this.checkIfLate()) {
-      const {
-        devices,
-        selectedDevice,
-        user,
-        setDevices,
-        hideBookModal,
-      } = this.props;
+    const {
+      devices,
+      selectedDevice,
+      user,
+      setDevices,
+      hideBookModal,
+      currentDate,
+    } = this.props;
+    if (!this.checkForErrors() && !checkIfLate(currentDate)) {
       //Update device
       const updatedDevices = [...devices];
       updatedDevices.map(device => {
@@ -124,12 +110,6 @@ class BookModal extends React.Component {
       hideBookModal();
       //Post booking info
     }
-  }
-
-  checkIfLate() {
-    const { currentDate } = this.props;
-    return currentDate.getHours() == 23
-      && currentDate.getMinutes() >= 45;
   }
 
   render() {
@@ -160,8 +140,8 @@ class BookModal extends React.Component {
               autoFocus
               label="Pick up time"
               type="time"
-              error={this.checkIfLate()}
-              helperText={this.checkIfLate() ? 'It\'s too late!' : ' '}
+              error={checkIfLate(currentDate)}
+              helperText={checkIfLate(currentDate) ? 'It\'s too late!' : ' '}
               disabled={true}
               value={dateToValue(currentDate)}
               className={classes.inputField}
@@ -174,7 +154,7 @@ class BookModal extends React.Component {
               type="time"
               error={showReturnDateError}
               helperText={returnDateError}
-              value={dateToValue(this.roundTime(returnDate))}
+              value={dateToValue(roundTime(returnDate))}
               onChange={this.handleDateChange}
               onFocus={() => this.checkForErrors(returnDate)}
               inputProps={{
@@ -230,6 +210,14 @@ BookModal.propTypes = {
   }),
   setDevices: PropTypes.func.isRequired,
   hideBookModal: PropTypes.func.isRequired,
+  reservations: PropTypes.arrayOf(
+    PropTypes.shape({
+      device: PropTypes.number.isRequired,
+      user: PropTypes.number.isRequired,
+      from: PropTypes.object.isRequired,
+      to: PropTypes.object.isRequired,
+    })
+  ),
 };
 
 const mapStateToProps = (state) => ({
@@ -241,6 +229,7 @@ const mapStateToProps = (state) => ({
   selectedDevice: state.devices.selectedDevice,
   devices: state.devices.devices,
   user: state.auth.user,
+  reservations: state.devices.reservations,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(BookModal));

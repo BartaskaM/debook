@@ -13,15 +13,18 @@ import { withStyles } from 'material-ui/styles';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
 import ReservationsTable from '../ReservationsTable';
-import { dateToValue } from 'Utils/dateUtils';
+import { 
+  dateToValue, 
+  checkIfLate, 
+  roundTime,
+  checkForReservation,
+} from 'Utils/dateUtils';
 import { fifteenMinutes } from 'Constants/Values';
 
 class ReserveModal extends React.Component {
   constructor(props) {
     super(props);
-    this.roundTime = this.roundTime.bind(this);
     this.handleReturnChange = this.handleReturnChange.bind(this);
-    this.checkForReservation = this.checkForReservation.bind(this);
     this.reserveDevice = this.reserveDevice.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
@@ -43,17 +46,6 @@ class ReserveModal extends React.Component {
     startDate.setFullYear(year, month - 1, day);
     setCurrentDate(startDate);
     this.checkForErrors(endDate, startDate);
-  }
-
-  roundTime(date) {
-    const currentDate = date;
-    const minutes = currentDate.getMinutes();
-    const hours = currentDate.getHours();
-    const m = (parseInt((minutes + 7.5) / 15) * 15) % 60;
-    const h = minutes > 52 ? (hours === 23 ? 0 : hours + 1) : hours;
-    currentDate.setMinutes(m);
-    currentDate.setHours(h);
-    return currentDate;
   }
 
   handleMinuteChange(h, m, nextDate, previousDate) {
@@ -111,26 +103,22 @@ class ReserveModal extends React.Component {
 
   checkForErrors(startDate, currentDate) {
     let err = false;
-    const { setReturnDateError, showReturnDateError } = this.props;
+    const { 
+      setReturnDateError, 
+      showReturnDateError, 
+      reservations, 
+      selectedDevice, 
+    } = this.props;
     if (startDate - currentDate < fifteenMinutes) {
       err = true;
       setReturnDateError(true, 'Book for minimum 15 minutes!');
-    } else if (this.checkForReservation(currentDate, startDate)) {
+    } else if (checkForReservation(currentDate, startDate, reservations, selectedDevice)) {
       err = true;
       setReturnDateError(true, 'This time is reserved!');
     } else if (showReturnDateError) {
       setReturnDateError(false);
     }
     return err;
-  }
-
-  checkForReservation(from, to) {
-    const { reservations, selectedDevice } = this.props;
-    return reservations.filter(res => res.device === selectedDevice
-      && (((res.to > to && res.from - fifteenMinutes < to)
-        || (res.to > from && res.from - fifteenMinutes < from))
-        || (res.to < to && res.from > from)))
-      .length !== 0;
   }
 
   reserveDevice() {
@@ -144,7 +132,7 @@ class ReserveModal extends React.Component {
       reservations,
     } = this.props;
 
-    if (!this.checkForErrors(returnDate, currentDate) && !this.checkIfLate()) {
+    if (!this.checkForErrors(returnDate, currentDate) && !checkIfLate(currentDate)) {
       const reservation = {
         device: selectedDevice,
         from: currentDate,
@@ -157,11 +145,6 @@ class ReserveModal extends React.Component {
       hideReserveModal();
       //Post booking info
     }
-  }
-
-  checkIfLate() {
-    const currentDate = this.props.currentDate;
-    return currentDate.getHours() === 23 && currentDate.getMinutes() >= 45;
   }
 
   cancelReservation() {
@@ -216,7 +199,6 @@ class ReserveModal extends React.Component {
               value={currentDate.toLocaleDateString()}
               onChange={this.handleDateChange}
               type="date"
-              error={this.checkIfLate()}
               className={classes.inputField}
               InputLabelProps={{ classes: { root: classes.label } }}
               FormHelperTextProps={{ classes: { root: classes.helperText } }}
@@ -226,9 +208,9 @@ class ReserveModal extends React.Component {
               autoFocus
               label="Pick up time"
               type="time"
-              error={this.checkIfLate()}
-              helperText={this.checkIfLate() ? 'It\'s too late!' : ' '}
-              value={dateToValue(this.roundTime(currentDate))}
+              error={checkIfLate(currentDate)}
+              helperText={checkIfLate(currentDate) ? 'It\'s too late!' : ' '}
+              value={dateToValue(roundTime(currentDate))}
               onChange={this.handleStartChange}
               inputProps={{
                 step: 900,
@@ -244,7 +226,7 @@ class ReserveModal extends React.Component {
               type="time"
               error={showReturnDateError}
               helperText={returnDateError}
-              value={dateToValue(this.roundTime(returnDate))}
+              value={dateToValue(roundTime(returnDate))}
               onChange={this.handleReturnChange}
               onFocus={() => this.checkForErrors(returnDate, currentDate)}
               inputProps={{
