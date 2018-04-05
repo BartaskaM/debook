@@ -1,0 +1,1 @@
+export const fifteenMinutes = 900000;

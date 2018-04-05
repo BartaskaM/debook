@@ -12,59 +12,53 @@ import Dialog, {
 import { withStyles } from 'material-ui/styles';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
-import ReservationsTable from './ReservationsTable';
-import Reservations from 'Constants/Reservations';
-import dateToValue from './dateConvert';
+import ReservationsTable from '../ReservationsTable';
+import { 
+  dateToValue, 
+  checkIfLate, 
+  roundTime,
+  checkForReservation,
+} from 'Utils/dateUtils';
+import { fifteenMinutes } from 'Constants/Values';
 
-class BookModal extends React.Component{
-  constructor(props){
+class BookModal extends React.Component {
+  constructor(props) {
     super(props);
-    this.roundTime = this.roundTime.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
-    this.checkForReservation = this.checkForReservation.bind(this);
     this.bookDevice = this.bookDevice.bind(this);
   }
 
-  roundTime(date){
-    const currentDate = date;
-    const minutes = currentDate.getMinutes();
-    const hours = currentDate.getHours();
-    const m = (parseInt((minutes + 7.5) / 15) * 15) % 60;
-    const h = minutes > 52 ? (hours === 23 ? 0 : hours + 1) : hours;
-    currentDate.setMinutes(m);
-    currentDate.setHours(h);
-    return currentDate;
-  }
-  handleMinuteChange(h, m, nextDate){
+  handleMinuteChange(h, m, nextDate) {
     const previousDate = this.props.returnDate;
-    if(m === 0){
+    if (m === 0) {
       //Handle hour increment
-      if(previousDate.getMinutes() === 45){
-        if(previousDate.getHours() === 23){
+      if (previousDate.getMinutes() === 45) {
+        if (previousDate.getHours() === 23) {
           nextDate.setHours(0);
         } else {
           nextDate.setHours(h + 1);
         }
-      } 
-    } else if(m === 45){
+      }
+    } else if (m === 45) {
       //Handle hour decrement
-      if(previousDate.getMinutes() === 0){
-        if(previousDate.getHours() === 0){
+      if (previousDate.getMinutes() === 0) {
+        if (previousDate.getHours() === 0) {
           nextDate.setHours(23);
         } else {
           nextDate.setHours(h - 1);
         }
-      } 
+      }
     } else {
       nextDate.setHours(h);
     }
     nextDate.setMinutes(m);
   }
-  handleDateChange(e){
-    const [h,m] = e.target.value.split(':').map( x => parseInt(x));
+
+  handleDateChange(e) {
+    const [h, m] = e.target.value.split(':').map(x => parseInt(x));
     const previousDate = this.props.returnDate;
     const nextDate = new Date(previousDate.getTime());
-    if(h === previousDate.getHours()){
+    if (h === previousDate.getHours()) {
       this.handleMinuteChange(h, m, nextDate);
     } else {
       nextDate.setHours(h);
@@ -73,97 +67,108 @@ class BookModal extends React.Component{
     this.checkForErrors(nextDate);
   }
 
-  checkForErrors(nextDate){
+  checkForErrors(nextDate) {
     let err = false;
-    if(nextDate - this.props.currentDate < 900000){
+    const {
+      currentDate,
+      setReturnDateError,
+      showReturnDateError,
+      reservations,
+      selectedDevice,
+    } = this.props;
+    if (nextDate - currentDate < fifteenMinutes) {
       err = true;
-      this.props.setReturnDateError(true, 'Book for minimum 15 minutes!');
-    } else if(this.checkForReservation(this.props.currentDate, nextDate)){
+      setReturnDateError(true, 'Book for minimum 15 minutes!');
+    } else if (checkForReservation(currentDate, nextDate, reservations, selectedDevice)) {
       err = true;
-      this.props.setReturnDateError(true, 'This time is reserved!');
-    }else if(this.props.showReturnDateError){
-      this.props.setReturnDateError(false);
+      setReturnDateError(true, 'This time is reserved!');
+    } else if (showReturnDateError) {
+      setReturnDateError(false);
     }
     return err;
   }
-  checkForReservation(from, to){
-    const extraMins = 900000;
-    return Reservations.filter(res => res.device === this.props.selectedDevice 
-      && (((res.to > to && res.from - extraMins < to) 
-      || (res.to > from && res.from - extraMins < from)) 
-      || (res.to < to && res.from > from)))
-      .length !== 0 ;
-  }
 
-  bookDevice(){
-    if(!this.checkForErrors() && !this.checkIfLate()){
+  bookDevice() {
+    const {
+      devices,
+      selectedDevice,
+      user,
+      setDevices,
+      hideBookModal,
+      currentDate,
+    } = this.props;
+    if (!this.checkForErrors() && !checkIfLate(currentDate)) {
       //Update device
-      const updatedDevices = [...this.props.devices];
+      const updatedDevices = [...devices];
       updatedDevices.map(device => {
-        if(device.id == this.props.selectedDevice){
-          device.custody = this.props.user.id;
+        if (device.id == selectedDevice) {
+          device.custody = user.id;
           device.available = false;
         }
       });
-      this.props.setDevices(updatedDevices);
-      this.props.showBookModal(false);
+      setDevices(updatedDevices);
+      hideBookModal();
       //Post booking info
     }
   }
 
-  checkIfLate(){
-    return this.props.currentDate.getHours() == 23 
-    && this.props.currentDate.getMinutes() >= 45;
-  }
   render() {
-    const { classes, currentDate, returnDate } = this.props;
+    const {
+      classes,
+      currentDate,
+      returnDate,
+      showBookDialog,
+      hideBookModal,
+      showReturnDateError,
+      returnDateError,
+    } = this.props;
     return (
       <div>
         <Dialog
-          open={this.props.showBookDialog}
-          onClose={() => this.props.showBookModal(false)}
+          open={showBookDialog}
+          onClose={hideBookModal}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle className={classes.title} disableTypography>Book device</DialogTitle>
           <DialogContent>
             <DialogContentText className={classes.description}>
-              To book this device, please select return time. 
-              You cannot book device if it is reserved, or if there is less than 15 minutes until 
+              To book this device, please select return time.
+              You cannot book device if it is reserved, or if there is less than 15 minutes until
               next reservation or midnight.
             </DialogContentText>
             <TextField
               autoFocus
               label="Pick up time"
               type="time"
-              error={this.checkIfLate()}
-              helperText={this.checkIfLate() ? 'It\'s too late!' : ''}
+              error={checkIfLate(currentDate)}
+              helperText={checkIfLate(currentDate) ? 'It\'s too late!' : ' '}
               disabled={true}
               value={dateToValue(currentDate)}
               className={classes.inputField}
-              InputLabelProps={{classes: {root: classes.label}}}
-              FormHelperTextProps={{classes: {root: classes.helperText}}}
+              InputLabelProps={{ classes: { root: classes.label } }}
+              FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
             <TextField
               autoFocus
               label="Drop off time"
               type="time"
-              error={this.props.showReturnDateError}
-              helperText={this.props.returnDateError}
-              value={dateToValue(this.roundTime(returnDate))}
+              error={showReturnDateError}
+              helperText={returnDateError}
+              value={dateToValue(roundTime(returnDate))}
               onChange={this.handleDateChange}
-              onFocus={() => this.checkForErrors(this.props.returnDate)}
+              onFocus={() => this.checkForErrors(returnDate)}
               inputProps={{
                 step: 900,
               }}
               className={classes.inputField}
-              InputLabelProps={{classes: {root: classes.label}}}
-              FormHelperTextProps={{classes: {root: classes.helperText}}}
+              InputLabelProps={{ classes: { root: classes.label } }}
+              FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
             <ReservationsTable />
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.props.showBookModal(false)} color="primary">
-              Cancel
+            <Button onClick={hideBookModal} color="primary">
+              Close
             </Button>
             <Button onClick={this.bookDevice} color="primary">
               Book
@@ -176,7 +181,6 @@ class BookModal extends React.Component{
 }
 
 BookModal.propTypes = {
-  showBookModal: PropTypes.func.isRequired,
   setReturnDate: PropTypes.func.isRequired,
   showBookDialog: PropTypes.bool.isRequired,
   returnDate: PropTypes.object.isRequired,
@@ -191,7 +195,7 @@ BookModal.propTypes = {
     model: PropTypes.string.isRequired,
     os: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    custody: PropTypes.string.isRequired,
+    custody: PropTypes.number,
     available: PropTypes.bool.isRequired,
     active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
@@ -205,6 +209,15 @@ BookModal.propTypes = {
     slack: PropTypes.string.isRequired,
   }),
   setDevices: PropTypes.func.isRequired,
+  hideBookModal: PropTypes.func.isRequired,
+  reservations: PropTypes.arrayOf(
+    PropTypes.shape({
+      device: PropTypes.number.isRequired,
+      user: PropTypes.number.isRequired,
+      from: PropTypes.object.isRequired,
+      to: PropTypes.object.isRequired,
+    })
+  ),
 };
 
 const mapStateToProps = (state) => ({
@@ -216,6 +229,7 @@ const mapStateToProps = (state) => ({
   selectedDevice: state.devices.selectedDevice,
   devices: state.devices.devices,
   user: state.auth.user,
+  reservations: state.devices.reservations,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(BookModal));

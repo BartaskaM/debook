@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import Select from 'material-ui/Select';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
@@ -14,10 +15,10 @@ import Menu, { MenuItem } from 'material-ui/Menu';
 import { AccountCircle } from 'material-ui-icons';
 
 import Styles from './Styles';
-import Categories from '../../Constants/Categories';
-import LinkButton from './LinkButton';
-import { connect } from 'react-redux';
+import Categories from 'Constants/Categories';
+import PathsWithLists from 'Constants/PathsWithLists';
 import * as devicesActions from '../../ActionCreators/devicesActions';
+import * as authActions from '../../ActionCreators/authActions';
 
 class Header extends React.Component {
   constructor() {
@@ -32,6 +33,7 @@ class Header extends React.Component {
     this.handleMenu = this.handleMenu.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
+    this.renderBranding = this.renderBranding.bind(this);
     this.renderSearchForm = this.renderSearchForm.bind(this);
     this.renderProfileMenu = this.renderProfileMenu.bind(this);
   }
@@ -56,21 +58,28 @@ class Header extends React.Component {
     });
   }
 
-  renderNavigationBarLinks() {
+  renderBranding() {
+    const { classes } = this.props;
     return (
-      <span>
-        <LinkButton to='/main' title='MainTabs' />
-        <LinkButton to='/login' title='LoginTabs' />
-        <LinkButton to='/profile' title='Profile' />
-        <LinkButton to='/devices' title='Devices' />
-        <LinkButton to='/offices' title='Offices' />
+      <span className={classes.homeButton} onClick={() => this.props.history.push('/devices')}>
+        <img
+          className={classes.leftMargin}
+          src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'}
+          height="40px"
+          width='40px'
+        />
+        <Typography variant="title" color="inherit" className={classes.text}>
+          DEVBRIDGE
+          <br />
+          GROUP
+        </Typography>
       </span>
     );
   }
 
   renderSearchForm() {
     const { classes } = this.props;
-    return (
+    return PathsWithLists.includes(this.props.location.pathname) ? (
       <span>
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor="search" className={classes.fontSize}>Search</InputLabel>
@@ -109,12 +118,12 @@ class Header extends React.Component {
           </Select>
         </FormControl>
       </span>
-    );
+    ) : '';
   }
 
   renderProfileMenu() {
     const { classes } = this.props;
-    return (
+    return  this.props.user ? (
       <span>
         <IconButton
           aria-owns={this.state.userMenuOpen ? 'menu-appbar' : null}
@@ -138,14 +147,28 @@ class Header extends React.Component {
           open={this.state.userMenuOpen}
           onClose={this.handleClose}
         >
-          <Link to='/profile'>
-            <MenuItem className={classes.fontSize} onClick={this.handleClose}>Profile</MenuItem>
-          </Link>
+          <MenuItem
+            className={classes.fontSize}
+            onClick={() => {
+              this.handleClose();
+              this.props.history.push('/profile');
+            }}
+          >
+            Profile
+          </MenuItem>
           <Divider />
-          <MenuItem className={classes.fontSize} onClick={this.handleClose}>Logout</MenuItem>
+          <MenuItem
+            className={classes.fontSize}
+            onClick={() => {
+              this.handleClose();
+              this.props.logOutUser();
+            }}
+          >
+            Logout
+          </MenuItem>
         </Menu>
       </span>
-    );
+    ) : '';
   }
 
   render() {
@@ -153,17 +176,7 @@ class Header extends React.Component {
     return (
       <AppBar position="sticky" color='inherit' className={classes.root}>
         <Toolbar>
-          <img
-            className={classes.leftMargin}
-            src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'}
-            height="40px"
-            width='40px'
-          />
-          <Typography variant="title" color="inherit" className={classes.text}>
-              DEVBRIDGE <br /> GROUP
-          </Typography>
-
-          {this.renderNavigationBarLinks()}
+          {this.renderBranding()}
 
           <div className={classes.rightMenu}>
             {this.renderSearchForm()}
@@ -179,11 +192,22 @@ Header.propTypes = {
   classes: PropTypes.object.isRequired,
   setModelFilter: PropTypes.func.isRequired,
   modelFilter: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired,
+  logOutUser: PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => {
   return {
+    user: state.auth.user,
     modelFilter: state.devices.modelFilter,
   };
 };
-export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Header));
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { ...devicesActions, ...authActions }
+  )(withStyles(Styles)(Header))
+);

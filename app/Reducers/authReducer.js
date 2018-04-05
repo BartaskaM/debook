@@ -1,11 +1,16 @@
+import { auth }from 'Constants/ActionTypes';
+
 const defaultState = {
-  user: {},
+  user: null,
 };
 
 export default (state = defaultState, action) => {
   switch (action.type){
-    case 'SET_USER_INFO': {
+    case auth.SET_USER_INFO: {
       return {...state, user: action.payload};
+    }
+    case auth.LOG_OUT_USER: {
+      return {...state, user: null};
     }
     default: return state;
   }

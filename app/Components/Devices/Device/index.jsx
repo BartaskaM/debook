@@ -45,7 +45,7 @@ device.propTypes = {
     model: PropTypes.string.isRequired,
     os: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    custody: PropTypes.string.isRequired,
+    custody: PropTypes.number,
     available: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired, 
   }).isRequired,
