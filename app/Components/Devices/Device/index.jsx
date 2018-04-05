@@ -48,7 +48,6 @@ device.propTypes = {
     custody: PropTypes.string.isRequired,
     available: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired, 
-    modelCount: PropTypes.number.isRequired,
   }).isRequired,
 };
 
