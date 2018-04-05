@@ -1,4 +1,4 @@
-import fifteenMinutes from 'Constants/Values';
+import { fifteenMinutes } from 'Constants/Values';
 
 export const dateToValue = (date) => {
   return date.toLocaleTimeString().split(':').slice(0, 2).join(':');
@@ -28,7 +28,7 @@ export const checkForReservation = (from, to, reservations, selectedDevice) => {
     .length !== 0;
 };
 const checkIfDateIsWithinReservation = (date, reservation) => {
-  return reservation.to > date && reservation.from - fifteenMinutes < date;
+  return reservation.to > date && (reservation.from - fifteenMinutes) < date;
 };
 const checkIfReservationIsWithinDates = (from, to, reservation) => {
   return reservation.to < to && reservation.from > from;
