@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import DeviceList from './DeviceList';
 import DevicesList from 'Constants/Devices';
-import User from 'Constants/User';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import Filters from 'Components/Filters';
 
@@ -17,7 +16,7 @@ class Devices extends React.Component {
     return (
       <div>
         <Filters />
-        <DeviceList user={User[0]} />
+        <DeviceList />
       </div>
     );
   }
