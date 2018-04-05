@@ -30,6 +30,11 @@ export const resetFilters = () => {
 export const showBookModal = (bool) => {
   return { type: devices.SHOW_BOOK_MODAL, payload: bool };
 };
+//-------------------------------------------
+export const showAddOfficeModal = (bool) => {
+  return { type: devices.SHOW_ADD_OFFICE_MODAL, payload: bool };
+};
+//-------------------------------------------
 export const setCurrentDate = () => {
   return { type: devices.SET_CURRENT_DATE };
 };

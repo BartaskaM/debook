@@ -8,7 +8,9 @@ import { withStyles } from 'material-ui/styles';
 import Styles from './Styles';
 import OfficeList from 'Constants/Offices';
 import OfficeItem from './OfficeItem';
-import AddOffice from './AddOffice';
+import AddOfficeModal from './AddOffice';
+import * as devicesActions from 'ActionCreators/devicesActions';
+import { connect } from 'react-redux';
 
 class Offices extends React.Component {
   constructor(props) {
@@ -18,14 +20,17 @@ class Offices extends React.Component {
 
   handleAddNewClick() {
     console.log('its working');
-    
+    this.props.showAddOfficeModal(true);
+    <AddOfficeModal />;
   }
 
   render() {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
+        <AddOfficeModal />
         <Grid container spacing={16}>
+          
           <List className={classes.officeList}>
             {OfficeList.map(office => (
               <OfficeItem key={office.id} office={office} />
@@ -38,8 +43,8 @@ class Offices extends React.Component {
               variant="raised"
               color="primary"
               className={classes.addNewButton}
-              onClick={this.handleAddNewClick}>
-              ADD NEW<AddOffice />
+              onClick={()=>this.handleAddNewClick()}>
+              ADD NEW
             </Button>
           </Grid>
         </Grid>
@@ -50,6 +55,12 @@ class Offices extends React.Component {
 
 Offices.propTypes = {
   classes: PropTypes.object.isRequired,
+  showAddOfficeModal: PropTypes.func.isRequired,
 };
 
-export default withStyles(Styles)(Offices);
+const mapStateToProps = state => {
+  return {
+    user: state.auth.user,
+  };
+};
+export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Offices));

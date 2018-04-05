@@ -8,6 +8,7 @@ const defaultState = {
   showAvailable: false,
   showUnavailable: false,
   showBookModal: false,
+  showAddOfficeModal: false,
   currentDate: new Date(),
   returnDate: new Date(),
   showReturnDateError: false,
@@ -57,6 +58,9 @@ export default (state = defaultState, action) => {
     }
     case devices.SHOW_BOOK_MODAL: {
       return {...state, showBookModal: action.payload}; 
+    }
+    case devices.SHOW_ADD_OFFICE_BOOK_MODAL: {
+      return {...state, showAddOfficeModal: action.payload}; 
     }
     case devices.SET_CURRENT_DATE: {
       return {...state, currentDate: new Date()};

@@ -1,3 +1,5 @@
+// Todo: fix deviceActions Action Creator
+
 import React from 'react';
 import {
   Input,
@@ -15,19 +17,25 @@ import Dialog, {
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import * as devicesActions from 'ActionCreators/devicesActions';
 
 import Styles from './Styles';
 
-class AddOffice extends React.Component {
-  constructor() {
-    super();
+class AddOfficeModal extends React.Component {
+  constructor(props) {
+    super(props);
   }
 
   render() {
+    
     //const { classes } = this.props;
     return (
       <div>
-        <Dialog>
+        <Dialog
+          open={this.props.showAddOfficeDialog}
+          onClose={() => this.props.showAddOfficeModal(false)}>
           <DialogTitle>Test</DialogTitle>
           <DialogContent>
             <DialogContentText>
@@ -64,7 +72,7 @@ class AddOffice extends React.Component {
             </form>
           </DialogContent>
           <DialogActions>
-            <Button>
+            <Button onClick={() => this.props.showAddOfficeModal(false)}>
               SUBMIT
             </Button>
           </DialogActions>
@@ -74,4 +82,15 @@ class AddOffice extends React.Component {
   }
 }
 
-export default withStyles(Styles)(AddOffice);
+AddOfficeModal.propTypes = {
+  showAddOfficeModal: PropTypes.func.isRequired,
+  showAddOfficeDialog: PropTypes.bool.isRequired,
+  classes: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  showAddOfficeDialog: state.devices.showAddOfficeModal,
+  user: state.auth.user,
+});
+
+export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(AddOfficeModal));
