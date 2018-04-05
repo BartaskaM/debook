@@ -154,7 +154,5 @@ const Devices =
         available: false,
         active: false,
       },
-
-    ];
-      
+    ];     
 export default Devices;

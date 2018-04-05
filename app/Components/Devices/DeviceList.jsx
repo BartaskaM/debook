@@ -9,10 +9,10 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import Plus from 'material-ui-icons/Add';
-import IconReserve from 'material-ui-icons/Event';
 import BookModal from 'components/BookModal';
-import Device from '../Device/Device';
+import Device from 'Components/Device';
 import * as devicesActions from 'ActionCreators/devicesActions';
+
 class DeviceList extends React.Component{
   constructor(props){
     super(props);
@@ -73,21 +73,9 @@ class DeviceList extends React.Component{
         <Grid item xs={4}key={index}>
           <Paper>
             <Link to={`/devices/${device.id.toString()}`}>
-              <Device image={device.image} brand={device.brand} model={device.model} id={device.id} os={device.os} location= {device.location}
-                custody={device.custody} available={device.available} />
+              <Device key={device.id} device={device}/>
             </Link>
-            <Button
-              variant='raised'
-              style={{
-                width: '50%',
-              
-              }}
-            ><IconReserve className={classes.leftIcon}/>Reserve </Button>
-            <Button 
-              
-              style={{
-                width: '50%',
-              }}
+            <Button            
               disabled={
                 device.available ? false : device.custody == (this.props.user.id) ? false : true
               } 
