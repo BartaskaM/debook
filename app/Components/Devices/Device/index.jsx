@@ -1,12 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import List, { ListItem } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
 import Styles from './Styles';
 
-const device = ({classes, device}) => {
+const device = ({classes, device, users}) => {
+  const user = device.available ? null :
+    users.find(user => user.id === device.custody);
   return (
     <List>
       <ListItem><img className={classes.deviceCardImage} src={device.image}/></ListItem> 
@@ -17,20 +20,20 @@ const device = ({classes, device}) => {
       }
       <Typography className={classes.deviceCardTitle}>{device.brand}, {device.model} </Typography>
       <Typography className={classes.deviceCardMainContent}>
-        Identification number: <span className={classes.main_text_color}> {device.id}</span> 
+        Identification number: <span className={classes.mainTextColor}> {device.id}</span> 
       </Typography>  
       <Typography className={classes.deviceCardMainContent}>
-         OS: <span className={classes.main_text_color}> {device.os}</span> 
+         OS: <span className={classes.mainTextColor}> {device.os}</span> 
       </Typography>
       <Typography className={classes.deviceCardMainContent}>
         Location: 
-        <span className={classes.main_text_color}><a href="#nolink"> {device.location} </a></span> 
+        <span className={classes.mainTextColor}> {device.location} </span> 
       </Typography>
       {device.available ? <Typography><br></br> </Typography>
         :
         <Typography className={classes.deviceCardMainContent}>
           Custody of: 
-          <span className={classes.mainTextColor}><a href="#nolink"> {device.custody} </a></span>
+          <span className={classes.mainTextColor}> {`${user.firstName} ${user.lastName}`} </span>
         </Typography>      
       }
     </List>
@@ -49,6 +52,11 @@ device.propTypes = {
     available: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired, 
   }).isRequired,
+  users: PropTypes.array.isRequired,
 };
 
-export default withStyles(Styles)(device);
+const mapStateToProps = state => ({
+  users: state.users.users,
+});
+
+export default connect(mapStateToProps, null)(withStyles(Styles)(device));
