@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
@@ -18,7 +18,6 @@ import { styles } from './Styles';
 import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
 
 class DeviceDetails extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -39,10 +38,10 @@ class DeviceDetails extends React.Component {
     }
   }
   static getDerivedStateFromProps(nextProps, prevState) {
-    const device = this.props.getDeviceWithId(this.nextProps.match.params.id);
-    if (device != prevState.device) {
-      return { device };
+    if (nextProps.device != prevState.device) {
+      return { device: nextProps.device };
     }
+    return { device: null };
   }
   renderError() {
     return <div><h1>Something went WRONG. Please try again. </h1></div>;
@@ -71,16 +70,14 @@ class DeviceDetails extends React.Component {
     this.setState({ device });
   }
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
     return (
       this.state.device ?
         <div className={classes.root}>
-          <Link to="/main">
-            <Button variant="flat">
-              <NavigateBefore />
-              <span className={classes.bigFont} >Back to the list</span>
-            </Button>
-          </Link>
+          <Button variant="flat" onClick={history.goBack}>
+            <NavigateBefore />
+            <span className={classes.bigFont} >Back</span>
+          </Button>
           <Divider className={classes.divider} />
           <Grid container spacing={8}>
             <Grid item md>
@@ -163,7 +160,6 @@ class DeviceDetails extends React.Component {
               className={classes.table}
               alignItems='stretch'
               direction='column'
-              justify='top'
             >
               <Button
                 variant='raised'
@@ -197,28 +193,29 @@ class DeviceDetails extends React.Component {
 DeviceDetails.propTypes = {
   classes: PropTypes.object.isRequired,
   getDeviceWithId: PropTypes.func.isRequired,
-  device: PropTypes.arrayOf(PropTypes.shape({
-    location: PropTypes.string.isRequired,
-    custody: PropTypes.string.isRequired,
-    available: PropTypes.bool.isRequired,
-    active: PropTypes.bool.isRequired,
-    id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    custody_of: PropTypes.string.isRequired,
-    booked_from: PropTypes.string.isRequired,
-    identification_num: PropTypes.string.isRequired,
-    serial_num: PropTypes.string.isRequired,
-    os: PropTypes.string.isRequired,
-    group: PropTypes.string.isRequired,
-    subgroup: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    check_in_due: PropTypes.string.isRequired,
-    purchased: PropTypes.string.isRequired,
-    vendor: PropTypes.string.isRequired,
-    tax_rate: PropTypes.string.isRequired,
-  })).isRequired,
+  device: PropTypes.shape({
+    location: PropTypes.string,
+    custody: PropTypes.string,
+    available: PropTypes.bool,
+    active: PropTypes.bool,
+    id: PropTypes.number,
+    image: PropTypes.string,
+    name: PropTypes.string,
+    custody_of: PropTypes.string,
+    booked_from: PropTypes.string,
+    identification_num: PropTypes.string,
+    serial_num: PropTypes.string,
+    os: PropTypes.string,
+    group: PropTypes.string,
+    subgroup: PropTypes.string,
+    description: PropTypes.string,
+    check_in_due: PropTypes.string,
+    purchased: PropTypes.string,
+    vendor: PropTypes.string,
+    tax_rate: PropTypes.string,
+  }),
   match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {

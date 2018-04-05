@@ -4,7 +4,7 @@ import auth from './authReducer';
 import users from './usersReducer';
 import userDetails from './userDetailsReducer';
 import devices from './devicesReducer';
-import devicesDetails from './deviceDetailsReducer';
+import deviceDetails from './deviceDetailsReducer';
 
 //If needed, import other reducers here and add them to function below.
 export default combineReducers({
@@ -12,5 +12,5 @@ export default combineReducers({
   users,
   userDetails,
   devices,
-  devicesDetails,
+  deviceDetails,
 });
