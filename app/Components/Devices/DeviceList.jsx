@@ -17,6 +17,7 @@ import * as usersActions from 'ActionCreators/usersActions';
 import Reservations from 'Constants/Reservations';
 import Users from 'Constants/User';
 import Devices from 'Constants/Devices';
+import Device from './Device';
 
 class DeviceList extends React.Component {
   constructor(props) {
@@ -105,18 +106,7 @@ class DeviceList extends React.Component {
         <Grid item xs={4} key={index}>
           <Paper>
             <Link to={`/devices/${device.id.toString()}`}>
-              <div>
-                <ul>
-                  <li>Id: {device.id}</li>
-                  <li>Brand: {device.brand}</li>
-                  <li>Model: {device.model}</li>
-                  <li>OS: {device.os}</li>
-                  <li>Location: {device.location}</li>
-                  <li>Custody: {device.custody}</li>
-                  <li>Available: {device.available.toString()}</li>
-                  <li>Active: {device.active.toString()}</li>
-                </ul>
-              </div>
+              <Device key={device.id} device={device}/>
             </Link>
             <Button
               variant='raised'
