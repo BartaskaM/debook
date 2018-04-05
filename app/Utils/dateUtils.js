@@ -1,7 +1,7 @@
 import fifteenMinutes from 'Constants/Values';
 
 export const dateToValue = (date) => {
-  return date.toLocaleTimeString().split(':').slice(0,2).join(':');
+  return date.toLocaleTimeString().split(':').slice(0, 2).join(':');
 };
 export const toUnixTimeStamp = (date) => {
   return parseInt((date.getTime() / 1000).toFixed(0));
@@ -19,9 +19,17 @@ export const roundTime = (date) => {
   return date;
 };
 export const checkForReservation = (from, to, reservations, selectedDevice) => {
-  return reservations.filter(res => res.device === selectedDevice
-    && (((res.to > to && res.from - fifteenMinutes < to)
-      || (res.to > from && res.from - fifteenMinutes < from))
-      || (res.to < to && res.from > from)))
+  return reservations.filter(res => res.device === selectedDevice && (
+    checkIfDateIsWithinReservation(to, res) ||
+    checkIfDateIsWithinReservation(from, res) ||
+    checkIfReservationIsWithinDates(from, to, res)
+  )
+  )
     .length !== 0;
+};
+const checkIfDateIsWithinReservation = (date, reservation) => {
+  return reservation.to > date && reservation.from - fifteenMinutes < date;
+};
+const checkIfReservationIsWithinDates = (from, to, reservation) => {
+  return reservation.to < to && reservation.from > from;
 };
