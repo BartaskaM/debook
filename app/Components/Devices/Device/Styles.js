@@ -2,12 +2,12 @@ const Styles =  ({
   root: {
     marginBottom: 10,
   },
-  device_card_image: {
+  deviceCardImage: {
     width: 150,
     display: 'block',
     margin: 'auto',
   },
-  availability_tag_available: {
+  availabilityTagAvailable: {
     borderRadius: 8,
     webkitBoxSizing: 'border-box',
     boxSizing: 'border-box',
@@ -24,7 +24,7 @@ const Styles =  ({
     textTransform: 'uppercase',
     backgroundColor: '#3a9b5c',
   },
-  availability_tag_unavailable: {
+  availabilityTagUnavailable: {
     borderRadius: 8,
     webkitBoxSizing: 'border-box',
     boxSizing: 'border-box',
@@ -41,7 +41,7 @@ const Styles =  ({
     textTransform: 'uppercase',
     backgroundColor: '#ce2b27',
   },
-  device_card_title: {
+  deviceCardTitle: {
     color: '#333',
     fontFamily: 'Roboto Condensed, sans-serif',
     fontSize: 22,
@@ -52,14 +52,14 @@ const Styles =  ({
     marginBottom: 5,
     marginLeft: 20,
   },
-  device_card_main_content: {
+  deviceCardMainContent: {
     fontSize: 12,
     fontWeight: 500,
     letterSpacing: .6,
     color: '#999',
     marginLeft: 20,
   },
-  main_text_color: {
+  mainTextColor: {
     color: '#000000',
   },
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import List, { ListItem} from 'material-ui/List';
+import List, { ListItem } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
@@ -9,28 +9,28 @@ import Styles from './Styles';
 const device = ({classes, device}) => {
   return (
     <List className={classes.root}>
-      <ListItem><img className={classes.device_card_image} src={device.image}/></ListItem> 
+      <ListItem><img className={classes.deviceCardImage} src={device.image}/></ListItem> 
       {device.available ?
-        <Typography className={classes.availability_tag_available}>Available</Typography>
+        <Typography className={classes.availabilityTagAvailable}>Available</Typography>
         :
-        <Typography className={classes.availability_tag_unavailable}>Unavailable</Typography>
+        <Typography className={classes.availabilityTagUnavailable}>Unavailable</Typography>
       }
-      <Typography className={classes.device_card_title}>{device.brand}, {device.model} </Typography>
-      <Typography className={classes.device_card_main_content}>
+      <Typography className={classes.deviceCardTitle}>{device.brand}, {device.model} </Typography>
+      <Typography className={classes.deviceCardMainContent}>
         Identification number: <span className={classes.main_text_color}> {device.id}</span> 
       </Typography>  
-      <Typography className={classes.device_card_main_content}>
+      <Typography className={classes.deviceCardMainContent}>
          OS: <span className={classes.main_text_color}> {device.os}</span> 
       </Typography>
-      <Typography className={classes.device_card_main_content}>
+      <Typography className={classes.deviceCardMainContent}>
         Location: 
         <span className={classes.main_text_color}><a href="#nolink"> {device.location} </a></span> 
       </Typography>
       {device.available ? <Typography><br></br> </Typography>
         :
-        <Typography className={classes.device_card_main_content}>
+        <Typography className={classes.deviceCardMainContent}>
           Custody of: 
-          <span className={classes.main_text_color}><a href="#nolink"> {device.custody} </a></span>
+          <span className={classes.mainTextColor}><a href="#nolink"> {device.custody} </a></span>
         </Typography>      
       }
     </List>

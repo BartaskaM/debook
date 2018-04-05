@@ -9,6 +9,7 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import Plus from 'material-ui-icons/Add';
+
 import BookModal from 'components/BookModal';
 import Device from './Device';
 import * as devicesActions from 'ActionCreators/devicesActions';
