@@ -107,7 +107,6 @@ class BookModal extends React.Component{
       });
       this.props.setDevices(updatedDevices);
       this.props.showBookModal(false);
-      console.log('works');
       //Post booking info
     }
   }
