@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
@@ -16,46 +15,55 @@ import NavigateBefore from 'material-ui-icons/NavigateBefore';
 
 import Row from './Row';
 import { styles } from './Styles';
-import DevicesList from 'Constants/Devices';
-import * as devicesActions from 'ActionCreators/devicesActions';
+//import DeviceDetailsList from 'Constants/DeviceDetails';
+import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
 
 class DeviceDetails extends React.Component {
 
-  constructor(props){
-    props.setDevices(DevicesList);
+  constructor(props) {
+    //  props.setDevices(DevicesList);
     super(props);
     this.state = {
-      device: {},
+      device: null,
     };
     this.handleEditClick = this.handleCheckClick.bind(this);
-    this.getParsedDate =  this.getParsedDate.bind(this);
-    this.renderError =  this.renderError.bind(this);
+    this.getParsedDate = this.getParsedDate.bind(this);
+    this.renderError = this.renderError.bind(this);
   }
   componentDidMount() {
-    this.props.setDevices(DevicesList);
+    //this.props.setDeviceDetails(DeviceDetailsList);
+
+    if (this.props.match.params.id) {
+      this.props.getDeviceWithId(this.props.match.params.id);
+    }
+    else {
+      this.setState({
+        device: null,
+      });
+    }
   }
-  static getDerivedStateFromProps(nextProps, prevState){
-    const device = nextProps.devices.find(device=>device.id == nextProps.match.params.id);
-    if(device != prevState.device){
-      return {device};
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const device = this.props.getDeviceWithId(this.nextProps.match.params.id);
+    if (device != prevState.device) {
+      return { device };
     }
   }
   renderError() {
     return <div><h1>Something went WRONG. Please try again. </h1></div>;
   }
-  getParsedDate(){
-    const currentDate = new Date(), 
-      currentMonth =  currentDate.getMonth() < 9 ? '-0' + (currentDate.getMonth() + 1) : 
+  getParsedDate() {
+    const currentDate = new Date(),
+      currentMonth = currentDate.getMonth() < 9 ? '-0' + (currentDate.getMonth() + 1) :
         '-' + (currentDate.getMonth() + 1),
-      currentDay = currentDate.getDate() < 10 ? '-0' + currentDate.getDate() : 
+      currentDay = currentDate.getDate() < 10 ? '-0' + currentDate.getDate() :
         '-' + currentDate.getDate(),
       date = currentDate.getFullYear() + currentMonth + currentDay;
-      
+
     return date;
   }
-  handleCheckClick(){
+  handleCheckClick() {
     const device = this.state.device;
-    if(device.custody.length === 0){
+    if (device.custody.length === 0) {
       this.open(device.id);
     } else {
       //Handle device return
@@ -63,97 +71,97 @@ class DeviceDetails extends React.Component {
       device.custody = 'New guy';
       device.booked_from = this.getParsedDate();
     }
-      
-    this.setState({device}); 
+
+    this.setState({ device });
   }
-  render(){
+  render() {
     const { classes } = this.props;
-    return ( 
-      this.state.device ?     
-        <div className={classes.root}>   
+    return (
+      this.state.device ?
+        <div className={classes.root}>
           <Link to="/main">
             <Button variant="flat">
               <NavigateBefore />
               <span className={classes.bigFont} >Back to the list</span>
             </Button>
           </Link>
-          <Divider className={classes.divider}/>
+          <Divider className={classes.divider} />
           <Grid container spacing={8}>
             <Grid item md>
               <img
                 className={classes.image}
                 src={this.state.device.image}
               />
-            </Grid> 
+            </Grid>
             <Grid item md={6} xs={12}>
               <Paper className={classes.table}>
                 <Grid container className={classes.table}>
                   <Grid item md={11}>
                     <Typography className={classes.title} variant="display3" align="left">
-                      {this.state.device.name} 
+                      {this.state.device.name}
                     </Typography>
-                  </Grid> 
+                  </Grid>
                   <Grid item md={11} className={classes.custody}>
                     <Grid container item>
                       <Grid item md={2} className={classes.label}>Custody of:</Grid>
                       <Grid item md={9}>{this.state.device.custody}
-                        <Tooltip 
-                          id="tooltip-bottom" 
+                        <Tooltip
+                          id="tooltip-bottom"
                           enterDelay={100}
                           leaveDelay={5000}
                           title="Request custody update"
                           placement="bottom">
-                          <Flag style={{color: 'red'}} />
+                          <Flag style={{ color: 'red' }} />
                         </Tooltip>
                       </Grid>
                     </Grid>
-                    <Row 
-                      label="Booked from" 
-                      value={this.state.device.booked_from}/>
+                    <Row
+                      label="Booked from"
+                      value={this.state.device.booked_from} />
                   </Grid>
                   <Grid item md={11}>
                     <Divider className={classes.divider} />
                     <Typography className={classes.title} variant="display1" align="left">
-                    ITEM DETAILS 
+                      ITEM DETAILS
                     </Typography>
                     <Divider className={classes.divider} />
                   </Grid>
-                  <Row 
-                    label="ID#" 
-                    value={this.state.device.identification_num}/>
-                  <Row 
-                    label="Serial number" 
-                    value={this.state.device.serial_num}/>
-                  <Row 
-                    label="OS" 
-                    value={this.state.device.os}/>
-                  <Row 
-                    label="Group" 
-                    value={this.state.device.group}/>
-                  <Row 
-                    label="Subgroup" 
-                    value={this.state.device.subgroup}/>
-                  <Row 
-                    label="Description" 
-                    value={this.state.device.description}/>
-                  <Row 
-                    label="Check-in due" 
-                    value={this.state.device.check_in_due}/>
-                  <Row 
-                    label="Location" 
-                    value={this.state.device.location}/>
-                  <Row 
-                    label="Purchased on:" 
-                    value={this.state.device.purchased}/>
-                  <Row 
-                    label="Vendor" 
-                    value={this.state.device.vendor}/>
-                  <Row 
-                    label="Tax rate" 
-                    value={this.state.device.tax_rate}/>
-                </Grid> 
+                  <Row
+                    label="ID#"
+                    value={this.state.device.identification_num} />
+                  <Row
+                    label="Serial number"
+                    value={this.state.device.serial_num} />
+                  <Row
+                    label="OS"
+                    value={this.state.device.os} />
+                  <Row
+                    label="Group"
+                    value={this.state.device.group} />
+                  <Row
+                    label="Subgroup"
+                    value={this.state.device.subgroup} />
+                  <Row
+                    label="Description"
+                    value={this.state.device.description} />
+                  <Row
+                    label="Check-in due"
+                    value={this.state.device.check_in_due} />
+                  <Row
+                    label="Location"
+                    value={this.state.device.location} />
+                  <Row
+                    label="Purchased on:"
+                    value={this.state.device.purchased} />
+                  <Row
+                    label="Vendor"
+                    value={this.state.device.vendor} />
+                  <Row
+                    label="Tax rate"
+                    value={this.state.device.tax_rate} />
+                </Grid>
               </Paper>
-            </Grid> 
+            </Grid>
             <Grid item md
               container
               className={classes.table}
@@ -161,20 +169,20 @@ class DeviceDetails extends React.Component {
               direction='column'
               justify='top'
             >
-              <Button 
+              <Button
                 variant='raised'
                 size='large'
                 disabled={
-                  this.state.device.available ? false :  true
-                } 
+                  this.state.device.available ? false : true
+                }
                 className={classes.button}
-                color={this.state.device.available ? 'primary' : 'secondary'} 
-                onClick={()=>this.handleCheckClick()}>
-                <Plus/>
+                color={this.state.device.available ? 'primary' : 'secondary'}
+                onClick={() => this.handleCheckClick()}>
+                <Plus />
                 {this.state.device.available ?
-                  'Book device' : 
+                  'Book device' :
                   'Device is booked'}
-              </Button>           
+              </Button>
               <Button variant="raised" size="large" color="primary" className={classes.button}>
                 RESERVATION
               </Button>
@@ -191,9 +199,10 @@ class DeviceDetails extends React.Component {
 }
 
 DeviceDetails.propTypes = {
-  setDevices: PropTypes.func.isRequired,
+  // setDeviceDetails: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  devices: PropTypes.arrayOf(PropTypes.shape({
+  getDeviceWithId: PropTypes.func.isRequired,
+  device: PropTypes.arrayOf(PropTypes.shape({
     location: PropTypes.string.isRequired,
     custody: PropTypes.string.isRequired,
     available: PropTypes.bool.isRequired,
@@ -215,10 +224,10 @@ DeviceDetails.propTypes = {
     tax_rate: PropTypes.string.isRequired,
   })).isRequired,
   match: PropTypes.object.isRequired,
-};  
+};
 const mapStateToProps = state => {
   return {
-    devices: state.devices.devices,
+    device: state.deviceDetails.device,
   };
 };
-export default connect(mapStateToProps, devicesActions)(withStyles(styles)(DeviceDetails));
+export default connect(mapStateToProps, deviceDetailsActions)(withStyles(styles)(DeviceDetails));
