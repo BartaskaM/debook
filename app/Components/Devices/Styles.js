@@ -9,6 +9,10 @@ const Styles = theme=>({
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
+  button: {
+    width: '46%',
+    margin: '2%',
+  },
 });
   
 export default Styles;

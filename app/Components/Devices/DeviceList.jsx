@@ -9,74 +9,100 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import Plus from 'material-ui-icons/Add';
-import BookModal from 'components/BookModal';
+import Clock from 'material-ui-icons/Schedule';
+import BookModal from 'Components/BookModal';
+import ReserveModal from 'Components/ReserveModal';
 import * as devicesActions from 'ActionCreators/devicesActions';
-class DeviceList extends React.Component{
-  constructor(props){
+import * as usersActions from 'ActionCreators/usersActions';
+import Reservations from 'Constants/Reservations';
+import Users from 'Constants/User';
+import Devices from 'Constants/Devices';
+
+class DeviceList extends React.Component {
+  constructor(props) {
     super(props);
-    this.state = {
-      devices: props.devices.filter(device=>device.active),
-    };
     this.renderDevices = this.renderDevices.bind(this);
-    this.handleCheckClick = this.handleCheckClick.bind(this);
     this.renderDevices = this.renderDevices.bind(this);
-    this.open = this.open.bind(this);
+    this.openBookDialog = this.openBookDialog.bind(this);
+    this.openReserveDialog = this.openReserveDialog.bind(this);
+    this.openReservationDetails = this.openReservationDetails.bind(this);
+    this.returnDevice = this.returnDevice.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.devices != this.state.devices) {
-      this.setState({
-        devices: nextProps.devices,
-      });
+  componentDidMount() {
+    const {
+      reservations,
+      setReservations,
+      users,
+      setUsers,
+      devices,
+      setDevices,
+    } = this.props;
+    if (reservations.length === 0) {
+      setReservations(Reservations);
+    }
+    if (users.length === 0) {
+      setUsers(Users);
+    }
+    if (devices.length === 0) {
+      setDevices(Devices);
     }
   }
 
-  handleCheckClick(deviceId){
-    const devices = this.state.devices.map(device=>{
-      if(device.id == deviceId){
-        if(device.custody.length === 0){
-          this.open(device.id);
-        } else {
-          //Handle device return
-          device.available = !device.available;
-          device.custody = '';
-          device.location = this.props.user.office;
-        }
+  returnDevice(deviceId) {
+    const { devices, setDevices, user } = this.props;
+    const newDevices = devices.map(device => {
+      if (device.id === deviceId) {
+        //Handle device return
+        device.available = true;
+        device.custody = null;
+        device.location = user.office;
       }
       return device;
     });
-    this.setState({devices}); 
+    setDevices(newDevices);
   }
 
-  filterDevices(){
-    let devicesToRender = this.state.devices
-      .filter(device => device.model.toLowerCase().includes(this.props.modelFilter.toLowerCase()));
-    if(this.props.brandFilter.length > 0)
-    {
-      devicesToRender = devicesToRender.filter(device => 
-        this.props.brandFilter.includes(device.brand));
+  filterDevices() {
+    const {
+      devices,
+      modelFilter,
+      brandFilter,
+      showAvailable,
+      showUnavailable,
+      officeFilter,
+    } = this.props;
+    let devicesToRender = devices
+      .filter(device => device.active &&
+        device.model.toLowerCase().includes(modelFilter.toLowerCase()));
+    if (brandFilter.length > 0) {
+      devicesToRender = devicesToRender.filter(device =>
+        brandFilter.includes(device.brand));
     }
-    if(this.props.officeFilter.length > 0){
-      devicesToRender = devicesToRender.filter(device => 
-        this.props.officeFilter.includes(device.location));
+    if (officeFilter.length > 0) {
+      devicesToRender = devicesToRender.filter(device =>
+        officeFilter.includes(device.location));
     }
-    if(this.props.showAvailable != this.props.showUnavailable)
-    {
-      if(this.props.showAvailable){
+    if (showAvailable != showUnavailable) {
+      if (showAvailable) {
         devicesToRender = devicesToRender.filter(device => device.available);
       }
-      if(this.props.showUnavailable){
+      if (showUnavailable) {
         devicesToRender = devicesToRender.filter(device => !device.available);
       }
     }
     return devicesToRender;
   }
 
-  renderDevices(classes){      
-    return this.filterDevices().map((device, index)=>{
+  renderDevices(classes) {
+    const { reservations, user } = this.props;
+    const userReservations = reservations
+      .filter(res => res.user === user.id);
+    const userReservedDevices = userReservations.map(res => res.device);
+    return this.filterDevices().map((device, index) => {
       return (
         //Replace list with device component
-        <Grid item xs={4}key={index}>
+        <Grid item xs={4} key={index}>
           <Paper>
             <Link to={`/devices/${device.id.toString()}`}>
               <div>
@@ -92,19 +118,33 @@ class DeviceList extends React.Component{
                 </ul>
               </div>
             </Link>
-            <Button 
+            <Button
               variant='raised'
               disabled={
-                device.available ? false : device.custody == (this.props.user.id) ? false : true
-              } 
-              color={device.available ? 'primary' : 'secondary'} 
-              onClick={()=>this.handleCheckClick(device.id)}>
-              <Plus className={classes.leftIcon}/>
+                device.available ? false : device.custody === user.id ? false : true
+              }
+              color={device.available ? 'primary' : 'secondary'}
+              className={classes.button}
+              onClick={device.custody === null ?
+                () => this.openBookDialog(device.id) :
+                () => this.returnDevice(device.id)}>
+              <Plus className={classes.leftIcon} />
               {device.available ?
-                'Book device' : 
-                device.custody == (this.props.user.id) ? 
+                'Book device' :
+                device.custody === user.id ?
                   'Return device' :
                   'Device is booked'}
+            </Button>
+            <Button
+              variant="raised"
+              className={classes.button}
+              onClick={
+                userReservedDevices.includes(device.id) ?
+                  () => this.openReservationDetails(userReservations
+                    .find(res => res.device === device.id)) :
+                  () => this.openReserveDialog(device.id)}>
+              <Clock className={classes.leftIcon} />
+              {userReservedDevices.includes(device.id) ? 'Reservation details' : 'Reserve'}
             </Button>
           </Paper>
         </Grid>
@@ -112,24 +152,26 @@ class DeviceList extends React.Component{
     });
   }
 
-  open(deviceId){
-    this.props.setCurrentDate();
-    const currentDate = new Date();
-    if(currentDate.getHours() !== 23)
-    {
-      currentDate.setHours(currentDate.getHours() + 1);
-    } 
-    this.props.setReturnDate(currentDate);
-    this.props.setSelectedDevice(deviceId);
-    this.props.showBookModal(true);
+  openBookDialog(deviceId) {
+    this.props.showBookModal(deviceId);
   }
 
-  render(){
+  openReserveDialog(deviceId) {
+    this.props.showReserveModal(deviceId);
+  }
+
+  openReservationDetails(reservation) {
+    const { from, to, device } = reservation;
+    this.props.showReservationDetails(from, to, device);
+  }
+
+  render() {
     const { classes } = this.props;
     return (
       <Grid container spacing={8} className={classes.root}>
         {this.renderDevices(classes)}
         <BookModal />
+        <ReserveModal />
       </Grid>
     );
   }
@@ -141,7 +183,7 @@ DeviceList.propTypes = {
     model: PropTypes.string.isRequired,
     os: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    custody: PropTypes.string.isRequired,
+    custody: PropTypes.number,
     available: PropTypes.bool.isRequired,
     active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
@@ -164,6 +206,20 @@ DeviceList.propTypes = {
   setReturnDate: PropTypes.func.isRequired,
   showBookModal: PropTypes.func.isRequired,
   setSelectedDevice: PropTypes.func.isRequired,
+  showReserveModal: PropTypes.func.isRequired,
+  reservations: PropTypes.arrayOf(
+    PropTypes.shape({
+      device: PropTypes.number.isRequired,
+      user: PropTypes.number.isRequired,
+      from: PropTypes.object.isRequired,
+      to: PropTypes.object.isRequired,
+    })
+  ),
+  setReservations: PropTypes.func.isRequired,
+  users: PropTypes.array.isRequired,
+  setUsers: PropTypes.func.isRequired,
+  showReservationDetails: PropTypes.func.isRequired,
+  setDevices: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {
@@ -174,6 +230,11 @@ const mapStateToProps = state => {
     showAvailable: state.devices.showAvailable,
     showUnavailable: state.devices.showUnavailable,
     user: state.auth.user,
+    reservations: state.devices.reservations,
+    users: state.users.users,
   };
 };
-export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(DeviceList));
+export default connect(mapStateToProps, {
+  ...devicesActions,
+  ...usersActions,
+})(withStyles(Styles)(DeviceList));
