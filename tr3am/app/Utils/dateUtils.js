@@ -1,6 +1,9 @@
 import { fifteenMinutes } from 'Constants/Values';
 
-export const dateToValue = (date) => {
+export const dateToFullYear = (date) => {
+  return date.toLocaleDateString().split('/').reverse().join('-');
+};
+export const dateToHours = (date) => {
   return date.toLocaleTimeString().split(':').slice(0, 2).join(':');
 };
 export const toUnixTimeStamp = (date) => {

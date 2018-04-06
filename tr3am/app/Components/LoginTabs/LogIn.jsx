@@ -36,11 +36,6 @@ class Login extends React.Component {
   }
   submitLogInForm(e) {
     e.preventDefault();
-    const results = {
-      email: this.state.email,
-      password: this.state.password,
-    };
-    console.log(results);
     this.validateLoginData();
   }
 

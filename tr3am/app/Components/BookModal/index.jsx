@@ -14,7 +14,7 @@ import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
 import ReservationsTable from '../ReservationsTable';
 import { 
-  dateToValue, 
+  dateToHours, 
   checkIfLate, 
   roundTime,
   checkForReservation,
@@ -143,7 +143,7 @@ class BookModal extends React.Component {
               error={checkIfLate(currentDate)}
               helperText={checkIfLate(currentDate) ? 'It\'s too late!' : ' '}
               disabled={true}
-              value={dateToValue(currentDate)}
+              value={dateToHours(currentDate)}
               className={classes.inputField}
               InputLabelProps={{ classes: { root: classes.label } }}
               FormHelperTextProps={{ classes: { root: classes.helperText } }}
@@ -154,7 +154,7 @@ class BookModal extends React.Component {
               type="time"
               error={showReturnDateError}
               helperText={returnDateError}
-              value={dateToValue(roundTime(returnDate))}
+              value={dateToHours(roundTime(returnDate))}
               onChange={this.handleDateChange}
               onFocus={() => this.checkForErrors(returnDate)}
               inputProps={{

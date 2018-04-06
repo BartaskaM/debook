@@ -6,7 +6,7 @@ import Grid from 'material-ui/Grid';
 import Row from './row';
 import { withStyles } from 'material-ui/styles';
 import Styles from './Styles';
-import { dateToValue } from 'Utils/dateUtils';
+import { dateToHours } from 'Utils/dateUtils';
 
 class ReservationsTable extends React.Component {
   renderRows(){
@@ -17,7 +17,7 @@ class ReservationsTable extends React.Component {
       .map((res, i) => {
         const { from, to, user } = res;
         const userInfo = users.find(usr => usr.id === user);
-        return <Row key={i} first={`${dateToValue(from)} - ${dateToValue(to)}`} 
+        return <Row key={i} first={`${dateToHours(from)} - ${dateToHours(to)}`} 
           second={`${userInfo.firstName} ${userInfo.lastName}`} 
           styleClass={classes.row}
           addDivider={true}/>;

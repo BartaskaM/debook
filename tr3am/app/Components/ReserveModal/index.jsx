@@ -14,7 +14,8 @@ import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
 import ReservationsTable from '../ReservationsTable';
 import { 
-  dateToValue, 
+  dateToFullYear,
+  dateToHours, 
   checkIfLate, 
   roundTime,
   checkForReservation,
@@ -196,7 +197,7 @@ class ReserveModal extends React.Component {
               disabled={showDetails}
               autoFocus
               label="Reservation day"
-              value={currentDate.toLocaleDateString()}
+              value={dateToFullYear(currentDate)}
               onChange={this.handleDateChange}
               type="date"
               className={classes.inputField}
@@ -210,7 +211,7 @@ class ReserveModal extends React.Component {
               type="time"
               error={checkIfLate(currentDate)}
               helperText={checkIfLate(currentDate) ? 'It\'s too late!' : ' '}
-              value={dateToValue(roundTime(currentDate))}
+              value={dateToHours(roundTime(currentDate))}
               onChange={this.handleStartChange}
               inputProps={{
                 step: 900,
@@ -226,7 +227,7 @@ class ReserveModal extends React.Component {
               type="time"
               error={showReturnDateError}
               helperText={returnDateError}
-              value={dateToValue(roundTime(returnDate))}
+              value={dateToHours(roundTime(returnDate))}
               onChange={this.handleReturnChange}
               onFocus={() => this.checkForErrors(returnDate, currentDate)}
               inputProps={{
