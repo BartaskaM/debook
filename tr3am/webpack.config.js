@@ -14,7 +14,7 @@ module.exports = {
     publicPath: '/dist/',
   },
   plugins: [new HtmlWebpackPlugin({
-    template: path.resolve(__dirname, 'public/index.html'),
+    template: path.resolve(__dirname, 'Public/index.html'),
   })],
   devtool: 'cheap-module-source-map',
   devServer: {
