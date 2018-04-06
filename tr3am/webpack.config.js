@@ -44,12 +44,11 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['react', 'es2015', 'env'],
+          presets: ['react', 'env'],
           plugins: [
             'react-hot-loader/babel',
             'babel-plugin-transform-class-properties',
             'babel-plugin-transform-object-rest-spread',
-            'transform-object-rest-spread',
           ],
         },
       },
