@@ -25,6 +25,12 @@ export const OfficeDetails = [
   'admin',
   'user',
 ];
+
 export const Brands = [
   'admin',
+];
+
+export const Events = [
+  'admin',
+  'user',
 ];

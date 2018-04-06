@@ -67,7 +67,7 @@ class MainContainer extends React.Component {
               <MainTabs tabIndex='/events' />
               <BookingEvents />
             </div>
-          )} allowedRoles={RouteRoles.Offices} />
+          )} allowedRoles={RouteRoles.Events} />
         } />
         <Route exact path='/brands' render={() =>
           <Auth component={() => (
