@@ -24,9 +24,10 @@ import Styles from './Styles';
 class AddOfficeModal extends React.Component {
   constructor(props) {
     super(props);
+    this.submitOffice = this.submitOffice.bind(this);
   }
 
-  submutOffice()
+  submitOffice()
   {
     this.props.showAddOfficeModal(false);
   }
@@ -49,28 +50,53 @@ class AddOfficeModal extends React.Component {
               <FormGroup>
                 <FormControl>
                   <InputLabel className={classes.fontSize}>Country:</InputLabel>
-                  <Input/>
+                  <Input
+                    inputProps={{
+                      name: 'country',
+                      maxLength: '255',
+                      required: 'required',
+                    }}/>
                 </FormControl>
                 <FormControl>
-                  <InputLabel  className={classes.fontSize}>City:</InputLabel>
-                  <Input/>
+                  <InputLabel className={classes.fontSize}>City:</InputLabel>
+                  <Input
+                    inputProps={{
+                      name: 'city',
+                      maxLength: '255',
+                      required: 'required',
+                    }}/>
                 </FormControl>
                 <FormControl>
-                  <InputLabel  className={classes.fontSize}>Address:</InputLabel>
-                  <Input/>
+                  <InputLabel className={classes.fontSize}>Address:</InputLabel>
+                  <Input
+                    inputProps={{
+                      name: 'address',
+                      maxLength: '255',
+                      required: 'required',
+                    }}/>
                 </FormControl>
                 <FormControl>
-                  <InputLabel  className={classes.fontSize}>Coordinates:</InputLabel>
-                  <Input/>
+                  <InputLabel className={classes.fontSize}>Coordinates:</InputLabel>
+                  <Input
+                    inputProps={{
+                      name: 'coordinates',
+                      maxLength: '255',
+                      required: 'required',
+                    }}/>
                 </FormControl>
               </FormGroup>
             </form>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.submitOffice} color="primary">
+            <Button
+              onClick={this.submitOffice}
+              color="primary"
+              className={classes.button}>
               SUBMIT
             </Button>
-            <Button onClick={() => this.props.showAddOfficeModal(false)}>
+            <Button
+              onClick={() => this.props.showAddOfficeModal(false)}
+              className={classes.button}>
               CANCEL
             </Button>
           </DialogActions>

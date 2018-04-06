@@ -1,6 +1,6 @@
 const Styles = theme => ({
   modalWidth: {
-    width: '100%',
+    fullWidth: true,
     maxWidth: 'none',
   },
   fontSize: {
@@ -8,6 +8,10 @@ const Styles = theme => ({
   },
   title: {
     fontSize: 30,
+  },
+  button: {
+    height: 50,
+    fontSize: 14,
   },
 });
 
