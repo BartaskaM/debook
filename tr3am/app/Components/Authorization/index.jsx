@@ -9,7 +9,7 @@ const Authorization = ({ component: Component, allowedRoles, user, location }) =
       // Not Logged on
       <Redirect
         to={{
-          pathname: '/login',
+          pathname: '/',
           state: { from: location },
         }}
       /> : allowedRoles.includes(user.role) ?

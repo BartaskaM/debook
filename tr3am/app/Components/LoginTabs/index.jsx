@@ -16,8 +16,8 @@ import SignUp from './SignUp';
 import Login from './Login';
 
 class LoginTabs extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       tabIndex: 0,
@@ -80,6 +80,7 @@ class LoginTabs extends React.Component {
 LoginTabs.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
+  tabIndex: PropTypes.number,
 };
 
 export default withStyles(Styles, { withTheme: true })(LoginTabs);
