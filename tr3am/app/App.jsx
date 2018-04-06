@@ -1,17 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { HashRouter as Router, Route } from 'react-router-dom';
+import { hot } from 'react-hot-loader';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { CssBaseline } from 'material-ui';
 import { Provider } from 'react-redux';
-import store from './store';
+import store from './Store';
 import { MuiThemeProvider } from 'material-ui/styles';
 
-import MainContainer from './Components/MainContainer';
+import MainContainer from 'Containers/MainContainer';
 import theme from 'Theme/theme';
 
-const App = document.querySelector('.app');
-
-ReactDOM.render(
+const App = () => (
   <MuiThemeProvider theme={theme}>
     <Provider store={store}>
       <Router>
@@ -20,5 +18,7 @@ ReactDOM.render(
         </CssBaseline>
       </Router>
     </Provider>
-  </MuiThemeProvider>, App
+  </MuiThemeProvider>
 );
+
+export default hot(module)(App);

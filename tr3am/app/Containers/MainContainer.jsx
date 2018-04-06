@@ -2,26 +2,26 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import * as RouteRoles from 'Constants/RouteRoles';
-import Auth from './Authorization';
-import Header from './Header';
-import LoginTabs from './LoginTabs';
-import MainTabs from './MainTabs';
-import Users from './Users';
-import UserDetails from './Users/UserDetails';
-import Devices from './Devices';
-import DeviceDetails from './Devices/DeviceDetails';
-import Offices from './Offices';
-import OfficeDetails from './Offices/OfficeDetails';
-import BookingEvents from './BookingEvents';
-import ErrorComponent from './Error';
-import BrandList from './Brands';
+import Auth from 'Components/Authorization';
+import Header from 'Components/Header';
+import LoginTabs from 'Components/LoginTabs';
+import MainTabs from 'Components/MainTabs';
+import Users from 'Components/Users';
+import UserDetails from 'Components/Users/UserDetails';
+import Devices from 'Components/Devices';
+import DeviceDetails from 'Components/Devices/DeviceDetails';
+import Offices from 'Components/Offices';
+import OfficeDetails from 'Components/Offices/OfficeDetails';
+import BookingEvents from 'Components/BookingEvents';
+import ErrorComponent from 'Components/Errors/Basic';
+import BrandList from 'Components/Brands';
 
 class MainContainer extends React.Component {
   render() {
     return (
       <div>
         <Header />
-        <Route path='/login' component={LoginTabs} />
+        <Route exact path='/' component={LoginTabs} />
         <Route exact path='/error' component={ErrorComponent} />
         <Route path='/profile' render={() =>
           <Auth component={UserDetails} allowedRoles={RouteRoles.UserDetails} />

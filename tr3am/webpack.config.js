@@ -1,16 +1,20 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const appDir = __dirname + '/app/';
-const buildDir = __dirname + '/app/dist/';
 const path = require('path');
 
+const appDir = path.resolve(__dirname, 'app/');
+const buildDir = path.resolve(__dirname, 'wwwroot/dist/');
+
 module.exports = {
-  entry: appDir + 'index.jsx',
+  entry: {
+    main: path.resolve(appDir, 'index.jsx'),
+  },
   output: {
-    filename: 'bundle.js',
+    filename: 'index_bundle.js',
     path: buildDir,
+    publicPath: '/dist/',
   },
   plugins: [new HtmlWebpackPlugin({
-    template: appDir + 'index.html',
+    template: path.resolve(__dirname, 'public/index.html'),
   })],
   devtool: 'cheap-module-source-map',
   devServer: {
@@ -40,8 +44,12 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['react', 'es2015'],
-          plugins: ['transform-object-rest-spread'],
+          presets: ['react', 'env'],
+          plugins: [
+            'react-hot-loader/babel',
+            'babel-plugin-transform-class-properties',
+            'babel-plugin-transform-object-rest-spread',
+          ],
         },
       },
       {
