@@ -3,8 +3,8 @@ const Styles = theme=>({
     paddingTop: 10,
     paddingRight: 10,
     paddingBottom: 10,
-    width: '80%',
-    float: 'right',
+    marginLeft: '21%',
+    width: '79%',
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
