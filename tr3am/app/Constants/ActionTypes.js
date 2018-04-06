@@ -33,3 +33,7 @@ export const devices = {
   HIDE_BOOK_MODAL: 'HIDE_BOOK_MODAL',
   HIDE_RESERVATION_DETAILS: 'HIDE_RESERVATION_DETAILS',
 };
+
+export const deviceDetails = {
+  SET_DEVICE_DETAILS: 'SET_DEVICE_DETAILS',
+};
