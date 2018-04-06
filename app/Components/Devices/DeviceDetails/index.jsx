@@ -13,9 +13,12 @@ import Tooltip from 'material-ui/Tooltip';
 import Flag from 'material-ui-icons/Flag';
 import NavigateBefore from 'material-ui-icons/NavigateBefore';
 
+import ReservationsTable from 'Components/ReservationsTable';
+import ReservationsCalendar from 'Components/ReservationsCalendar';
 import Row from './Row';
 import { styles } from './Styles';
 import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
+import * as devicesActions from 'ActionCreators/devicesActions';
 
 class DeviceDetails extends React.Component {
   constructor(props) {
@@ -28,8 +31,10 @@ class DeviceDetails extends React.Component {
     this.renderError = this.renderError.bind(this);
   }
   componentDidMount() {
-    if (this.props.match.params.id) {
-      this.props.getDeviceWithId(this.props.match.params.id);
+    const id = this.props.match.params.id;
+    if (id) {
+      this.props.getDeviceWithId(id);
+      this.props.setSelectedDevice(parseInt(id));
     }
   }
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -74,14 +79,14 @@ class DeviceDetails extends React.Component {
             <span className={classes.bigFont} >Back</span>
           </Button>
           <Divider className={classes.divider} />
-          <Grid container spacing={8}>
-            <Grid item md>
+          <Grid container spacing={16}>
+            <Grid item md={3}>
               <img
                 className={classes.image}
                 src={this.state.device.image}
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={6}>
               <Paper className={classes.table}>
                 <Grid container className={classes.table}>
                   <Grid item md={11}>
@@ -150,10 +155,9 @@ class DeviceDetails extends React.Component {
                 </Grid>
               </Paper>
             </Grid>
-            <Grid item md
-              container
+            <Grid item md={3}
               className={classes.table}
-              alignItems='stretch'
+              container
               direction='column'
             >
               <Button
@@ -176,7 +180,10 @@ class DeviceDetails extends React.Component {
               <Button variant="raised" size="large" color="secondary" className={classes.button}>
                 CHANGE LOCATION
               </Button>
-
+              <Paper className={classes.reservationsRoot}>
+                <ReservationsCalendar/>
+                <ReservationsTable/>
+              </Paper>
             </Grid>
           </Grid>
         </div>
@@ -211,6 +218,7 @@ DeviceDetails.propTypes = {
   }),
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
+  setSelectedDevice: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -220,7 +228,7 @@ const mapStateToProps = state => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, deviceDetailsActions)(
+  connect(mapStateToProps, {...deviceDetailsActions, ...devicesActions})(
     withStyles(styles)(DeviceDetails)
   )
 );
