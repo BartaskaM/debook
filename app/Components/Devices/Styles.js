@@ -3,15 +3,25 @@ const Styles = theme=>({
     paddingTop: 10,
     paddingRight: 10,
     paddingBottom: 10,
-    width: '80%',
-    float: 'right',
+    marginLeft: '21%',
+    width: '79%',
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
   button: {
-    width: '46%',
-    margin: '2%',
+    width: '44%',
+    margin: '3%',
+  },
+  devicePaper: {
+    height: '100%',
+  },
+  deviceContainer: {
+    height: '86%',
+    margin: '0 3%',
+  },
+  buttonsContainer: {
+    height: '14%',
   },
 });
   

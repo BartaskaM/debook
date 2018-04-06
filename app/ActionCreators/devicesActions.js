@@ -27,7 +27,7 @@ export const setShowUnavailable = (bool) => {
 export const resetFilters = () => {
   return { type: devices.RESET_FILTERS };
 };
-export const showBookModal = (showBookModal, selectedDevice = -1) => {
+export const showBookModal = (selectedDevice) => {
 
   const returnDate = new Date();
   if(returnDate.getHours() !== 23)
@@ -37,12 +37,14 @@ export const showBookModal = (showBookModal, selectedDevice = -1) => {
   return { 
     type: devices.SHOW_BOOK_MODAL, 
     payload: {
-      showBookModal,
       currentDate: new Date(),
       returnDate,
       selectedDevice,
     },
   };
+};
+export const hideBookModal = () => {
+  return { type: devices.HIDE_BOOK_MODAL };
 };
 export const setCurrentDate = (date) => {
   return { type: devices.SET_CURRENT_DATE, payload: date };
@@ -60,7 +62,7 @@ export const setReturnDateError = (bool, message) => {
 export const setSelectedDevice = (id) => {
   return { type: devices.SET_SELECTED_DEVICE, payload: id };
 };
-export const showReserveModal = (showReserveModal, selectedDevice = -1) => {
+export const showReserveModal = (selectedDevice) => {
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + 1);
   const returnDate = new Date(currentDate);
@@ -71,25 +73,30 @@ export const showReserveModal = (showReserveModal, selectedDevice = -1) => {
   return { 
     type: devices.SHOW_RESERVE_MODAL, 
     payload: {
-      showReserveModal,
+      showReserveModal: true,
       currentDate,
       returnDate,
       selectedDevice,
     }, 
   };
 };
+export const hideReserveModal = () => {
+  return { type: devices.HIDE_RESERVE_MODAL };
+};
 export const setReservations = (reservations) => {
   return { type: devices.SET_RESERVATIONS, payload: reservations };
 };
 export const showReservationDetails = 
-(bool, from = new Date(), to = new Date(), selectedDevice = -1) => {
+(from, to, selectedDevice) => {
   return { 
     type: devices.SHOW_RESERVATION_DETAILS, 
     payload: {
-      showReservationDetails: bool,
       from,
       to,
       selectedDevice,
     },
   };
+};
+export const hideReservationDetails = () => {
+  return { type: devices.HIDE_RESERVATION_DETAILS };
 };

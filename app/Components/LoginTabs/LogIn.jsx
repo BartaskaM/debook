@@ -28,9 +28,9 @@ class Login extends React.Component {
     this.inputHandler = this.inputHandler.bind(this);
     this.validateLoginData = this.validateLoginData.bind(this);
   }
-  
-  componentDidMount(){
-    if(this.props.user){
+
+  componentDidMount() {
+    if (this.props.user) {
       this.props.history.push('/devices');
     }
   }
@@ -68,11 +68,11 @@ class Login extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        <Typography variant='display3' align='center'>
+        <Typography variant='display3'>
           Welcome!
         </Typography>
-        <Typography variant='headline' align='center'>
-          Enter your login data
+        <Typography variant='headline'>
+          Enter your details below to access your account
         </Typography>
         <form onSubmit={this.submitLogInForm}>
           <FormGroup>
@@ -128,4 +128,4 @@ Login.propTypes = {
 const mapStateToProps = state => ({
   user: state.auth.user,
 });
-export default withRouter(connect(mapStateToProps,auth)(withStyles(Styles)(Login)));
+export default withRouter(connect(mapStateToProps, auth)(withStyles(Styles)(Login)));
