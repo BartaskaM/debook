@@ -1,10 +1,15 @@
 import { fifteenMinutes } from 'Constants/Values';
 
 export const dateToFullYear = (date) => {
-  return date.toLocaleDateString().split('/').reverse().join('-');
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
 };
 export const dateToHours = (date) => {
-  return date.toLocaleTimeString().split(':').slice(0, 2).join(':');
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  return `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`;
 };
 export const toUnixTimeStamp = (date) => {
   return parseInt((date.getTime() / 1000).toFixed(0));
