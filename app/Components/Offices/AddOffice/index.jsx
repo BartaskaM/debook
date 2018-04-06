@@ -1,5 +1,3 @@
-// Todo: fix deviceActions Action Creator
-
 import React from 'react';
 import {
   Input,
@@ -19,7 +17,7 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as devicesActions from 'ActionCreators/devicesActions';
+import * as officesActions from 'ActionCreators/officesActions';
 
 import Styles from './Styles';
 
@@ -28,52 +26,52 @@ class AddOfficeModal extends React.Component {
     super(props);
   }
 
+  submutOffice()
+  {
+    this.props.showAddOfficeModal(false);
+  }
   render() {
-    
-    //const { classes } = this.props;
+    const { classes } = this.props;
     return (
       <div>
         <Dialog
           open={this.props.showAddOfficeDialog}
-          onClose={() => this.props.showAddOfficeModal(false)}>
-          <DialogTitle>Test</DialogTitle>
+          onClose={() => this.props.showAddOfficeModal(false)}
+          aria-labelledby="form-dialog-title"
+          className={classes.modalWidth}>
+          
+          <DialogTitle className={classes.title} disableTypography>Add new office</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Blah
+              Please enter all needed data into fields,
             </DialogContentText>
             <form>
               <FormGroup>
                 <FormControl>
-                  <InputLabel>Country:</InputLabel>
+                  <InputLabel className={classes.fontSize}>Country:</InputLabel>
                   <Input/>
                 </FormControl>
                 <FormControl>
-                  <InputLabel>City:</InputLabel>
+                  <InputLabel  className={classes.fontSize}>City:</InputLabel>
                   <Input/>
                 </FormControl>
                 <FormControl>
-                  <InputLabel>Address:</InputLabel>
+                  <InputLabel  className={classes.fontSize}>Address:</InputLabel>
                   <Input/>
                 </FormControl>
                 <FormControl>
-                  <InputLabel>Coordinates:</InputLabel>
+                  <InputLabel  className={classes.fontSize}>Coordinates:</InputLabel>
                   <Input/>
-                </FormControl>
-                <FormControl>
-                  <Button
-                    type='submit'
-                    variant="raised"
-                    color="primary"
-                  >
-                SUBMIT
-                  </Button>
                 </FormControl>
               </FormGroup>
             </form>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.props.showAddOfficeModal(false)}>
+            <Button onClick={this.submitOffice} color="primary">
               SUBMIT
+            </Button>
+            <Button onClick={() => this.props.showAddOfficeModal(false)}>
+              CANCEL
             </Button>
           </DialogActions>
         </Dialog>
@@ -89,8 +87,8 @@ AddOfficeModal.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  showAddOfficeDialog: state.devices.showAddOfficeModal,
+  showAddOfficeDialog: state.offices.showAddOfficeModal,
   user: state.auth.user,
 });
 
-export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(AddOfficeModal));
+export default connect(mapStateToProps, officesActions)(withStyles(Styles)(AddOfficeModal));

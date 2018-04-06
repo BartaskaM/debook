@@ -9,7 +9,7 @@ import Styles from './Styles';
 import OfficeList from 'Constants/Offices';
 import OfficeItem from './OfficeItem';
 import AddOfficeModal from './AddOffice';
-import * as devicesActions from 'ActionCreators/devicesActions';
+import * as officesActions from 'ActionCreators/officesActions';
 import { connect } from 'react-redux';
 
 class Offices extends React.Component {
@@ -21,7 +21,6 @@ class Offices extends React.Component {
   handleAddNewClick() {
     console.log('its working');
     this.props.showAddOfficeModal(true);
-    <AddOfficeModal />;
   }
 
   render() {
@@ -63,4 +62,4 @@ const mapStateToProps = state => {
     user: state.auth.user,
   };
 };
-export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Offices));
+export default connect(mapStateToProps, officesActions)(withStyles(Styles)(Offices));
