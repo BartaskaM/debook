@@ -12,6 +12,8 @@ const defaultState = {
   returnDate: new Date(),
   showReturnDateError: false,
   returnDateError: '',
+  showCurrentDateError: false,
+  currentDateError: '',
   selectedDevice: -1,
   showReserveModal: false,
   reservations: [],
@@ -88,6 +90,13 @@ export default (state = defaultState, action) => {
         ...state,
         showReturnDateError: action.payload.show,
         returnDateError: action.payload.message,
+      };
+    }
+    case devices.SET_CURRENT_DATE_ERROR: {
+      return {
+        ...state,
+        showCurrentDateError: action.payload.show,
+        currentDateError: action.payload.message,
       };
     }
     case devices.SET_SELECTED_DEVICE: {
