@@ -31,11 +31,6 @@ class DeviceDetails extends React.Component {
     if (this.props.match.params.id) {
       this.props.getDeviceWithId(this.props.match.params.id);
     }
-    else {
-      this.setState({
-        device: null,
-      });
-    }
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.device != prevState.device) {
