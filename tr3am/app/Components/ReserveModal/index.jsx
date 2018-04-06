@@ -197,7 +197,10 @@ class ReserveModal extends React.Component {
       <div>
         <Dialog
           open={showReserveDialog}
-          onClose={hideReserveModal}
+          onClose={
+            showDetails ?
+              hideReservationDetails :
+              hideReserveModal}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle className={classes.title} disableTypography>
