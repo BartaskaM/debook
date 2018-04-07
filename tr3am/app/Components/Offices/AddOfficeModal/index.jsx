@@ -24,11 +24,36 @@ import Styles from './Styles';
 class AddOfficeModal extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      country: '',
+      city: '',
+      address: '',
+      LAT: 0,
+      LNG: 0,
+    };
     this.submitOffice = this.submitOffice.bind(this);
+    this.inputHandler = this.inputHandler.bind(this);
+  }
+
+  inputHandler(e) {
+    console.log(e.target.name);
+    console.log(e.target.value);
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   submitOffice()
   {
+    const { offices, addOffice } = this.props;
+    const testItem = {
+      id: offices.length + 1,
+      country: this.state.country,
+      city: this.state.city,
+      address: this.state.address,
+      lat: this.state.LAT,
+      lng: this.state.LNG,
+    };
+    console.log(testItem);
+    addOffice(testItem);
     this.props.showAddOfficeModal(false);
   }
   render() {
@@ -55,7 +80,8 @@ class AddOfficeModal extends React.Component {
                       name: 'country',
                       maxLength: '255',
                       required: 'required',
-                    }}/>
+                    }}
+                    onChange={this.inputHandler} />
                 </FormControl>
                 <FormControl>
                   <InputLabel className={classes.fontSize}>City:</InputLabel>
@@ -64,7 +90,8 @@ class AddOfficeModal extends React.Component {
                       name: 'city',
                       maxLength: '255',
                       required: 'required',
-                    }}/>
+                    }}
+                    onChange={this.inputHandler} />
                 </FormControl>
                 <FormControl>
                   <InputLabel className={classes.fontSize}>Address:</InputLabel>
@@ -73,16 +100,30 @@ class AddOfficeModal extends React.Component {
                       name: 'address',
                       maxLength: '255',
                       required: 'required',
-                    }}/>
+                    }}
+                    onChange={this.inputHandler} />
                 </FormControl>
                 <FormControl>
-                  <InputLabel className={classes.fontSize}>Coordinates:</InputLabel>
+                  <InputLabel className={classes.fontSize}>LAT:</InputLabel>
                   <Input
                     inputProps={{
-                      name: 'coordinates',
+                      name: 'LAT',
                       maxLength: '255',
                       required: 'required',
-                    }}/>
+                    }}
+                    onChange={this.inputHandler}
+                    type='number'/>
+                </FormControl>
+                <FormControl>
+                  <InputLabel className={classes.fontSize}>LNG:</InputLabel>
+                  <Input
+                    inputProps={{
+                      name: 'LNG',
+                      maxLength: '255',
+                      required: 'required',
+                    }}
+                    onChange={this.inputHandler}
+                    type='number'/>
                 </FormControl>
               </FormGroup>
             </form>
@@ -107,31 +148,23 @@ class AddOfficeModal extends React.Component {
 }
 
 AddOfficeModal.propTypes = {
-  setCountry: PropTypes.func.isRequired,
-  setCity: PropTypes.func.isRequired,
-  setAddress: PropTypes.func.isRequired,
-  setLat: PropTypes.func.isRequired,
-  setLng: PropTypes.func.isRequired,
+  addOffice: PropTypes.func.isRequired,
   showAddOfficeModal: PropTypes.func.isRequired,
   showAddOfficeDialog: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
-  office: PropTypes.shape({
+  offices: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     country: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired,
-  }).isRequired,
+  })).isRequired,
 };
 
 const mapStateToProps = (state) => ({
   showAddOfficeDialog: state.offices.showAddOfficeModal,
-  country: state.offices.country,
-  city: state.offices.city,
-  address: state.offices.address,
-  lat: state.offices.lat,
-  lng: state.offices.lng,
+  offices: state.offices.offices,
   user: state.auth.user,
 });
 

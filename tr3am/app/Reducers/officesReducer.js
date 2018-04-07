@@ -1,6 +1,7 @@
 import { offices } from 'Constants/ActionTypes';
 
 const defaultState = {
+  offices: [],
   country: '',
   city: '',
   address: '',
@@ -10,7 +11,13 @@ const defaultState = {
 };
 
 export default (state = defaultState, action) => {
-  switch (action.type){
+  switch (action.type) {
+    case offices.ADD_OFFICE: {
+      return { ...state, offices: [...state.offices, action.payload] };
+    }
+    case offices.SET_OFFICES: {
+      return { ...state, offices: [...action.payload] };
+    }
     case offices.SHOW_ADD_OFFICE_MODAL: {
       return {...state, showAddOfficeModal: action.payload}; 
     }

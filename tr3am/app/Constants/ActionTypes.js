@@ -46,4 +46,6 @@ export const offices = {
   SET_ADDRESS: 'SET_ADDRESS',
   SET_LAT: 'SET_LAT',
   SET_LNG: 'SET_LNG',
+  ADD_OFFICE: 'ADD_OFFICE',
+  SET_OFFICES: 'SET_OFFICES',
 };
