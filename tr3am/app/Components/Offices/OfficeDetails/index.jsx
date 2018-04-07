@@ -8,15 +8,17 @@ import NavigateBefore from 'material-ui-icons/NavigateBefore';
 import Divider from 'material-ui/Divider';
 import { withStyles } from 'material-ui/styles';
 import { withRouter } from 'react-router-dom';
+import * as officesActions from 'ActionCreators/officesActions';
+import { connect } from 'react-redux';
 
 import Styles from './Styles';
 import Map from './Map';
-import Offices from 'Constants/Offices';
+//import Offices from 'Constants/Offices';
 
 class OfficeDetails extends React.Component {
   render() {
-    const office = Offices.find(office => office.id == this.props.match.params.id);
-    const { classes, history } = this.props;
+    const { classes, history, offices } = this.props;
+    const office = offices.find(office => office.id == this.props.match.params.id);
     return (
       <div className={classes.root}>
         <Button variant="flat" onClick={history.goBack}>
@@ -66,6 +68,22 @@ OfficeDetails.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
+  offices: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
+  })).isRequired,
 };
 
-export default withStyles(Styles)(withRouter(OfficeDetails));
+const mapStateToProps = state => {
+  return {
+    user: state.auth.user,
+    offices: state.offices.offices,
+  };
+};
+
+export default connect(
+  mapStateToProps, officesActions)(withStyles(Styles)(withRouter(OfficeDetails)));

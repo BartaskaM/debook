@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import {
   Input,
   Button,
@@ -18,6 +19,7 @@ import Dialog, {
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as officesActions from 'ActionCreators/officesActions';
+import Map from './Map';
 
 import Styles from './Styles';
 
@@ -30,10 +32,18 @@ class AddOfficeModal extends React.Component {
       address: '',
       LAT: 0,
       LNG: 0,
+      isMarkerShown: false,
     };
     this.submitOffice = this.submitOffice.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
+    this.handelMapClick = this.handelMapClick.bind(this);
+    this.addNewOffice = this.addNewOffice.bind(this);
   }
+
+  handelMapClick = () => {
+    this.setState({ isMarkerShown: false });
+    this.delayedShowMarker();
+  };
 
   inputHandler(e) {
     console.log(e.target.name);
@@ -41,10 +51,9 @@ class AddOfficeModal extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  submitOffice()
-  {
-    const { offices, addOffice } = this.props;
-    const testItem = {
+  addNewOffice() {
+    const { offices, addOffice, history  } = this.props;
+    const newOffice = {
       id: offices.length + 1,
       country: this.state.country,
       city: this.state.city,
@@ -52,9 +61,29 @@ class AddOfficeModal extends React.Component {
       lat: this.state.LAT,
       lng: this.state.LNG,
     };
-    console.log(testItem);
-    addOffice(testItem);
+    console.log(newOffice);
+    addOffice(newOffice);
     this.props.showAddOfficeModal(false);
+    history.push(`/offices/${offices.length + 1}`);
+  }
+
+  submitOffice()
+  {
+    const { offices } = this.props;
+    const specificOffice = (offices.find(x => x.city === this.state.city));
+    if (specificOffice != null) {
+      if (specificOffice.country === this.state.country &&
+        specificOffice.address === this.state.address) {
+        console.log('Same office');
+      }
+      else {
+        this.addNewOffice();
+      }
+    }
+    else {
+      this.addNewOffice();
+    }
+    //this.props.showAddOfficeModal(false);
   }
   render() {
     const { classes } = this.props;
@@ -103,7 +132,7 @@ class AddOfficeModal extends React.Component {
                     }}
                     onChange={this.inputHandler} />
                 </FormControl>
-                <FormControl>
+                {/*<FormControl>
                   <InputLabel className={classes.fontSize}>LAT:</InputLabel>
                   <Input
                     inputProps={{
@@ -124,7 +153,19 @@ class AddOfficeModal extends React.Component {
                     }}
                     onChange={this.inputHandler}
                     type='number'/>
-                </FormControl>
+                </FormControl> */}
+
+                <Map
+                  lat={0}
+                  lng={0}
+                  googleMapURL={'https://maps.googleapis.com/' +
+                    'maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA' +
+                      '&v=3.exp&libraries=geometry,drawing,places'}
+                  loadingElement={<div style={{ height: '100%', width: '100%' }} />}
+                  containerElement={<div style={{ height: 400, width: 400  }} />}
+                  mapElement={<div style={{ height: '100%', width: '100%' }} />}
+                  onMarkerClick={this.handelMapClick}
+                />
               </FormGroup>
             </form>
           </DialogContent>
@@ -160,6 +201,7 @@ AddOfficeModal.propTypes = {
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired,
   })).isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -168,4 +210,5 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
 
-export default connect(mapStateToProps, officesActions)(withStyles(Styles)(AddOfficeModal));
+export default withRouter(connect(mapStateToProps,
+  officesActions)(withStyles(Styles)(AddOfficeModal)));
