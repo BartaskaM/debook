@@ -107,13 +107,31 @@ class AddOfficeModal extends React.Component {
 }
 
 AddOfficeModal.propTypes = {
+  setCountry: PropTypes.func.isRequired,
+  setCity: PropTypes.func.isRequired,
+  setAddress: PropTypes.func.isRequired,
+  setLat: PropTypes.func.isRequired,
+  setLng: PropTypes.func.isRequired,
   showAddOfficeModal: PropTypes.func.isRequired,
   showAddOfficeDialog: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
+  office: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 const mapStateToProps = (state) => ({
   showAddOfficeDialog: state.offices.showAddOfficeModal,
+  country: state.offices.country,
+  city: state.offices.city,
+  address: state.offices.address,
+  lat: state.offices.lat,
+  lng: state.offices.lng,
   user: state.auth.user,
 });
 

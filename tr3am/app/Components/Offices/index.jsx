@@ -8,7 +8,7 @@ import { withStyles } from 'material-ui/styles';
 import Styles from './Styles';
 import OfficeList from 'Constants/Offices';
 import OfficeItem from './OfficeItem';
-import AddOfficeModal from './AddOffice';
+import AddOfficeModal from './AddOfficeModal';
 import * as officesActions from 'ActionCreators/officesActions';
 import { connect } from 'react-redux';
 
