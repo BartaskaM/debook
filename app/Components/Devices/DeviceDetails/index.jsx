@@ -15,6 +15,7 @@ import NavigateBefore from 'material-ui-icons/NavigateBefore';
 
 import Row from './Row';
 import { styles } from './Styles';
+import LocationModal from 'Components/LocationModal';
 import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
 
 class DeviceDetails extends React.Component {
@@ -26,6 +27,7 @@ class DeviceDetails extends React.Component {
     this.handleEditClick = this.handleCheckClick.bind(this);
     this.getParsedDate = this.getParsedDate.bind(this);
     this.renderError = this.renderError.bind(this);
+    this.openLocationDialog = this.openLocationDialog.bind(this);
   }
   componentDidMount() {
     if (this.props.match.params.id) {
@@ -74,6 +76,7 @@ class DeviceDetails extends React.Component {
             <span className={classes.bigFont} >Back</span>
           </Button>
           <Divider className={classes.divider} />
+          <LocationModal />
           <Grid container spacing={8}>
             <Grid item md>
               <img
@@ -107,7 +110,7 @@ class DeviceDetails extends React.Component {
                       label="Booked from"
                       value={this.state.device.booked_from} />
                   </Grid>
-                  <Grid item md={11}>
+                  <Grid item md={11} xs={11}>
                     <Divider className={classes.divider} />
                     <Typography className={classes.title} variant="display1" align="left">
                       ITEM DETAILS
@@ -173,7 +176,12 @@ class DeviceDetails extends React.Component {
               <Button variant="raised" size="large" color="primary" className={classes.button}>
                 RESERVATION
               </Button>
-              <Button variant="raised" size="large" color="secondary" className={classes.button}>
+              <Button
+                variant="raised"
+                size="large"
+                color="secondary"
+                className={classes.button}
+                onClick={() => this.openLocationDialog(this.state.device.id)}>
                 CHANGE LOCATION
               </Button>
 
@@ -183,11 +191,15 @@ class DeviceDetails extends React.Component {
         : this.renderError()
     );
   }
+  openLocationDialog(deviceDetailsId) {
+    this.props.showLocationModal(deviceDetailsId);
+  }
 }
 
 DeviceDetails.propTypes = {
   classes: PropTypes.object.isRequired,
   getDeviceWithId: PropTypes.func.isRequired,
+  showLocationModal: PropTypes.func.isRequired,
   device: PropTypes.shape({
     location: PropTypes.string,
     custody: PropTypes.string,
