@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as officesActions from 'ActionCreators/officesActions';
 import Typography from 'material-ui/Typography';
+
 import Styles from './Styles';
 
 class AddOfficeModal extends React.Component {
@@ -48,8 +49,6 @@ class AddOfficeModal extends React.Component {
   };
 
   inputHandler(e) {
-    console.log(e.target.name);
-    console.log(e.target.value);
     this.setState({ errorMessage: '' });
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -64,7 +63,6 @@ class AddOfficeModal extends React.Component {
       lat: parseFloat(this.state.LAT),
       lng: parseFloat(this.state.LNG),
     };
-    console.log(newOffice);
     addOffice(newOffice);
     this.props.showAddOfficeModal(false);
     history.push(`/offices/${offices.length + 1}`);
