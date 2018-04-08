@@ -5,14 +5,15 @@ import PropTypes from 'prop-types';
 import Calendar from 'react-calendar';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import styles from './Styles';
+
 class ReservationsCalendar extends React.Component {
   constructor(props){
     super(props);
   }
+  
   render(){
-
     return <Calendar value={this.props.currentDate} 
-      onChange={ (newValue) => {this.props.setCurrentDate(newValue);}}
+      onChange={ newValue => this.props.setCurrentDate(newValue)}
       tileClassName={({ date }) => 
         this.props.reservations
           .filter(res => 

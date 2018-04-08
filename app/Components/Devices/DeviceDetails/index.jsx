@@ -31,10 +31,10 @@ class DeviceDetails extends React.Component {
     this.renderError = this.renderError.bind(this);
   }
   componentDidMount() {
-    const id = this.props.match.params.id;
+    const id = parseInt(this.props.match.params.id);
     if (id) {
       this.props.getDeviceWithId(id);
-      this.props.setSelectedDevice(parseInt(id));
+      this.props.setSelectedDevice(id);
     }
   }
   static getDerivedStateFromProps(nextProps, prevState) {
