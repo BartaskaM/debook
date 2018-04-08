@@ -5,8 +5,8 @@ const defaultState = {
   country: '',
   city: '',
   address: '',
-  lat: '',
-  lng: '',
+  lat: 0.0,
+  lng: 0.0,
   showAddOfficeModal: false,
 };
 

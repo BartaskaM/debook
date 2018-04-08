@@ -13,6 +13,10 @@ const Styles = theme => ({
     height: 50,
     fontSize: 14,
   },
+  errorMessage: {
+    color: 'red',
+    paddingLeft: 25,
+  },
 });
 
 export default Styles;

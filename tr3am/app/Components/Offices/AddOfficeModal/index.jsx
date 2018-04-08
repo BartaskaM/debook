@@ -19,8 +19,7 @@ import Dialog, {
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as officesActions from 'ActionCreators/officesActions';
-import Map from './Map';
-
+import Typography from 'material-ui/Typography';
 import Styles from './Styles';
 
 class AddOfficeModal extends React.Component {
@@ -33,11 +32,14 @@ class AddOfficeModal extends React.Component {
       LAT: 0,
       LNG: 0,
       isMarkerShown: false,
+      errorMessage: '',
     };
     this.submitOffice = this.submitOffice.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
     this.handelMapClick = this.handelMapClick.bind(this);
     this.addNewOffice = this.addNewOffice.bind(this);
+    this.officeExists = this.officeExists.bind(this);
+    this.validateCoordinates = this.validateCoordinates.bind(this);
   }
 
   handelMapClick = () => {
@@ -48,6 +50,7 @@ class AddOfficeModal extends React.Component {
   inputHandler(e) {
     console.log(e.target.name);
     console.log(e.target.value);
+    this.setState({ errorMessage: '' });
     this.setState({ [e.target.name]: e.target.value });
   }
 
@@ -58,8 +61,8 @@ class AddOfficeModal extends React.Component {
       country: this.state.country,
       city: this.state.city,
       address: this.state.address,
-      lat: this.state.LAT,
-      lng: this.state.LNG,
+      lat: parseFloat(this.state.LAT),
+      lng: parseFloat(this.state.LNG),
     };
     console.log(newOffice);
     addOffice(newOffice);
@@ -67,23 +70,51 @@ class AddOfficeModal extends React.Component {
     history.push(`/offices/${offices.length + 1}`);
   }
 
-  submitOffice()
-  {
+  officeExists() {
     const { offices } = this.props;
     const specificOffice = (offices.find(x => x.city === this.state.city));
     if (specificOffice != null) {
       if (specificOffice.country === this.state.country &&
         specificOffice.address === this.state.address) {
-        console.log('Same office');
+        this.setState({ errorMessage: 'Office already exists' });
+        return true;
       }
-      else {
-        this.addNewOffice();
+      else {        
+        return false;
       }
     }
     else {
-      this.addNewOffice();
+      return false;
     }
-    //this.props.showAddOfficeModal(false);
+  }
+
+  validateCoordinates() {
+    const regLAT = new RegExp(
+      /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/);
+    const regLNG = new RegExp(
+      /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/);
+    if (regLAT.exec(this.state.LAT)) {
+      if (regLNG.exec(this.state.LNG)) {
+        return true;
+      } else {
+        this.setState({ errorMessage: 'Wrong coordinates format' });
+        return false;
+      }
+    } else {
+      this.setState({ errorMessage: 'Wrong coordinates format' });
+      return false;
+    }
+
+  }
+
+  submitOffice(e)
+  {
+    e.preventDefault();
+    if (this.validateCoordinates()) {
+      if (!this.officeExists()) {
+        this.addNewOffice();
+      }
+    }
   }
   render() {
     const { classes } = this.props;
@@ -93,14 +124,16 @@ class AddOfficeModal extends React.Component {
           open={this.props.showAddOfficeDialog}
           onClose={() => this.props.showAddOfficeModal(false)}
           aria-labelledby="form-dialog-title"
-          className={classes.modalWidth}>
-          
+          className={classes.modalWidth}
+          modal='true'>
           <DialogTitle className={classes.title} disableTypography>Add new office</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Please enter all needed data into fields,
             </DialogContentText>
-            <form>
+            <form
+              onSubmit={this.submitOffice}
+              id="addNewOfficeForm">
               <FormGroup>
                 <FormControl>
                   <InputLabel className={classes.fontSize}>Country:</InputLabel>
@@ -132,46 +165,36 @@ class AddOfficeModal extends React.Component {
                     }}
                     onChange={this.inputHandler} />
                 </FormControl>
-                {/*<FormControl>
+                <FormControl>
                   <InputLabel className={classes.fontSize}>LAT:</InputLabel>
                   <Input
                     inputProps={{
                       name: 'LAT',
-                      maxLength: '255',
+                      maxLength: '12',
                       required: 'required',
                     }}
-                    onChange={this.inputHandler}
-                    type='number'/>
+                    onChange={this.inputHandler} />
                 </FormControl>
                 <FormControl>
                   <InputLabel className={classes.fontSize}>LNG:</InputLabel>
                   <Input
                     inputProps={{
                       name: 'LNG',
-                      maxLength: '255',
+                      maxLength: '12',
                       required: 'required',
                     }}
-                    onChange={this.inputHandler}
-                    type='number'/>
-                </FormControl> */}
-
-                <Map
-                  lat={0}
-                  lng={0}
-                  googleMapURL={'https://maps.googleapis.com/' +
-                    'maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA' +
-                      '&v=3.exp&libraries=geometry,drawing,places'}
-                  loadingElement={<div style={{ height: '100%', width: '100%' }} />}
-                  containerElement={<div style={{ height: 400, width: 400  }} />}
-                  mapElement={<div style={{ height: '100%', width: '100%' }} />}
-                  onMarkerClick={this.handelMapClick}
-                />
+                    onChange={this.inputHandler} />
+                </FormControl>
               </FormGroup>
             </form>
           </DialogContent>
+          <Typography variant='headline' className={classes.errorMessage}>
+            {this.state.errorMessage}
+          </Typography>
           <DialogActions>
             <Button
-              onClick={this.submitOffice}
+              type='submit'
+              form='addNewOfficeForm'
               color="primary"
               className={classes.button}>
               SUBMIT
@@ -184,6 +207,7 @@ class AddOfficeModal extends React.Component {
           </DialogActions>
         </Dialog>
       </div>
+      
     );
   }
 }
