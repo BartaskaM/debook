@@ -16,35 +16,17 @@ class Offices extends React.Component {
   constructor(props) {
     super(props);
     this.handleAddNewClick = this.handleAddNewClick.bind(this);
-    //this.props.setOffices(OfficeList);
   }
 
   componentDidMount() {
     const { offices, setOffices } = this.props;
-    //console.log(offices);
-    //console.log('Blah blah blah');
-    //console.log(Object.keys(offices).length);
-
     if (Object.keys(offices).length === 0) {  
       setOffices(OfficeList);
     }
   }
 
   handleAddNewClick() {
-    //const { offices, addOffice } = this.props;
-    //const testItem = {
-    //  id: offices.length + 1,
-    //  country: 'Lithuaniaasdasd',
-    //  city: 'Kawnsasdasd',
-    //  address: '11D A. Juozapavièiaus pr.asd',
-    //  lat: 5.864296,
-    //  lng: 6.945239,
-    //};
-    //addOffice(testItem);
-    ////console.log('its working');
     this.props.showAddOfficeModal(true);
-    
-    //console.log(offices);
   }
 
   render() {
