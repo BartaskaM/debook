@@ -12,7 +12,9 @@ class ReservationsTable extends React.Component {
   renderRows(){
     const { classes, selectedDevice, reservations, currentDate, users } = this.props;
     return reservations.filter(res => res.device === selectedDevice && 
-    res.from.getDate() === currentDate.getDate())
+    res.from.getDate() === currentDate.getDate() && 
+    res.from.getMonth() === currentDate.getMonth() &&
+    res.from.getFullYear() === currentDate.getFullYear())
       .sort(res => res.from)
       .map((res, i) => {
         const { from, to, user } = res;

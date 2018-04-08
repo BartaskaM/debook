@@ -2,10 +2,6 @@ export const styles = {
   root: {
     margin: '50px 75px',
   },
-  paper: {
-    padding: 20,
-    margin: 20,
-  },
   divider: {
     margin: '5px 0',
   },
@@ -14,8 +10,8 @@ export const styles = {
   },
   table: {
     marginTop: 10,
-    marginLeft: 10,
     marginBottom: 10,
+    paddingLeft: 10,
   },
   label: {
     color: '#999',
@@ -23,9 +19,8 @@ export const styles = {
   },
   image: {
     flex: 1,
-    width: 320,
-    height: 378,
-    resizeMode: 'contain', 
+    width: '100%',
+    height: 'auto',
   },
   button: {
     fontSize: 13,
@@ -40,5 +35,8 @@ export const styles = {
   custody: {
     backgroundColor: '#f6f6f6',
     marginLeft: 1,
+  },
+  reservationsRoot: {
+    width: '100%',
   },
 };
