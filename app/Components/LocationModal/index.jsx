@@ -14,7 +14,6 @@ import Button from 'material-ui/Button';
 
 import { withStyles } from 'material-ui/styles';
 import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
-import DeviceDetails from 'Components/Devices/DeviceDetails';
 import Offices from 'Constants/Offices';
 
 const styles = theme => ({
@@ -41,11 +40,12 @@ class LocationModal extends React.Component {
       selectedDevice,
       changeDeviceLocation,
       hideLocationModal,
+      active,
     } = this.props;
 
     changeDeviceLocation(selectedDevice, this.state.location);
+    active();
     hideLocationModal();
-    <DeviceDetails />;
   }
   render() {
     const {
@@ -61,7 +61,7 @@ class LocationModal extends React.Component {
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle className={classes.title} disableTypography>
-                        Change device location
+            Change device location
           </DialogTitle>
           <DialogContent>
             <FormControl className={classes.formControl}>
@@ -88,10 +88,10 @@ class LocationModal extends React.Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={hideLocationModal} color="primary">
-                            Close
+              Close
             </Button>
             <Button onClick={this.changeLocation} color="primary">
-                            Change
+              Change
             </Button>
           </DialogActions>
         </Dialog>
@@ -105,6 +105,7 @@ LocationModal.propTypes = {
   classes: PropTypes.object.isRequired,
   hideLocationModal: PropTypes.func.isRequired,
   changeDeviceLocation: PropTypes.func.isRequired,
+  active: PropTypes.func,
   device: PropTypes.shape({
     id: PropTypes.number.isRequired,
     location: PropTypes.string.isRequired,

@@ -28,6 +28,7 @@ class DeviceDetails extends React.Component {
     this.getParsedDate = this.getParsedDate.bind(this);
     this.renderError = this.renderError.bind(this);
     this.openLocationDialog = this.openLocationDialog.bind(this);
+    this.handler = this.handler.bind(this);
   }
   componentDidMount() {
     if (this.props.match.params.id) {
@@ -63,9 +64,9 @@ class DeviceDetails extends React.Component {
       device.custody = 'New guy';
       device.booked_from = this.getParsedDate();
     }
-
     this.setState({ device });
   }
+
   render() {
     const { classes, history } = this.props;
     return (
@@ -76,7 +77,7 @@ class DeviceDetails extends React.Component {
             <span className={classes.bigFont} >Back</span>
           </Button>
           <Divider className={classes.divider} />
-          <LocationModal />
+          <LocationModal active={this.handler} />
           <Grid container spacing={8}>
             <Grid item md>
               <img
@@ -193,6 +194,11 @@ class DeviceDetails extends React.Component {
   }
   openLocationDialog(deviceDetailsId) {
     this.props.showLocationModal(deviceDetailsId);
+  }
+  handler() {
+    this.setState({
+      device: this.props.device,
+    });
   }
 }
 
