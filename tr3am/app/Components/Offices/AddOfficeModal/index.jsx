@@ -48,18 +48,17 @@ class AddOfficeModal extends React.Component {
   }
 
   addNewOffice() {
-    const { offices, addOffice, history  } = this.props;
+    const { addOffice, history  } = this.props;
     const newOffice = {
-      id: offices.length + 1,
       country: this.state.country,
       city: this.state.city,
       address: this.state.address,
       lat: parseFloat(this.state.LAT),
       lng: parseFloat(this.state.LNG),
     };
-    addOffice(newOffice);
+    const newOfficeID = addOffice(newOffice)['newOfficeID'];
     this.props.showAddOfficeModal(false);
-    history.push(`/offices/${offices.length + 1}`);
+    history.push(`/offices/${newOfficeID}`);
   }
 
   officeExists() {
