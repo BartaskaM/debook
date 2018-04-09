@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as officesActions from 'ActionCreators/officesActions';
 import Typography from 'material-ui/Typography';
+import CoordinatesRegEx from 'Constants/CoordinatesRegEx';
 
 import Styles from './Styles';
 
@@ -32,21 +33,14 @@ class AddOfficeModal extends React.Component {
       address: '',
       LAT: 0,
       LNG: 0,
-      isMarkerShown: false,
       errorMessage: '',
     };
     this.submitOffice = this.submitOffice.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
-    this.handelMapClick = this.handelMapClick.bind(this);
     this.addNewOffice = this.addNewOffice.bind(this);
     this.officeExists = this.officeExists.bind(this);
     this.validateCoordinates = this.validateCoordinates.bind(this);
   }
-
-  handelMapClick = () => {
-    this.setState({ isMarkerShown: false });
-    this.delayedShowMarker();
-  };
 
   inputHandler(e) {
     this.setState({ errorMessage: '' });
@@ -71,15 +65,11 @@ class AddOfficeModal extends React.Component {
   officeExists() {
     const { offices } = this.props;
     const specificOffice = (offices.find(x => x.city === this.state.city));
-    if (specificOffice != null) {
-      if (specificOffice.country === this.state.country &&
+    if (specificOffice != null &&
+      specificOffice.country === this.state.country &&
         specificOffice.address === this.state.address) {
-        this.setState({ errorMessage: 'Office already exists' });
-        return true;
-      }
-      else {        
-        return false;
-      }
+      this.setState({ errorMessage: 'Office already exists' });
+      return true;
     }
     else {
       return false;
@@ -87,26 +77,17 @@ class AddOfficeModal extends React.Component {
   }
 
   validateCoordinates() {
-    const regLAT = new RegExp(
-      /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/);
-    const regLNG = new RegExp(
-      /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/);
-    if (regLAT.exec(this.state.LAT)) {
-      if (regLNG.exec(this.state.LNG)) {
-        return true;
-      } else {
-        this.setState({ errorMessage: 'Wrong coordinates format' });
-        return false;
-      }
+    const regLAT = new RegExp(CoordinatesRegEx.r_LAT);
+    const regLNG = new RegExp(CoordinatesRegEx.r_LNG);
+    if (regLAT.exec(this.state.LAT) && regLNG.exec(this.state.LNG)) {
+      return true;
     } else {
       this.setState({ errorMessage: 'Wrong coordinates format' });
       return false;
     }
-
   }
 
-  submitOffice(e)
-  {
+  submitOffice(e){
     e.preventDefault();
     if (this.validateCoordinates()) {
       if (!this.officeExists()) {

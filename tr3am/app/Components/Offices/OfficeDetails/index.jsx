@@ -13,7 +13,6 @@ import { connect } from 'react-redux';
 
 import Styles from './Styles';
 import Map from './Map';
-//import Offices from 'Constants/Offices';
 
 class OfficeDetails extends React.Component {
   render() {

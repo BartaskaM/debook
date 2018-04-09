@@ -41,11 +41,6 @@ export const deviceDetails = {
 
 export const offices = {
   SHOW_ADD_OFFICE_MODAL: 'SHOW_ADD_OFFICE_MODAL',
-  SET_COUNTRY: 'SET_COUNTRY',
-  SET_CITY: 'SET_CITY',
-  SET_ADDRESS: 'SET_ADDRESS',
-  SET_LAT: 'SET_LAT',
-  SET_LNG: 'SET_LNG',
   ADD_OFFICE: 'ADD_OFFICE',
   SET_OFFICES: 'SET_OFFICES',
 };
