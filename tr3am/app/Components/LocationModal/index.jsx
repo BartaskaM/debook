@@ -15,13 +15,7 @@ import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
 import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
 import Offices from 'Constants/Offices';
-
-const styles = theme => ({
-  formControl: {
-    margin: theme.spacing.unit,
-    minWidth: 120,
-  },
-});
+import styles from './Style';
 
 class LocationModal extends React.Component {
   constructor(props) {
@@ -43,7 +37,7 @@ class LocationModal extends React.Component {
       active,
     } = this.props;
 
-    changeDeviceLocation(selectedDevice, this.state.location);
+    changeDeviceLocation(selectedDevice.id, this.state.location);
     active();
     hideLocationModal();
   }
@@ -106,11 +100,10 @@ LocationModal.propTypes = {
   hideLocationModal: PropTypes.func.isRequired,
   changeDeviceLocation: PropTypes.func.isRequired,
   active: PropTypes.func,
-  device: PropTypes.shape({
+  selectedDevice: PropTypes.shape({
     id: PropTypes.number.isRequired,
     location: PropTypes.string.isRequired,
   }),
-  selectedDevice: PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({

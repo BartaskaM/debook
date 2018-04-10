@@ -200,7 +200,7 @@ class DeviceDetails extends React.Component {
     );
   }
   openLocationDialog() {
-    this.props.showLocationModal(deviceDetailsId);
+    this.props.showLocationModal(this.state.device);
   }
   locationHandler() {
     // updates location which is changed by locationmodal
