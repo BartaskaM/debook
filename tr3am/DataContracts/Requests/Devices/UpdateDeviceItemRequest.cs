@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace tr3am.DataContracts.Requests.Devices
 {
-    public class DeviceItemRequest
+    public class UpdateDeviceItemRequest
     {
         [Required]
         public string Brand { get; set; }
@@ -46,6 +46,5 @@ namespace tr3am.DataContracts.Requests.Devices
         public string BookedFrom { get; set; }
         [Required]
         public string CheckInDue { get; set; }
-
     }
 }
