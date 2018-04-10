@@ -7,7 +7,7 @@ using tr3am.DataContracts.Requests.Devices;
 
 namespace tr3am.DataContracts
 {
-    interface IDevicesRepository
+    public interface IDevicesRepository
     {
         List<SmallDeviceItem> GetAll();
         FullDeviceItem GetById(int id);

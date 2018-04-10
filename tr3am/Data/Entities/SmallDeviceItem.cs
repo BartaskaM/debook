@@ -15,6 +15,6 @@ namespace tr3am.Data.Entities
         public int IdentificationNum { get; set; }
         public string OS { get; set; }
         public int Location { get; set; }
-        public int? Custody { get; set; };
+        public int? Custody { get; set; }
     }
 }
