@@ -31,7 +31,7 @@ class DeviceDetails extends React.Component {
     this.getParsedDate = this.getParsedDate.bind(this);
     this.renderError = this.renderError.bind(this);
     this.openLocationDialog = this.openLocationDialog.bind(this);
-    this.handler = this.handler.bind(this);
+    this.locationHandler = this.locationHandler.bind(this);
   }
   componentDidMount() {
     const id = parseInt(this.props.match.params.id);
@@ -82,7 +82,7 @@ class DeviceDetails extends React.Component {
             <span className={classes.bigFont} >Back</span>
           </Button>
           <Divider className={classes.divider} />
-          <LocationModal active={this.handler} />
+          <LocationModal active={this.locationHandler} />
           <Grid container spacing={8}>
             <Grid item md>
               <img
@@ -186,7 +186,7 @@ class DeviceDetails extends React.Component {
                 size="large"
                 color="secondary"
                 className={classes.button}
-                onClick={() => this.openLocationDialog(this.state.device.id)}>
+                onClick={() => this.openLocationDialog()}>
                 CHANGE LOCATION
               </Button>
               <Paper className={classes.reservationsRoot}>
@@ -199,10 +199,11 @@ class DeviceDetails extends React.Component {
         : this.renderError()
     );
   }
-  openLocationDialog(deviceDetailsId) {
+  openLocationDialog() {
     this.props.showLocationModal(deviceDetailsId);
   }
-  handler() {
+  locationHandler() {
+    // updates location which is changed by locationmodal
     this.setState({
       device: this.props.device,
     });
