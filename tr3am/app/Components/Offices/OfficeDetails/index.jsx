@@ -15,9 +15,22 @@ import Styles from './Styles';
 import Map from './Map';
 
 class OfficeDetails extends React.Component {
-  render() {
-    const { classes, history, offices } = this.props;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      office: {},
+    };
+  }
+
+  componentDidMount() {
+    const { offices } = this.props;
     const office = offices.find(office => office.id == this.props.match.params.id);
+    this.setState({ office: office });
+  }
+
+  render() {
+    const { classes, history } = this.props;
     return (
       <div className={classes.root}>
         <Button variant="flat" onClick={history.goBack}>
@@ -29,11 +42,14 @@ class OfficeDetails extends React.Component {
         <Grid container spacing={16} justify='center' className={classes.officedetailsContainer}>
           <Grid item xs={6}>
             <Paper className={classes.officeLocationInfo}>
-              <Typography variant='display2'><b>Country:</b> {office.country}</Typography>
+              <Typography
+                variant='display2'><b>Country:</b> {this.state.office.country}</Typography>
               <br />
-              <Typography variant='display2'><b>City:</b> {office.city}</Typography>
+              <Typography
+                variant='display2'><b>City:</b> {this.state.office.city}</Typography>
               <br />
-              <Typography variant='display2'><b>Address:</b> {office.address}</Typography>
+              <Typography
+                variant='display2'><b>Address:</b> {this.state.office.address}</Typography>
               <br />
               <span>
                 {/* TODO: Implement button functionality */}
@@ -46,8 +62,8 @@ class OfficeDetails extends React.Component {
           <Grid item xs={6}>
             <Paper className={classes.mapElement}>
               <Map
-                lat={office.lat}
-                lng={office.lng}
+                lat={this.state.office.lat}
+                lng={this.state.office.lng}
                 googleMapURL={'https://maps.googleapis.com/' +
                   'maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA' +
                   '&v=3.exp&libraries=geometry,drawing,places'}
