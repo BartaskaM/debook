@@ -10,7 +10,7 @@ namespace tr3am.Data
     {
         private readonly List<OfficeItem> _items;
 
-        public OfficesRepository ()
+        public OfficesRepository()
         {
             _items = new List<OfficeItem>
             {
@@ -62,19 +62,19 @@ namespace tr3am.Data
             };
         }
 
-        public List<OfficeItem> GetAll ()
+        public List<OfficeItem> GetAll()
         {
-            return _items.ToList ();
+            return _items.ToList();
         }
 
-        public OfficeItem GetById (int id)
+        public OfficeItem GetById(int id)
         {
-            return _items.SingleOrDefault (x => x.Id == id);
+            return _items.SingleOrDefault(x => x.Id == id);
         }
 
-        public OfficeItem Create (OfficeItemRequest request)
+        public OfficeItem Create(OfficeItemRequest request)
         {
-            var id = _items.DefaultIfEmpty ().Max (x => x.Id) + 1;
+            var id = _items.DefaultIfEmpty().Max(x => x.Id) + 1;
 
             var item = new OfficeItem
             {
@@ -86,14 +86,14 @@ namespace tr3am.Data
                 Lng = request.Lng,
             };
 
-            _items.Add (item);
+            _items.Add(item);
 
             return item;
         }
 
-        public void Update (int id, OfficeItemRequest request)
+        public void Update(int id, OfficeItemRequest request)
         {
-            var item = _items.Single (x => x.Id == id);
+            var item = _items.Single(x => x.Id == id);
 
             item.Country = request.Country;
             item.City = request.City;
@@ -102,11 +102,11 @@ namespace tr3am.Data
             item.Lng = request.Lng;
         }
 
-        public void Delete (int id)
+        public void Delete(int id)
         {
-            var item = _items.Single (x => x.Id == id);
+            var item = _items.Single(x => x.Id == id);
 
-            _items.Remove (item);
+            _items.Remove(item);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace tr3am
     {
         public IActionResult Index()
         {
-            return File ("/dist/index.html", "text/html");
+            return File("/dist/index.html", "text/html");
         }
     }
 }

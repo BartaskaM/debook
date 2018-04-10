@@ -6,10 +6,10 @@ namespace tr3am.DataContracts
 {
     public interface IOfficesRepository
     {
-        List<OfficeItem> GetAll ();
-        OfficeItem GetById (int id);
-        OfficeItem Create (OfficeItemRequest request);
-        void Update (int id, OfficeItemRequest request);
-        void Delete (int id);
+        List<OfficeItem> GetAll();
+        OfficeItem GetById(int id);
+        OfficeItem Create(OfficeItemRequest request);
+        void Update(int id, OfficeItemRequest request);
+        void Delete(int id);
     }
 }
