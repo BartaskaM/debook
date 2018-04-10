@@ -1,0 +1,112 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using tr3am.Data.Entities;
+using tr3am.DataContracts;
+using tr3am.DataContracts.Requests.Offices;
+
+namespace tr3am.Data
+{
+    public class OfficesRepository : IOfficesRepository
+    {
+        private readonly List<OfficeItem> _items;
+
+        public OfficesRepository()
+        {
+            _items = new List<OfficeItem>
+            {
+                new OfficeItem
+                {
+                    Id = 1,
+                    Country = "Lithuania",
+                    City = "Kawns",
+                    Address = "11D A. Juozapavičiaus pr.",
+                    Lat = 54.864296,
+                    Lng = 23.945239,
+                },
+              new OfficeItem
+              {
+                Id = 2,
+                Country = "Lithuania",
+                City = "Wilno",
+                Address = "135 Zalgirio g.",
+                Lat = 54.704881,
+                Lng = 25.271658,
+              },
+              new OfficeItem
+              {
+                Id = 3,
+                Country = "United States of America",
+                City = "Chicago",
+                Address = "343 W. Erie St. Suite 600",
+                Lat = 41.893646,
+                Lng = -87.637532,
+              },
+              new OfficeItem
+              {
+                Id = 4,
+                Country = "Canada",
+                City = "Toronto",
+                Address = "36 Toronto Street Suite 260",
+                Lat = 43.650579,
+                Lng = -79.376536,
+              },
+              new OfficeItem
+              {
+                Id = 5,
+                Country = "United Kingdom",
+                City = "London",
+                Address = "1 Mark Square",
+                Lat = 51.524425,
+                Lng = -0.082300,
+              },
+            };
+        }
+
+        public List<OfficeItem> GetAll()
+        {
+            return _items.ToList();
+        }
+
+        public OfficeItem GetById(int id)
+        {
+            return _items.SingleOrDefault(x => x.Id == id);
+        }
+
+        public OfficeItem Create(OfficeItemRequest request)
+        {
+            var id = _items.DefaultIfEmpty().Max(x => x.Id) + 1;
+
+            var item = new OfficeItem
+            {
+                Id = id,
+                Country = request.Country,
+                City = request.City,
+                Address = request.Address,
+                Lat = request.Lat,
+                Lng = request.Lng,
+            };
+
+            _items.Add(item);
+
+            return item;
+        }
+
+        public void Update(int id, OfficeItemRequest request)
+        {
+            var item = _items.Single(x => x.Id == id);
+
+            item.Country = request.Country;
+            item.City = request.City;
+            item.Address = request.Address;
+            item.Lat = request.Lat;
+            item.Lng = request.Lng;
+        }
+
+        public void Delete(int id)
+        {
+            var item = _items.Single(x => x.Id == id);
+
+            _items.Remove(item);
+        }
+    }
+}
