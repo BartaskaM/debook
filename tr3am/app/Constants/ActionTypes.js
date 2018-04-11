@@ -38,3 +38,9 @@ export const devices = {
 export const deviceDetails = {
   SET_DEVICE_DETAILS: 'SET_DEVICE_DETAILS',
 };
+
+export const offices = {
+  SHOW_ADD_OFFICE_MODAL: 'SHOW_ADD_OFFICE_MODAL',
+  ADD_OFFICE: 'ADD_OFFICE',
+  SET_OFFICES: 'SET_OFFICES',
+};

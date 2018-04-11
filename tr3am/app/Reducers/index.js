@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import auth from './authReducer';
 import users from './usersReducer';
 import userDetails from './userDetailsReducer';
+import offices from './officesReducer';
 import devices from './devicesReducer';
 import deviceDetails from './deviceDetailsReducer';
 
@@ -11,6 +12,7 @@ export default combineReducers({
   auth,
   users,
   userDetails,
+  offices,
   devices,
   deviceDetails,
 });
