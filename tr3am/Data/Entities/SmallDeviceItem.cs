@@ -7,6 +7,19 @@ namespace tr3am.Data.Entities
 {
     public class SmallDeviceItem
     {
+        public SmallDeviceItem(SmallDeviceItem item)
+        {
+            Id = item.Id;
+            Image = item.Image;
+            Available = item.Available;
+            Brand = item.Brand;
+            Model = item.Model;
+            IdentificationNum = item.IdentificationNum;
+            OS = item.OS;
+            Location = item.Location;
+            Custody = item.Custody;
+        }
+        public SmallDeviceItem() { }
         public int Id { get; set; }
         public string Image { get; set; }
         public bool Available { get; set; }

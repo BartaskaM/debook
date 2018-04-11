@@ -74,7 +74,7 @@ namespace tr3am.Data
 
         public List<SmallDeviceItem> GetAll()
         {
-            return _items.Where(x => x.Active).Cast<SmallDeviceItem>().ToList();
+            return _items.Where(x => x.Active).Select(x => new SmallDeviceItem(x)).ToList();
         }
 
         public FullDeviceItem GetById(int id)
