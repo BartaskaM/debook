@@ -109,7 +109,7 @@ class AddOfficeModal extends React.Component {
           modal='true'>
           <DialogTitle className={classes.title} disableTypography>Add new office</DialogTitle>
           <DialogContent>
-            <DialogContentText>
+            <DialogContentText className={classes.description}>
               Please enter all needed data into fields,
             </DialogContentText>
             <form
@@ -147,7 +147,7 @@ class AddOfficeModal extends React.Component {
                     onChange={this.inputHandler} />
                 </FormControl>
                 <FormControl>
-                  <InputLabel className={classes.fontSize}>LAT:</InputLabel>
+                  <InputLabel className={classes.fontSize}>Coordinates LAT:</InputLabel>
                   <Input
                     inputProps={{
                       name: 'LAT',
@@ -157,7 +157,7 @@ class AddOfficeModal extends React.Component {
                     onChange={this.inputHandler} />
                 </FormControl>
                 <FormControl>
-                  <InputLabel className={classes.fontSize}>LNG:</InputLabel>
+                  <InputLabel className={classes.fontSize}>Coordinates LNG:</InputLabel>
                   <Input
                     inputProps={{
                       name: 'LNG',

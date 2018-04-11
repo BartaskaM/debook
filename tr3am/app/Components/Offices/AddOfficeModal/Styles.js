@@ -17,6 +17,9 @@ const Styles = theme => ({
     color: 'red',
     paddingLeft: 25,
   },
+  description: {
+    fontSize: 16,
+  },
 });
 
 export default Styles;
