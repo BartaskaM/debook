@@ -42,6 +42,10 @@ class AddOfficeModal extends React.Component {
     this.validateCoordinates = this.validateCoordinates.bind(this);
   }
 
+  componentWillUnmount() {
+    this.props.showAddOfficeModal(false);
+  }
+
   inputHandler(e) {
     this.setState({ errorMessage: '' });
     this.setState({ [e.target.name]: e.target.value });
@@ -57,7 +61,6 @@ class AddOfficeModal extends React.Component {
       lng: parseFloat(this.state.LNG),
     };
     const newOfficeID = addOffice(newOffice)['newOfficeID'];
-    this.props.showAddOfficeModal(false);
     history.push(`/offices/${newOfficeID}`);
   }
 
