@@ -47,7 +47,7 @@ class Offices extends React.Component {
               variant="raised"
               color="primary"
               className={classes.addNewButton}
-              onClick={()=>this.handleAddNewClick()}>
+              onClick={this.handleAddNewClick}>
               ADD NEW
             </Button>
           </Grid>
