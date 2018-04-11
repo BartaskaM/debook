@@ -9,9 +9,9 @@ namespace tr3am.DataContracts
 {
     public interface IDevicesRepository
     {
-        List<SmallDeviceItem> GetAll();
-        FullDeviceItem GetById(int id);
-        FullDeviceItem Create(CreateDeviceItemRequest request);
+        List<DeviceItemDTO> GetAll();
+        DeviceItem GetById(int id);
+        DeviceItem Create(CreateDeviceItemRequest request);
         void Update(int id, UpdateDeviceItemRequest request);
         void Delete(int id);
     }

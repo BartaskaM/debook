@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Entities;
 using tr3am.DataContracts;
@@ -20,7 +21,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<SmallDeviceItem> GetAll()
+        public IEnumerable<DeviceItemDTO> GetAll()
         {
             return _devicesRepository.GetAll();
         }
@@ -28,14 +29,16 @@ namespace tr3am.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            try
-            {
-                return Ok(_devicesRepository.GetById(id));
-            }
-            catch
-            {
-                return NotFound();
-            }
+
+                DeviceItem item = _devicesRepository.GetById(id);
+                if (item != null)
+                {
+                    return Ok();
+                } else
+                {
+                    return NotFound();
+                }
+            
         }
 
         [HttpPost]

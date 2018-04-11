@@ -9,7 +9,7 @@ namespace tr3am.DataContracts.Requests.Devices
     public class UpdateDeviceItemRequest
     {
         [Required]
-        public string Brand { get; set; }
+        public int Brand { get; set; }
         [Required]
         public string Model { get; set; }
         [Required]
@@ -29,7 +29,7 @@ namespace tr3am.DataContracts.Requests.Devices
         [Required]
         public string Description { get; set; }
         [Required]
-        public string Purchased { get; set; }
+        public DateTime Purchased { get; set; }
         [Required]
         public string Vendor { get; set; }
         [Required]
@@ -42,9 +42,5 @@ namespace tr3am.DataContracts.Requests.Devices
         public bool Active { get; set; }
         [Required]
         public int Custody { get; set; }
-        [Required]
-        public string BookedFrom { get; set; }
-        [Required]
-        public string CheckInDue { get; set; }
     }
 }
