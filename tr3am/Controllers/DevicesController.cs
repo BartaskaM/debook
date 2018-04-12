@@ -75,9 +75,15 @@ namespace tr3am.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _devicesRepository.Delete(id);
-
-            return NoContent();
+            try
+            {
+                _devicesRepository.Delete(id);
+                return NoContent();
+            }
+            catch
+            {
+                return NotFound();
+            }
         }
     }
 }

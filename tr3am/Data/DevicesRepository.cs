@@ -145,7 +145,7 @@ namespace tr3am.Data
 
         public void Delete(int id)
         {
-            var item = _items.Single(x => x.Id == id);
+            var item = _items.First(x => x.Id == id);
             item.Active = false;
         }
     }
