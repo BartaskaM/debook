@@ -34,7 +34,7 @@ namespace tr3am.Controllers
                 FullDeviceDTO item = _devicesRepository.GetById(id);
                 if (item != null)
                 {
-                    return Ok();
+                    return Ok(item);
                 } else
                 {
                     return NotFound();

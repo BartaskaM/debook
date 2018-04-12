@@ -97,11 +97,11 @@ namespace tr3am.Data
                     Id = id,
                     Brand = new BrandDTO { Id = 1 },
                     Model = new ModelDTO { Id = 1 },
-                    Available = true,
-                    Active = true,
+                    Available = x.Available,
+                    Active = x.Active,
                     Image = x.Image,
                     Name = x.Name,
-                    Custody = null,
+                    Custody = new UserDTO { Id = x.Custody.Id },
                     IdentificationNum = x.IdentificationNum,
                     SerialNum = x.SerialNum,
                     OS = x.OS,
@@ -118,7 +118,7 @@ namespace tr3am.Data
 
         public int? Create(CreateDeviceItemRequest request)
         {
-            var id = _items.Count() != 0 ? _items.Max(x => x.Id) : 1;
+            var id = _items.Count() != 0 ? _items.Max(x => x.Id) + 1 : 1;
             var office = _officesRepository.GetById(request.Location);
             if(office == null)
             {

@@ -33,7 +33,6 @@ namespace tr3am.DataContracts.Requests.Devices
         public DateTime Purchased { get; set; }
         [MaxLength(255)]
         public string Vendor { get; set; }
-        [MaxLength(255)]
         public float TaxRate { get; set; }
         [Required]
         public int Location { get; set; }
