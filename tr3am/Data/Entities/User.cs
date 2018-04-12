@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace tr3am.Data.Entities
 {
-    public class UserItem
+    public class User
     {
         public int Id { get; set; }
     }

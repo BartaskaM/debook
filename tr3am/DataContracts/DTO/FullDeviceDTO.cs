@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace tr3am.Data.Entities
+namespace tr3am.DataContracts.DTO
 {
-    public class DeviceItem
+    public class FullDeviceDTO
     {
         public int Id { get; set; }
         public string Image { get; set; }
         public bool Available { get; set; }
-        public BrandItem Brand { get; set; }
-        public string Model { get; set; }
+        public BrandDTO Brand { get; set; }
+        public ModelDTO Model { get; set; }
         public int IdentificationNum { get; set; }
         public string OS { get; set; }
-        public OfficeItem Location { get; set; }
-        public UserItem Custody { get; set; }
+        public OfficeDTO Location { get; set; }
+        public UserDTO Custody { get; set; }
         public string Name { get; set; }
         public string SerialNum { get; set; }
         public string Group { get; set; }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Entities;
 using tr3am.DataContracts;
+using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Devices;
 
 namespace tr3am.Controllers
@@ -14,14 +15,16 @@ namespace tr3am.Controllers
     public class DevicesController : Controller
     {
         private readonly IDevicesRepository _devicesRepository;
+        private readonly IOfficesRepository _officesRepository;
 
-        public DevicesController(IDevicesRepository devicesRepository)
+        public DevicesController(IDevicesRepository devicesRepository, IOfficesRepository officesRepository)
         {
             _devicesRepository = devicesRepository;
+            _officesRepository = officesRepository;
         }
 
         [HttpGet]
-        public IEnumerable<DeviceItemDTO> GetAll()
+        public IEnumerable<ShortDeviceDTO> GetAll()
         {
             return _devicesRepository.GetAll();
         }
@@ -30,7 +33,7 @@ namespace tr3am.Controllers
         public IActionResult GetById(int id)
         {
 
-                DeviceItem item = _devicesRepository.GetById(id);
+                FullDeviceDTO item = _devicesRepository.GetById(id);
                 if (item != null)
                 {
                     return Ok();
@@ -51,6 +54,10 @@ namespace tr3am.Controllers
 
             var item = _devicesRepository.Create(request);
 
+            if (item == null)
+            {
+                return BadRequest(new { Message = "This office doesn't exist" });
+            }
             return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
         }
 

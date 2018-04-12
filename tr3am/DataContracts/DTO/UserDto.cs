@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace tr3am.Data.Entities
+namespace tr3am.DataContracts.DTO
 {
-    public class BrandItem
+    public class UserDTO
     {
         public int Id { get; set; }
     }

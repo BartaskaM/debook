@@ -1,6 +1,6 @@
 ﻿namespace tr3am.Data.Entities
 {
-    public class OfficeItem
+    public class Office
     {
         public int Id { get; set; }
         public string Country { get; set; }
