@@ -25,7 +25,7 @@ namespace tr3am.Data
                 Image = "https://store.storeimages.cdn-apple.com/4974/as-images.apple.com/is/image/AppleInc/aos/published/images/i/pa/ipad/cell/ipad-cell-select-spacegray-201703?wid=470&hei=556&fmt=png-alpha&.v=1507581905122",
                 Available = true,
                 Active = true,
-                Model = "iPad Pro 10.5",
+                Model = new Model { Id = 1 },
                 Name = "Apple iPad Pro 10.5\", 256GB",
                 Custody = null,
                 IdentificationNum = 497,
@@ -50,7 +50,7 @@ namespace tr3am.Data
                 Image = "https://store.storeimages.cdn-apple.com/4974/as-images.apple.com/is/image/AppleInc/aos/published/images/i/pa/ipad/cell/ipad-cell-select-spacegray-201703?wid=470&hei=556&fmt=png-alpha&.v=1507581905122",
                 Available = true,
                 Active = true,
-                Model = "iPad Pro 10.5",
+                Model = new Model { Id = 1 },
                 Name = "Apple iPad Pro 10.5\", 256GB",
                 Custody = null,
                 IdentificationNum = 497,
@@ -116,7 +116,7 @@ namespace tr3am.Data
                 .FirstOrDefault();
         }
 
-        public FullDeviceDTO Create(CreateDeviceItemRequest request)
+        public int? Create(CreateDeviceItemRequest request)
         {
             var id = _items.Count() != 0 ? _items.Max(x => x.Id) : 1;
             var office = _officesRepository.GetById(request.Location);
@@ -128,7 +128,7 @@ namespace tr3am.Data
             {
                 Id = id,
                 Brand = new Brand { Id = 1 },
-                Model = request.Model,
+                Model = new Model { Id = 1 },
                 Available = true,
                 Active = true,
                 Image = request.Image,
@@ -156,27 +156,7 @@ namespace tr3am.Data
 
             _items.Add(item);
 
-            return new FullDeviceDTO
-            {
-                Id = id,
-                Brand = new BrandDTO { Id = 1 },
-                Model = new ModelDTO { Id = 1 },
-                Available = true,
-                Active = true,
-                Image = request.Image,
-                Name = request.Name,
-                Custody = null,
-                IdentificationNum = request.IdentificationNum,
-                SerialNum = request.SerialNum,
-                OS = request.OS,
-                Group = request.Group,
-                Subgroup = request.Subgroup,
-                Description = request.Description,
-                Purchased = request.Purchased,
-                Vendor = request.Vendor,
-                TaxRate = request.TaxRate,
-                Location = office
-            };
+            return id;
         }
 
         public void Update(int id, UpdateDeviceItemRequest request)
@@ -184,7 +164,7 @@ namespace tr3am.Data
             var item = _items.First(x => x.Id == id);
 
             item.Brand = new Brand { Id = request.Brand };
-            item.Model = request.Model;
+            item.Model = new Model { Id = request.Model };
             item.Available = request.Available;
             item.Active = request.Active;
             item.Image = request.Image;

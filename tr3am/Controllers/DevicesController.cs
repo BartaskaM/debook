@@ -15,12 +15,10 @@ namespace tr3am.Controllers
     public class DevicesController : Controller
     {
         private readonly IDevicesRepository _devicesRepository;
-        private readonly IOfficesRepository _officesRepository;
 
-        public DevicesController(IDevicesRepository devicesRepository, IOfficesRepository officesRepository)
+        public DevicesController(IDevicesRepository devicesRepository)
         {
             _devicesRepository = devicesRepository;
-            _officesRepository = officesRepository;
         }
 
         [HttpGet]
@@ -58,7 +56,7 @@ namespace tr3am.Controllers
             {
                 return BadRequest(new { Message = "This office doesn't exist" });
             }
-            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+            return CreatedAtAction(nameof(GetById), new { id = item }, item);
         }
 
         [HttpPut("{id}")]
