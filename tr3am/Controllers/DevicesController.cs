@@ -57,16 +57,19 @@ namespace tr3am.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateDeviceItemRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 _devicesRepository.Update(id, request);
+                return NoContent();
             }
             catch
             {
                 return NotFound();
             }
-
-            return NoContent();
         }
 
         [HttpDelete("{id}")]

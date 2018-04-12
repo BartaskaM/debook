@@ -122,7 +122,7 @@ namespace tr3am.Data
 
         public void Update(int id, UpdateDeviceItemRequest request)
         {
-            var item = _items.Single(x => x.Id == id);
+            var item = _items.First(x => x.Id == id);
 
             item.Brand = new BrandItem { Id = request.Brand };
             item.Model = request.Model;
