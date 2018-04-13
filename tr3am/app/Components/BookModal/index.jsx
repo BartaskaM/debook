@@ -156,7 +156,7 @@ class BookModal extends React.Component {
               helperText={returnDateError}
               value={dateToHours(roundTime(returnDate))}
               onChange={this.handleDateChange}
-              onFocus={() => this.checkForErrors(returnDate)}
+              onBlur={() => this.checkForErrors(returnDate)}
               inputProps={{
                 step: 900,
               }}

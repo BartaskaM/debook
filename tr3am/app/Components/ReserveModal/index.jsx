@@ -251,7 +251,7 @@ class ReserveModal extends React.Component {
               helperText={returnDateError}
               value={dateToHours(roundTime(returnDate))}
               onChange={this.handleReturnChange}
-              onFocus={() => this.checkForErrors(returnDate, currentDate)}
+              onBlur={() => this.checkForErrors(returnDate, currentDate)}
               inputProps={{
                 step: 900,
               }}
