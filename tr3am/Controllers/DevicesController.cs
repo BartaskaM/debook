@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,16 +31,14 @@ namespace tr3am.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-
-                FullDeviceDTO item = _devicesRepository.GetById(id);
-                if (item != null)
-                {
-                    return Ok(item);
-                } else
-                {
-                    return NotFound();
-                }
-            
+            FullDeviceDTO item = _devicesRepository.GetById(id);
+            if (item != null)
+            {
+                return Ok(item);
+            } else
+            {
+                return NotFound();
+            }   
         }
 
         [HttpPost]
@@ -54,7 +53,7 @@ namespace tr3am.Controllers
 
             if (item == null)
             {
-                return BadRequest(new { Message = "This office doesn't exist" });
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This office doesn't exist" });
             }
             return CreatedAtAction(nameof(GetById), new { id = item }, item);
         }
@@ -69,12 +68,12 @@ namespace tr3am.Controllers
             try
             {
                 _devicesRepository.Update(id, request);
-                return NoContent();
             }
             catch
             {
                 return NotFound();
             }
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -83,12 +82,12 @@ namespace tr3am.Controllers
             try
             {
                 _devicesRepository.Delete(id);
-                return NoContent();
             }
             catch
             {
                 return NotFound();
             }
+            return NoContent();
         }
     }
 }
