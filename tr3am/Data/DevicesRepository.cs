@@ -159,10 +159,14 @@ namespace tr3am.Data
             return id;
         }
 
-        public void Update(int id, UpdateDeviceItemRequest request)
+        public string Update(int id, UpdateDeviceItemRequest request)
         {
             var item = _items.First(x => x.Id == id);
-
+            var office = _officesRepository.GetById(request.Location);
+            if (office == null)
+            {
+                return "This office doesn't exist";
+            }
             item.Brand = new Brand { Id = request.Brand };
             item.Model = new Model { Id = request.Model };
             item.Available = request.Available;
@@ -179,7 +183,16 @@ namespace tr3am.Data
             item.Purchased = request.Purchased;
             item.Vendor = request.Vendor;
             item.TaxRate = request.TaxRate;
-            item.Location = new Office { Id = request.Location, City = "Kaunas" };
+            item.Location = new Office
+            {
+                Id = office.Id,
+                City = office.City,
+                Country = office.Country,
+                Address = office.Address,
+                Lat = office.Lat,
+                Lng = office.Lng
+            };
+            return null;
         }
 
         public void Delete(int id)

@@ -13,7 +13,7 @@ namespace tr3am.DataContracts
         List<ShortDeviceDTO> GetAll();
         FullDeviceDTO GetById(int id);
         int? Create(CreateDeviceItemRequest request);
-        void Update(int id, UpdateDeviceItemRequest request);
+        string Update(int id, UpdateDeviceItemRequest request);
         void Delete(int id);
     }
 }

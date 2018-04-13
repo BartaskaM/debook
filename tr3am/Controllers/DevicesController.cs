@@ -67,7 +67,11 @@ namespace tr3am.Controllers
             }
             try
             {
-                _devicesRepository.Update(id, request);
+                string error = _devicesRepository.Update(id, request);
+                if(error != null)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, new { Message = error });
+                }
             }
             catch
             {
