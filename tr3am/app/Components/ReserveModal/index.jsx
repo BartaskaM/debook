@@ -30,6 +30,7 @@ class ReserveModal extends React.Component {
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
     this.cancelReservation = this.cancelReservation.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
   handleDateChange(e) {
@@ -149,7 +150,7 @@ class ReserveModal extends React.Component {
       setReservations,
       reservations,
     } = this.props;
-
+    this.roundTimes();
     if (!this.checkForErrors(returnDate, currentDate) && !checkIfLate(currentDate)) {
       const reservation = {
         device: selectedDevice,
@@ -179,6 +180,23 @@ class ReserveModal extends React.Component {
     hideReservationDetails();
   }
 
+  roundTimes() {
+    const { 
+      setCurrentDate,
+      setReturnDate, 
+      currentDate, 
+      returnDate, 
+    } = this.props;
+    setCurrentDate(roundTime(currentDate));
+    setReturnDate(roundTime(returnDate));
+  }
+
+  handleBlur() {
+    const { currentDate, returnDate } = this.props;
+    this.roundTimes();
+    this.checkForErrors(returnDate, currentDate);
+  }
+  
   render() {
     const {
       classes,
@@ -217,7 +235,6 @@ class ReserveModal extends React.Component {
             </DialogContentText>
             <TextField
               disabled={showDetails}
-              autoFocus
               label="Reservation day"
               value={dateToFullYear(currentDate)}
               onChange={this.handleDateChange}
@@ -233,8 +250,9 @@ class ReserveModal extends React.Component {
               type="time"
               error={showCurrentDateError}
               helperText={currentDateError}
-              value={dateToHours(roundTime(currentDate))}
+              value={dateToHours(currentDate)}
               onChange={this.handleStartChange}
+              onBlur={this.handleBlur}
               inputProps={{
                 step: 900,
               }}
@@ -244,14 +262,13 @@ class ReserveModal extends React.Component {
             />
             <TextField
               disabled={showDetails}
-              autoFocus
               label="Drop off time"
               type="time"
               error={showReturnDateError}
               helperText={returnDateError}
-              value={dateToHours(roundTime(returnDate))}
+              value={dateToHours(returnDate)}
               onChange={this.handleReturnChange}
-              onBlur={() => this.checkForErrors(returnDate, currentDate)}
+              onBlur={this.handleBlur}
               inputProps={{
                 step: 900,
               }}

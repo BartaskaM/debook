@@ -26,6 +26,7 @@ class BookModal extends React.Component {
     super(props);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.bookDevice = this.bookDevice.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
   handleMinuteChange(h, m, nextDate) {
@@ -96,8 +97,10 @@ class BookModal extends React.Component {
       setDevices,
       hideBookModal,
       currentDate,
+      returnDate,
     } = this.props;
-    if (!this.checkForErrors() && !checkIfLate(currentDate)) {
+    this.roundTimes();
+    if (!this.checkForErrors(returnDate) && !checkIfLate(currentDate)) {
       //Update device
       const updatedDevices = [...devices];
       updatedDevices.map(device => {
@@ -112,6 +115,20 @@ class BookModal extends React.Component {
     }
   }
 
+  roundTimes() {
+    const { 
+      setReturnDate,  
+      returnDate, 
+    } = this.props;
+    setReturnDate(roundTime(returnDate));
+  }
+
+  handleBlur() {
+    const { returnDate } = this.props;
+    this.roundTimes();
+    this.checkForErrors(returnDate);
+  }
+  
   render() {
     const {
       classes,
@@ -137,7 +154,6 @@ class BookModal extends React.Component {
               next reservation or midnight.
             </DialogContentText>
             <TextField
-              autoFocus
               label="Pick up time"
               type="time"
               error={checkIfLate(currentDate)}
@@ -154,9 +170,9 @@ class BookModal extends React.Component {
               type="time"
               error={showReturnDateError}
               helperText={returnDateError}
-              value={dateToHours(roundTime(returnDate))}
+              value={dateToHours(returnDate)}
               onChange={this.handleDateChange}
-              onBlur={() => this.checkForErrors(returnDate)}
+              onBlur={this.handleBlur}
               inputProps={{
                 step: 900,
               }}
