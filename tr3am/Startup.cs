@@ -23,6 +23,7 @@ namespace tr3am
         {
             services.AddMvc();
             services.AddSingleton<IOfficesRepository, OfficesRepository>();
+            services.AddSingleton<IDevicesRepository, DevicesRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
