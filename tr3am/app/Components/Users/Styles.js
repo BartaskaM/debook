@@ -15,6 +15,7 @@ const Styles = {
   userPaper: {
     padding: 30,
     width: '100%',
+    textAlign: 'center',
   },
 };
 
