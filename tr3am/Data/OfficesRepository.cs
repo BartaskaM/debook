@@ -2,19 +2,20 @@
 using System.Linq;
 using tr3am.Data.Entities;
 using tr3am.DataContracts;
+using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Offices;
 
 namespace tr3am.Data
 {
     public class OfficesRepository : IOfficesRepository
     {
-        private readonly List<OfficeItem> _items;
+        private readonly List<Office> _items;
 
         public OfficesRepository()
         {
-            _items = new List<OfficeItem>
+            _items = new List<Office>
             {
-                new OfficeItem
+                new Office
                 {
                     Id = 1,
                     Country = "Lithuania",
@@ -23,7 +24,7 @@ namespace tr3am.Data
                     Lat = 54.864296,
                     Lng = 23.945239,
                 },
-              new OfficeItem
+              new Office
               {
                 Id = 2,
                 Country = "Lithuania",
@@ -32,7 +33,7 @@ namespace tr3am.Data
                 Lat = 54.704881,
                 Lng = 25.271658,
               },
-              new OfficeItem
+              new Office
               {
                 Id = 3,
                 Country = "United States of America",
@@ -41,7 +42,7 @@ namespace tr3am.Data
                 Lat = 41.893646,
                 Lng = -87.637532,
               },
-              new OfficeItem
+              new Office
               {
                 Id = 4,
                 Country = "Canada",
@@ -50,7 +51,7 @@ namespace tr3am.Data
                 Lat = 43.650579,
                 Lng = -79.376536,
               },
-              new OfficeItem
+              new Office
               {
                 Id = 5,
                 Country = "United Kingdom",
@@ -62,21 +63,32 @@ namespace tr3am.Data
             };
         }
 
-        public List<OfficeItem> GetAll()
+        public List<Office> GetAll()
         {
             return _items.ToList();
         }
 
-        public OfficeItem GetById(int id)
+        public OfficeDTO GetById(int id)
         {
-            return _items.SingleOrDefault(x => x.Id == id);
+            return _items
+                .Where(x => x.Id == id)
+                .Select(x => new OfficeDTO
+                {
+                    Id = x.Id,
+                    City = x.City,
+                    Country = x.Country,
+                    Address = x.Address,
+                    Lat = x.Lat,
+                    Lng = x.Lng
+                })
+                .FirstOrDefault();
         }
 
-        public OfficeItem Create(OfficeItemRequest request)
+        public Office Create(OfficeItemRequest request)
         {
             var id = _items.DefaultIfEmpty().Max(x => x.Id) + 1;
 
-            var item = new OfficeItem
+            var item = new Office
             {
                 Id = id,
                 Country = request.Country,
