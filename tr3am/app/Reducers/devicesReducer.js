@@ -77,7 +77,13 @@ export default (state = defaultState, action) => {
       };
     }
     case devices.HIDE_BOOK_MODAL: {
-      return { ...state, showBookModal: false };
+      return { 
+        ...state, 
+        showBookModal: false, 
+        showCurrentDateError: false, 
+        showReturnDateError: false, 
+        currentDateError: '', 
+        returnDateError: '' };
     }
     case devices.SET_CURRENT_DATE: {
       return { ...state, currentDate: action.payload };
@@ -117,7 +123,14 @@ export default (state = defaultState, action) => {
       };
     }
     case devices.HIDE_RESERVE_MODAL: {
-      return { ...state, showReserveModal: false };
+      return { 
+        ...state, 
+        showReserveModal: false,
+        showCurrentDateError: false,
+        showReturnDateError: false,
+        currentDateError: '',
+        returnDateError: '', 
+      };
     }
     case devices.SET_RESERVATIONS: {
       return { ...state, reservations: action.payload };

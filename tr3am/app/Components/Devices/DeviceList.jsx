@@ -99,7 +99,7 @@ class DeviceList extends React.Component {
   canCheckIn(reservation){
     if(reservation){
       const now = new Date();
-      if(now - reservation.from < fifteenMinutes){
+      if(reservation.from - now < fifteenMinutes){
         return true;
       } else {
         return false;
