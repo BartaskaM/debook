@@ -1,20 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import List from 'material-ui/List';
-import { withStyles } from 'material-ui/styles';
 
 import Styles from './Styles';
 import OfficeList from 'Constants/Offices';
 import OfficeItem from './OfficeItem';
 import AddOfficeModal from './AddOfficeModal';
 import * as officesActions from 'ActionCreators/officesActions';
-import { connect } from 'react-redux';
 
 class Offices extends React.Component {
   constructor(props) {
     super(props);
+    
     this.handleAddNewClick = this.handleAddNewClick.bind(this);
   }
 

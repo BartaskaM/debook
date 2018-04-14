@@ -1,38 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import NavigateBefore from 'material-ui-icons/NavigateBefore';
 import Divider from 'material-ui/Divider';
-import { withStyles } from 'material-ui/styles';
-import { withRouter } from 'react-router-dom';
-import * as officesActions from 'ActionCreators/officesActions';
-import { connect } from 'react-redux';
 
 import Styles from './Styles';
 import * as RouteRoles from 'Constants/RouteRoles';
+import * as officeDetailsActions from 'ActionCreators/officeDetailsActions';
 import Map from './Map';
 
 class OfficeDetails extends React.Component {
-
   constructor(props) {
     super(props);
+
     this.state = {
-      office: {},
+      office: null,
     };
   }
 
   componentDidMount() {
-    const { offices } = this.props;
-    const office = offices.find(office => office.id == this.props.match.params.id);
-    this.setState({ office: office });
+    this.props.getOfficeWithId(this.props.match.params.id);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.office != prevState.office) {
+      return { office: nextProps.office };
+    }
+
+    return { office: null };
   }
 
   render() {
     const { classes, history, user } = this.props;
-    return (
+    return this.state.office ? (
       <div className={classes.root}>
         <Button variant="flat" onClick={history.goBack}>
           <NavigateBefore />
@@ -90,7 +96,7 @@ class OfficeDetails extends React.Component {
           </Grid>
         </Grid>
       </div>
-    );
+    ) : '';
   }
 }
 
@@ -98,23 +104,27 @@ OfficeDetails.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  offices: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    country: PropTypes.string.isRequired,
-    city: PropTypes.string.isRequired,
-    address: PropTypes.string.isRequired,
-    lat: PropTypes.number.isRequired,
-    lng: PropTypes.number.isRequired,
-  })).isRequired,
   user: PropTypes.object.isRequired,
+  getOfficeWithId: PropTypes.func.isRequired,
+  office: PropTypes.shape({
+    id: PropTypes.number,
+    country: PropTypes.string,
+    city: PropTypes.string,
+    address: PropTypes.string,
+    lat: PropTypes.number,
+    lng: PropTypes.number,
+  }),
 };
 
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
-    offices: state.offices.offices,
+    office: state.officeDetails.office,
   };
 };
 
-export default connect(
-  mapStateToProps, officesActions)(withStyles(Styles)(withRouter(OfficeDetails)));
+export default withRouter(
+  connect(mapStateToProps, officeDetailsActions)(
+    withStyles(Styles)(OfficeDetails)
+  )
+);
