@@ -18,6 +18,7 @@ import Reservations from 'Constants/Reservations';
 import Users from 'Constants/User';
 import Devices from 'Constants/Devices';
 import Device from './Device';
+import { fifteenMinutes } from 'Constants/Values';
 
 class DeviceList extends React.Component {
   constructor(props) {
@@ -95,12 +96,42 @@ class DeviceList extends React.Component {
     return devicesToRender;
   }
 
+  canCheckIn(reservation){
+    if(reservation){
+      const now = new Date();
+      if(now - reservation.from < fifteenMinutes){
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  checkIn(deviceId){
+    const {
+      devices,
+      user,
+      setDevices,
+    } = this.props;
+    //Update device
+    const updatedDevices = [...devices];
+    updatedDevices.map(device => {
+      if (device.id == deviceId) {
+        device.custody = user.id;
+        device.available = false;
+      }
+    });
+    setDevices(updatedDevices);
+    //Post booking info
+    //Change reservation status
+  }
+
   renderDevices() {
     const { reservations, user, classes } = this.props;
     const userReservations = reservations
       .filter(res => res.user === user.id);
-    const userReservedDevices = userReservations.map(res => res.device);
     return this.filterDevices().map((device, index) => {
+      const userReservationForThisDevice = userReservations.find(res => res.device == device.id);
       return (
         //Replace list with device component
         <Grid item xs={4} key={index}>
@@ -118,12 +149,17 @@ class DeviceList extends React.Component {
                 }
                 color={device.available ? 'primary' : 'secondary'}
                 className={classes.button}
-                onClick={device.custody === null ?
-                  () => this.openBookDialog(device.id) :
-                  () => this.returnDevice(device.id)}>
+                onClick={device.custody ?
+                  () => this.returnDevice(device.id) :
+                  this.canCheckIn(userReservationForThisDevice) ?
+                    () => this.checkIn(device.id) :
+                    () => this.openBookDialog(device.id) 
+                }>
                 <Plus className={classes.leftIcon} />
                 {device.available ?
-                  'Book device' :
+                  this.canCheckIn(userReservationForThisDevice) ? 
+                    'Check-in' : 
+                    'Book device' : 
                   device.custody === user.id ?
                     'Return device' :
                     'Device is booked'}
@@ -132,12 +168,11 @@ class DeviceList extends React.Component {
                 variant="raised"
                 className={classes.button}
                 onClick={
-                  userReservedDevices.includes(device.id) ?
-                    () => this.openReservationDetails(userReservations
-                      .find(res => res.device === device.id)) :
+                  userReservationForThisDevice ?
+                    () => this.openReservationDetails(userReservationForThisDevice) :
                     () => this.openReserveDialog(device.id)}>
                 <Clock className={classes.leftIcon} />
-                {userReservedDevices.includes(device.id) ? 'Reservation details' : 'Reserve'}
+                {userReservationForThisDevice ? 'Reservation details' : 'Reserve'}
               </Button>
             </div>
           </Paper>
