@@ -12,6 +12,7 @@ import * as officesActions from 'ActionCreators/officesActions';
 import { connect } from 'react-redux';
 
 import Styles from './Styles';
+import * as RouteRoles from 'Constants/RouteRoles';
 import Map from './Map';
 
 class OfficeDetails extends React.Component {
@@ -30,7 +31,7 @@ class OfficeDetails extends React.Component {
   }
 
   render() {
-    const { classes, history } = this.props;
+    const { classes, history, user } = this.props;
     return (
       <div className={classes.root}>
         <Button variant="flat" onClick={history.goBack}>
@@ -51,6 +52,20 @@ class OfficeDetails extends React.Component {
               <Typography
                 variant='display2'><b>Address:</b> {this.state.office.address}</Typography>
               <br />
+              {RouteRoles.Offices.includes(user.role) &&
+                <div>
+                  <Typography
+                    variant='display2'><b>LAT:</b> {this.state.office.lat}</Typography>
+                  <br />
+                </div>
+              }
+              {RouteRoles.Offices.includes(user.role) &&
+                <div>
+                  <Typography
+                    variant='display2'><b>LNG:</b> {this.state.office.lng}</Typography>
+                  <br />
+                </div>
+              }
               <span>
                 {/* TODO: Implement button functionality */}
                 <Button variant="raised" color="primary" className={classes.editButton}>
@@ -91,6 +106,7 @@ OfficeDetails.propTypes = {
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired,
   })).isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
