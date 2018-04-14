@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import Grid from 'material-ui/Grid';
 import Styles from './Styles';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
+import { ListItem } from 'material-ui/List';
 import Button from 'material-ui/Button';
-import { Link } from 'react-router-dom';
 import Plus from 'material-ui-icons/Add';
 import Clock from 'material-ui-icons/Schedule';
 import BookModal from 'Components/BookModal';
@@ -94,18 +95,19 @@ class DeviceList extends React.Component {
   }
 
   renderDevices() {
-    const { reservations, user, classes } = this.props;
+    const { reservations, user, classes, history } = this.props;
     const userReservations = reservations
       .filter(res => res.user === user.id);
     const userReservedDevices = userReservations.map(res => res.device);
     return this.filterDevices().map((device, index) => {
       return (
-        //Replace list with device component
         <Grid item xs={4} key={index}>
           <Paper className={classes.devicePaper}>
-            <Link to={`/devices/${device.id.toString()}`}>
+            <ListItem button 
+              onClick={() => history.push(`/devices/${device.id}`)} 
+              className={classes.deviceItem}>
               <Device key={device.id} device={device}/>
-            </Link>
+            </ListItem>
             <Button
               variant='raised'
               disabled={
@@ -219,6 +221,7 @@ DeviceList.propTypes = {
     lng: PropTypes.number.isRequired,
   })).isRequired,
   setOffices: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 const mapStateToProps = state => {
   return {
@@ -238,4 +241,4 @@ export default connect(mapStateToProps, {
   ...devicesActions,
   ...usersActions,
   ...officesActions,
-})(withStyles(Styles)(DeviceList));
+})(withRouter(withStyles(Styles)(DeviceList)));
