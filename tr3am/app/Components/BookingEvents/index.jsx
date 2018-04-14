@@ -42,8 +42,8 @@ class BookingEvents extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        {this.renderListHeader()}
         <Grid container>
+          {this.renderListHeader()}
           <List className={classes.list}>
             {BookingEventsList.map(event => (
               <EventItem key={event.id} event={event} />

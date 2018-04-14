@@ -57,8 +57,8 @@ class Offices extends React.Component {
     return (
       <div className={classes.root}>
         <AddOfficeModal />
-        {this.renderListHeader()}
         <Grid container spacing={16}>
+          {this.renderListHeader()}
           <List className={classes.officeList}>
             {offices.map(office => (
               <OfficeItem key={office.id} office={office} />

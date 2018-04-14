@@ -41,8 +41,8 @@ class BrandList extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        {this.renderListHeader()}
         <Grid container spacing={16}>
+          {this.renderListHeader()}
           <List className={classes.brandList}>
             {AllBrands.map(brands => (
               <BrandsItem key={brands.id} brand={brands} />
