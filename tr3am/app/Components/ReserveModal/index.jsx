@@ -311,7 +311,7 @@ ReserveModal.propTypes = {
   showReturnDateError: PropTypes.bool.isRequired,
   setReturnDateError: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  selectedDevice: PropTypes.number.isRequired,
+  selectedDevice: PropTypes.number,
   devices: PropTypes.arrayOf(PropTypes.shape({
     brand: PropTypes.string.isRequired,
     model: PropTypes.string.isRequired,

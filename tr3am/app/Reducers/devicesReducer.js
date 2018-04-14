@@ -14,10 +14,11 @@ const defaultState = {
   returnDateError: '',
   showCurrentDateError: false,
   currentDateError: '',
-  selectedDevice: -1,
+  selectedDevice: null,
   showReserveModal: false,
   reservations: [],
   showReservationDetails: false,
+  showReturnModal: false,
 };
 
 export default (state = defaultState, action) => {
@@ -139,6 +140,12 @@ export default (state = defaultState, action) => {
     }
     case devices.HIDE_RESERVATION_DETAILS: {
       return { ...state, showReserveModal: false, showReservationDetails: false };
+    }
+    case devices.SHOW_RETURN_MODAL: {
+      return { ...state, showReturnModal: true, selectedDevice: action.payload };
+    }
+    case devices.HIDE_RETURN_MODAL: {
+      return { ...state, showReturnModal: false };
     }
     default: return state;
   }

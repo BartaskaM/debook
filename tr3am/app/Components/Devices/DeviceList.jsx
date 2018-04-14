@@ -14,10 +14,13 @@ import BookModal from 'Components/BookModal';
 import ReserveModal from 'Components/ReserveModal';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as usersActions from 'ActionCreators/usersActions';
+import * as officesActions from 'ActionCreators/officesActions';
 import Reservations from 'Constants/Reservations';
 import Users from 'Constants/User';
 import Devices from 'Constants/Devices';
+import Offices from 'Constants/Offices';
 import Device from './Device';
+import ReturnModal from 'Components/ReturnModal';
 
 class DeviceList extends React.Component {
   constructor(props) {
@@ -27,7 +30,7 @@ class DeviceList extends React.Component {
     this.openBookDialog = this.openBookDialog.bind(this);
     this.openReserveDialog = this.openReserveDialog.bind(this);
     this.openReservationDetails = this.openReservationDetails.bind(this);
-    this.returnDevice = this.returnDevice.bind(this);
+    this.showReturnModal = this.showReturnModal.bind(this);
   }
 
   componentDidMount() {
@@ -38,6 +41,8 @@ class DeviceList extends React.Component {
       setUsers,
       devices,
       setDevices,
+      setOffices,
+      offices,
     } = this.props;
     if (reservations.length === 0) {
       setReservations(Reservations);
@@ -48,20 +53,13 @@ class DeviceList extends React.Component {
     if (devices.length === 0) {
       setDevices(Devices);
     }
+    if (offices.length === 0) {
+      setOffices(Offices);
+    }
   }
 
-  returnDevice(deviceId) {
-    const { devices, setDevices, user } = this.props;
-    const newDevices = devices.map(device => {
-      if (device.id === deviceId) {
-        //Handle device return
-        device.available = true;
-        device.custody = null;
-        device.location = user.office;
-      }
-      return device;
-    });
-    setDevices(newDevices);
+  showReturnModal(deviceId) {
+    this.props.showReturnModal(deviceId);
   }
 
   filterDevices() {
@@ -120,7 +118,7 @@ class DeviceList extends React.Component {
                 className={classes.button}
                 onClick={device.custody === null ?
                   () => this.openBookDialog(device.id) :
-                  () => this.returnDevice(device.id)}>
+                  () => this.showReturnModal(device.id)}>
                 <Plus className={classes.leftIcon} />
                 {device.available ?
                   'Book device' :
@@ -166,6 +164,7 @@ class DeviceList extends React.Component {
         {this.renderDevices()}
         <BookModal />
         <ReserveModal />
+        <ReturnModal />
       </Grid>
     );
   }
@@ -214,6 +213,16 @@ DeviceList.propTypes = {
   setUsers: PropTypes.func.isRequired,
   showReservationDetails: PropTypes.func.isRequired,
   setDevices: PropTypes.func.isRequired,
+  showReturnModal: PropTypes.func.isRequired,
+  offices: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
+  })).isRequired,
+  setOffices: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {
@@ -226,9 +235,11 @@ const mapStateToProps = state => {
     user: state.auth.user,
     reservations: state.devices.reservations,
     users: state.users.users,
+    offices: state.offices.offices,
   };
 };
 export default connect(mapStateToProps, {
   ...devicesActions,
   ...usersActions,
+  ...officesActions,
 })(withStyles(Styles)(DeviceList));
