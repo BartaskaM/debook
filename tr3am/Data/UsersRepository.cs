@@ -18,7 +18,66 @@ namespace tr3am.Data
         public UsersRepository(IOfficesRepository officesRepository)
         {
             _officesRepository = officesRepository;
-            _items = new List<User>();
+            OfficeDTO office = _officesRepository.GetById(1);
+            _items = new List<User>
+            {
+               new User {
+                Id = 1,
+                FirstName = "John",
+                LastName = "Snow",
+                Email = "admin@admin.com",
+                Office = new Office
+                {
+                    Id = 1,
+                    Address = office.Address,
+                    City = office.City,
+                    Country = office.Country,
+                    Lat = office.Lat,
+                    Lng = office.Lng,
+                },
+                Slack = "LordCommander2",
+                Role = "admin",
+                Password = "admin",
+                },
+                new User
+                {
+                Id = 2,
+                FirstName = "Petras",
+                LastName = "Petraitis",
+                Email = "user@user.com",
+                Office = new Office
+                {
+                    Id = 1,
+                    Address = office.Address,
+                    City = office.City,
+                    Country = office.Country,
+                    Lat = office.Lat,
+                    Lng = office.Lng,
+                },
+                Slack = "pStandsForPeasant",
+                Role = "user",
+                Password = "user",
+                },
+                new User
+                {
+                Id = 3,
+                FirstName = "Augustas Nojus",
+                LastName = "Grebliauskas",
+                Email = "noah.grebliauskas@gmail.com",
+                Office = new Office
+                {
+                    Id = 1,
+                    Address = office.Address,
+                    City = office.City,
+                    Country = office.Country,
+                    Lat = office.Lat,
+                    Lng = office.Lng,
+                },
+                Slack = "Humpero",
+                Role = "admin",
+                Password = "password",
+                },
+            };
         }
 
         public int Create(CreateUserRequest request)
@@ -51,6 +110,7 @@ namespace tr3am.Data
                 Office = office,
                 Password = request.Password,
                 Slack = request.Slack,
+                Role = "user",
             };
             _items.Add(newUser);
             return id;
@@ -60,7 +120,7 @@ namespace tr3am.Data
         public void Delete(int id)
         {
             User user = _items.FirstOrDefault(x => x.Id == id);
-            if(user == null)
+            if (user == null)
             {
                 throw new InvalidUserException();
             }
@@ -77,6 +137,7 @@ namespace tr3am.Data
                 LastName = user.LastName,
                 Office = _officesRepository.GetById(user.Office.Id),
                 Slack = user.Slack,
+                Role = user.Role,
             })
             .ToList();
         }
@@ -84,7 +145,7 @@ namespace tr3am.Data
         public UserDTO GetById(int id)
         {
             User user = _items.FirstOrDefault(x => x.Id == id);
-            if(user == null)
+            if (user == null)
             {
                 throw new InvalidUserException();
             }
@@ -96,6 +157,7 @@ namespace tr3am.Data
                 LastName = user.LastName,
                 Office = _officesRepository.GetById(user.Office.Id),
                 Slack = user.Slack,
+                Role = user.Role,
             };
         }
 
@@ -134,6 +196,7 @@ namespace tr3am.Data
                 user.Password = request.Password;
             }
             user.Slack = request.Slack;
+            user.Role = request.Role;
         }
     }
 }

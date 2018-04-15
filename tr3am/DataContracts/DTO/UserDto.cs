@@ -8,5 +8,6 @@
         public string Email { get; set; }
         public OfficeDTO Office { get; set; }
         public string Slack { get; set; }
+        public string Role { get; set; }
     }
 }
