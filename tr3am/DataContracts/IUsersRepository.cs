@@ -7,7 +7,7 @@ using tr3am.DataContracts.Requests.Users;
 
 namespace tr3am.DataContracts
 {
-    interface IUsersRepository
+    public interface IUsersRepository
     {
         List<UserDTO> GetAll();
         UserDTO GetById(int id);
