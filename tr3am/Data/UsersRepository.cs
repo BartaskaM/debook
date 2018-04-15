@@ -23,7 +23,7 @@ namespace tr3am.Data
 
         public int Create(CreateUserRequest request)
         {
-            int id = _items.Max(x => x.Id) + 1;
+            int id = _items.Count() == 0 ? 1 : _items.Max(x => x.Id) + 1;
             OfficeDTO officeDto = _officesRepository.GetById(request.Office.Value);
             if (officeDto == null)
             {
@@ -111,7 +111,7 @@ namespace tr3am.Data
             {
                 throw new InvalidOfficeException();
             }
-            if (_items.FirstOrDefault(x => x.Email == request.Email) != null)
+            if (user.Email != request.Email && _items.FirstOrDefault(x => x.Email == request.Email) != null)
             {
                 throw new DuplicateEmailException();
             }
