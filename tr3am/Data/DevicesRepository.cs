@@ -116,7 +116,7 @@ namespace tr3am.Data
                 .FirstOrDefault();
         }
 
-        public int? Create(CreateDeviceItemRequest request)
+        public int? Create(CreateDeviceRequest request)
         {
             var id = _items.Count() != 0 ? _items.Max(x => x.Id) + 1 : 1;
             var office = _officesRepository.GetById(request.Location);
@@ -159,7 +159,7 @@ namespace tr3am.Data
             return id;
         }
 
-        public string Update(int id, UpdateDeviceItemRequest request)
+        public string Update(int id, UpdateDeviceRequest request)
         {
             var item = _items.First(x => x.Id == id);
             var office = _officesRepository.GetById(request.Location);

@@ -42,7 +42,7 @@ namespace tr3am.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]CreateDeviceItemRequest request)
+        public IActionResult Create([FromBody]CreateDeviceRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace tr3am.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] UpdateDeviceItemRequest request)
+        public IActionResult Update(int id, [FromBody] UpdateDeviceRequest request)
         {
             if (!ModelState.IsValid)
             {
