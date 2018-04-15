@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Entities;
+using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Devices;
@@ -31,14 +32,14 @@ namespace tr3am.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            FullDeviceDTO item = _devicesRepository.GetById(id);
-            if (item != null)
+            try
             {
-                return Ok(item);
-            } else
+                return Ok(_devicesRepository.GetById(id));
+            }
+            catch(InvalidDeviceException)
             {
                 return NotFound();
-            }   
+            } 
         }
 
         [HttpPost]
@@ -48,14 +49,15 @@ namespace tr3am.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var item = _devicesRepository.Create(request);
-
-            if (item == null)
+            try
+            {
+                var item = _devicesRepository.Create(request);
+                return CreatedAtAction(nameof(GetById), new { id = item }, item);
+            }
+            catch(InvalidOfficeException)
             {
                 return StatusCode(StatusCodes.Status409Conflict, new { Error = "This office doesn't exist" });
             }
-            return CreatedAtAction(nameof(GetById), new { id = item }, item);
         }
 
         [HttpPut("{id}")]
@@ -67,17 +69,22 @@ namespace tr3am.Controllers
             }
             try
             {
-                string error = _devicesRepository.Update(id, request);
-                if(error != null)
-                {
-                    return StatusCode(StatusCodes.Status409Conflict, new { Message = error });
-                }
+                _devicesRepository.Update(id, request);
+                return NoContent();
             }
-            catch
+            catch(InvalidDeviceException)
             {
                 return NotFound();
             }
-            return NoContent();
+            catch(InvalidOfficeException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This office doesn't exist" });
+            }
+            catch(InvalidUserException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This user doesn't exist" });
+            }
+
         }
 
         [HttpDelete("{id}")]
