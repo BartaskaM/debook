@@ -80,6 +80,25 @@ namespace tr3am.Data
             };
         }
 
+        public UserDTO LogIn(LogInRequest request)
+        {
+            User user = _items.FirstOrDefault(x => x.Email == request.Email);
+            if(user == null || user.Password != request.Password)
+            {
+                throw new InvalidUserException();
+            }
+            return new UserDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Office = _officesRepository.GetById(user.Office.Id),
+                Slack = user.Slack,
+                Role = user.Role,
+            };
+        }
+
         public int Create(CreateUserRequest request)
         {
             int id = _items.Count() == 0 ? 1 : _items.Max(x => x.Id) + 1;
