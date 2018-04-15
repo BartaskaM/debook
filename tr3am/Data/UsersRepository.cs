@@ -80,14 +80,14 @@ namespace tr3am.Data
             };
         }
 
-        public UserDTO LogIn(LogInRequest request)
+        public LogInDTO LogIn(LogInRequest request)
         {
             User user = _items.FirstOrDefault(x => x.Email == request.Email);
             if(user == null || user.Password != request.Password)
             {
                 throw new InvalidUserException();
             }
-            return new UserDTO
+            return new LogInDTO
             {
                 Id = user.Id,
                 Email = user.Email,
@@ -96,6 +96,7 @@ namespace tr3am.Data
                 Office = _officesRepository.GetById(user.Office.Id),
                 Slack = user.Slack,
                 Role = user.Role,
+                Password = user.Password,
             };
         }
 

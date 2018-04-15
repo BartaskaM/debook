@@ -14,6 +14,6 @@ namespace tr3am.DataContracts
         int Create(CreateUserRequest request);
         void Update(int id, UpdateUserRequest request);
         void Delete(int id);
-        UserDTO LogIn(LogInRequest request);
+        LogInDTO LogIn(LogInRequest request);
     }
 }
