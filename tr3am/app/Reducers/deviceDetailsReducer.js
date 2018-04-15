@@ -16,13 +16,9 @@ export default (state = defaultState, action) => {
       return { ...state, showLocationModal: false };
     }
     case deviceDetails.SHOW_LOCATION_MODAL: {
-      const {
-        selectedDevice,
-      } = action.payload;
       return {
         ...state,
         showLocationModal: true,
-        selectedDevice,
       };
     }
   }

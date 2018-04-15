@@ -31,13 +31,12 @@ class LocationModal extends React.Component {
   }
   changeLocation() {
     const {
-      selectedDevice,
       changeDeviceLocation,
       hideLocationModal,
       active,
     } = this.props;
 
-    changeDeviceLocation(selectedDevice.id, this.state.location);
+    changeDeviceLocation(this.state.location);
     active();
     hideLocationModal();
   }
@@ -100,14 +99,11 @@ LocationModal.propTypes = {
   hideLocationModal: PropTypes.func.isRequired,
   changeDeviceLocation: PropTypes.func.isRequired,
   active: PropTypes.func,
-  selectedDevice: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    location: PropTypes.string.isRequired,
-  }),
+  location: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
   showLocationDialog: state.deviceDetails.showLocationModal,
-  selectedDevice: state.deviceDetails.selectedDevice,
+  device: state.deviceDetails.device,
 });
 export default connect(mapStateToProps, deviceDetailsActions)(withStyles(styles)(LocationModal));
