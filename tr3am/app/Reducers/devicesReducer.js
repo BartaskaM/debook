@@ -10,10 +10,8 @@ const defaultState = {
   showBookModal: false,
   currentDate: new Date(),
   returnDate: new Date(),
-  showReturnDateError: false,
-  returnDateError: '',
-  showCurrentDateError: false,
-  currentDateError: '',
+  returnDateError: ' ',
+  currentDateError: ' ',
   selectedDevice: -1,
   showReserveModal: false,
   reservations: [],
@@ -80,10 +78,8 @@ export default (state = defaultState, action) => {
       return { 
         ...state, 
         showBookModal: false, 
-        showCurrentDateError: false, 
-        showReturnDateError: false, 
-        currentDateError: '', 
-        returnDateError: '' };
+        currentDateError: ' ', 
+        returnDateError: ' ' };
     }
     case devices.SET_CURRENT_DATE: {
       return { ...state, currentDate: action.payload };
@@ -94,15 +90,13 @@ export default (state = defaultState, action) => {
     case devices.SET_RETURN_DATE_ERROR: {
       return {
         ...state,
-        showReturnDateError: action.payload.show,
-        returnDateError: action.payload.message,
+        returnDateError: action.payload,
       };
     }
     case devices.SET_CURRENT_DATE_ERROR: {
       return {
         ...state,
-        showCurrentDateError: action.payload.show,
-        currentDateError: action.payload.message,
+        currentDateError: action.payload,
       };
     }
     case devices.SET_SELECTED_DEVICE: {
@@ -126,10 +120,8 @@ export default (state = defaultState, action) => {
       return { 
         ...state, 
         showReserveModal: false,
-        showCurrentDateError: false,
-        showReturnDateError: false,
-        currentDateError: '',
-        returnDateError: '', 
+        currentDateError: ' ',
+        returnDateError: ' ', 
       };
     }
     case devices.SET_RESERVATIONS: {

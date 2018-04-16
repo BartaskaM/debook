@@ -52,19 +52,11 @@ export const setCurrentDate = (date) => {
 export const setReturnDate = (date) => {
   return { type: devices.SET_RETURN_DATE, payload: date };
 };
-export const setReturnDateError = (bool, message) => {
-  if (bool) {
-    return { type: devices.SET_RETURN_DATE_ERROR, payload: { show: true, message } };
-  } else {
-    return { type: devices.SET_RETURN_DATE_ERROR, payload: { show: false, message: '' } };
-  }
+export const setReturnDateError = (message) => {
+  return { type: devices.SET_RETURN_DATE_ERROR, payload: message };
 };
-export const setCurrentDateError = (bool, message) => {
-  if (bool) {
-    return { type: devices.SET_CURRENT_DATE_ERROR, payload: { show: true, message } };
-  } else {
-    return { type: devices.SET_CURRENT_DATE_ERROR, payload: { show: false, message: '' } };
-  }
+export const setCurrentDateError = (message) => {
+  return { type: devices.SET_CURRENT_DATE_ERROR, payload: message };
 };
 export const setSelectedDevice = (id) => {
   return { type: devices.SET_SELECTED_DEVICE, payload: id };
