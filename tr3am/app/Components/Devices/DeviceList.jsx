@@ -30,6 +30,10 @@ class DeviceList extends React.Component {
     this.openReservationDetails = this.openReservationDetails.bind(this);
     this.returnDevice = this.returnDevice.bind(this);
     this.handleBookClick = this.handleBookClick.bind(this);
+    this.getBookButtonValues = this.getBookButtonValues.bind(this);
+    this.state = {
+      bookButtonValues: [],
+    };
   }
 
   componentDidMount() {
@@ -50,6 +54,17 @@ class DeviceList extends React.Component {
     if (devices.length === 0) {
       setDevices(Devices);
     }
+    //Refresh button values every 10 s
+    this.interval = setInterval(this.getBookButtonValues, 10000);
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.interval);
+  }
+
+  static getDerivedStateFromProps(nextProps){
+    const { devices, user, reservations } = nextProps;
+    return { bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user, reservations) };
   }
 
   returnDevice(deviceId) {
@@ -64,6 +79,35 @@ class DeviceList extends React.Component {
       return device;
     });
     setDevices(newDevices);
+  }
+
+  static formBookButtonValuesArray(devices, user, reservations){
+    const bookButtonValues = [];
+    devices.forEach(device => {
+      if (device.available) {
+        const userReservationForThisDevice = reservations
+          .filter(res => res.device === device.id && user.id === res.user);
+        if (DeviceList.canCheckIn(userReservationForThisDevice)) {
+          bookButtonValues[device.id] = 'Check-in';
+        } else {
+          bookButtonValues[device.id] = 'Book device';
+        }
+      } else {
+        if (device.custody === user.id) {
+          bookButtonValues[device.id] = 'Return device';
+        } else {
+          bookButtonValues[device.id] = 'Device is booked';
+        }
+      }
+    });
+    return bookButtonValues;
+  }
+
+  getBookButtonValues(){
+    const { user, reservations, devices } = this.props;
+    this.setState({
+      bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user, reservations),
+    });
   }
 
   filterDevices() {
@@ -97,7 +141,7 @@ class DeviceList extends React.Component {
     return devicesToRender;
   }
 
-  canCheckIn(reservation){
+  static canCheckIn(reservation){
     if(reservation){
       const now = new Date();
       if(reservation.from - now < fifteenMinutes){
@@ -111,7 +155,7 @@ class DeviceList extends React.Component {
   handleBookClick(device, userReservationForThisDevice){
     return device.custody ?
       this.returnDevice(device.id) :
-      this.canCheckIn(userReservationForThisDevice) ?
+      DeviceList.canCheckIn(userReservationForThisDevice) ?
         this.props.checkInDevice(device.id) :
         this.openBookDialog(device.id);
   }
@@ -141,13 +185,7 @@ class DeviceList extends React.Component {
                 className={classes.button}
                 onClick={() => this.handleBookClick(device, userReservationForThisDevice)}>
                 <Plus className={classes.leftIcon} />
-                {device.available ?
-                  this.canCheckIn(userReservationForThisDevice) ? 
-                    'Check-in' : 
-                    'Book device' : 
-                  device.custody === user.id ?
-                    'Return device' :
-                    'Device is booked'}
+                {this.state.bookButtonValues[device.id]}
               </Button>
               <Button
                 variant="raised"
