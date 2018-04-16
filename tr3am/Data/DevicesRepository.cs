@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using tr3am.Data.Entities;
+using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Devices;
@@ -11,11 +12,13 @@ namespace tr3am.Data
     public class DevicesRepository : IDevicesRepository
     {
         private readonly List<Device> _items;
-        private IOfficesRepository _officesRepository;
+        private readonly IOfficesRepository _officesRepository;
+        private readonly IUsersRepository _usersRepository;
 
-        public DevicesRepository(IOfficesRepository officesRepository)
+        public DevicesRepository(IOfficesRepository officesRepository, IUsersRepository usersRepository)
         {
             _officesRepository = officesRepository;
+            _usersRepository = usersRepository;
             _items = new List<Device>
             {
                 new Device
@@ -82,7 +85,24 @@ namespace tr3am.Data
                 Brand = new BrandDTO { Id = 1 },
                 Model = new ModelDTO { Id = 1 },
                 OS = x.OS,
-                Custody = new UserDTO { Id = 1 },
+                Custody = new UserDTO
+                {
+                    Id = x.Custody.Id,
+                    Email = x.Custody.Email,
+                    FirstName = x.Custody.FirstName,
+                    LastName = x.Custody.LastName,
+                    Office = new OfficeDTO
+                    {
+                        Id = x.Custody.Office.Id,
+                        Address = x.Custody.Office.Address,
+                        City = x.Custody.Office.City,
+                        Country = x.Custody.Office.Country,
+                        Lat = x.Custody.Office.Lat,
+                        Lng = x.Custody.Office.Lng,
+                    },
+                    Role = x.Custody.Role,
+                    Slack = x.Custody.Slack,
+                },
                 IdentificationNum = x.IdentificationNum,
                 Location = _officesRepository.GetById(x.Location.Id),               
             }).ToList();
@@ -90,39 +110,58 @@ namespace tr3am.Data
 
         public FullDeviceDTO GetById(int id)
         {
-            return _items
-                .Where(x => x.Id == id)
-                .Select(x => new FullDeviceDTO
+            Device device = _items.FirstOrDefault(x => x.Id == id);
+            if(device == null)
+            {
+                throw new InvalidDeviceException();
+            }
+            return new FullDeviceDTO
                 {
-                    Id = id,
+                    Id = device.Id,
                     Brand = new BrandDTO { Id = 1 },
                     Model = new ModelDTO { Id = 1 },
-                    Available = x.Available,
-                    Active = x.Active,
-                    Image = x.Image,
-                    Name = x.Name,
-                    Custody = new UserDTO { Id = x.Custody.Id },
-                    IdentificationNum = x.IdentificationNum,
-                    SerialNum = x.SerialNum,
-                    OS = x.OS,
-                    Group = x.Group,
-                    Subgroup = x.Subgroup,
-                    Description = x.Description,
-                    Purchased = x.Purchased,
-                    Vendor = x.Vendor,
-                    TaxRate = x.TaxRate,
-                    Location = _officesRepository.GetById(x.Location.Id)
-                })
-                .FirstOrDefault();
+                    Available = device.Available,
+                    Active = device.Active,
+                    Image = device.Image,
+                    Name = device.Name,
+                    Custody = new UserDTO
+                    {
+                        Id = device.Custody.Id,
+                        Email = device.Custody.Email,
+                        FirstName = device.Custody.FirstName,
+                        LastName = device.Custody.LastName,
+                        Office = new OfficeDTO
+                        {
+                            Id = device.Custody.Office.Id,
+                            Address = device.Custody.Office.Address,
+                            City = device.Custody.Office.City,
+                            Country = device.Custody.Office.Country,
+                            Lat = device.Custody.Office.Lat,
+                            Lng = device.Custody.Office.Lng,
+                        },
+                        Role = device.Custody.Role,
+                        Slack = device.Custody.Slack,
+                    },
+                    IdentificationNum = device.IdentificationNum,
+                    SerialNum = device.SerialNum,
+                    OS = device.OS,
+                    Group = device.Group,
+                    Subgroup = device.Subgroup,
+                    Description = device.Description,
+                    Purchased = device.Purchased,
+                    Vendor = device.Vendor,
+                    TaxRate = device.TaxRate,
+                    Location = _officesRepository.GetById(device.Location.Id)
+                };
         }
 
-        public int? Create(CreateDeviceItemRequest request)
+        public int Create(CreateDeviceRequest request)
         {
             var id = _items.Count() != 0 ? _items.Max(x => x.Id) + 1 : 1;
             var office = _officesRepository.GetById(request.Location);
             if(office == null)
             {
-                return null;
+                throw new InvalidOfficeException();
             }
             var item = new Device
             {
@@ -159,21 +198,39 @@ namespace tr3am.Data
             return id;
         }
 
-        public string Update(int id, UpdateDeviceItemRequest request)
+        public void Update(int id, UpdateDeviceRequest request)
         {
             var item = _items.First(x => x.Id == id);
             var office = _officesRepository.GetById(request.Location);
             if (office == null)
             {
-                return "This office doesn't exist";
+                throw new InvalidOfficeException();
             }
+            UserDTO user = _usersRepository.GetById(request.Custody);           
             item.Brand = new Brand { Id = request.Brand };
             item.Model = new Model { Id = request.Model };
             item.Available = request.Available;
             item.Active = request.Active;
             item.Image = request.Image;
             item.Name = request.Name;
-            item.Custody = new User { Id = request.Custody };
+            item.Custody = new User
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Role = user.Role,
+                Slack = user.Slack,
+                Office = new Office
+                {
+                    Id = user.Office.Id,
+                    Address = user.Office.Address,
+                    City = user.Office.City,
+                    Country = user.Office.Country,
+                    Lat = user.Office.Lat,
+                    Lng = user.Office.Lng,
+                }
+            };
             item.IdentificationNum = request.IdentificationNum;
             item.SerialNum = request.SerialNum;
             item.OS = request.OS;
@@ -192,7 +249,6 @@ namespace tr3am.Data
                 Lat = office.Lat,
                 Lng = office.Lng
             };
-            return null;
         }
 
         public void Delete(int id)
