@@ -13,12 +13,6 @@ import EventItem from './EventItem';
 
 class BookingEvents extends React.Component {
 
-  constructor() {
-    super();
-
-    this.renderListHeader = this.renderListHeader.bind(this);
-  }
-
   renderListHeader() {
     const { classes } = this.props;
     return (

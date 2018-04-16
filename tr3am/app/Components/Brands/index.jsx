@@ -14,12 +14,6 @@ import AllBrands from '../../Constants/BrandsList';
 
 class BrandList extends React.Component {
 
-  constructor() {
-    super();
-
-    this.renderListHeader = this.renderListHeader.bind(this);
-  }
-
   renderListHeader() {
     const { classes } = this.props;
     return (

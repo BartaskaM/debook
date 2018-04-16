@@ -16,10 +16,10 @@ import * as officesActions from 'ActionCreators/officesActions';
 import { connect } from 'react-redux';
 
 class Offices extends React.Component {
+  
   constructor(props) {
     super(props);
     this.handleAddNewClick = this.handleAddNewClick.bind(this);
-    this.renderListHeader = this.renderListHeader.bind(this);
   }
 
   componentDidMount() {

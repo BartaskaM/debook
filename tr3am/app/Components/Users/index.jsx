@@ -14,12 +14,7 @@ import UsersList from 'Constants/User';
 import UserItem from './UserItem';
 
 class Users extends React.Component {
-  constructor() {
-    super();
-
-    this.renderListHeader = this.renderListHeader.bind(this);
-  }
-
+  
   componentDidMount() {
     //TODO: Fetch users
     this.props.setUsers(UsersList);
