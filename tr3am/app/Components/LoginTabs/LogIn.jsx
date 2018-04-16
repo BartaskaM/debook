@@ -13,7 +13,6 @@ import {
 import { withStyles } from 'material-ui/styles';
 
 import Styles from './Styles';
-import UserLoginData from 'Constants/User';
 import * as auth from 'ActionCreators/authActions';
 
 class Login extends React.Component {
@@ -22,41 +21,26 @@ class Login extends React.Component {
     this.state = {
       email: '',
       password: '',
-      errorMessage: '',
     };
     this.submitLogInForm = this.submitLogInForm.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
-    this.validateLoginData = this.validateLoginData.bind(this);
   }
 
-  componentDidMount() {
-    if (this.props.user) {
-      this.props.history.push('/devices');
+  static getDerivedStateFromProps(nextProps, previousState){
+    if (nextProps.user) {
+      nextProps.history.push('/devices');
     }
+    return previousState;
   }
+
   submitLogInForm(e) {
     e.preventDefault();
-    this.validateLoginData();
+    const { email, password } = this.state;
+    this.props.logIn({ email, password });
   }
 
   inputHandler(e) {
     this.setState({ [e.target.name]: e.target.value });
-  }
-
-  validateLoginData() {
-    const userLoginData = (UserLoginData.find(x => x.email === this.state.email));
-    if (userLoginData != null) {
-      if (userLoginData.password === this.state.password) {
-        this.props.setUserInfo(userLoginData);
-        this.props.history.push('/devices');
-      }
-      else {
-        this.setState({ errorMessage: 'Check your credentials!' });
-      }
-    }
-    else {
-      this.setState({ errorMessage: 'Check your credentials!' });
-    }
   }
 
   render() {
@@ -96,7 +80,7 @@ class Login extends React.Component {
                 onChange={this.inputHandler} />
             </FormControl>
             <Typography variant='headline' className={classes.errorMessage}>
-              {this.state.errorMessage}
+              {this.props.showError ? 'Incorrect credentials' : ' '}
             </Typography>
             <FormControl className={classes.signUpFormField}>
               <Button
@@ -113,14 +97,17 @@ class Login extends React.Component {
     );
   }
 }
+
 Login.propTypes = {
   classes: PropTypes.object.isRequired,
-  setUserInfo: PropTypes.func.isRequired,
+  logIn: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   user: PropTypes.object,
+  showError: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
+  showError: state.auth.showError,
 });
 export default withRouter(connect(mapStateToProps, auth)(withStyles(Styles)(Login)));

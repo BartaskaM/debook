@@ -1,5 +1,7 @@
 export const auth = {
-  SET_USER_INFO: 'SET_USER_INFO',
+  LOG_IN: 'LOG_IN',
+  LOG_IN_ERROR: 'LOG_IN_ERROR',
+  LOG_IN_START: 'LOG_IN_START',
   LOG_OUT_USER: 'LOG_OUT_USER',
 };
 
