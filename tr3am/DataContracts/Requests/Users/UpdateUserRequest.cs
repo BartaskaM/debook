@@ -20,7 +20,7 @@ namespace tr3am.DataContracts.Requests.Users
         public string Email { get; set; }
         public string Password { get; set; }
         [Required]
-        public int? Office { get; set; }
+        public int Office { get; set; }
         [MaxLength(64)]
         public string Slack { get; set; }
         [Required]
