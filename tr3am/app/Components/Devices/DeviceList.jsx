@@ -31,7 +31,6 @@ class DeviceList extends React.Component {
     this.openBookDialog = this.openBookDialog.bind(this);
     this.openReserveDialog = this.openReserveDialog.bind(this);
     this.openReservationDetails = this.openReservationDetails.bind(this);
-    this.showReturnModal = this.showReturnModal.bind(this);
   }
 
   componentDidMount() {
@@ -57,10 +56,6 @@ class DeviceList extends React.Component {
     if (offices.length === 0) {
       setOffices(Offices);
     }
-  }
-
-  showReturnModal(deviceId) {
-    this.props.showReturnModal(deviceId);
   }
 
   filterDevices() {
@@ -95,7 +90,7 @@ class DeviceList extends React.Component {
   }
 
   renderDevices() {
-    const { reservations, user, classes, history } = this.props;
+    const { reservations, user, classes, history, showReturnModal } = this.props;
     const userReservations = reservations
       .filter(res => res.user === user.id);
     const userReservedDevices = userReservations.map(res => res.device);
@@ -117,7 +112,7 @@ class DeviceList extends React.Component {
               className={classes.buttonLeft}
               onClick={device.custody === null ?
                 () => this.openBookDialog(device.id) :
-                () => this.showReturnModal(device.id)}>
+                () => showReturnModal(device.id)}>
               <Plus className={classes.leftIcon} />
               {device.available ?
                 'Book device' :
