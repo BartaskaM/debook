@@ -153,6 +153,17 @@ export default (state = defaultState, action) => {
     case devices.HIDE_RESERVATION_DETAILS: {
       return { ...state, showReserveModal: false, showReservationDetails: false };
     }
+    case devices.CHECK_IN_DEVICE: {
+      const { deviceId, userId } = action.payload;
+      const updatedDevices = [...devices];
+      updatedDevices.map(device => {
+        if (device.id === deviceId) {
+          device.custody = userId;
+          device.available = false;
+        }
+      });
+      return{ ...state, devices: updatedDevices };
+    }
     default: return state;
   }
 };

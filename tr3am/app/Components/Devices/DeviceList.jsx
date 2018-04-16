@@ -29,6 +29,7 @@ class DeviceList extends React.Component {
     this.openReserveDialog = this.openReserveDialog.bind(this);
     this.openReservationDetails = this.openReservationDetails.bind(this);
     this.returnDevice = this.returnDevice.bind(this);
+    this.handleBookClick = this.handleBookClick.bind(this);
   }
 
   componentDidMount() {
@@ -107,23 +108,12 @@ class DeviceList extends React.Component {
     }
   }
 
-  checkIn(deviceId){
-    const {
-      devices,
-      user,
-      setDevices,
-    } = this.props;
-    //Update device
-    const updatedDevices = [...devices];
-    updatedDevices.map(device => {
-      if (device.id == deviceId) {
-        device.custody = user.id;
-        device.available = false;
-      }
-    });
-    setDevices(updatedDevices);
-    //Post booking info
-    //Change reservation status
+  handleBookClick(device, userReservationForThisDevice){
+    return device.custody ?
+      this.returnDevice(device.id) :
+      this.canCheckIn(userReservationForThisDevice) ?
+        this.props.checkInDevice(device.id) :
+        this.openBookDialog(device.id);
   }
 
   renderDevices() {
@@ -149,12 +139,7 @@ class DeviceList extends React.Component {
                 }
                 color={device.available ? 'primary' : 'secondary'}
                 className={classes.button}
-                onClick={device.custody ?
-                  () => this.returnDevice(device.id) :
-                  this.canCheckIn(userReservationForThisDevice) ?
-                    () => this.checkIn(device.id) :
-                    () => this.openBookDialog(device.id) 
-                }>
+                onClick={() => this.handleBookClick(device, userReservationForThisDevice)}>
                 <Plus className={classes.leftIcon} />
                 {device.available ?
                   this.canCheckIn(userReservationForThisDevice) ? 
@@ -249,6 +234,7 @@ DeviceList.propTypes = {
   setUsers: PropTypes.func.isRequired,
   showReservationDetails: PropTypes.func.isRequired,
   setDevices: PropTypes.func.isRequired,
+  checkInDevice: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {
