@@ -111,6 +111,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         showReserveModal: true,
+        showReservationDetails: false,
         selectedDevice,
         currentDate,
         returnDate,
@@ -138,7 +139,7 @@ export default (state = defaultState, action) => {
       };
     }
     case devices.HIDE_RESERVATION_DETAILS: {
-      return { ...state, showReserveModal: false, showReservationDetails: false };
+      return { ...state, showReserveModal: false };
     }
     default: return state;
   }
