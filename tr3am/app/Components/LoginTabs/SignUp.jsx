@@ -19,12 +19,12 @@ import validator from 'email-validator';
 import { CircularProgress, LinearProgress } from 'material-ui/Progress';
 
 import Styles from './Styles';
-import Offices from 'Constants/Offices';
 import * as authActions from 'ActionCreators/authActions';
+import * as officesActions from 'ActionCreators/officesActions';
 
 class SignUp extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       email: '',
@@ -32,7 +32,7 @@ class SignUp extends React.Component {
       repeatPassword: '',
       passwordErrorMessage: '',
       emailErrorMessage: '',
-      office: 1,
+      office: props.offices[0] ? props.offices[0].id : null,
       firstName: '',
       lastName: '',
       slackName: '',
@@ -42,6 +42,10 @@ class SignUp extends React.Component {
     this.handleFormChange = this.handleFormChange.bind(this);
     this.validateEmail = this.validateEmail.bind(this);
     this.validatePassword = this.validatePassword.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.fetchOffices();
   }
 
   static getDerivedStateFromProps(nextProps, previousState){
@@ -120,7 +124,14 @@ class SignUp extends React.Component {
   }
 
   render() {
-    const { classes, signUpError, fetchingSignUp } = this.props;
+    const { 
+      classes, 
+      signUpError, 
+      fetchingSignUp,
+      fetchOfficesError,
+      fetchingOffices,
+      offices, 
+    } = this.props;
     const { 
       email,
       password,
@@ -230,13 +241,13 @@ class SignUp extends React.Component {
                   value={office}
                   autoWidth={true}
                   onChange={this.handleFormChange}
-                  disabled={true}
+                  disabled={fetchingOffices}
                   className={classes.select}
                   inputProps={{
                     name: 'office',
                   }}
                 >
-                  {Offices.map((office, i) => (
+                  {offices.map((office, i) => (
                     <MenuItem
                       key={i}
                       value={office.id}
@@ -246,7 +257,14 @@ class SignUp extends React.Component {
                     </MenuItem>
                   ))}
                 </Select>
-                <CircularProgress size={24} className={classes.buttonProgress}/>
+                {
+                  fetchOfficesError.length > 0 && 
+                <FormHelperText>{fetchOfficesError}</FormHelperText>
+                }
+                {
+                  fetchingOffices && 
+                  <CircularProgress size={24} className={classes.buttonProgress}/>
+                }
               </div>
             </FormControl>
             <FormControl className={classes.signUpFormField}>
@@ -289,12 +307,29 @@ SignUp.propTypes = {
   signUpError: PropTypes.string.isRequired,
   currentTab: PropTypes.number.isRequired,
   fetchingSignUp: PropTypes.bool.isRequired,
+  offices: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
+  })).isRequired,
+  fetchingOffices: PropTypes.bool.isRequired,
+  fetchOfficesError: PropTypes.string.isRequired,
+  fetchOffices: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
   signUpError: store.auth.signUpError,
   currentTab: store.auth.currentTab,
   fetchingSignUp: store.auth.fetchingSignUp,
+  offices: store.offices.offices,
+  fetchingOffices: store.offices.fetchingOffices,
+  fetchOfficesError: store.offices.fetchOfficesError,
 });
 
-export default connect(mapStateToProps, authActions)(withStyles(Styles)(SignUp));
+export default connect(mapStateToProps, {
+  ...authActions, 
+  ...officesActions,
+})(withStyles(Styles)(SignUp));
