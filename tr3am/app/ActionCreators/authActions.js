@@ -1,4 +1,5 @@
 import { auth } from 'Constants/ActionTypes';
+import history from 'history';
 import axios from 'axios';
 
 export const logIn = (logInInfo) => async dispatch => {
@@ -9,10 +10,12 @@ export const logIn = (logInInfo) => async dispatch => {
       type: auth.LOG_IN,
       payload: response.data,
     });
-  } catch { 
+    history.push('/devices');
+  } catch(e) { 
     dispatch({
       type: auth.LOG_IN_ERROR,
-    });}
+    });
+  }
 };
 
 export const logOutUser = () => {

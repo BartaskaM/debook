@@ -6,6 +6,7 @@ import Input from 'material-ui/Input';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import { InputLabel } from 'material-ui/Input';
+import { LinearProgress } from 'material-ui/Progress';
 import {
   FormControl,
   FormGroup,
@@ -44,7 +45,7 @@ class Login extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, logInError, fetchingLogIn } = this.props;
     return (
       <div>
         <Typography variant='display3'>
@@ -80,9 +81,10 @@ class Login extends React.Component {
                 onChange={this.inputHandler} />
             </FormControl>
             <Typography variant='headline' className={classes.errorMessage}>
-              {this.props.showError ? 'Incorrect credentials' : ' '}
+              {logInError ? 'Incorrect credentials' : ' '}
             </Typography>
             <FormControl className={classes.signUpFormField}>
+              {fetchingLogIn && <LinearProgress className={classes.progressBar}/>}
               <Button
                 type='submit'
                 variant='raised'
@@ -103,11 +105,13 @@ Login.propTypes = {
   logIn: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   user: PropTypes.object,
-  showError: PropTypes.bool.isRequired,
+  logInError: PropTypes.bool.isRequired,
+  fetchingLogIn: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  showError: state.auth.showError,
+  logInError: state.auth.logInError,
+  fetchingLogIn: state.auth.fetchingLogIn,
 });
 export default withRouter(connect(mapStateToProps, auth)(withStyles(Styles)(Login)));
