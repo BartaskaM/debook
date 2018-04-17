@@ -6,7 +6,7 @@ const buildDir = path.resolve(__dirname, 'wwwroot/dist/');
 
 module.exports = {
   entry: {
-    main: ['babel-polyfill', path.resolve(appDir, 'index.jsx')],
+    main: path.resolve(appDir, 'index.jsx'),
   },
   output: {
     filename: 'index_bundle.js',
@@ -49,6 +49,7 @@ module.exports = {
             'react-hot-loader/babel',
             'babel-plugin-transform-class-properties',
             'babel-plugin-transform-object-rest-spread',
+            'babel-plugin-transform-runtime',
           ],
         },
       },
