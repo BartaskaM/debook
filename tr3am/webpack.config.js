@@ -6,7 +6,7 @@ const buildDir = path.resolve(__dirname, 'wwwroot/dist/');
 
 module.exports = {
   entry: {
-    main: path.resolve(appDir, 'index.jsx'),
+    main: ['babel-polyfill', path.resolve(appDir, 'index.jsx')],
   },
   output: {
     filename: 'index_bundle.js',

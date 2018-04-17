@@ -25,7 +25,7 @@ class OfficeDetails extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getOfficeWithId(this.props.match.params.id);
+    this.props.getOfficeWithId(parseInt(this.props.match.params.id));
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
