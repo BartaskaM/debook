@@ -19,3 +19,25 @@ export const logIn = (logInInfo) => {
 export const logOutUser = () => {
   return { type: auth.LOG_OUT_USER };
 };
+
+export const setCurrentTab = (tabNumber) => {
+  return { type: auth.SET_CURRENT_TAB, payload: tabNumber };
+};
+
+export const signUp = (signUpData) => async(dispatch) => {
+  dispatch({
+    type: auth.SIGN_UP_START,
+  });
+  try{
+    await axios.post('api/users', signUpData);
+    dispatch({
+      type: auth.SIGN_UP_SUCCESS,
+    });
+  }
+  catch(e){
+    dispatch({
+      type: auth.SIGN_UP_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};

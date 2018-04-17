@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import {
   Input,
   Typography,
@@ -11,11 +12,14 @@ import { InputLabel } from 'material-ui/Input';
 import {
   FormControl,
   FormGroup,
+  FormHelperText,
 } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
+import validator from 'email-validator';
 
 import Styles from './Styles';
 import Offices from 'Constants/Offices';
+import * as authActions from 'ActionCreators/authActions';
 
 class SignUp extends React.Component {
   constructor() {
@@ -23,13 +27,14 @@ class SignUp extends React.Component {
 
     this.state = {
       email: '',
-      emailErrorMessage: '',
       password: '',
       repeatPassword: '',
       passwordErrorMessage: '',
-      office: '',
-      validEmail: true,
-      validPassword: true,
+      emailErrorMessage: '',
+      office: 1,
+      firstName: '',
+      lastName: '',
+      slackName: '',
     };
 
     this.submitSignUpForm = this.submitSignUpForm.bind(this);
@@ -38,23 +43,43 @@ class SignUp extends React.Component {
     this.validatePassword = this.validatePassword.bind(this);
   }
 
-  submitSignUpForm(event) {
-    event.preventDefault();
+  static getDerivedStateFromProps(nextProps, previousState){
+    if(nextProps.currentTab === 0){
+      return {
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        repeatPassword: '',
+        slackName: '',
+        office: 1,
+        passwordErrorMessage: '',
+        emailErrorMessage: '',
+      };
+    }
+    return previousState;
+  }
 
+  submitSignUpForm(e) {
+    e.preventDefault();
+    const { 
+      email,
+      password,
+      firstName,
+      lastName,
+      slackName,
+      office,
+    } = this.state;
     if (this.validateEmail() && this.validatePassword()) {
       const result = {
-        firstName: event.target.firstName.value,
-        lastName: event.target.lastName.value,
-        email: event.target.email.value,
-        office: event.target.office.value,
-        slackName: event.target.slackName.value,
-        password: event.target.password.value,
-        repeatPassword: event.target.repeatPassword.value,
+        firstName,
+        lastName,
+        email,
+        office,
+        slack: slackName,
+        password,
       };
-
-      console.log(result);
-
-      this.props.changeTab(null, 0);
+      this.props.signUp(result);
     }
   }
 
@@ -63,32 +88,29 @@ class SignUp extends React.Component {
   }
 
   validateEmail() {
-    if (this.state.email !== 'email@email.com') {
+    if (validator.validate(this.state.email)) {
       this.setState({
-        validEmail: true,
         emailErrorMessage: '',
       });
       return true;
     }
-
     this.setState({
-      validEmail: false,
-      emailErrorMessage: 'Email is already in use.',
+      emailErrorMessage: 'This e-mail is not valid',
     });
     return false;
   }
 
   validatePassword() {
-    if (this.state.password === this.state.repeatPassword) {
+    //call api to check if email is used
+    const { password, repeatPassword } = this.state;
+    if (password === repeatPassword) {
       this.setState({
-        validPassword: true,
         passwordErrorMessage: '',
       });
       return true;
     }
-    else if (this.state.repeatPassword != '') {
+    else if (repeatPassword != '') {
       this.setState({
-        validPassword: false,
         passwordErrorMessage: 'Passwords do not match.',
       });
       return false;
@@ -97,7 +119,18 @@ class SignUp extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, signUpError } = this.props;
+    const { 
+      email,
+      password,
+      repeatPassword,
+      firstName,
+      lastName,
+      slackName,
+      office,
+      emailErrorMessage,
+      passwordErrorMessage,
+    } = this.state;
     return (
       <div>
         <Typography variant='display3'>
@@ -111,8 +144,9 @@ class SignUp extends React.Component {
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>Email</InputLabel>
               <Input
+                value={email}
                 className={classes.fontSize}
-                error={!this.state.validEmail}
+                error={emailErrorMessage.length > 0}
                 onChange={this.handleFormChange}
                 onBlur={this.validateEmail}
                 inputProps={{
@@ -122,15 +156,14 @@ class SignUp extends React.Component {
                   required: 'required',
                 }}
               />
-              <Typography variant='headline' className={classes.errorMessage}>
-                {this.state.emailErrorMessage}
-              </Typography>
+              {emailErrorMessage.length > 0 && <FormHelperText>{emailErrorMessage}</FormHelperText>}
             </FormControl>
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>Password</InputLabel>
               <Input
                 className={classes.fontSize}
-                error={!this.state.validPassword}
+                value={password}
+                error={passwordErrorMessage.length > 0}
                 onChange={this.handleFormChange}
                 onBlur={this.validatePassword}
                 inputProps={{
@@ -144,7 +177,8 @@ class SignUp extends React.Component {
               <InputLabel className={classes.fontSize}>Repeat Password</InputLabel>
               <Input
                 className={classes.fontSize}
-                error={!this.state.validPassword}
+                value={repeatPassword}
+                error={passwordErrorMessage.length > 0}
                 onChange={this.handleFormChange}
                 onBlur={this.validatePassword}
                 inputProps={{
@@ -153,14 +187,19 @@ class SignUp extends React.Component {
                   required: 'required',
                 }}
               />
-              <Typography variant='headline' className={classes.errorMessage}>
-                {this.state.passwordErrorMessage}
-              </Typography>
+              {
+                passwordErrorMessage.length > 0 && 
+              <FormHelperText>
+                {passwordErrorMessage}
+              </FormHelperText>
+              }
             </FormControl>
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>First name</InputLabel>
               <Input
                 className={classes.fontSize}
+                value={firstName}
+                onChange={this.handleFormChange}
                 inputProps={{
                   type: 'text',
                   name: 'firstName',
@@ -172,6 +211,8 @@ class SignUp extends React.Component {
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>Last name</InputLabel>
               <Input
+                value={lastName}
+                onChange={this.handleFormChange}
                 className={classes.fontSize}
                 inputProps={{
                   type: 'text',
@@ -184,7 +225,7 @@ class SignUp extends React.Component {
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>Office</InputLabel>
               <Select
-                value={this.state.office}
+                value={office}
                 autoWidth={true}
                 onChange={this.handleFormChange}
                 className={classes.fontSize}
@@ -192,10 +233,10 @@ class SignUp extends React.Component {
                   name: 'office',
                 }}
               >
-                {Offices.map(office => (
+                {Offices.map((office, i) => (
                   <MenuItem
-                    key={office.id}
-                    value={office.city}
+                    key={i}
+                    value={office.id}
                     className={classes.menuItemWidth}
                   >
                     {office.city}
@@ -206,6 +247,8 @@ class SignUp extends React.Component {
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>Slack name</InputLabel>
               <Input
+                value={slackName}
+                onChange={this.handleFormChange}
                 className={classes.fontSize}
                 inputProps={{
                   type: 'text',
@@ -214,6 +257,9 @@ class SignUp extends React.Component {
                 }}
               />
             </FormControl>
+            <Typography variant="display1">
+              {signUpError}
+            </Typography>
             <FormControl className={classes.signUpFormField}>
               <Button
                 type='submit'
@@ -233,7 +279,14 @@ class SignUp extends React.Component {
 
 SignUp.propTypes = {
   classes: PropTypes.object.isRequired,
-  changeTab: PropTypes.func.isRequired,
+  signUp: PropTypes.func.isRequired,
+  signUpError: PropTypes.string.isRequired,
+  currentTab: PropTypes.number.isRequired,
 };
 
-export default withStyles(Styles)(SignUp);
+const mapStateToProps = store => ({
+  signUpError: store.auth.signUpError,
+  currentTab: store.auth.currentTab,
+});
+
+export default connect(mapStateToProps, authActions)(withStyles(Styles)(SignUp));
