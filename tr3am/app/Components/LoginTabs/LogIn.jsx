@@ -37,7 +37,8 @@ class Login extends React.Component {
   submitLogInForm(e) {
     e.preventDefault();
     const { email, password } = this.state;
-    this.props.logIn({ email, password });
+    const { logIn, history } = this.props;
+    logIn({ email, password }, history);
   }
 
   inputHandler(e) {

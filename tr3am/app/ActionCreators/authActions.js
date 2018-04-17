@@ -1,8 +1,7 @@
 import { auth } from 'Constants/ActionTypes';
-import history from 'history';
 import axios from 'axios';
 
-export const logIn = (logInInfo) => async dispatch => {
+export const logIn = (logInInfo, history) => async dispatch => {
   dispatch({type: auth.LOG_IN_START});
   try{
     const response = await axios.post('api/login', logInInfo);
