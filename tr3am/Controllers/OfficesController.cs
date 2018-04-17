@@ -17,7 +17,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<OfficeItem> GetAll()
+        public IEnumerable<Office> GetAll()
         {
             return _officesRepository.GetAll();
         }
