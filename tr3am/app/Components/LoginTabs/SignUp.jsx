@@ -16,6 +16,7 @@ import {
 } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
 import validator from 'email-validator';
+import { CircularProgress, LinearProgress } from 'material-ui/Progress';
 
 import Styles from './Styles';
 import Offices from 'Constants/Offices';
@@ -119,7 +120,7 @@ class SignUp extends React.Component {
   }
 
   render() {
-    const { classes, signUpError } = this.props;
+    const { classes, signUpError, fetchingSignUp } = this.props;
     const { 
       email,
       password,
@@ -224,25 +225,29 @@ class SignUp extends React.Component {
             </FormControl>
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>Office</InputLabel>
-              <Select
-                value={office}
-                autoWidth={true}
-                onChange={this.handleFormChange}
-                className={classes.fontSize}
-                inputProps={{
-                  name: 'office',
-                }}
-              >
-                {Offices.map((office, i) => (
-                  <MenuItem
-                    key={i}
-                    value={office.id}
-                    className={classes.menuItemWidth}
-                  >
-                    {office.city}
-                  </MenuItem>
-                ))}
-              </Select>
+              <div className={classes.wrapper}>
+                <Select
+                  value={office}
+                  autoWidth={true}
+                  onChange={this.handleFormChange}
+                  disabled={true}
+                  className={classes.select}
+                  inputProps={{
+                    name: 'office',
+                  }}
+                >
+                  {Offices.map((office, i) => (
+                    <MenuItem
+                      key={i}
+                      value={office.id}
+                      className={classes.menuItemWidth}
+                    >
+                      {office.city}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <CircularProgress size={24} className={classes.buttonProgress}/>
+              </div>
             </FormControl>
             <FormControl className={classes.signUpFormField}>
               <InputLabel className={classes.fontSize}>Slack name</InputLabel>
@@ -261,6 +266,7 @@ class SignUp extends React.Component {
               {signUpError}
             </Typography>
             <FormControl className={classes.signUpFormField}>
+              {fetchingSignUp && <LinearProgress className={classes.progressBar}/>}
               <Button
                 type='submit'
                 variant="raised"
@@ -282,11 +288,13 @@ SignUp.propTypes = {
   signUp: PropTypes.func.isRequired,
   signUpError: PropTypes.string.isRequired,
   currentTab: PropTypes.number.isRequired,
+  fetchingSignUp: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = store => ({
   signUpError: store.auth.signUpError,
   currentTab: store.auth.currentTab,
+  fetchingSignUp: store.auth.fetchingSignUp,
 });
 
 export default connect(mapStateToProps, authActions)(withStyles(Styles)(SignUp));
