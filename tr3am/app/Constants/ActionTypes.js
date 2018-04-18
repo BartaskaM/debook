@@ -1,5 +1,5 @@
 export const auth = {
-  LOG_IN: 'LOG_IN',
+  LOG_IN_SUCCESS: 'LOG_IN_SUCCESS',
   LOG_IN_ERROR: 'LOG_IN_ERROR',
   LOG_IN_START: 'LOG_IN_START',
   LOG_OUT_USER: 'LOG_OUT_USER',

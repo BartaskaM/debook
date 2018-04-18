@@ -11,7 +11,7 @@ const defaultState = {
 
 export default (state = defaultState, action) => {
   switch (action.type){
-    case auth.LOG_IN: {
+    case auth.LOG_IN_SUCCESS: {
       return { ...state, fetchingLogIn: false, user: action.payload };
     }
     case auth.LOG_IN_START: {
