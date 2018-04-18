@@ -5,7 +5,6 @@ export const fetchUser = (userId) => async dispatch => {
   dispatch({ type: userDetails.FETCH_USER_START });
   try{
     const response = await api.get(`users/${userId}`);
-    console.log(response);
     dispatch({
       type: userDetails.FETCH_USER_SUCCESS,
       payload: response.data,

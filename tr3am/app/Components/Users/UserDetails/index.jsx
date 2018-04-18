@@ -19,11 +19,11 @@ import {
 import validator from 'email-validator';
 
 import { styles } from './Styles';
-import Offices from 'Constants/Offices';
 import users from 'Constants/User';
 import * as userDetailsActions from 'ActionCreators/userDetailsActions';
 import * as usersActions from 'ActionCreators/usersActions';
-import { LinearProgress } from 'material-ui';
+import * as officesActions from 'ActionCreators/officesActions';
+import { LinearProgress, CircularProgress } from 'material-ui';
 
 class UserDetails extends React.Component {
   constructor(props) {
@@ -55,10 +55,18 @@ class UserDetails extends React.Component {
     this.validateAll = this.validateAll.bind(this);
   }
 
+  static getDerivedStateFromProps(nextProps, previousState){
+
+    if(nextProps.user != previousState.user){
+      console.log({ user: {...nextProps.user, office: nextProps.user.office.id }});
+      return { user: {...nextProps.user, office: nextProps.user.office.id }};
+    }
+    return null;
+  }
+
   componentDidMount() {
     const { setUserDetails, match, fetchUser, currentUser } = this.props;
     const id = match.params.id;
-    console.log(id);
     if (id) {
       // Is in /user/:id
       fetchUser(id);
@@ -208,10 +216,11 @@ class UserDetails extends React.Component {
   }
 
   handleEditClick() {
+    const {setUsers, users, fetchOffices } = this.props;
     if(this.state.edit){
       if(this.validateAll()){
         const { user, newPassword } = this.state;
-        this.props.setUsers([...this.props.users].map( usr => {
+        setUsers([...users].map( usr => {
           if(usr.id == user.id){
             if(this.shouldChangePassword()){
               return {...user, password: newPassword};
@@ -226,6 +235,7 @@ class UserDetails extends React.Component {
         this.setState({ edit: false });
       }
     } else {
+      fetchOffices();
       this.setState({ edit: true });
     }   
   }
@@ -292,7 +302,7 @@ class UserDetails extends React.Component {
   }
 
   renderProfileEdit(){
-    const { classes, currentUser } = this.props;
+    const { classes, currentUser, offices, fetchingOffices } = this.props;
     const { 
       validFirstName, 
       validLastName, 
@@ -390,25 +400,31 @@ class UserDetails extends React.Component {
             <Grid item xs={2} className={classes.label}>Office</Grid>
             <Grid item xs={10}>
               <FormControl className={classes.signUpFormField}>
-                <Select
-                  value={office}
-                  autoWidth={true}
-                  onChange={this.handleFormChange}
-                  className={classes.fontSize}
-                  inputProps={{
-                    name: 'office',
-                  }}
-                >
-                  {Offices.map(office => (
-                    <MenuItem
-                      key={office.id}
-                      value={office.city}
-                      className={classes.menuItemWidth}
-                    >
-                      {office.city}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <span className={classes.wrapper}>
+                  <Select
+                    value={office}
+                    autoWidth={true}
+                    onChange={this.handleFormChange}
+                    className={classes.fontSize}
+                    inputProps={{
+                      name: 'office',
+                    }}
+                  >
+                    {offices.map((office, i) => (
+                      <MenuItem
+                        key={i}
+                        value={office.id}
+                        className={classes.menuItemWidth}
+                      >
+                        {office.city}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {
+                    fetchingOffices && 
+                  <CircularProgress size={18} className={classes.buttonProgress}/>
+                  }
+                </span>
                 <FormHelperText/>
               </FormControl>
             </Grid>
@@ -558,6 +574,16 @@ UserDetails.propTypes = {
   users: PropTypes.array.isRequired,
   setUsers: PropTypes.func.isRequired,
   fetchingUser: PropTypes.bool.isRequired,
+  offices: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
+  })).isRequired,
+  fetchOffices: PropTypes.func.isRequired,
+  fetchingOffices: PropTypes.bool,
 };
 
 const mapStateToProps = store => ({
@@ -565,9 +591,12 @@ const mapStateToProps = store => ({
   user: store.userDetails.userDetails,
   users: store.users.users,
   fetchingUser: store.userDetails.fetchingUser,
+  offices: store.offices.offices,
+  fetchingOffices: store.offices.fetchingOffices,
 });
 
 export default withRouter(connect(mapStateToProps, {
   ...userDetailsActions,
   ...usersActions,
+  ...officesActions,
 })(withStyles(styles)(UserDetails)));
