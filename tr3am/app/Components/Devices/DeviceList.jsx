@@ -18,6 +18,7 @@ import Reservations from 'Constants/Reservations';
 import Users from 'Constants/User';
 import Devices from 'Constants/Devices';
 import Device from './Device';
+import ReturnModal from 'Components/ReturnModal';
 import { fifteenMinutes } from 'Constants/Values';
 
 class DeviceList extends React.Component {
@@ -62,23 +63,9 @@ class DeviceList extends React.Component {
     clearInterval(this.interval);
   }
 
-  static getDerivedStateFromProps(nextProps){
+  static getDerivedStateFromProps(nextProps){console.log('new props');
     const { devices, user, reservations } = nextProps;
     return { bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user, reservations) };
-  }
-
-  returnDevice(deviceId) {
-    const { devices, setDevices, user } = this.props;
-    const newDevices = devices.map(device => {
-      if (device.id === deviceId) {
-        //Handle device return
-        device.available = true;
-        device.custody = null;
-        device.location = user.office.city;
-      }
-      return device;
-    });
-    setDevices(newDevices);
   }
 
   static formBookButtonValuesArray(devices, user, reservations){
@@ -154,7 +141,7 @@ class DeviceList extends React.Component {
 
   handleBookClick(device, userReservationForThisDevice){
     return device.custody ?
-      this.returnDevice(device.id) :
+      this.props.showReturnModal(device.id) :
       DeviceList.canCheckIn(userReservationForThisDevice) ?
         this.props.checkInDevice(device.id) :
         this.openBookDialog(device.id);
@@ -224,6 +211,7 @@ class DeviceList extends React.Component {
         {this.renderDevices()}
         <BookModal />
         <ReserveModal />
+        <ReturnModal />
       </Grid>
     );
   }
@@ -280,6 +268,7 @@ DeviceList.propTypes = {
   showReservationDetails: PropTypes.func.isRequired,
   setDevices: PropTypes.func.isRequired,
   checkInDevice: PropTypes.func.isRequired,
+  showReturnModal: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {
