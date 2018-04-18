@@ -74,7 +74,7 @@ class DeviceList extends React.Component {
         //Handle device return
         device.available = true;
         device.custody = null;
-        device.location = user.office;
+        device.location = user.office.city;
       }
       return device;
     });
@@ -246,7 +246,14 @@ DeviceList.propTypes = {
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    office: PropTypes.string.isRequired,
+    office: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      country: PropTypes.string.isRequired,
+      city: PropTypes.string.isRequired,
+      lat: PropTypes.number.isRequired,
+      lng: PropTypes.number.isRequired,
+      address: PropTypes.string.isRequired,
+    }).isRequired,
     slack: PropTypes.string.isRequired,
   }),
   modelFilter: PropTypes.string.isRequired,
