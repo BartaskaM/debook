@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
@@ -77,35 +78,7 @@ namespace tr3am.Data
 
         public List<ShortDeviceDTO> GetAll()
         {
-            return _items.Where(x => x.Active).Select(x => new ShortDeviceDTO
-            {
-                Id = x.Id,
-                Image = x.Image,
-                Available = x.Available,
-                Brand = new BrandDTO { Id = 1 },
-                Model = new ModelDTO { Id = 1 },
-                OS = x.OS,
-                Custody = new UserDTO
-                {
-                    Id = x.Custody.Id,
-                    Email = x.Custody.Email,
-                    FirstName = x.Custody.FirstName,
-                    LastName = x.Custody.LastName,
-                    Office = new OfficeDTO
-                    {
-                        Id = x.Custody.Office.Id,
-                        Address = x.Custody.Office.Address,
-                        City = x.Custody.Office.City,
-                        Country = x.Custody.Office.Country,
-                        Lat = x.Custody.Office.Lat,
-                        Lng = x.Custody.Office.Lng,
-                    },
-                    Role = x.Custody.Role,
-                    Slack = x.Custody.Slack,
-                },
-                IdentificationNum = x.IdentificationNum,
-                Location = _officesRepository.GetById(x.Location.Id),               
-            }).ToList();
+            return _items.Where(x => x.Active).Select(Mapper.Map<Device,ShortDeviceDTO>).ToList();
         }
 
         public FullDeviceDTO GetById(int id)
@@ -115,47 +88,11 @@ namespace tr3am.Data
             {
                 throw new InvalidDeviceException();
             }
-            return new FullDeviceDTO
-                {
-                    Id = device.Id,
-                    Brand = new BrandDTO { Id = 1 },
-                    Model = new ModelDTO { Id = 1 },
-                    Available = device.Available,
-                    Active = device.Active,
-                    Image = device.Image,
-                    Name = device.Name,
-                    Custody = new UserDTO
-                    {
-                        Id = device.Custody.Id,
-                        Email = device.Custody.Email,
-                        FirstName = device.Custody.FirstName,
-                        LastName = device.Custody.LastName,
-                        Office = new OfficeDTO
-                        {
-                            Id = device.Custody.Office.Id,
-                            Address = device.Custody.Office.Address,
-                            City = device.Custody.Office.City,
-                            Country = device.Custody.Office.Country,
-                            Lat = device.Custody.Office.Lat,
-                            Lng = device.Custody.Office.Lng,
-                        },
-                        Role = device.Custody.Role,
-                        Slack = device.Custody.Slack,
-                    },
-                    IdentificationNum = device.IdentificationNum,
-                    SerialNum = device.SerialNum,
-                    OS = device.OS,
-                    Group = device.Group,
-                    Subgroup = device.Subgroup,
-                    Description = device.Description,
-                    Purchased = device.Purchased,
-                    Vendor = device.Vendor,
-                    TaxRate = device.TaxRate,
-                    Location = _officesRepository.GetById(device.Location.Id)
-                };
+
+            return Mapper.Map<Device, FullDeviceDTO>(device);
         }
 
-        public int Create(CreateDeviceRequest request)
+        public void Create(CreateDeviceRequest request)
         {
             var id = _items.Count() != 0 ? _items.Max(x => x.Id) + 1 : 1;
             var office = _officesRepository.GetById(request.Location);
@@ -182,20 +119,10 @@ namespace tr3am.Data
                 Purchased = request.Purchased,
                 Vendor = request.Vendor,
                 TaxRate = request.TaxRate,
-                Location = new Office
-                {
-                    Id = office.Id,
-                    City = office.City,
-                    Country = office.Country,
-                    Address = office.Address,
-                    Lat = office.Lat,
-                    Lng = office.Lng
-                },
+                Location = Mapper.Map<OfficeDTO,Office>(office),
             };
 
             _items.Add(item);
-
-            return id;
         }
 
         public void Update(int id, UpdateDeviceRequest request)
@@ -213,24 +140,7 @@ namespace tr3am.Data
             item.Active = request.Active;
             item.Image = request.Image;
             item.Name = request.Name;
-            item.Custody = new User
-            {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Role = user.Role,
-                Slack = user.Slack,
-                Office = new Office
-                {
-                    Id = user.Office.Id,
-                    Address = user.Office.Address,
-                    City = user.Office.City,
-                    Country = user.Office.Country,
-                    Lat = user.Office.Lat,
-                    Lng = user.Office.Lng,
-                }
-            };
+            item.Custody = Mapper.Map<UserDTO,User>(user);
             item.IdentificationNum = request.IdentificationNum;
             item.SerialNum = request.SerialNum;
             item.OS = request.OS;
@@ -240,15 +150,7 @@ namespace tr3am.Data
             item.Purchased = request.Purchased;
             item.Vendor = request.Vendor;
             item.TaxRate = request.TaxRate;
-            item.Location = new Office
-            {
-                Id = office.Id,
-                City = office.City,
-                Country = office.Country,
-                Address = office.Address,
-                Lat = office.Lat,
-                Lng = office.Lng
-            };
+            item.Location = Mapper.Map<OfficeDTO,Office>(office);
         }
 
         public void Delete(int id)

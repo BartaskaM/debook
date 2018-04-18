@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using tr3am.Data.Entities;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
@@ -63,28 +64,20 @@ namespace tr3am.Data
             };
         }
 
-        public List<Office> GetAll()
+        public List<OfficeDTO> GetAll()
         {
-            return _items.ToList();
+            return _items.Select(Mapper.Map<Office,OfficeDTO>).ToList();
         }
 
         public OfficeDTO GetById(int id)
         {
             return _items
                 .Where(x => x.Id == id)
-                .Select(x => new OfficeDTO
-                {
-                    Id = x.Id,
-                    City = x.City,
-                    Country = x.Country,
-                    Address = x.Address,
-                    Lat = x.Lat,
-                    Lng = x.Lng
-                })
+                .Select(Mapper.Map<Office,OfficeDTO>)
                 .FirstOrDefault();
         }
 
-        public Office Create(OfficeItemRequest request)
+        public void Create(OfficeItemRequest request)
         {
             var id = _items.DefaultIfEmpty().Max(x => x.Id) + 1;
 
@@ -99,8 +92,6 @@ namespace tr3am.Data
             };
 
             _items.Add(item);
-
-            return item;
         }
 
         public void Update(int id, OfficeItemRequest request)

@@ -20,7 +20,7 @@ namespace tr3am.Data.Entities
         Pending,
         CheckedIn,
         Expired,
-        Done,
+        Completed,
         OverDue
     }
 }
