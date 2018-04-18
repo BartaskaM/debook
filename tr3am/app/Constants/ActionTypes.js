@@ -15,6 +15,9 @@ export const users = {
 
 export const userDetails = {
   SET_USER_DETAILS: 'SET_USER_DETAILS',
+  FETCH_USER_START: 'FETCH_USER_START',
+  FETCH_USER_SUCCESS: 'FETCH_USER_SUCCESS',
+  FETCH_USER_ERROR: 'FETCH_USER_ERROR',
 };
 
 export const devices = {

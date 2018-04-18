@@ -1,5 +1,5 @@
 import { offices } from 'Constants/ActionTypes';
-import axios from 'axios';
+import api from 'api';
 
 export const showAddOfficeModal = (bool) => {
   return { type: offices.SHOW_ADD_OFFICE_MODAL, payload: bool };
@@ -19,7 +19,7 @@ export const fetchOffices = () => async dispatch => {
     dispatch({
       type: offices.FETCH_OFFICES_START,
     });
-    const response = await axios.get('api/offices');
+    const response = await api.get('offices');
     dispatch({
       type: offices.FETCH_OFFICES_SUCCESS,
       payload: response.data,

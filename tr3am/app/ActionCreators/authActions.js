@@ -1,10 +1,10 @@
 import { auth } from 'Constants/ActionTypes';
-import axios from 'axios';
+import api from 'api';
 
 export const logIn = (logInInfo, history) => async dispatch => {
   dispatch({type: auth.LOG_IN_START});
   try{
-    const response = await axios.post('api/login', logInInfo);
+    const response = await api.post('login', logInInfo);
     dispatch({
       type: auth.LOG_IN_SUCCESS,
       payload: response.data,
@@ -30,7 +30,7 @@ export const signUp = (signUpData) => async(dispatch) => {
     type: auth.SIGN_UP_START,
   });
   try{
-    await axios.post('api/users', signUpData);
+    await api.post('users', signUpData);
     dispatch({
       type: auth.SIGN_UP_SUCCESS,
     });
