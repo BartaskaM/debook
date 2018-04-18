@@ -111,31 +111,31 @@ class ReserveModal extends React.Component {
   checkForErrors(returnDate, currentDate) {
     let err = false;
     const { 
-      setReturnDateError, 
-      showReturnDateError, 
+      setReturnDateError,  
       reservations, 
       selectedDevice, 
       setCurrentDateError,
-      showCurrentDateError,
+      returnDateError,
+      currentDateError,
     } = this.props;
     if (returnDate - currentDate < fifteenMinutes) {
       err = true;
-      setReturnDateError(true, 'Reserve for minimum 15 minutes!');
+      setReturnDateError('Reserve for minimum 15 minutes!');
     } else if (checkForReservation(currentDate, returnDate, reservations, selectedDevice)) {
       err = true;
-      setReturnDateError(true, 'This time is reserved!');
-    } else if (showReturnDateError) {
-      setReturnDateError(false);
+      setReturnDateError('This time is reserved!');
+    } else if (returnDateError.length > 1) {
+      setReturnDateError(' ');
     }
 
     if(checkIfLate(currentDate)){
       err = true;
-      setCurrentDateError(true, 'It\'s too late!');
+      setCurrentDateError('It\'s too late!');
     } else if (!this.checkIfFuture(currentDate)) {
       err = true;
-      setCurrentDateError(true, 'Reserve for future dates!');
-    } else if (showCurrentDateError) {
-      setCurrentDateError(false);
+      setCurrentDateError('Reserve for future dates!');
+    } else if (currentDateError.length > 1) {
+      setCurrentDateError(' ');
     }
     return err;
   }
@@ -204,11 +204,9 @@ class ReserveModal extends React.Component {
       returnDate,
       showReserveDialog,
       hideReserveModal,
-      showReturnDateError,
       returnDateError,
       hideReservationDetails,
       showDetails,
-      showCurrentDateError,
       currentDateError,
     } = this.props;
     return (
@@ -248,7 +246,7 @@ class ReserveModal extends React.Component {
               autoFocus
               label="Pick up time"
               type="time"
-              error={showCurrentDateError}
+              error={currentDateError.length > 1}
               helperText={currentDateError}
               value={dateToHours(currentDate)}
               onChange={this.handleStartChange}
@@ -264,7 +262,7 @@ class ReserveModal extends React.Component {
               disabled={showDetails}
               label="Drop off time"
               type="time"
-              error={showReturnDateError}
+              error={returnDateError.length > 1}
               helperText={returnDateError}
               value={dateToHours(returnDate)}
               onChange={this.handleReturnChange}
@@ -308,7 +306,6 @@ ReserveModal.propTypes = {
   returnDate: PropTypes.object.isRequired,
   currentDate: PropTypes.object.isRequired,
   returnDateError: PropTypes.string.isRequired,
-  showReturnDateError: PropTypes.bool.isRequired,
   setReturnDateError: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   selectedDevice: PropTypes.number,
@@ -327,7 +324,14 @@ ReserveModal.propTypes = {
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    office: PropTypes.string.isRequired,
+    office: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      country: PropTypes.string.isRequired,
+      city: PropTypes.string.isRequired,
+      lat: PropTypes.number.isRequired,
+      lng: PropTypes.number.isRequired,
+      address: PropTypes.string.isRequired,
+    }).isRequired,
     slack: PropTypes.string.isRequired,
   }),
   setDevices: PropTypes.func.isRequired,
@@ -345,7 +349,6 @@ ReserveModal.propTypes = {
   setReservations: PropTypes.func.isRequired,
   showDetails: PropTypes.bool.isRequired,
   hideReservationDetails: PropTypes.func.isRequired,
-  showCurrentDateError: PropTypes.bool.isRequired,
   setCurrentDateError: PropTypes.func.isRequired,
   currentDateError: PropTypes.string.isRequired,
 };
@@ -355,14 +358,12 @@ const mapStateToProps = (state) => ({
   returnDate: state.devices.returnDate,
   currentDate: state.devices.currentDate,
   returnDateError: state.devices.returnDateError,
-  showReturnDateError: state.devices.showReturnDateError,
   selectedDevice: state.devices.selectedDevice,
   devices: state.devices.devices,
   user: state.auth.user,
   reservations: state.devices.reservations,
   showDetails: state.devices.showReservationDetails,
   currentDateError: state.devices.currentDateError,
-  showCurrentDateError: state.devices.showCurrentDateError,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(ReserveModal));

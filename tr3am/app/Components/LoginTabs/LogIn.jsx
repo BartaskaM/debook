@@ -6,6 +6,7 @@ import Input from 'material-ui/Input';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import { InputLabel } from 'material-ui/Input';
+import { LinearProgress } from 'material-ui/Progress';
 import {
   FormControl,
   FormGroup,
@@ -13,7 +14,6 @@ import {
 import { withStyles } from 'material-ui/styles';
 
 import Styles from './Styles';
-import UserLoginData from 'Constants/User';
 import * as auth from 'ActionCreators/authActions';
 
 class Login extends React.Component {
@@ -22,45 +22,31 @@ class Login extends React.Component {
     this.state = {
       email: '',
       password: '',
-      errorMessage: '',
     };
     this.submitLogInForm = this.submitLogInForm.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
-    this.validateLoginData = this.validateLoginData.bind(this);
   }
 
-  componentDidMount() {
-    if (this.props.user) {
-      this.props.history.push('/devices');
+  static getDerivedStateFromProps(nextProps, previousState){
+    if (nextProps.user) {
+      nextProps.history.push('/devices');
     }
+    return previousState;
   }
+
   submitLogInForm(e) {
     e.preventDefault();
-    this.validateLoginData();
+    const { email, password } = this.state;
+    const { logIn, history } = this.props;
+    logIn({ email, password }, history);
   }
 
   inputHandler(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  validateLoginData() {
-    const userLoginData = (UserLoginData.find(x => x.email === this.state.email));
-    if (userLoginData != null) {
-      if (userLoginData.password === this.state.password) {
-        this.props.setUserInfo(userLoginData);
-        this.props.history.push('/devices');
-      }
-      else {
-        this.setState({ errorMessage: 'Check your credentials!' });
-      }
-    }
-    else {
-      this.setState({ errorMessage: 'Check your credentials!' });
-    }
-  }
-
   render() {
-    const { classes } = this.props;
+    const { classes, logInError, fetchingLogIn } = this.props;
     return (
       <div>
         <Typography variant='display3'>
@@ -96,9 +82,10 @@ class Login extends React.Component {
                 onChange={this.inputHandler} />
             </FormControl>
             <Typography variant='headline' className={classes.errorMessage}>
-              {this.state.errorMessage}
+              {logInError ? 'Incorrect credentials' : ' '}
             </Typography>
             <FormControl className={classes.signUpFormField}>
+              {fetchingLogIn && <LinearProgress className={classes.progressBar}/>}
               <Button
                 type='submit'
                 variant='raised'
@@ -113,14 +100,19 @@ class Login extends React.Component {
     );
   }
 }
+
 Login.propTypes = {
   classes: PropTypes.object.isRequired,
-  setUserInfo: PropTypes.func.isRequired,
+  logIn: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   user: PropTypes.object,
+  logInError: PropTypes.bool.isRequired,
+  fetchingLogIn: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
+  logInError: state.auth.logInError,
+  fetchingLogIn: state.auth.fetchingLogIn,
 });
 export default withRouter(connect(mapStateToProps, auth)(withStyles(Styles)(Login)));

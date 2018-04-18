@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace tr3am.DataContracts.Requests.Devices
 {
-    public class CreateDeviceItemRequest
+    public class UpdateDeviceRequest
     {
         [Required]
         public int Brand { get; set; }
@@ -15,7 +15,6 @@ namespace tr3am.DataContracts.Requests.Devices
         public string Image { get; set; }
         [MaxLength(255)]
         public string Name { get; set; }
-        [Required]
         public int IdentificationNum { get; set; }
         [Required]
         [MaxLength(255)]
@@ -29,12 +28,17 @@ namespace tr3am.DataContracts.Requests.Devices
         public string Subgroup { get; set; }
         [MaxLength(2000)]
         public string Description { get; set; }
-        [Required]
         public DateTime Purchased { get; set; }
         [MaxLength(255)]
         public string Vendor { get; set; }
         public float TaxRate { get; set; }
         [Required]
         public int Location { get; set; }
+        [Required]
+        public bool Available { get; set; }
+        [Required]
+        public bool Active { get; set; }
+        [Required]
+        public int Custody { get; set; }
     }
 }

@@ -19,8 +19,8 @@ const OfficeItem = ({ classes, office, history }) => {
               <Grid item xs>{office.country}</Grid>
               <Grid item xs={2}>{office.city}</Grid>
               <Grid item xs={3}>{office.address}</Grid>
-              <Grid item xs={2}>LAT: {office.lat}</Grid>
-              <Grid item xs={2}>LNG: {office.lng}</Grid>
+              <Grid item xs={2}>{office.lat}</Grid>
+              <Grid item xs={2}>{office.lng}</Grid>
             </Grid>
           </Typography>
         </Paper>

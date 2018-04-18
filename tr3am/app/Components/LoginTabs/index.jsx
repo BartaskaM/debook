@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import SwipeableViews from 'react-swipeable-views';
 import {
   AppBar,
@@ -14,26 +15,20 @@ import Styles from './Styles';
 import TabContainer from './TabContainer';
 import SignUp from './SignUp';
 import Login from './Login';
+import * as authActions from 'ActionCreators/authActions';
 
 class LoginTabs extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      tabIndex: 0,
-    };
-
     this.handleTabChange = this.handleTabChange.bind(this);
   }
 
   handleTabChange(event, value) {
-    this.setState({
-      tabIndex: value,
-    });
+    this.props.setCurrentTab(value);
   }
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes, theme, currentTab } = this.props;
 
     return (
       <div className={classes.root}>
@@ -42,7 +37,7 @@ class LoginTabs extends React.Component {
           <Grid item xs={6}>
             <AppBar position="static" color="inherit">
               <Tabs
-                value={this.state.tabIndex}
+                value={currentTab}
                 onChange={this.handleTabChange}
                 indicatorColor='primary'
                 textColor='primary'
@@ -59,7 +54,7 @@ class LoginTabs extends React.Component {
             <Paper>
               <SwipeableViews
                 axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                index={this.state.tabIndex}
+                index={currentTab}
                 onChangeIndex={this.handleTabChange}
               >
                 <TabContainer dir={theme.direction}>
@@ -80,7 +75,15 @@ class LoginTabs extends React.Component {
 LoginTabs.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  tabIndex: PropTypes.number,
+  setCurrentTab: PropTypes.func.isRequired,
+  currentTab: PropTypes.number.isRequired,
 };
 
-export default withStyles(Styles, { withTheme: true })(LoginTabs);
+const mapStateToProps = store => ({
+  currentTab: store.auth.currentTab,
+});
+
+export default connect(mapStateToProps, authActions)(withStyles(
+  Styles, 
+  { withTheme: true }
+)(LoginTabs));

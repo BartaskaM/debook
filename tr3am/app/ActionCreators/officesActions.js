@@ -1,4 +1,5 @@
 import { offices } from 'Constants/ActionTypes';
+import axios from 'axios';
 
 export const showAddOfficeModal = (bool) => {
   return { type: offices.SHOW_ADD_OFFICE_MODAL, payload: bool };
@@ -12,4 +13,21 @@ export const addOffice = (office) => {
   office['id'] = newOfficeID;
   //---------------------------
   return { type: offices.ADD_OFFICE, payload: office, newOfficeID};
+};
+export const fetchOffices = () => async dispatch => {
+  try{
+    dispatch({
+      type: offices.FETCH_OFFICES_START,
+    });
+    const response = await axios.get('api/offices');
+    dispatch({
+      type: offices.FETCH_OFFICES_SUCCESS,
+      payload: response.data,
+    });
+  } catch (e) {
+    dispatch({
+      type: offices.FETCH_OFFICES_ERROR,
+      payload: e.toString(),
+    });
+  }
 };

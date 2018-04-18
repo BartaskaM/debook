@@ -73,18 +73,18 @@ class BookModal extends React.Component {
     const {
       currentDate,
       setReturnDateError,
-      showReturnDateError,
+      returnDateError,
       reservations,
       selectedDevice,
     } = this.props;
     if (nextDate - currentDate < fifteenMinutes) {
       err = true;
-      setReturnDateError(true, 'Book for minimum 15 minutes!');
+      setReturnDateError('Book for minimum 15 minutes!');
     } else if (checkForReservation(currentDate, nextDate, reservations, selectedDevice)) {
       err = true;
-      setReturnDateError(true, 'This time is reserved!');
-    } else if (showReturnDateError) {
-      setReturnDateError(false);
+      setReturnDateError('This time is reserved!');
+    } else if (returnDateError.length > 1) {
+      setReturnDateError(' ');
     }
     return err;
   }
@@ -138,7 +138,6 @@ class BookModal extends React.Component {
       returnDate,
       showBookDialog,
       hideBookModal,
-      showReturnDateError,
       returnDateError,
     } = this.props;
     return (
@@ -170,7 +169,7 @@ class BookModal extends React.Component {
               autoFocus
               label="Drop off time"
               type="time"
-              error={showReturnDateError}
+              error={returnDateError.length > 1}
               helperText={returnDateError}
               value={dateToHours(returnDate)}
               onChange={this.handleDateChange}
@@ -204,7 +203,6 @@ BookModal.propTypes = {
   returnDate: PropTypes.object.isRequired,
   currentDate: PropTypes.object.isRequired,
   returnDateError: PropTypes.string.isRequired,
-  showReturnDateError: PropTypes.bool.isRequired,
   setReturnDateError: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   selectedDevice: PropTypes.number,
@@ -223,7 +221,14 @@ BookModal.propTypes = {
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    office: PropTypes.string.isRequired,
+    office: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      country: PropTypes.string.isRequired,
+      city: PropTypes.string.isRequired,
+      lat: PropTypes.number.isRequired,
+      lng: PropTypes.number.isRequired,
+      address: PropTypes.string.isRequired,
+    }).isRequired,
     slack: PropTypes.string.isRequired,
   }),
   setDevices: PropTypes.func.isRequired,
@@ -243,7 +248,6 @@ const mapStateToProps = (state) => ({
   returnDate: state.devices.returnDate,
   currentDate: state.devices.currentDate,
   returnDateError: state.devices.returnDateError,
-  showReturnDateError: state.devices.showReturnDateError,
   selectedDevice: state.devices.selectedDevice,
   devices: state.devices.devices,
   user: state.auth.user,
