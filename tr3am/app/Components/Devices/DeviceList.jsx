@@ -72,7 +72,7 @@ class DeviceList extends React.Component {
     devices.forEach(device => {
       if (device.available) {
         const userReservationForThisDevice = reservations
-          .filter(res => res.device === device.id && user.id === res.user);
+          .find(res => res.device === device.id && user.id === res.user);
         if (DeviceList.canCheckIn(userReservationForThisDevice)) {
           bookButtonValues[device.id] = 'Check-in';
         } else {
@@ -139,10 +139,11 @@ class DeviceList extends React.Component {
   }
 
   handleBookClick(device, userReservationForThisDevice){
+    const { showReturnModal, checkInDevice, user } = this.props;
     return device.custody ?
-      this.props.showReturnModal(device.id) :
+      showReturnModal(device.id) :
       DeviceList.canCheckIn(userReservationForThisDevice) ?
-        this.props.checkInDevice(device.id) :
+        checkInDevice(device.id, user.id) :
         this.openBookDialog(device.id);
   }
 

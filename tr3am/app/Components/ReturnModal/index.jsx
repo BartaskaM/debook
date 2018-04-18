@@ -21,7 +21,6 @@ class ReturnModal extends React.Component {
     this.state = {
       selectedOffice: props.user.office.city,
     };
-    console.log(props.user.office.city);
     this.handleChange = this.handleChange.bind(this);
     this.returnDevice = this.returnDevice.bind(this);
     this.close = this.close.bind(this);
