@@ -104,10 +104,7 @@ class BookModal extends React.Component {
       //Update device
       const updatedDevices = devices.map(device => {
         if (device.id === selectedDevice) {
-          const newDevice = {...device};
-          newDevice.custody = user.id;
-          newDevice.available = false;
-          return newDevice;
+          return { ...device, custody: user.id, available: false };
         }
         return device;
       });

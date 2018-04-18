@@ -27,11 +27,11 @@ class Login extends React.Component {
     this.inputHandler = this.inputHandler.bind(this);
   }
 
-  static getDerivedStateFromProps(nextProps, previousState){
-    if (nextProps.user) {
-      nextProps.history.push('/devices');
+  componentDidMount(){
+    const { user, history } = this.props;
+    if (user) {
+      history.push('/devices');
     }
-    return previousState;
   }
 
   submitLogInForm(e) {

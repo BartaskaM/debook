@@ -11,18 +11,24 @@ import Select from 'material-ui/Select';
 import Button from 'material-ui/Button';
 import { MenuItem } from 'material-ui/Menu';
 import  { withStyles } from 'material-ui/styles';
+import { CircularProgress } from 'material-ui/Progress';
 import * as devicesActions from 'ActionCreators/devicesActions';
+import * as officesActions from 'ActionCreators/officesActions';
 import Styles from './Styles';
 
 class ReturnModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      selectedOffice: props.user.office,
+      selectedOffice: props.user.office.city,
     };
     this.handleChange = this.handleChange.bind(this);
     this.returnDevice = this.returnDevice.bind(this);
     this.close = this.close.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.fetchOffices();
   }
 
   returnDevice(){
@@ -50,11 +56,16 @@ class ReturnModal extends React.Component {
   close(){
     const { user, hideReturnModal } = this.props;
     hideReturnModal();
-    this.setState({selectedOffice: user.office});
+    this.setState({selectedOffice: user.office.city});
   }
 
   render(){
-    const { classes, showReturnDialog, offices } = this.props;
+    const { 
+      classes, 
+      showReturnDialog, 
+      offices, 
+      fetchingOffices,
+    } = this.props;
     return(
       <Dialog
         open={showReturnDialog}
@@ -66,10 +77,18 @@ class ReturnModal extends React.Component {
           <DialogContentText className={classes.description}>
               Select office in which you return device.
           </DialogContentText>
-          <Select value={this.state.selectedOffice} onChange={this.handleChange}>
-            {offices
-              .map( (office, i) => <MenuItem key={i} value={office.city}>{office.city}</MenuItem>)}
-          </Select>
+          <span className={classes.wrapper}>
+            <Select value={this.state.selectedOffice} onChange={this.handleChange}>
+              {offices
+                .map( (office, i) =>
+                  <MenuItem key={i} value={office.city}>
+                    {office.city}
+                  </MenuItem>
+                )}
+            </Select>
+            {fetchingOffices &&
+            <CircularProgress size={18} className={classes.buttonProgress}/>}
+          </span>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.close} color="primary">
@@ -93,7 +112,14 @@ ReturnModal.propTypes = {
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    office: PropTypes.string.isRequired,
+    office: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      country: PropTypes.string.isRequired,
+      city: PropTypes.string.isRequired,
+      lat: PropTypes.number.isRequired,
+      lng: PropTypes.number.isRequired,
+      address: PropTypes.string.isRequired,
+    }).isRequired,
     slack: PropTypes.string.isRequired,
   }),
   devices: PropTypes.arrayOf(PropTypes.shape({
@@ -115,6 +141,8 @@ ReturnModal.propTypes = {
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired,
   })).isRequired,
+  fetchOffices: PropTypes.func.isRequired,
+  fetchingOffices: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -123,6 +151,10 @@ const mapStateToProps = state => ({
   devices: state.devices.devices,
   user: state.auth.user,
   offices: state.offices.offices,
+  fetchingOffices: state.offices.fetchingOffices,
 });
 
-export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(ReturnModal));
+export default connect(mapStateToProps, { 
+  ...devicesActions, 
+  ...officesActions, 
+})(withStyles(Styles)(ReturnModal));
