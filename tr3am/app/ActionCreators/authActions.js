@@ -6,7 +6,7 @@ export const logIn = (logInInfo, history) => async dispatch => {
   try{
     const response = await axios.post('api/login', logInInfo);
     dispatch({
-      type: auth.LOG_IN,
+      type: auth.LOG_IN_SUCCESS,
       payload: response.data,
     });
     history.push('/devices');
