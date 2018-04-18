@@ -17,6 +17,15 @@ const Styles = theme=>({
   helperText: {
     fontSize: 10,
   },
+  wrapper: {
+    margin: theme.spacing.unit,
+    position: 'relative',
+  },
+  buttonProgress: {
+    position: 'absolute',
+    top: '25%',
+    right: -20,
+  },
 });
   
 export default Styles;

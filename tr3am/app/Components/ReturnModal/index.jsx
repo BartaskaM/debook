@@ -11,6 +11,7 @@ import Select from 'material-ui/Select';
 import Button from 'material-ui/Button';
 import { MenuItem } from 'material-ui/Menu';
 import  { withStyles } from 'material-ui/styles';
+import { CircularProgress } from 'material-ui/Progress';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as officesActions from 'ActionCreators/officesActions';
 import Styles from './Styles';
@@ -59,7 +60,12 @@ class ReturnModal extends React.Component {
   }
 
   render(){
-    const { classes, showReturnDialog, offices } = this.props;
+    const { 
+      classes, 
+      showReturnDialog, 
+      offices, 
+      fetchingOffices,
+    } = this.props;
     return(
       <Dialog
         open={showReturnDialog}
@@ -71,10 +77,18 @@ class ReturnModal extends React.Component {
           <DialogContentText className={classes.description}>
               Select office in which you return device.
           </DialogContentText>
-          <Select value={this.state.selectedOffice} onChange={this.handleChange}>
-            {offices
-              .map( (office, i) => <MenuItem key={i} value={office.city}>{office.city}</MenuItem>)}
-          </Select>
+          <span className={classes.wrapper}>
+            <Select value={this.state.selectedOffice} onChange={this.handleChange}>
+              {offices
+                .map( (office, i) => 
+                  <MenuItem key={i} value={office.city}>
+                    {office.city}
+                  </MenuItem>
+                )}
+            </Select>
+            {fetchingOffices &&
+            <CircularProgress size={18} className={classes.buttonProgress}/>}
+          </span>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.close} color="primary">
@@ -128,6 +142,7 @@ ReturnModal.propTypes = {
     lng: PropTypes.number.isRequired,
   })).isRequired,
   fetchOffices: PropTypes.func.isRequired,
+  fetchingOffices: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -136,6 +151,7 @@ const mapStateToProps = state => ({
   devices: state.devices.devices,
   user: state.auth.user,
   offices: state.offices.offices,
+  fetchingOffices: state.offices.fetchingOffices,
 });
 
 export default connect(mapStateToProps, { 
