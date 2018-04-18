@@ -11,7 +11,7 @@ namespace tr3am.DataContracts
     public interface IReservationsRepository
     {
         List<ReservationDTO> GetAll(bool showAll);
-        ReservationDTO GetByDeviceId(int id);
+        List<ReservationDTO> GetByDeviceId(int id);
         void Create(ReservationRequest request);
         void Update(int id, ReservationRequest request);
         void Delete(int id);

@@ -23,6 +23,7 @@ namespace tr3am.DataContracts
                 cfg.CreateMap<UserDTO, User>();
                 cfg.CreateMap<Device, FullDeviceDTO>();
                 cfg.CreateMap<Device, ShortDeviceDTO>();
+                cfg.CreateMap<FullDeviceDTO, Device>();
                 cfg.CreateMap<Reservation, ReservationDTO>();
             });
         }
