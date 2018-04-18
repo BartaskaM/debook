@@ -19,7 +19,6 @@ import {
 import validator from 'email-validator';
 
 import { styles } from './Styles';
-import users from 'Constants/User';
 import * as userDetailsActions from 'ActionCreators/userDetailsActions';
 import * as usersActions from 'ActionCreators/usersActions';
 import * as officesActions from 'ActionCreators/officesActions';
@@ -53,12 +52,11 @@ class UserDetails extends React.Component {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.validateAllPasswords = this.validateAllPasswords.bind(this);
     this.validateAll = this.validateAll.bind(this);
+    this.goBackToInfo = this.goBackToInfo.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, previousState){
-
     if(nextProps.user != previousState.user){
-      console.log({ user: {...nextProps.user, office: nextProps.user.office.id }});
       return { user: {...nextProps.user, office: nextProps.user.office.id }};
     }
     return null;
@@ -69,6 +67,10 @@ class UserDetails extends React.Component {
     const id = match.params.id;
     if (id) {
       // Is in /user/:id
+      if(parseInt(id) === currentUser.id)
+      {
+        setUserDetails(currentUser);
+      }
       fetchUser(id);
     }
     else {
@@ -109,12 +111,6 @@ class UserDetails extends React.Component {
       this.setState({
         validEmail: false,
         emailErrorMessage: 'Enter valid e-mail.',
-      });
-    } else if (email != this.props.user.email && 
-      users.map(user => user.email).includes(this.state.user.email)) {
-      this.setState({
-        validEmail: false,
-        emailErrorMessage: 'This email is in use.',
       });
     } else {
       this.setState({
@@ -216,24 +212,27 @@ class UserDetails extends React.Component {
   }
 
   handleEditClick() {
-    const {setUsers, users, fetchOffices } = this.props;
+    const { 
+      fetchOffices,
+      updateUser,
+      currentUser,
+      offices,
+    } = this.props;
     if(this.state.edit){
       if(this.validateAll()){
         const { user, newPassword } = this.state;
-        setUsers([...users].map( usr => {
-          if(usr.id == user.id){
-            if(this.shouldChangePassword()){
-              return {...user, password: newPassword};
-            }
-            else {
-              return {...user};
-            }           
+        const office = offices.find(x => x.id === user.office);
+        if(this.shouldChangePassword()){
+          updateUser({...user, office, password: newPassword}, this.goBackToInfo, true);
+        }
+        else {
+          if(user.id === currentUser.id){
+            updateUser({...user, office}, this.goBackToInfo, true);
           } else {
-            return usr;
+            updateUser({...user, office}, this.goBackToInfo);
           }
-        }));       
-        this.setState({ edit: false });
-      }
+        }     
+      }   
     } else {
       fetchOffices();
       this.setState({ edit: true });
@@ -241,7 +240,8 @@ class UserDetails extends React.Component {
   }
 
   handleCancelClick(){
-    this.setState({ edit: false, user: this.props.user });
+    const { user } = this.props;
+    this.setState({ edit: false, user: { ...user, office: user.office.id } });
   }
 
   renderProfileInfo(){
@@ -301,8 +301,30 @@ class UserDetails extends React.Component {
       </Grid>);
   }
 
+  goBackToInfo(){
+    this.setState({
+      edit: false,
+      validEmail: true,
+      validFirstName: true,
+      validLastName: true,
+      emailErrorMessage: '',
+      oldPassword: '',
+      newPassword: '',
+      repeatPassword: '',
+      validOldPassword: true,
+      validNewPassword: true,
+      newPasswordMatch: true,
+    });
+  }
+
   renderProfileEdit(){
-    const { classes, currentUser, offices, fetchingOffices } = this.props;
+    const { 
+      classes,
+      currentUser,
+      offices,
+      fetchingOffices,
+      updateUserError,
+    } = this.props;
     const { 
       validFirstName, 
       validLastName, 
@@ -380,7 +402,7 @@ class UserDetails extends React.Component {
                 <Input
                   value={email}
                   className={classes.fontSize}
-                  error={!this.state.validEmail}
+                  error={!this.state.validEmail || updateUserError.length > 0}
                   onChange={this.handleFormChange}
                   onBlur={this.validateEmail}
                   inputProps={{
@@ -391,7 +413,7 @@ class UserDetails extends React.Component {
                   }}
                 />
                 <FormHelperText>
-                  {!validEmail ? emailErrorMessage : ''}
+                  {!validEmail ? emailErrorMessage : updateUserError}
                 </FormHelperText>
               </FormControl>
             </Grid> 
@@ -518,7 +540,13 @@ class UserDetails extends React.Component {
   }
 
   render() {
-    const { classes, history, user, fetchingUser } = this.props;
+    const { 
+      classes,
+      history,
+      user,
+      fetchingUser,
+      updatingUser,
+    } = this.props;
     return (
       <div className={classes.root}>
         <Button variant="flat" onClick={history.goBack}>
@@ -526,9 +554,10 @@ class UserDetails extends React.Component {
           <span className={classes.bigFont} >Back</span>
         </Button>
         <Divider className={classes.divider} />
-        {
-          !user || fetchingUser ?
-            <LinearProgress/> :
+        {!user || fetchingUser ?
+          <LinearProgress/> :       
+          <div>
+            {updatingUser && <LinearProgress/>} 
             <Paper className={classes.paper}>
               <Divider className={classes.divider} />
               <span className={classes.header}>Profile</span>
@@ -538,6 +567,7 @@ class UserDetails extends React.Component {
                 {this.renderButtons()}
               </Grid>
             </Paper>
+          </div>
         }
       </div>
     );
@@ -584,6 +614,9 @@ UserDetails.propTypes = {
   })).isRequired,
   fetchOffices: PropTypes.func.isRequired,
   fetchingOffices: PropTypes.bool,
+  updateUser: PropTypes.func.isRequired,
+  updatingUser: PropTypes.bool.isRequired,
+  updateUserError: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -593,6 +626,8 @@ const mapStateToProps = store => ({
   fetchingUser: store.userDetails.fetchingUser,
   offices: store.offices.offices,
   fetchingOffices: store.offices.fetchingOffices,
+  updatingUser: store.userDetails.updatingUser,
+  updateUserError: store.userDetails.updateUserError,
 });
 
 export default withRouter(connect(mapStateToProps, {
