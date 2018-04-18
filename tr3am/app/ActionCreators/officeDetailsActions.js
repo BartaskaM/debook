@@ -20,13 +20,13 @@ export const getOfficeWithId = (officeId) => async (dispatch) => {
   }
 };
 
-export const updateOfficeWithId = (officeId, officeData) => async (dispatch) => {
+export const updateOfficeWithId = (officeData) => async (dispatch) => {
   dispatch({ type: officeDetails.UPDATE_OFFICE_BEGIN });
 
   try {
     dispatch({
       type: officeDetails.UPDATE_OFFICE_SUCCESS,
-      payload: { id: officeId, office: officeData },
+      payload: { id: officeData.id, office: officeData },
     });
   } catch (e) {
     dispatch({ type: officeDetails.UPDATE_OFFICE_ERROR });

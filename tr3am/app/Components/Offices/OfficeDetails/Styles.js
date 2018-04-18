@@ -23,6 +23,14 @@ const Styles = {
     width: 180,
     fontSize: 20,
   },
+  cancelButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: 200,
+    height: 60,
+    width: 180,
+    fontSize: 20,
+  },
   backButton: {
     position: 'absolute',
     bottom: 10,
