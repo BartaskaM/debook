@@ -80,7 +80,7 @@ class ReturnModal extends React.Component {
           <span className={classes.wrapper}>
             <Select value={this.state.selectedOffice} onChange={this.handleChange}>
               {offices
-                .map( (office, i) => 
+                .map( (office, i) =>
                   <MenuItem key={i} value={office.city}>
                     {office.city}
                   </MenuItem>
