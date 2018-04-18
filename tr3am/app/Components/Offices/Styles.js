@@ -15,6 +15,7 @@ const Styles = {
   officePaper: {
     padding: 30,
     width: '100%',
+    textAlign: 'center',
   },
 };
 

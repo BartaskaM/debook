@@ -15,6 +15,7 @@ const Styles = {
   brandPaper: {
     padding: 30,
     width: '100%',
+    textAlign: 'center',
   },
   brandLogo: {
     width: '50px',

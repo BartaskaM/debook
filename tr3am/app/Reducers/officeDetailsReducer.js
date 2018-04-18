@@ -12,21 +12,21 @@ const defaultState = {
 
 export default (state = defaultState, action) => {
   switch (action.type) {
-    case officeDetails.GET_OFFICE_BEGIN: {
+    case officeDetails.FETCH_OFFICE_START: {
       return {
         ...state,
         getOfficeLoading: true,
         getOfficeError: false,
       };
     }
-    case officeDetails.GET_OFFICE_SUCCESS: {
+    case officeDetails.FETCH_OFFICE_SUCCESS: {
       return {
         ...state,
         getOfficeLoading: false,
         office: action.payload,
       };
     }
-    case officeDetails.GET_OFFICE_ERROR: {
+    case officeDetails.FETCH_OFFICE_ERROR: {
       return {
         ...state,
         getOfficeLoading: false,
@@ -34,7 +34,7 @@ export default (state = defaultState, action) => {
       };
     }
 
-    case officeDetails.UPDATE_OFFICE_BEGIN: {
+    case officeDetails.UPDATE_OFFICE_START: {
       return {
         ...state,
         updateOfficeLoading: true,

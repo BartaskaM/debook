@@ -1,33 +1,45 @@
 import { offices } from 'Constants/ActionTypes';
-import OfficeList from 'Constants/Offices';
+import api from 'api';
 
-export const getOffices = () => async (dispatch) => {
-  dispatch({ type: offices.GET_OFFICES_BEGIN });
+export const fetchOffices = () => async dispatch => {
+  try{
+    dispatch({
+      type: offices.FETCH_OFFICES_START,
+    });
 
-  try {
-    const responseData = OfficeList;
+    const response = await api.get('offices');
 
     dispatch({
-      type: offices.GET_OFFICES_SUCCESS,
-      payload: responseData,
+      type: offices.FETCH_OFFICES_SUCCESS,
+      payload: response.data,
     });
   } catch (e) {
-    dispatch({ type: offices.GET_OFFICES_ERROR });
+    dispatch({
+      type: offices.FETCH_OFFICES_ERROR,
+      payload: e.toString(),
+    });
   }
 };
-export const addOffice = (office) => async (dispatch) => {
-  dispatch({ type: offices.ADD_OFFICE_BEGIN });
 
+export const addOffice = (office) => async (dispatch) => {
   try {
+    dispatch({ 
+      type: offices.ADD_OFFICE_START,
+    });
+
     //Temp solution for setting id
     office['id'] = Math.floor(Math.random() * 10000) + 1;
     //---------------------------
+    
     dispatch({
       type: offices.ADD_OFFICE_SUCCESS,
       payload: office,
     });
   } catch (e) {
-    dispatch({ type: offices.ADD_OFFICE_ERROR });
+    dispatch({ 
+      type: offices.ADD_OFFICE_ERROR, 
+      payload: e.toString(), 
+    });
   }
 };
 export const showAddOfficeModal = (bool) => {

@@ -3,40 +3,40 @@ import { offices } from 'Constants/ActionTypes';
 const defaultState = {
   offices: [],
 
-  getOfficesLoading: false,
-  getOfficesError: false,
+  fetchOfficesLoading: false,
+  fetchOfficesError: '',
 
   addOfficeLoading: false,
-  addOfficeError: false,
+  addOfficeError: '',
 
   showAddOfficeModal: false,
 };
 
 export default (state = defaultState, action) => {
   switch (action.type) {
-    case offices.GET_OFFICES_BEGIN: {
+    case offices.FETCH_OFFICES_START: {
       return {
         ...state,
-        getOfficesLoading: true,
-        getOfficesError: false,
+        fetchOfficesLoading: true,
+        fetchOfficesError: '',
       };
     }
-    case offices.GET_OFFICES_SUCCESS: {
+    case offices.FETCH_OFFICES_SUCCESS: {
       return {
         ...state,
-        getOfficesLoading: false,
-        offices: [...action.payload],
+        fetchOfficesLoading: false,
+        offices: action.payload,
       };
     }
-    case offices.GET_OFFICES_ERROR: {
+    case offices.FETCH_OFFICES_ERROR: {
       return {
         ...state,
-        getOfficesLoading: false,
-        getOfficesError: true,
+        fetchOfficesLoading: false,
+        fetchOfficesError: action.payload,
       };
     }
 
-    case offices.ADD_OFFICE_BEGIN: {
+    case offices.ADD_OFFICE_START: {
       return {
         ...state,
         addOfficeLoading: true,
