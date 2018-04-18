@@ -29,11 +29,12 @@ class ReturnModal extends React.Component {
     const { devices, setDevices, selectedDevice } = this.props;
     const newDevices = devices.map(device => {
       if (device.id === selectedDevice) {
-        const newDevice = {...device};
-        newDevice.available = true;
-        newDevice.custody = null;
-        newDevice.location = this.state.selectedOffice;
-        return newDevice;
+        return {
+          ...device,
+          available: true,
+          custody: null,
+          location: this.state.selectedOffice,
+        };
       }
       return device;
     });
