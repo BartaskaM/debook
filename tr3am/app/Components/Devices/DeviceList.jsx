@@ -182,14 +182,14 @@ class DeviceList extends React.Component {
                   device.available ? false : device.custody === user.id ? false : true
                 }
                 color={device.available ? 'primary' : 'secondary'}
-                className={classes.button}
+                className={classes.buttonLeft}
                 onClick={() => this.handleBookClick(device, userReservationForThisDevice)}>
                 <Plus className={classes.leftIcon} />
                 {this.state.bookButtonValues[device.id]}
               </Button>
               <Button
                 variant="raised"
-                className={classes.button}
+                className={classes.buttonRight}
                 onClick={
                   userReservationForThisDevice ?
                     () => this.openReservationDetails(userReservationForThisDevice) :

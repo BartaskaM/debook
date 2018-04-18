@@ -102,12 +102,14 @@ class BookModal extends React.Component {
     this.roundTimes();
     if (!this.checkForErrors(returnDate) && !checkIfLate(currentDate)) {
       //Update device
-      const updatedDevices = [...devices];
-      updatedDevices.map(device => {
-        if (device.id == selectedDevice) {
-          device.custody = user.id;
-          device.available = false;
+      const updatedDevices = devices.map(device => {
+        if (device.id === selectedDevice) {
+          const newDevice = {...device};
+          newDevice.custody = user.id;
+          newDevice.available = false;
+          return newDevice;
         }
+        return device;
       });
       setDevices(updatedDevices);
       hideBookModal();
@@ -203,7 +205,7 @@ BookModal.propTypes = {
   returnDateError: PropTypes.string.isRequired,
   setReturnDateError: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  selectedDevice: PropTypes.number.isRequired,
+  selectedDevice: PropTypes.number,
   devices: PropTypes.arrayOf(PropTypes.shape({
     brand: PropTypes.string.isRequired,
     model: PropTypes.string.isRequired,

@@ -99,6 +99,12 @@ export const showReservationDetails =
 export const hideReservationDetails = () => {
   return { type: devices.HIDE_RESERVATION_DETAILS };
 };
+export const hideReturnModal = () => {
+  return { type: devices.HIDE_RETURN_MODAL };
+};
+export const showReturnModal = (selectedDevice) => {
+  return { type: devices.SHOW_RETURN_MODAL, payload: selectedDevice };
+};
 export const checkInDevice = (deviceId, userId) => {
   return { type: devices.CHECK_IN_DEVICE, payload: {deviceId, userId}};
 };
