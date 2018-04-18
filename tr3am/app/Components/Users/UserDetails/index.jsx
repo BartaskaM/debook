@@ -601,8 +601,6 @@ UserDetails.propTypes = {
   }).isRequired,
   setUserDetails: PropTypes.func.isRequired,
   fetchUser: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired,
-  setUsers: PropTypes.func.isRequired,
   fetchingUser: PropTypes.bool.isRequired,
   offices: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
