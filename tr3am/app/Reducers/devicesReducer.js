@@ -152,9 +152,9 @@ export default (state = defaultState, action) => {
       const updatedDevices = [...devices];
       updatedDevices.map(device => {
         if (device.id === deviceId) {
-          device.custody = userId;
-          device.available = false;
+          return {...device, custody: userId, available: false};
         }
+        return device;
       });
       return{ ...state, devices: updatedDevices };
     }

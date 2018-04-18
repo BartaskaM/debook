@@ -29,7 +29,6 @@ class DeviceList extends React.Component {
     this.openBookDialog = this.openBookDialog.bind(this);
     this.openReserveDialog = this.openReserveDialog.bind(this);
     this.openReservationDetails = this.openReservationDetails.bind(this);
-    this.returnDevice = this.returnDevice.bind(this);
     this.handleBookClick = this.handleBookClick.bind(this);
     this.getBookButtonValues = this.getBookButtonValues.bind(this);
     this.state = {
@@ -63,7 +62,7 @@ class DeviceList extends React.Component {
     clearInterval(this.interval);
   }
 
-  static getDerivedStateFromProps(nextProps){console.log('new props');
+  static getDerivedStateFromProps(nextProps){
     const { devices, user, reservations } = nextProps;
     return { bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user, reservations) };
   }
