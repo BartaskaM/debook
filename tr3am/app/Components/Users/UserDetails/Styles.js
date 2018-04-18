@@ -1,4 +1,4 @@
-export const styles = {
+export const styles = theme => ({
   root: {
     margin: '50px 75px',
   },
@@ -33,4 +33,13 @@ export const styles = {
     color: '#999',
     textTransform: 'capitalize',
   },
-};
+  wrapper: {
+    margin: theme.spacing.unit,
+    position: 'relative',
+  },
+  buttonProgress: {
+    position: 'absolute',
+    top: '25%',
+    right: -20,
+  },
+});

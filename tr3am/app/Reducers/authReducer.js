@@ -35,6 +35,9 @@ export default (state = defaultState, action) => {
     case auth.SIGN_UP_ERROR: {
       return { ...state, fetchingSignUp: false, signUpError: action.payload };
     }
+    case auth.UPDATE_LOGGED_IN_USER: {
+      return{ ...state, user: action.payload };
+    }
     default: return state;
   }
 };

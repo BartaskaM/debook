@@ -65,6 +65,10 @@ namespace tr3am.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateUserRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             try
             {
                 _usersRepository.Update(id, request);

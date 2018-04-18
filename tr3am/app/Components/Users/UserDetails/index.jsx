@@ -19,11 +19,10 @@ import {
 import validator from 'email-validator';
 
 import { styles } from './Styles';
-import Offices from 'Constants/Offices';
-import users from 'Constants/User';
 import * as userDetailsActions from 'ActionCreators/userDetailsActions';
 import * as usersActions from 'ActionCreators/usersActions';
-import { LinearProgress } from 'material-ui';
+import * as officesActions from 'ActionCreators/officesActions';
+import { LinearProgress, CircularProgress } from 'material-ui';
 
 class UserDetails extends React.Component {
   constructor(props) {
@@ -53,14 +52,25 @@ class UserDetails extends React.Component {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.validateAllPasswords = this.validateAllPasswords.bind(this);
     this.validateAll = this.validateAll.bind(this);
+    this.goBackToInfo = this.goBackToInfo.bind(this);
+  }
+
+  static getDerivedStateFromProps(nextProps, previousState){
+    if(nextProps.user != previousState.user){
+      return { user: {...nextProps.user, office: nextProps.user.office.id }};
+    }
+    return null;
   }
 
   componentDidMount() {
     const { setUserDetails, match, fetchUser, currentUser } = this.props;
     const id = match.params.id;
-    console.log(id);
     if (id) {
       // Is in /user/:id
+      if(parseInt(id) === currentUser.id)
+      {
+        setUserDetails(currentUser);
+      }
       fetchUser(id);
     }
     else {
@@ -101,12 +111,6 @@ class UserDetails extends React.Component {
       this.setState({
         validEmail: false,
         emailErrorMessage: 'Enter valid e-mail.',
-      });
-    } else if (email != this.props.user.email && 
-      users.map(user => user.email).includes(this.state.user.email)) {
-      this.setState({
-        validEmail: false,
-        emailErrorMessage: 'This email is in use.',
       });
     } else {
       this.setState({
@@ -208,30 +212,36 @@ class UserDetails extends React.Component {
   }
 
   handleEditClick() {
+    const { 
+      fetchOffices,
+      updateUser,
+      currentUser,
+      offices,
+    } = this.props;
     if(this.state.edit){
       if(this.validateAll()){
         const { user, newPassword } = this.state;
-        this.props.setUsers([...this.props.users].map( usr => {
-          if(usr.id == user.id){
-            if(this.shouldChangePassword()){
-              return {...user, password: newPassword};
-            }
-            else {
-              return {...user};
-            }           
+        const office = offices.find(x => x.id === user.office);
+        if(this.shouldChangePassword()){
+          updateUser({...user, office, password: newPassword}, this.goBackToInfo, true);
+        }
+        else {
+          if(user.id === currentUser.id){
+            updateUser({...user, office}, this.goBackToInfo, true);
           } else {
-            return usr;
+            updateUser({...user, office}, this.goBackToInfo);
           }
-        }));       
-        this.setState({ edit: false });
-      }
+        }     
+      }   
     } else {
+      fetchOffices();
       this.setState({ edit: true });
     }   
   }
 
   handleCancelClick(){
-    this.setState({ edit: false, user: this.props.user });
+    const { user } = this.props;
+    this.setState({ edit: false, user: { ...user, office: user.office.id } });
   }
 
   renderProfileInfo(){
@@ -291,8 +301,30 @@ class UserDetails extends React.Component {
       </Grid>);
   }
 
+  goBackToInfo(){
+    this.setState({
+      edit: false,
+      validEmail: true,
+      validFirstName: true,
+      validLastName: true,
+      emailErrorMessage: '',
+      oldPassword: '',
+      newPassword: '',
+      repeatPassword: '',
+      validOldPassword: true,
+      validNewPassword: true,
+      newPasswordMatch: true,
+    });
+  }
+
   renderProfileEdit(){
-    const { classes, currentUser } = this.props;
+    const { 
+      classes,
+      currentUser,
+      offices,
+      fetchingOffices,
+      updateUserError,
+    } = this.props;
     const { 
       validFirstName, 
       validLastName, 
@@ -370,7 +402,7 @@ class UserDetails extends React.Component {
                 <Input
                   value={email}
                   className={classes.fontSize}
-                  error={!this.state.validEmail}
+                  error={!this.state.validEmail || updateUserError.length > 0}
                   onChange={this.handleFormChange}
                   onBlur={this.validateEmail}
                   inputProps={{
@@ -381,7 +413,7 @@ class UserDetails extends React.Component {
                   }}
                 />
                 <FormHelperText>
-                  {!validEmail ? emailErrorMessage : ''}
+                  {!validEmail ? emailErrorMessage : updateUserError}
                 </FormHelperText>
               </FormControl>
             </Grid> 
@@ -390,25 +422,31 @@ class UserDetails extends React.Component {
             <Grid item xs={2} className={classes.label}>Office</Grid>
             <Grid item xs={10}>
               <FormControl className={classes.signUpFormField}>
-                <Select
-                  value={office}
-                  autoWidth={true}
-                  onChange={this.handleFormChange}
-                  className={classes.fontSize}
-                  inputProps={{
-                    name: 'office',
-                  }}
-                >
-                  {Offices.map(office => (
-                    <MenuItem
-                      key={office.id}
-                      value={office.city}
-                      className={classes.menuItemWidth}
-                    >
-                      {office.city}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <span className={classes.wrapper}>
+                  <Select
+                    value={office}
+                    autoWidth={true}
+                    onChange={this.handleFormChange}
+                    className={classes.fontSize}
+                    inputProps={{
+                      name: 'office',
+                    }}
+                  >
+                    {offices.map((office, i) => (
+                      <MenuItem
+                        key={i}
+                        value={office.id}
+                        className={classes.menuItemWidth}
+                      >
+                        {office.city}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {
+                    fetchingOffices && 
+                  <CircularProgress size={18} className={classes.buttonProgress}/>
+                  }
+                </span>
                 <FormHelperText/>
               </FormControl>
             </Grid>
@@ -502,7 +540,13 @@ class UserDetails extends React.Component {
   }
 
   render() {
-    const { classes, history, user, fetchingUser } = this.props;
+    const { 
+      classes,
+      history,
+      user,
+      fetchingUser,
+      updatingUser,
+    } = this.props;
     return (
       <div className={classes.root}>
         <Button variant="flat" onClick={history.goBack}>
@@ -510,9 +554,10 @@ class UserDetails extends React.Component {
           <span className={classes.bigFont} >Back</span>
         </Button>
         <Divider className={classes.divider} />
-        {
-          !user || fetchingUser ?
-            <LinearProgress/> :
+        {!user || fetchingUser ?
+          <LinearProgress/> :       
+          <div>
+            {updatingUser && <LinearProgress/>} 
             <Paper className={classes.paper}>
               <Divider className={classes.divider} />
               <span className={classes.header}>Profile</span>
@@ -522,6 +567,7 @@ class UserDetails extends React.Component {
                 {this.renderButtons()}
               </Grid>
             </Paper>
+          </div>
         }
       </div>
     );
@@ -558,6 +604,19 @@ UserDetails.propTypes = {
   users: PropTypes.array.isRequired,
   setUsers: PropTypes.func.isRequired,
   fetchingUser: PropTypes.bool.isRequired,
+  offices: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
+  })).isRequired,
+  fetchOffices: PropTypes.func.isRequired,
+  fetchingOffices: PropTypes.bool,
+  updateUser: PropTypes.func.isRequired,
+  updatingUser: PropTypes.bool.isRequired,
+  updateUserError: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -565,9 +624,14 @@ const mapStateToProps = store => ({
   user: store.userDetails.userDetails,
   users: store.users.users,
   fetchingUser: store.userDetails.fetchingUser,
+  offices: store.offices.offices,
+  fetchingOffices: store.offices.fetchingOffices,
+  updatingUser: store.userDetails.updatingUser,
+  updateUserError: store.userDetails.updateUserError,
 });
 
 export default withRouter(connect(mapStateToProps, {
   ...userDetailsActions,
   ...usersActions,
+  ...officesActions,
 })(withStyles(styles)(UserDetails)));
