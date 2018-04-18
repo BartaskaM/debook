@@ -45,6 +45,18 @@ const Styles = {
   bigFont: {
     fontSize: 18,
   },
+  inputField: {
+    fontSize: 18,
+    display: 'inline-block',
+    marginTop: 10,
+    marginLeft: 20,
+    width: 250,
+  },
+  inlineBlock: {
+    marginTop: 10,
+    width: 120,
+    display: 'inline-block',
+  },
 };
 
 export default Styles;

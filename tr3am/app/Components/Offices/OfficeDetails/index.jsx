@@ -131,10 +131,14 @@ class OfficeDetails extends React.Component {
     return (
       <Paper className={classes.officeLocationInfo}>
         <Typography
-          variant='display2'><b>Country:</b></Typography>
+          variant='display2'
+          className={classes.inlineBlock}
+        >
+          <b>Country:</b>
+        </Typography>
         <Input
           value={this.state.country}
-          className={classes.fontSize}
+          className={classes.inputField}
           onChange={(e) => this.setState({ country: e.target.value })}
           inputProps={{
             type: 'text',
@@ -145,10 +149,14 @@ class OfficeDetails extends React.Component {
         />
         <br />
         <Typography
-          variant='display2'><b>City:</b></Typography>
+          variant='display2'
+          className={classes.inlineBlock}
+        >
+          <b>City:</b>
+        </Typography>
         <Input
           value={this.state.city}
-          className={classes.fontSize}
+          className={classes.inputField}
           onChange={(e) => this.setState({ city: e.target.value })}
           inputProps={{
             type: 'text',
@@ -159,10 +167,14 @@ class OfficeDetails extends React.Component {
         />
         <br />
         <Typography
-          variant='display2'><b>Address:</b></Typography>
+          variant='display2'
+          className={classes.inlineBlock}
+        >
+          <b>Address:</b>
+        </Typography>
         <Input
           value={this.state.address}
-          className={classes.fontSize}
+          className={classes.inputField}
           onChange={(e) => this.setState({ address: e.target.value })}
           inputProps={{
             type: 'text',
@@ -173,10 +185,14 @@ class OfficeDetails extends React.Component {
         />
         <br />
         <Typography
-          variant='display2'><b>LAT:</b></Typography>
+          variant='display2'
+          className={classes.inlineBlock}
+        >
+          <b>LAT:</b>
+        </Typography>
         <Input
           value={this.state.lat}
-          className={classes.fontSize}
+          className={classes.inputField}
           onChange={(e) => this.setState({ lat: e.target.value })}
           inputProps={{
             type: 'number',
@@ -187,10 +203,14 @@ class OfficeDetails extends React.Component {
         />
         <br />
         <Typography
-          variant='display2'><b>LNG:</b></Typography>
+          variant='display2'
+          className={classes.inlineBlock}
+        >
+          <b>LNG:</b>
+        </Typography>
         <Input
           value={this.state.lng}
-          className={classes.fontSize}
+          className={classes.inputField}
           onChange={(e) => this.setState({ lng: e.target.value })}
           inputProps={{
             type: 'number',
