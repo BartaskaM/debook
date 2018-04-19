@@ -7,6 +7,7 @@ import Button from 'material-ui/Button';
 import List from 'material-ui/List';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
+import { LinearProgress } from 'material-ui/Progress';
 
 import Styles from './Styles';
 import StylesUtils from 'Utils/StylesUtils';
@@ -15,7 +16,7 @@ import AddOfficeModal from './AddOfficeModal';
 import * as officesActions from 'ActionCreators/officesActions';
 
 class Offices extends React.Component {
-  
+
   constructor(props) {
     super(props);
 
@@ -50,17 +51,21 @@ class Offices extends React.Component {
   }
 
   render() {
-    const { classes, offices } = this.props;
+    const { classes, offices, fetchOfficesLoading } = this.props;
     return (
       <div className={classes.root}>
         <AddOfficeModal />
         <Grid container spacing={16}>
           {this.renderListHeader()}
-          <List className={classes.officeList}>
-            {offices.map(office => (
-              <OfficeItem key={office.id} office={office} />
-            ))}
-          </List>
+          {fetchOfficesLoading ?
+            <Grid item xs={12}>
+              <LinearProgress />
+            </Grid>
+            : <List className={classes.officeList}>
+              {offices.map(office => (
+                <OfficeItem key={office.id} office={office} />
+              ))}
+            </List>}
           <Grid item xs={12}>
             {/* TODO: Implement button functionality */}
 

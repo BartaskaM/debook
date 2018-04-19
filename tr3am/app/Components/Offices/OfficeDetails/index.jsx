@@ -10,6 +10,7 @@ import Input from 'material-ui/Input';
 import Button from 'material-ui/Button';
 import NavigateBefore from 'material-ui-icons/NavigateBefore';
 import Divider from 'material-ui/Divider';
+import { LinearProgress } from 'material-ui/Progress';
 
 import Styles from './Styles';
 import * as RouteRoles from 'Constants/RouteRoles';
@@ -264,7 +265,7 @@ class OfficeDetails extends React.Component {
   }
 
   render() {
-    const { classes, history } = this.props;
+    const { classes, history, fetchOfficeLoading } = this.props;
     return this.state.office ? (
       <div className={classes.root}>
         <Button variant="flat" onClick={history.goBack}>
@@ -274,25 +275,31 @@ class OfficeDetails extends React.Component {
         <Divider className={classes.divider} />
 
         <Grid container spacing={16} justify='center' className={classes.officedetailsContainer}>
-          <Grid item xs={6}>
-            {this.state.isEditMode ?
-              this.renderInformationEditable() :
-              this.renderInformation()}
-          </Grid>
-          <Grid item xs={6}>
-            <Paper className={classes.mapElement}>
-              <Map
-                lat={this.state.office.lat}
-                lng={this.state.office.lng}
-                googleMapURL={'https://maps.googleapis.com/' +
-                  'maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA' +
-                  '&v=3.exp&libraries=geometry,drawing,places'}
-                loadingElement={<div style={{ height: '100%' }} />}
-                containerElement={<div style={{ height: 400 }} />}
-                mapElement={<div style={{ height: '100%' }} />}
-              />
-            </Paper>
-          </Grid>
+          { fetchOfficeLoading ?
+            <Grid item xs={12}>
+              <LinearProgress />
+            </Grid>
+            : <Grid container>
+              <Grid item xs={6}>
+                {this.state.isEditMode ?
+                  this.renderInformationEditable() :
+                  this.renderInformation()}
+              </Grid>
+              <Grid item xs={6}>
+                <Paper className={classes.mapElement}>
+                  <Map
+                    lat={this.state.office.lat}
+                    lng={this.state.office.lng}
+                    googleMapURL={'https://maps.googleapis.com/' +
+                      'maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA' +
+                      '&v=3.exp&libraries=geometry,drawing,places'}
+                    loadingElement={<div style={{ height: '100%' }} />}
+                    containerElement={<div style={{ height: 400 }} />}
+                    mapElement={<div style={{ height: '100%' }} />}
+                  />
+                </Paper>
+              </Grid>
+            </Grid>}
         </Grid>
       </div>
     ) : '';
@@ -314,12 +321,15 @@ OfficeDetails.propTypes = {
     lat: PropTypes.number,
     lng: PropTypes.number,
   }),
+  fetchOfficeLoading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
     office: state.officeDetails.office,
+    fetchOfficeLoading: state.officeDetails.fetchOfficeLoading,
+    updateOfficeLoading: state.officeDetails.updateOfficeLoading,
   };
 };
 
