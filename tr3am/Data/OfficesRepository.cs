@@ -102,9 +102,29 @@ namespace tr3am.Data
                 Lng = request.Lng,
             };
 
+            if (!OfficeExists(item))
+            {
+                throw new DuplicateOfficeException();
+            }
+
             _items.Add(item);
 
             return item;
+        }
+
+        public bool OfficeExists(Office office)
+        {
+            Office result = _items.Find(x =>
+            x.Country == office.Country &&
+            x.City == office.City &&
+            x.Address == office.Address);
+
+            if (result != null)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public void Update(int id, OfficeItemRequest request)

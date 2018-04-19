@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Entities;
+using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.Requests.Offices;
 
@@ -29,7 +31,7 @@ namespace tr3am.Controllers
             {
                 return Ok(_officesRepository.GetById(id));
             }
-            catch
+            catch (InvalidOfficeException)
             {
                 return NotFound();
             }
@@ -43,9 +45,15 @@ namespace tr3am.Controllers
                 return BadRequest(ModelState);
             }
 
-            var item = _officesRepository.Create(request);
-
-            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+            try
+            {
+                var item = _officesRepository.Create(request);
+                return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+            }
+            catch (DuplicateOfficeException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "An office with those details already exists." });
+            }
         }
 
         [HttpPut("{id}")]
@@ -55,7 +63,7 @@ namespace tr3am.Controllers
             {
                 _officesRepository.Update(id, request);
             }
-            catch
+            catch (InvalidOfficeException)
             {
                 return NotFound();
             }
@@ -66,7 +74,14 @@ namespace tr3am.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _officesRepository.Delete(id);
+            try
+            {
+                _officesRepository.Delete(id);
+            }
+            catch (InvalidOfficeException)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }
