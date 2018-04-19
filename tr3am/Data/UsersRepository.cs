@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
@@ -87,23 +88,14 @@ namespace tr3am.Data
             {
                 throw new InvalidUserException();
             }
-            return new LogInDTO
-            {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Office = _officesRepository.GetById(user.Office.Id),
-                Slack = user.Slack,
-                Role = user.Role,
-                Password = user.Password,
-            };
+
+            return Mapper.Map<User, LogInDTO>(user);
         }
 
         public int Create(CreateUserRequest request)
         {
-            int id = _items.Count() == 0 ? 1 : _items.Max(x => x.Id) + 1;
-            OfficeDTO officeDto = _officesRepository.GetById(request.Office);
+            int id = _items.Any() ? _items.Max(x => x.Id) + 1 : 1;
+            OfficeDTO officeDto = _officesRepository.GetById(request.Office.Value);
             if (officeDto == null)
             {
                 throw new InvalidOfficeException();
@@ -112,15 +104,8 @@ namespace tr3am.Data
             {
                 throw new DuplicateEmailException();
             }
-            Office office = new Office
-            {
-                Id = officeDto.Id,
-                Address = officeDto.Address,
-                City = officeDto.City,
-                Country = officeDto.Country,
-                Lat = officeDto.Lat,
-                Lng = officeDto.Lng,
-            };
+
+            Office office = Mapper.Map<OfficeDTO, Office>(officeDto);
             User newUser = new User
             {
                 Id = id,
@@ -149,16 +134,7 @@ namespace tr3am.Data
 
         public List<UserDTO> GetAll()
         {
-            return _items.Select(user => new UserDTO
-            {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Office = _officesRepository.GetById(user.Office.Id),
-                Slack = user.Slack,
-                Role = user.Role,
-            })
+            return _items.Select(Mapper.Map<User,UserDTO>)
             .ToList();
         }
 
@@ -169,16 +145,7 @@ namespace tr3am.Data
             {
                 throw new InvalidUserException();
             }
-            return new UserDTO
-            {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Office = _officesRepository.GetById(user.Office.Id),
-                Slack = user.Slack,
-                Role = user.Role,
-            };
+            return Mapper.Map<User,UserDTO>(user);
         }
 
         public void Update(int id, UpdateUserRequest request)
@@ -188,7 +155,7 @@ namespace tr3am.Data
             {
                 throw new InvalidUserException();
             }
-            OfficeDTO officeDto = _officesRepository.GetById(request.Office);
+            OfficeDTO officeDto = _officesRepository.GetById(request.Office.Value);
             if (officeDto == null)
             {
                 throw new InvalidOfficeException();
@@ -197,15 +164,8 @@ namespace tr3am.Data
             {
                 throw new DuplicateEmailException();
             }
-            Office office = new Office
-            {
-                Id = officeDto.Id,
-                Address = officeDto.Address,
-                City = officeDto.City,
-                Country = officeDto.Country,
-                Lat = officeDto.Lat,
-                Lng = officeDto.Lng,
-            };
+
+            Office office = Mapper.Map<OfficeDTO, Office>(officeDto);
 
             user.Email = request.Email;
             user.FirstName = request.FirstName;
