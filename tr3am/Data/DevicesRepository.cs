@@ -92,7 +92,7 @@ namespace tr3am.Data
             return Mapper.Map<Device, FullDeviceDTO>(device);
         }
 
-        public void Create(CreateDeviceRequest request)
+        public int Create(CreateDeviceRequest request)
         {
             var id = _items.Count() != 0 ? _items.Max(x => x.Id) + 1 : 1;
             var office = _officesRepository.GetById(request.Location.Value);
@@ -123,6 +123,7 @@ namespace tr3am.Data
             };
 
             _items.Add(item);
+            return id;
         }
 
         public void Update(int id, UpdateDeviceRequest request)

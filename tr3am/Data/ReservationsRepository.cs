@@ -7,6 +7,7 @@ using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
+using tr3am.DataContracts.Enums;
 using tr3am.DataContracts.Requests.Reservations;
 
 namespace tr3am.Data
@@ -52,6 +53,18 @@ namespace tr3am.Data
                 }
             };
         }
+
+        public ReservationDTO GetById(int id)
+        {
+            Reservation reservation = _items.FirstOrDefault(x => x.Id == id);
+            if (reservation == null)
+            {
+                throw new InvalidReservationException();
+            }
+
+            return Mapper.Map<Reservation, ReservationDTO>(reservation);
+        }
+
         public List<ReservationDTO> GetAll(bool showAll)
         {
             RefreshReservations();
@@ -73,19 +86,19 @@ namespace tr3am.Data
             RefreshReservations();
             if (showAll)
             {
-                return _items.Where(x => x.Id == id).Select(Mapper.Map<Reservation, ReservationDTO>).ToList();
+                return _items.Where(x => x.Device.Id == id).Select(Mapper.Map<Reservation, ReservationDTO>).ToList();
             }
             else
             {
                 return _items
-                    .Where(x => x.Id == id && (x.Status == Status.CheckedIn || x.Status == Status.OverDue ||
+                    .Where(x => x.Device.Id == id && (x.Status == Status.CheckedIn || x.Status == Status.OverDue ||
                                                x.Status == Status.Pending))
                     .Select(Mapper.Map<Reservation, ReservationDTO>).ToList();
             }
 
         }
 
-        public void Create(ReservationRequest request)
+        public int Create(ReservationRequest request)
         {
             int id = _items.Any() ? _items.Max(x => x.Id) + 1 : 1;
             Device device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(request.Device.Value));
@@ -101,6 +114,7 @@ namespace tr3am.Data
                 To = request.To,
             };
             _items.Add(reservation);
+            return id;
         }
 
         public void Update(int id, ReservationRequest request)

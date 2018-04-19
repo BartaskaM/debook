@@ -11,6 +11,7 @@ using tr3am.DataContracts.Requests.Reservations;
 
 namespace tr3am.Controllers
 {
+    [Route("api/reservations")]
     public class ReservationsController : Controller
     {
         private readonly IReservationsRepository _reservationsRepository;
@@ -19,18 +20,27 @@ namespace tr3am.Controllers
         {
             _reservationsRepository = reservationsRepository;
         }
-        [HttpGet("api/reservations")]
+
+        [HttpGet]
         public IEnumerable<ReservationDTO> GetAll([FromQuery]bool showAll)
         {
             return _reservationsRepository.GetAll(showAll);
         }
 
-        [HttpGet("api/devices/{id}/reservations")]
-        public IEnumerable<ReservationDTO> GetByDeviceId(int id)
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
         {
-            return _reservationsRepository.GetByDeviceId(id);
+            try
+            {
+                return Ok(_reservationsRepository.GetById(id));
+            }
+            catch (InvalidOfficeException)
+            {
+                return NotFound();
+            }
         }
-        [HttpPost("api/reservations")]
+
+        [HttpPost]
         public IActionResult Create([FromBody]ReservationRequest request)
         {
             if (!ModelState.IsValid)
@@ -40,8 +50,8 @@ namespace tr3am.Controllers
 
             try
             {
-                _reservationsRepository.Create(request);
-                return NoContent();
+                int id = _reservationsRepository.Create(request);
+                return CreatedAtAction(nameof(GetById), new {Id = id}, id);
             }
             catch (InvalidDeviceException)
             {
@@ -65,7 +75,8 @@ namespace tr3am.Controllers
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = "Reserve for future dates" });
             }
         }
-        [HttpPost("api/reservations/{id}")]
+
+        [HttpPost("{id}")]
         public IActionResult Update(int id, [FromBody]ReservationRequest request)
         {
             if (!ModelState.IsValid)
@@ -105,6 +116,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             try

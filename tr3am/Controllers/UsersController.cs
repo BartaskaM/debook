@@ -49,8 +49,8 @@ namespace tr3am.Controllers
             }
             try
             {
-                var id = _usersRepository.Create(request);
-                return NoContent();
+                int id = _usersRepository.Create(request);
+                return CreatedAtAction(nameof(GetById), new { Id = id }, id);
             }
             catch (InvalidOfficeException)
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using tr3am.Data.Entities;
+using tr3am.DataContracts.Enums;
 
 namespace tr3am.DataContracts.DTO
 {

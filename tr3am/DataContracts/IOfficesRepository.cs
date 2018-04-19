@@ -9,7 +9,7 @@ namespace tr3am.DataContracts
     {
         List<OfficeDTO> GetAll();
         OfficeDTO GetById(int id);
-        void Create(OfficeItemRequest request);
+        int Create(OfficeItemRequest request);
         void Update(int id, OfficeItemRequest request);
         void Delete(int id);
     }

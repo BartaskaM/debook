@@ -45,9 +45,9 @@ namespace tr3am.Controllers
                 return BadRequest(ModelState);
             }
 
-            _officesRepository.Create(request);
+            int id = _officesRepository.Create(request);
 
-            return NoContent();
+            return CreatedAtAction(nameof(GetById),new {Id = id}, id);
         }
 
         [HttpPut("{id}")]

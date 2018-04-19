@@ -81,7 +81,7 @@ namespace tr3am.Data
             return Mapper.Map<Office, OfficeDTO>(item);
         }
 
-        public void Create(OfficeItemRequest request)
+        public int Create(OfficeItemRequest request)
         {
             var id = _items.Any() ? _items.Max(x => x.Id) + 1 : 1;
 
@@ -96,6 +96,7 @@ namespace tr3am.Data
             };
 
             _items.Add(item);
+            return id;
         }
 
         public void Update(int id, OfficeItemRequest request)
