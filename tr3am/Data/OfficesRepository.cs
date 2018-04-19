@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using tr3am.Data.Entities;
+using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Offices;
@@ -70,18 +71,21 @@ namespace tr3am.Data
 
         public OfficeDTO GetById(int id)
         {
-            return _items
-                .Where(x => x.Id == id)
-                .Select(x => new OfficeDTO
-                {
-                    Id = x.Id,
-                    City = x.City,
-                    Country = x.Country,
-                    Address = x.Address,
-                    Lat = x.Lat,
-                    Lng = x.Lng
-                })
-                .FirstOrDefault();
+            Office office = _items.FirstOrDefault(x => x.Id == id);
+            if (office == null)
+            {
+                throw new InvalidOfficeException();
+            }
+
+            return new OfficeDTO
+            {
+                Id = office.Id,
+                City = office.City,
+                Country = office.Country,
+                Address = office.Address,
+                Lat = office.Lat,
+                Lng = office.Lng
+            };
         }
 
         public Office Create(OfficeItemRequest request)
@@ -105,13 +109,17 @@ namespace tr3am.Data
 
         public void Update(int id, OfficeItemRequest request)
         {
-            var item = _items.Single(x => x.Id == id);
+            Office office = _items.FirstOrDefault(x => x.Id == id);
+            if (office == null)
+            {
+                throw new InvalidOfficeException();
+            }
 
-            item.Country = request.Country;
-            item.City = request.City;
-            item.Address = request.Address;
-            item.Lat = request.Lat;
-            item.Lng = request.Lng;
+            office.Country = request.Country;
+            office.City = request.City;
+            office.Address = request.Address;
+            office.Lat = request.Lat;
+            office.Lng = request.Lng;
         }
 
         public void Delete(int id)
