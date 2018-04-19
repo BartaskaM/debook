@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using tr3am.Data.Entities;
+using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Offices;
@@ -19,7 +21,7 @@ namespace tr3am.Data
                 {
                     Id = 1,
                     Country = "Lithuania",
-                    City = "Kawns",
+                    City = "Kaunas",
                     Address = "11D A. Juozapavičiaus pr.",
                     Lat = 54.864296,
                     Lng = 23.945239,
@@ -28,7 +30,7 @@ namespace tr3am.Data
               {
                 Id = 2,
                 Country = "Lithuania",
-                City = "Wilno",
+                City = "Vilnius",
                 Address = "135 Zalgirio g.",
                 Lat = 54.704881,
                 Lng = 25.271658,
@@ -63,30 +65,25 @@ namespace tr3am.Data
             };
         }
 
-        public List<Office> GetAll()
+        public List<OfficeDTO> GetAll()
         {
-            return _items.ToList();
+            return _items.Select(Mapper.Map<Office,OfficeDTO>).ToList();
         }
 
         public OfficeDTO GetById(int id)
         {
-            return _items
-                .Where(x => x.Id == id)
-                .Select(x => new OfficeDTO
-                {
-                    Id = x.Id,
-                    City = x.City,
-                    Country = x.Country,
-                    Address = x.Address,
-                    Lat = x.Lat,
-                    Lng = x.Lng
-                })
-                .FirstOrDefault();
+            var item = _items.FirstOrDefault(x => x.Id == id);
+            if (item == null)
+            {
+                throw new InvalidOfficeException();
+            }
+
+            return Mapper.Map<Office, OfficeDTO>(item);
         }
 
-        public Office Create(OfficeItemRequest request)
+        public int Create(OfficeItemRequest request)
         {
-            var id = _items.DefaultIfEmpty().Max(x => x.Id) + 1;
+            var id = _items.Any() ? _items.Max(x => x.Id) + 1 : 1;
 
             var item = new Office
             {
@@ -99,8 +96,7 @@ namespace tr3am.Data
             };
 
             _items.Add(item);
-
-            return item;
+            return id;
         }
 
         public void Update(int id, OfficeItemRequest request)
@@ -116,8 +112,11 @@ namespace tr3am.Data
 
         public void Delete(int id)
         {
-            var item = _items.Single(x => x.Id == id);
-
+            var item = _items.FirstOrDefault(x => x.Id == id);
+            if (item == null)
+            {
+                throw new InvalidOfficeException();
+            }
             _items.Remove(item);
         }
     }

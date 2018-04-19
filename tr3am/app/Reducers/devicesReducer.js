@@ -12,10 +12,11 @@ const defaultState = {
   returnDate: new Date(),
   returnDateError: ' ',
   currentDateError: ' ',
-  selectedDevice: -1,
+  selectedDevice: null,
   showReserveModal: false,
   reservations: [],
   showReservationDetails: false,
+  showReturnModal: false,
 };
 
 export default (state = defaultState, action) => {
@@ -148,14 +149,19 @@ export default (state = defaultState, action) => {
     }
     case devices.CHECK_IN_DEVICE: {
       const { deviceId, userId } = action.payload;
-      const updatedDevices = [...devices];
-      updatedDevices.map(device => {
+      const updatedDevices = state.devices.map(device => {
         if (device.id === deviceId) {
-          device.custody = userId;
-          device.available = false;
+          return { ...device, custody: userId, available: false };
         }
+        return device;
       });
-      return{ ...state, devices: updatedDevices };
+      return { ...state, devices: updatedDevices };
+    }
+    case devices.SHOW_RETURN_MODAL: {
+      return { ...state, showReturnModal: true, selectedDevice: action.payload };
+    }
+    case devices.HIDE_RETURN_MODAL: {
+      return { ...state, showReturnModal: false };
     }
     default: return state;
   }

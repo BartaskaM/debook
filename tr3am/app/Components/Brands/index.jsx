@@ -4,7 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import List from 'material-ui/List';
-import Paper from 'material-ui/paper';
+import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
 import Styles from './Styles';

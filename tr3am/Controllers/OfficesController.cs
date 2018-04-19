@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Entities;
+using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
+using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Offices;
 
 namespace tr3am.Controllers
@@ -17,7 +19,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Office> GetAll()
+        public IEnumerable<OfficeDTO> GetAll()
         {
             return _officesRepository.GetAll();
         }
@@ -29,7 +31,7 @@ namespace tr3am.Controllers
             {
                 return Ok(_officesRepository.GetById(id));
             }
-            catch
+            catch(InvalidOfficeException)
             {
                 return NotFound();
             }
@@ -43,19 +45,23 @@ namespace tr3am.Controllers
                 return BadRequest(ModelState);
             }
 
-            var item = _officesRepository.Create(request);
+            int id = _officesRepository.Create(request);
 
-            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+            return CreatedAtAction(nameof(GetById),new {Id = id}, id);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] OfficeItemRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                BadRequest(ModelState);
+            }
             try
             {
                 _officesRepository.Update(id, request);
             }
-            catch
+            catch(InvalidOfficeException)
             {
                 return NotFound();
             }
@@ -66,7 +72,14 @@ namespace tr3am.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _officesRepository.Delete(id);
+            try
+            {
+                _officesRepository.Delete(id);
+            }
+            catch (InvalidOfficeException)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

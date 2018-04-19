@@ -21,11 +21,13 @@ namespace tr3am
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Mappings.SetupMappings();
             services.AddMvc();
             services.AddSingleton<IOfficesRepository, OfficesRepository>();
             services.AddSingleton<IDevicesRepository, DevicesRepository>();
             services.AddSingleton<IUsersRepository, UsersRepository>();
             services.AddSingleton<IEventsRepository, EventsRepository>();
+            services.AddSingleton<IReservationsRepository, ReservationsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
