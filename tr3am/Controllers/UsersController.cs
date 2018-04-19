@@ -50,7 +50,7 @@ namespace tr3am.Controllers
             try
             {
                 var id = _usersRepository.Create(request);
-                NoContent();
+                return NoContent();
             }
             catch (InvalidOfficeException)
             {

@@ -88,14 +88,15 @@ namespace tr3am.Data
         public void Create(ReservationRequest request)
         {
             int id = _items.Any() ? _items.Max(x => x.Id) + 1 : 1;
+            Device device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(request.Device.Value));
+            CheckIfDateAvailable(request.From, request.To, device);
             UserDTO userDto = _usersRepository.GetById(request.User.Value);
-            FullDeviceDTO deviceDto = _devicesRepository.GetById(request.Device.Value);
             Reservation reservation = new Reservation
             {
                 Id = id,
-                User = Mapper.Map<UserDTO,User>(userDto),
+                User = Mapper.Map<UserDTO, User>(userDto),
                 Status = request.Status,
-                Device = Mapper.Map<FullDeviceDTO, Device>(deviceDto),
+                Device = device,
                 From = request.From,
                 To = request.To,
             };
@@ -110,9 +111,11 @@ namespace tr3am.Data
                 throw new InvalidReservationException();
             }
 
+            Device device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(request.Device.Value));
+            CheckIfDateAvailable(request.From, request.To, device);
             reservation.User = Mapper.Map<UserDTO, User>(_usersRepository.GetById(request.User.Value));
             reservation.Status = request.Status;
-            reservation.Device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(request.Device.Value));
+            reservation.Device = device;
             reservation.From = request.From;
             reservation.To = request.To;
         }
@@ -134,14 +137,14 @@ namespace tr3am.Data
         {
             DateTime now = DateTime.Now;
             TimeSpan fifteenMinutes = new TimeSpan(0, 15, 0);
-            foreach(Reservation x in _items)
+            foreach (Reservation x in _items)
             {
                 if (x.Status == Status.Pending)
                 {
                     var z = now - x.From;
                     if (now - x.From > fifteenMinutes)
                     {
-                        
+
                         x.Status = Status.Expired;
                     }
                 }
@@ -153,6 +156,41 @@ namespace tr3am.Data
                     }
                 }
             }
+        }
+
+        private void CheckIfDateAvailable(DateTime from, DateTime to, Device device)
+        {
+            DateTime now = DateTime.Now;
+            if (from < now)
+            {
+                throw new PastDateException();
+            }
+
+            if (from > to)
+            {
+                throw new NegativeDateException();
+            }
+            var items = _items.Where(x => x.Device.Id == device.Id &&
+                                          (x.Status == Status.CheckedIn || x.Status == Status.OverDue ||
+                                           x.Status == Status.Pending));
+            foreach (var reservation in items)
+            {
+                if (CheckIfDateIsWithinReservation(from, reservation) ||
+                    CheckIfDateIsWithinReservation(to, reservation) ||
+                    CheckIfReservationIsWithinDates(from, to, reservation))
+                {
+                    throw new UsedDateException();
+                }
+            }
+        }
+        private bool CheckIfDateIsWithinReservation(DateTime date, Reservation reservation)
+        {
+            TimeSpan fifteenMinutes = new TimeSpan(0, 15, 0);
+            return reservation.To > date && (reservation.From - fifteenMinutes) < date;
+        }
+        private bool CheckIfReservationIsWithinDates(DateTime from, DateTime to, Reservation reservation)
+        {
+            return reservation.To < to && reservation.From > from;
         }
     }
 }

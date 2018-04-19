@@ -49,7 +49,20 @@ namespace tr3am.Controllers
             }
             catch (InvalidUserException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This user doesn't exist" });
+                return StatusCode(StatusCodes.Status409Conflict, new {Message = "This user doesn't exist"});
+            }
+            catch (UsedDateException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This date is already reserved" });
+            }
+            catch (NegativeDateException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict,
+                    new { Message = "To date must be greater than from date" });
+            }
+            catch (PastDateException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "Reserve for future dates" });
             }
         }
         [HttpPost("api/reservations/{id}")]
@@ -65,13 +78,30 @@ namespace tr3am.Controllers
                 _reservationsRepository.Update(id, request);
                 return NoContent();
             }
+            catch (InvalidReservationException)
+            {
+                return NotFound();
+            }
             catch (InvalidDeviceException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This device doesn't exist" });
+                return StatusCode(StatusCodes.Status409Conflict, new {Message = "This device doesn't exist"});
             }
             catch (InvalidUserException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This user doesn't exist" });
+                return StatusCode(StatusCodes.Status409Conflict, new {Message = "This user doesn't exist"});
+            }
+            catch (UsedDateException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new {Message = "This date is already reserved"});
+            }
+            catch (NegativeDateException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict,
+                    new {Message = "To date must be greater than from date"});
+            }
+            catch (PastDateException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "Reserve for future dates" });
             }
         }
 
