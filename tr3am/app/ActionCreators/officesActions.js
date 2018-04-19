@@ -7,7 +7,7 @@ export const fetchOffices = () => async dispatch => {
   });
 
   try {
-    const response = await api.get('offices');
+    const response = await api.get('/offices');
 
     dispatch({
       type: offices.FETCH_OFFICES_SUCCESS,
@@ -27,7 +27,7 @@ export const addOffice = (office) => async (dispatch) => {
   });
   
   try {
-    await api.post('offices', office);
+    await api.post('/offices', office);
     dispatch({
       type: offices.ADD_OFFICE_SUCCESS,
       payload: office,

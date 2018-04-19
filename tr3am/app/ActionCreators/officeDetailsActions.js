@@ -7,7 +7,7 @@ export const fetchOfficeWithId = (officeId) => async (dispatch) => {
   });
 
   try {
-    const response = await api.get(`offices/${officeId}`);
+    const response = await api.get(`/offices/${officeId}`);
     dispatch({
       type: officeDetails.FETCH_OFFICE_SUCCESS,
       payload: response.data,
@@ -26,7 +26,7 @@ export const updateOfficeWithId = (officeData) => async (dispatch) => {
   });
 
   try {
-    api.put(`offices/${officeData.id}`, { ...officeData });
+    api.put(`/offices/${officeData.id}`, { ...officeData });
 
     dispatch({
       type: officeDetails.UPDATE_OFFICE_SUCCESS,

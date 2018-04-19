@@ -71,7 +71,7 @@ namespace tr3am.Data
 
         public OfficeDTO GetById(int id)
         {
-            Office office = _items.FirstOrDefault(x => x.Id == id);
+            var office = _items.FirstOrDefault(x => x.Id == id);
             if (office == null)
             {
                 throw new InvalidOfficeException();
@@ -114,7 +114,7 @@ namespace tr3am.Data
 
         public bool OfficeExists(Office office)
         {
-            Office result = _items.Find(x =>
+            var result = _items.Find(x =>
             x.Country == office.Country &&
             x.City == office.City &&
             x.Address == office.Address);
@@ -129,7 +129,7 @@ namespace tr3am.Data
 
         public void Update(int id, OfficeItemRequest request)
         {
-            Office office = _items.FirstOrDefault(x => x.Id == id);
+            var office = _items.FirstOrDefault(x => x.Id == id);
             if (office == null)
             {
                 throw new InvalidOfficeException();
