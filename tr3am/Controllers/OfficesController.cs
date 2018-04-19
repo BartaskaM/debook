@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Entities;
 using tr3am.DataContracts;
+using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Offices;
 
 namespace tr3am.Controllers
@@ -17,7 +18,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Office> GetAll()
+        public IEnumerable<OfficeDTO> GetAll()
         {
             return _officesRepository.GetAll();
         }
@@ -43,9 +44,9 @@ namespace tr3am.Controllers
                 return BadRequest(ModelState);
             }
 
-            var item = _officesRepository.Create(request);
+            _officesRepository.Create(request);
 
-            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+            return NoContent();
         }
 
         [HttpPut("{id}")]

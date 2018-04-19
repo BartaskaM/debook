@@ -21,9 +21,38 @@ namespace tr3am.Data
         {
             _usersRepository = usersRepository;
             _devicesRepository = devicesRepository;
-            _items = new List<Reservation>();
+            _items = new List<Reservation>
+            {
+                new Reservation()
+                {
+                    Id = 1,
+                    Status = Status.Pending,
+                    User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(1)),
+                    Device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(1)),
+                    From = DateTime.Now.AddHours(2),
+                    To = DateTime.Now.AddHours(3),
+                },
+                new Reservation()
+                {
+                    Id = 2,
+                    Status = Status.Pending,
+                    User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(2)),
+                    Device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(1)),
+                    From = DateTime.Now.AddHours(4),
+                    To = DateTime.Now.AddHours(5),
+                },
+                new Reservation()
+                {
+                    Id = 1,
+                    Status = Status.Completed,
+                    User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(1)),
+                    Device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(1)),
+                    From = DateTime.Now.Subtract(new TimeSpan(2, 0, 0)),
+                    To = DateTime.Now.Subtract(new TimeSpan(1, 0, 0)),
+                }
+            };
         }
-        public List<ReservationDTO> GetAll(bool showAll = false)
+        public List<ReservationDTO> GetAll(bool showAll)
         {
             RefreshReservations();
             if (showAll)
@@ -33,13 +62,13 @@ namespace tr3am.Data
             else
             {
                 return _items.Where(x =>
-                        x.Status == Status.CheckedIn && x.Status == Status.Pending && x.Status == Status.OverDue)
+                        x.Status == Status.CheckedIn || x.Status == Status.Pending || x.Status == Status.OverDue)
                     .Select(Mapper.Map<Reservation, ReservationDTO>)
                     .ToList();
             }
         }
 
-        public List<ReservationDTO> GetByDeviceId(int id, bool showAll = false)
+        public List<ReservationDTO> GetByDeviceId(int id, bool showAll)
         {
             RefreshReservations();
             if (showAll)
@@ -108,7 +137,8 @@ namespace tr3am.Data
             {
                 if (x.Status == Status.Pending)
                 {
-                    if (x.From - now >= fifteenMinutes)
+                    var z = now - x.From;
+                    if ( x.From > now && x.From - now > fifteenMinutes)
                     {
                         
                         x.Status = Status.Expired;
