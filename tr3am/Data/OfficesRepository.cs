@@ -19,7 +19,7 @@ namespace tr3am.Data
                 {
                     Id = 1,
                     Country = "Lithuania",
-                    City = "Kawns",
+                    City = "Kaunas",
                     Address = "11D A. Juozapavičiaus pr.",
                     Lat = 54.864296,
                     Lng = 23.945239,
@@ -28,7 +28,7 @@ namespace tr3am.Data
                 {
                     Id = 2,
                     Country = "Lithuania",
-                    City = "Wilno",
+                    City = "Vilnius",
                     Address = "135 Zalgirio g.",
                     Lat = 54.704881,
                     Lng = 25.271658,

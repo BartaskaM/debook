@@ -4,7 +4,7 @@ const User = [
     firstName: 'John',
     lastName: 'Snow',
     email: 'admin@admin.com',
-    office: 'Wilno',
+    office: 'Vilnius',
     slack: 'LordCommander2',
     role: 'admin',
     password: 'admin',
