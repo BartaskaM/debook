@@ -12,7 +12,7 @@ namespace tr3am.DataContracts
     {
         List<Event> GetAll();
         EventDTO GetById(int id);
-        Event Create(EventItemRequest request);
+        int Create(EventItemRequest request);
         void Update(int id, EventItemRequest request);
         void Delete(int id);
     }

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Entities;
+using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.Requests.Events;
 
@@ -32,19 +34,13 @@ namespace tr3am.Controllers
             {
                 return Ok(_eventsRepository.GetById(id));
             }
-            catch
+            catch (InvalidEventException)
             {
                 return NotFound();
             }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            _eventsRepository.Delete(id);
 
-            return NoContent();
-        }
 
         [HttpPost]
         public IActionResult Create([FromBody]EventItemRequest request)
@@ -53,10 +49,23 @@ namespace tr3am.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var item = _eventsRepository.Create(request);
-
-            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+            try
+            {
+                _eventsRepository.Create(request);
+                return NoContent();
+            }
+            catch (InvalidOfficeException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This office doesn't exist" });
+            }
+            catch (InvalidDeviceException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This device doesn't exist" });
+            }
+            catch (InvalidUserException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This user doesn't exist" });
+            }
         }
 
         [HttpPut("{id}")]
@@ -65,13 +74,39 @@ namespace tr3am.Controllers
             try
             {
                 _eventsRepository.Update(id, request);
+                return NoContent();
             }
-            catch
+            catch (InvalidEventException)
             {
                 return NotFound();
             }
+            catch (InvalidOfficeException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This office doesn't exist" });
+            }
+            catch (InvalidUserException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This user doesn't exist" });
+            }
+            catch (InvalidDeviceException)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This device doesn't exist" });
+            }
 
-            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _eventsRepository.Delete(id);
+                return NoContent();
+            }
+            catch (InvalidEventException)
+            {
+                return NotFound();
+            }
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using tr3am.Data.Entities;
+using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Events;
@@ -31,34 +33,21 @@ namespace tr3am.Data
                 {
                     Id = 1,
                     Action = "Check In",
-                    Device = new Device
-                    {
-                        Id = 1,
-                    },
-                    Office = new Office
-                    {
-                        Id = 1,
-                        Address = office.Address,
-                        City = office.City,
-                        Country = office.Country,
-                        Lat = office.Lat,
-                        Lng = office.Lng,
-                    },
-                    User = new User
-                    {
-                        Id = 1,
-
-                    },
+                    Device = Mapper.Map<FullDeviceDTO,Device>(_devicesRepository.GetById(1)),
+                    Office = Mapper.Map<OfficeDTO,Office>(_officesRepository.GetById(1)),
+                    User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(1)),
                     Date_time = new DateTime(2018, 3, 1, 8, 0, 0),
                 },
+                                new Event
+                {
+                    Id = 2,
+                    Action = "Check In",
+                    Device = Mapper.Map<FullDeviceDTO,Device>(_devicesRepository.GetById(1)),
+                    Office = Mapper.Map<OfficeDTO,Office>(_officesRepository.GetById(2)),
+                    User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(2)),
+                    Date_time = new DateTime(2018, 4, 2, 8, 0, 0),
+                },
             };
-        }
-
-        public void Delete(int id)
-        {
-            var item = _items.Single(x => x.Id == id);
-
-            _items.Remove(item);
         }
 
         public List<Event> GetAll()
@@ -68,48 +57,83 @@ namespace tr3am.Data
 
         public EventDTO GetById(int id)
         {
-            return _items
-                .Where(x => x.Id == id)
-                .Select(x => new EventDTO
-                {
-                    Id = x.Id,
-                    //Action = x.Action,
-                    //Device = x.Device,
-                    //Office = x.Office,
-                    //User = x.User,
-                    //Date_time = x.Date_time,
-                })
-                .FirstOrDefault();
+            Event event_ = _items.FirstOrDefault(x => x.Id == id);
+            if (event_ == null)
+            {
+                throw new InvalidEventException();
+            }
+
+            return Mapper.Map<Event, EventDTO>(event_);
         }
 
-        public Event Create(EventItemRequest request)
+        public int Create(EventItemRequest request)
         {
-            var id = _items.DefaultIfEmpty().Max(x => x.Id) + 1;
+            var id = _items.Count() != 0 ? _items.Max(x => x.Id) + 1 : 1;
+            var office = _officesRepository.GetById(request.Office);
+            var device = _devicesRepository.GetById(request.Device);
+            var user = _usersRepository.GetById(request.User);
 
+            if (office == null)
+            {
+                throw new InvalidOfficeException();
+            }
+            if (device == null)
+            {
+                throw new InvalidDeviceException();
+            }
+            if (user == null)
+            {
+                throw new InvalidUserException();
+            }
             var item = new Event
             {
                 Id = id,
-            //    Action = request.Action,
-            //    Device = request.Device,
-            //Office = request.Office,
-            //    User = request.User,
+                Action = request.Action,
+                Device = Mapper.Map<FullDeviceDTO, Device>(device),
+                Office = Mapper.Map<OfficeDTO, Office>(office),
+                User = Mapper.Map<UserDTO, User>(user),
                 Date_time = request.Date_time,
             };
 
             _items.Add(item);
-
-            return item;
+            return id;
         }
 
         public void Update(int id, EventItemRequest request)
         {
-            var item = _items.Single(x => x.Id == id);
+            var item = _items.First(x => x.Id == id);
+            var office = _officesRepository.GetById(request.Office);
+            var device = _devicesRepository.GetById(request.Device);
+            var user = _usersRepository.GetById(request.User);
 
-            //item.Action = request.Action;
-            //item.Device = request.Device;
-            //item.Office = request.Office;
-            //item.User = request.User;
+            if (office == null)
+            {
+                throw new InvalidOfficeException();
+            }
+            if (device == null)
+            {
+                throw new InvalidDeviceException();
+            }
+            if (user == null)
+            {
+                throw new InvalidUserException();
+            }
+            item.Action = request.Action;
+            item.Device = Mapper.Map<FullDeviceDTO, Device>(device);
+            item.Office = Mapper.Map<OfficeDTO, Office>(office);
+            item.User = Mapper.Map<UserDTO, User>(user);
             item.Date_time = request.Date_time;
+
+        }
+
+        public void Delete(int id)
+        {
+            var item = _items.FirstOrDefault(x => x.Id == id);
+            if (item == null)
+            {
+                throw new InvalidEventException();
+            }
+            _items.Remove(item);
         }
     }
 }
