@@ -13,35 +13,42 @@ namespace tr3am.Data
     public class EventsRepository : IEventsRepository
     {
         private readonly List<Event> _items;
-        public EventsRepository()
+        private readonly IOfficesRepository _officesRepository;
+        private readonly IUsersRepository _usersRepository;
+        private readonly IDevicesRepository _devicesRepository;
+
+        public EventsRepository(IOfficesRepository officesRepository, IUsersRepository usersRepository, IDevicesRepository devicesRepository)
         {
+            _officesRepository = officesRepository;
+            _usersRepository = usersRepository;
+            _devicesRepository = devicesRepository;
+            OfficeDTO office = _officesRepository.GetById(1);
+            UserDTO user = _usersRepository.GetById(1);
+            FullDeviceDTO device = _devicesRepository.GetById(1);
             _items = new List<Event>
             {
                 new Event
                 {
                     Id = 1,
                     Action = "Check In",
-                    Device = 1,
-                    Office = 1,
-                    User = 1,
-                    Date_time = new DateTime(2018, 3, 1, 8, 0, 0),
-                },
-                new Event
-                {
-                    Id = 2,
-                    Action = "Check Out",
-                    Device = 1,
-                    Office = 1,
-                    User = 1,
-                    Date_time = new DateTime(2018, 3, 1, 8, 0, 0),
-                },
-                new Event
-                {
-                    Id = 3,
-                    Action = "Check In",
-                    Device = 1,
-                    Office = 1,
-                    User = 1,
+                    Device = new Device
+                    {
+                        Id = 1,
+                    },
+                    Office = new Office
+                    {
+                        Id = 1,
+                        Address = office.Address,
+                        City = office.City,
+                        Country = office.Country,
+                        Lat = office.Lat,
+                        Lng = office.Lng,
+                    },
+                    User = new User
+                    {
+                        Id = 1,
+
+                    },
                     Date_time = new DateTime(2018, 3, 1, 8, 0, 0),
                 },
             };
@@ -66,11 +73,11 @@ namespace tr3am.Data
                 .Select(x => new EventDTO
                 {
                     Id = x.Id,
-                    Action = x.Action,
-                    Device = x.Device,
-                    Office = x.Office,
-                    User = x.User,
-                    Date_time = x.Date_time,
+                    //Action = x.Action,
+                    //Device = x.Device,
+                    //Office = x.Office,
+                    //User = x.User,
+                    //Date_time = x.Date_time,
                 })
                 .FirstOrDefault();
         }
@@ -82,10 +89,10 @@ namespace tr3am.Data
             var item = new Event
             {
                 Id = id,
-                Action = request.Action,
-                Device = request.Device,
-                Office = request.Office,
-                User = request.User,
+            //    Action = request.Action,
+            //    Device = request.Device,
+            //Office = request.Office,
+            //    User = request.User,
                 Date_time = request.Date_time,
             };
 
@@ -98,10 +105,10 @@ namespace tr3am.Data
         {
             var item = _items.Single(x => x.Id == id);
 
-            item.Action = request.Action;
-            item.Device = request.Device;
-            item.Office = request.Office;
-            item.User = request.User;
+            //item.Action = request.Action;
+            //item.Device = request.Device;
+            //item.Office = request.Office;
+            //item.User = request.User;
             item.Date_time = request.Date_time;
         }
     }
