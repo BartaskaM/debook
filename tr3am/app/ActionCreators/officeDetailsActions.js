@@ -33,6 +33,9 @@ export const updateOfficeWithId = (officeData) => async (dispatch) => {
       payload: { id: officeData.id, office: officeData },
     });
   } catch (e) {
-    dispatch({ type: officeDetails.UPDATE_OFFICE_ERROR });
+    dispatch({ 
+      type: officeDetails.UPDATE_OFFICE_ERROR,
+      payload: e.toString(),
+    });
   }
 };
