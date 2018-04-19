@@ -35,7 +35,7 @@ class OfficeDetails extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getOfficeWithId(parseInt(this.props.match.params.id));
+    this.props.fetchOfficeWithId(parseInt(this.props.match.params.id));
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -304,7 +304,7 @@ OfficeDetails.propTypes = {
   match: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  getOfficeWithId: PropTypes.func.isRequired,
+  fetchOfficeWithId: PropTypes.func.isRequired,
   updateOfficeWithId: PropTypes.func.isRequired,
   office: PropTypes.shape({
     id: PropTypes.number,

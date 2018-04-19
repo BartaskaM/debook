@@ -3,8 +3,8 @@ import { officeDetails } from 'Constants/ActionTypes';
 const defaultState = {
   office: null,
 
-  getOfficeLoading: false,
-  getOfficeError: false,
+  fetchOfficeLoading: false,
+  fetchOfficeError: false,
 
   updateOfficeLoading: false,
   updateOfficeError: false,
@@ -15,22 +15,22 @@ export default (state = defaultState, action) => {
     case officeDetails.FETCH_OFFICE_START: {
       return {
         ...state,
-        getOfficeLoading: true,
-        getOfficeError: false,
+        fetchOfficeLoading: true,
+        fetchOfficeError: false,
       };
     }
     case officeDetails.FETCH_OFFICE_SUCCESS: {
       return {
         ...state,
-        getOfficeLoading: false,
+        fetchOfficeLoading: false,
         office: action.payload,
       };
     }
     case officeDetails.FETCH_OFFICE_ERROR: {
       return {
         ...state,
-        getOfficeLoading: false,
-        getOfficeError: true,
+        fetchOfficeLoading: false,
+        fetchOfficeError: true,
       };
     }
 
@@ -44,7 +44,7 @@ export default (state = defaultState, action) => {
     case officeDetails.UPDATE_OFFICE_SUCCESS: {
       return {
         ...state,
-        getOfficeLoading: false,
+        fetchOfficeLoading: false,
         office: action.payload.office,
       };
     }

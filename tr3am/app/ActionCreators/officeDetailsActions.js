@@ -1,29 +1,33 @@
 import { officeDetails } from 'Constants/ActionTypes';
-import officeList from 'Constants/Offices';
+import api from 'api';
 
-export const getOfficeWithId = (officeId) => async (dispatch) => {
-  dispatch({ type: officeDetails.FETCH_OFFICE_START });
+export const fetchOfficeWithId = (officeId) => async (dispatch) => {
+  dispatch({
+    type: officeDetails.FETCH_OFFICE_START,
+  });
 
   try {
-    const responseData = officeList.find(office => office.id === officeId);
-
-    if (responseData) {
-      dispatch({
-        type: officeDetails.FETCH_OFFICE_SUCCESS,
-        payload: responseData,
-      });
-    } else {
-      throw new Error(`Failed to find office with id: ${officeId}`);
-    }
+    const response = await api.get(`offices/${officeId}`);
+    dispatch({
+      type: officeDetails.FETCH_OFFICE_SUCCESS,
+      payload: response.data,
+    });
   } catch (e) {
-    dispatch({ type: officeDetails.FETCH_OFFICE_ERROR });
+    dispatch({
+      type: officeDetails.FETCH_OFFICE_ERROR,
+      payload: e.toString(),
+    });
   }
 };
 
 export const updateOfficeWithId = (officeData) => async (dispatch) => {
-  dispatch({ type: officeDetails.UPDATE_OFFICE_START });
+  dispatch({
+    type: officeDetails.UPDATE_OFFICE_START,
+  });
 
   try {
+    api.put(`offices/${officeData.id}`, { ...officeData });
+
     dispatch({
       type: officeDetails.UPDATE_OFFICE_SUCCESS,
       payload: { id: officeData.id, office: officeData },

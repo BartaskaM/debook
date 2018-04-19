@@ -2,11 +2,11 @@ import { offices } from 'Constants/ActionTypes';
 import api from 'api';
 
 export const fetchOffices = () => async dispatch => {
-  try{
-    dispatch({
-      type: offices.FETCH_OFFICES_START,
-    });
+  dispatch({
+    type: offices.FETCH_OFFICES_START,
+  });
 
+  try {
     const response = await api.get('offices');
 
     dispatch({
@@ -22,15 +22,12 @@ export const fetchOffices = () => async dispatch => {
 };
 
 export const addOffice = (office) => async (dispatch) => {
+  dispatch({ 
+    type: offices.ADD_OFFICE_START,
+  });
+  
   try {
-    dispatch({ 
-      type: offices.ADD_OFFICE_START,
-    });
-
-    //Temp solution for setting id
-    office['id'] = Math.floor(Math.random() * 10000) + 1;
-    //---------------------------
-    
+    await api.post('offices', office);
     dispatch({
       type: offices.ADD_OFFICE_SUCCESS,
       payload: office,
