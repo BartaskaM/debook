@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Entities;
+using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Offices;
@@ -30,7 +31,7 @@ namespace tr3am.Controllers
             {
                 return Ok(_officesRepository.GetById(id));
             }
-            catch
+            catch(InvalidOfficeException)
             {
                 return NotFound();
             }
@@ -52,11 +53,15 @@ namespace tr3am.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] OfficeItemRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                BadRequest(ModelState);
+            }
             try
             {
                 _officesRepository.Update(id, request);
             }
-            catch
+            catch(InvalidOfficeException)
             {
                 return NotFound();
             }
@@ -67,7 +72,14 @@ namespace tr3am.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _officesRepository.Delete(id);
+            try
+            {
+                _officesRepository.Delete(id);
+            }
+            catch (InvalidOfficeException)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

@@ -31,7 +31,7 @@ namespace tr3am.Controllers
             return _reservationsRepository.GetByDeviceId(id);
         }
         [HttpPost("api/reservations")]
-        public IActionResult Create(ReservationRequest request)
+        public IActionResult Create([FromBody]ReservationRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +53,7 @@ namespace tr3am.Controllers
             }
         }
         [HttpPost("api/reservations/{id}")]
-        public IActionResult Update(int id, ReservationRequest request)
+        public IActionResult Update(int id, [FromBody]ReservationRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace tr3am.Controllers
             }
             catch (InvalidDeviceException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This office doesn't exist" });
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This device doesn't exist" });
             }
             catch (InvalidUserException)
             {

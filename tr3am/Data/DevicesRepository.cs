@@ -95,7 +95,7 @@ namespace tr3am.Data
         public void Create(CreateDeviceRequest request)
         {
             var id = _items.Count() != 0 ? _items.Max(x => x.Id) + 1 : 1;
-            var office = _officesRepository.GetById(request.Location);
+            var office = _officesRepository.GetById(request.Location.Value);
             if(office == null)
             {
                 throw new InvalidOfficeException();
@@ -110,7 +110,7 @@ namespace tr3am.Data
                 Image = request.Image,
                 Name = request.Name,
                 Custody = null,
-                IdentificationNum = request.IdentificationNum,
+                IdentificationNum = request.IdentificationNum.Value,
                 SerialNum = request.SerialNum,
                 OS = request.OS,
                 Group = request.Group,
@@ -128,14 +128,14 @@ namespace tr3am.Data
         public void Update(int id, UpdateDeviceRequest request)
         {
             var item = _items.First(x => x.Id == id);
-            var office = _officesRepository.GetById(request.Location);
+            var office = _officesRepository.GetById(request.Location.Value);
             if (office == null)
             {
                 throw new InvalidOfficeException();
             }
-            UserDTO user = _usersRepository.GetById(request.Custody);           
-            item.Brand = new Brand { Id = request.Brand };
-            item.Model = new Model { Id = request.Model };
+            UserDTO user = _usersRepository.GetById(request.Custody.Value);           
+            item.Brand = new Brand { Id = request.Brand.Value };
+            item.Model = new Model { Id = request.Model.Value };
             item.Available = request.Available;
             item.Active = request.Active;
             item.Image = request.Image;
@@ -155,7 +155,11 @@ namespace tr3am.Data
 
         public void Delete(int id)
         {
-            var item = _items.First(x => x.Id == id);
+            var item = _items.FirstOrDefault(x => x.Id == id);
+            if (item == null)
+            {
+                throw new InvalidDeviceException();
+            }
             item.Active = false;
         }
     }

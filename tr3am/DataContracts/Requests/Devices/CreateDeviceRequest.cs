@@ -9,14 +9,14 @@ namespace tr3am.DataContracts.Requests.Devices
     public class CreateDeviceRequest
     {
         [Required]
-        public int Brand { get; set; }
+        public int? Brand { get; set; }
         [Required]
-        public int Model { get; set; }
+        public int? Model { get; set; }
         public string Image { get; set; }
         [MaxLength(255)]
         public string Name { get; set; }
         [Required]
-        public int IdentificationNum { get; set; }
+        public int? IdentificationNum { get; set; }
         [Required]
         [MaxLength(255)]
         public string SerialNum { get; set; }
@@ -35,6 +35,6 @@ namespace tr3am.DataContracts.Requests.Devices
         public string Vendor { get; set; }
         public float TaxRate { get; set; }
         [Required]
-        public int Location { get; set; }
+        public int? Location { get; set; }
     }
 }

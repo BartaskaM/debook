@@ -95,7 +95,7 @@ namespace tr3am.Data
         public int Create(CreateUserRequest request)
         {
             int id = _items.Any() ? _items.Max(x => x.Id) + 1 : 1;
-            OfficeDTO officeDto = _officesRepository.GetById(request.Office);
+            OfficeDTO officeDto = _officesRepository.GetById(request.Office.Value);
             if (officeDto == null)
             {
                 throw new InvalidOfficeException();
@@ -155,7 +155,7 @@ namespace tr3am.Data
             {
                 throw new InvalidUserException();
             }
-            OfficeDTO officeDto = _officesRepository.GetById(request.Office);
+            OfficeDTO officeDto = _officesRepository.GetById(request.Office.Value);
             if (officeDto == null)
             {
                 throw new InvalidOfficeException();

@@ -50,7 +50,7 @@ namespace tr3am.Controllers
             try
             {
                 var id = _usersRepository.Create(request);
-                return CreatedAtAction(nameof(GetById), new { id }, id);
+                NoContent();
             }
             catch (InvalidOfficeException)
             {
@@ -72,6 +72,7 @@ namespace tr3am.Controllers
             try
             {
                 _usersRepository.Update(id, request);
+                return NoContent();
             }
             catch(InvalidUserException)
             {
@@ -85,8 +86,6 @@ namespace tr3am.Controllers
             {
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = "This e-mail is already in use." });
             }
-
-            return NoContent();
         }
 
         [HttpDelete("{id}")]

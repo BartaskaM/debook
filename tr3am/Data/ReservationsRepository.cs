@@ -87,9 +87,9 @@ namespace tr3am.Data
 
         public void Create(ReservationRequest request)
         {
-            int id = _items.Any() ? _items.Max(x => x.Id) : 1;
-            UserDTO userDto = _usersRepository.GetById(request.User);
-            FullDeviceDTO deviceDto = _devicesRepository.GetById(request.Device);
+            int id = _items.Any() ? _items.Max(x => x.Id) + 1 : 1;
+            UserDTO userDto = _usersRepository.GetById(request.User.Value);
+            FullDeviceDTO deviceDto = _devicesRepository.GetById(request.Device.Value);
             Reservation reservation = new Reservation
             {
                 Id = id,
@@ -99,6 +99,7 @@ namespace tr3am.Data
                 From = request.From,
                 To = request.To,
             };
+            _items.Add(reservation);
         }
 
         public void Update(int id, ReservationRequest request)
@@ -109,9 +110,9 @@ namespace tr3am.Data
                 throw new InvalidReservationException();
             }
 
-            reservation.User = Mapper.Map<UserDTO, User>(_usersRepository.GetById(request.User));
+            reservation.User = Mapper.Map<UserDTO, User>(_usersRepository.GetById(request.User.Value));
             reservation.Status = request.Status;
-            reservation.Device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(request.Device));
+            reservation.Device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(request.Device.Value));
             reservation.From = request.From;
             reservation.To = request.To;
         }
@@ -138,7 +139,7 @@ namespace tr3am.Data
                 if (x.Status == Status.Pending)
                 {
                     var z = now - x.From;
-                    if ( x.From > now && x.From - now > fifteenMinutes)
+                    if (now - x.From > fifteenMinutes)
                     {
                         
                         x.Status = Status.Expired;

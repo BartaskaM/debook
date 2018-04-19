@@ -94,7 +94,7 @@ namespace tr3am.Controllers
             {
                 _devicesRepository.Delete(id);
             }
-            catch
+            catch(InvalidDeviceException)
             {
                 return NotFound();
             }
