@@ -20,7 +20,7 @@ const UserItem = ({ classes, user, history }) => {
               <Grid item xs={2}>{user.firstName}</Grid>
               <Grid item xs={2}>{user.lastName}</Grid>
               <Grid item xs={3}>{user.email}</Grid>
-              <Grid item xs={2}>{user.office.city}</Grid>
+              <Grid item xs={2}>{user.office}</Grid>
               <Grid item xs={3}>{user.slack}</Grid>
             </Grid>
           </Typography>
@@ -38,14 +38,7 @@ UserItem.propTypes = {
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    office: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      country: PropTypes.string.isRequired,
-      city: PropTypes.string.isRequired,
-      lat: PropTypes.number.isRequired,
-      lng: PropTypes.number.isRequired,
-      address: PropTypes.string.isRequired,
-    }).isRequired,
+    office: PropTypes.string.isRequired,
     slack: PropTypes.string.isRequired,
     role: PropTypes.string.isRequired,
   }).isRequired,

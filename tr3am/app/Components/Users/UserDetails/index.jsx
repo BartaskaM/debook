@@ -11,6 +11,7 @@ import NavigateBefore from 'material-ui-icons/NavigateBefore';
 import Input from 'material-ui/Input';
 import Select from 'material-ui/Select';
 import { MenuItem } from 'material-ui/Menu';
+import { CircularProgress, LinearProgress } from 'material-ui/Progress';
 import {
   FormControl,
   FormGroup,
@@ -22,7 +23,6 @@ import { styles } from './Styles';
 import * as userDetailsActions from 'ActionCreators/userDetailsActions';
 import * as usersActions from 'ActionCreators/usersActions';
 import * as officesActions from 'ActionCreators/officesActions';
-import { LinearProgress, CircularProgress } from 'material-ui';
 
 class UserDetails extends React.Component {
   constructor(props) {
