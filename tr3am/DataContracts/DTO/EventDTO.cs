@@ -13,6 +13,6 @@ namespace tr3am.DataContracts.DTO
         public FullDeviceDTO Device { get; set; }
         public OfficeDTO Office { get; set; }
         public UserDTO User { get; set; }
-        public DateTime Date_time { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

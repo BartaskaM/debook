@@ -36,7 +36,7 @@ namespace tr3am.Data
                     Device = Mapper.Map<FullDeviceDTO,Device>(_devicesRepository.GetById(1)),
                     Office = Mapper.Map<OfficeDTO,Office>(_officesRepository.GetById(1)),
                     User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(1)),
-                    Date_time = new DateTime(2018, 3, 1, 8, 0, 0),
+                    CreatedOn = new DateTime(2018, 3, 1, 8, 0, 0),
                 },
                                 new Event
                 {
@@ -45,7 +45,7 @@ namespace tr3am.Data
                     Device = Mapper.Map<FullDeviceDTO,Device>(_devicesRepository.GetById(1)),
                     Office = Mapper.Map<OfficeDTO,Office>(_officesRepository.GetById(2)),
                     User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(2)),
-                    Date_time = new DateTime(2018, 4, 2, 8, 0, 0),
+                    CreatedOn = new DateTime(2018, 4, 2, 8, 0, 0),
                 },
             };
         }
@@ -92,9 +92,8 @@ namespace tr3am.Data
                 Device = Mapper.Map<FullDeviceDTO, Device>(device),
                 Office = Mapper.Map<OfficeDTO, Office>(office),
                 User = Mapper.Map<UserDTO, User>(user),
-                Date_time = request.Date_time,
+                CreatedOn = request.Date_time,
             };
-
             _items.Add(item);
             return id;
         }
@@ -122,13 +121,13 @@ namespace tr3am.Data
             item.Device = Mapper.Map<FullDeviceDTO, Device>(device);
             item.Office = Mapper.Map<OfficeDTO, Office>(office);
             item.User = Mapper.Map<UserDTO, User>(user);
-            item.Date_time = request.Date_time;
-
+            item.CreatedOn = request.Date_time;
         }
 
         public void Delete(int id)
         {
             var item = _items.FirstOrDefault(x => x.Id == id);
+
             if (item == null)
             {
                 throw new InvalidEventException();

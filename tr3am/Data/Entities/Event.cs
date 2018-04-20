@@ -12,6 +12,6 @@ namespace tr3am.Data.Entities
         public Device Device { get; set; }
         public Office Office { get; set; }
         public User User { get; set; }
-        public DateTime Date_time { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

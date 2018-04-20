@@ -40,8 +40,6 @@ namespace tr3am.Controllers
             }
         }
 
-
-
         [HttpPost]
         public IActionResult Create([FromBody]EventItemRequest request)
         {
@@ -56,15 +54,18 @@ namespace tr3am.Controllers
             }
             catch (InvalidOfficeException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This office doesn't exist" });
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.Office.ToString());
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = errorText });
             }
             catch (InvalidDeviceException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This device doesn't exist" });
+                string errorText = String.Format("Device with ID: {0} doesn't exist", request.Device.ToString());
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (InvalidUserException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This user doesn't exist" });
+                string errorText = String.Format("User with ID: {0} doesn't exist", request.User.ToString());
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }
 
@@ -82,17 +83,19 @@ namespace tr3am.Controllers
             }
             catch (InvalidOfficeException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This office doesn't exist" });
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.Office.ToString());
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = errorText });
             }
             catch (InvalidUserException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This user doesn't exist" });
+                string errorText = String.Format("User with ID: {0} doesn't exist", request.User.ToString());
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (InvalidDeviceException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This device doesn't exist" });
+                string errorText = String.Format("Device with ID: {0} doesn't exist", request.Device.ToString());
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
-
         }
 
         [HttpDelete("{id}")]
