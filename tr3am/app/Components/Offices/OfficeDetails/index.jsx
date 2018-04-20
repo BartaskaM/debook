@@ -22,7 +22,7 @@ class OfficeDetails extends React.Component {
     super(props);
 
     this.state = {
-      office: null,
+      id: null,
       country: null,
       city: null,
       address: null,
@@ -39,48 +39,20 @@ class OfficeDetails extends React.Component {
     this.props.fetchOfficeWithId(parseInt(this.props.match.params.id));
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.office != prevState.office) {
-      return {
-        office: nextProps.office,
-        country: nextProps.office.country,
-        city: nextProps.office.city,
-        address: nextProps.office.address,
-        lat: nextProps.office.lat,
-        lng: nextProps.office.lng,
-
-        isEditMode: false,
-      };
-    }
-
+  static getDerivedStateFromProps(nextProps) {
     return {
-      office: null,
-      country: null,
-      city: null,
-      address: null,
-      lat: null,
-      lng: null,
-
+      ...nextProps.office,
       isEditMode: false,
     };
   }
 
   resetStateFromProps() {
-    const { office } = this.props;
-
-    this.setState({
-      office: office,
-      country: office.country,
-      city: office.city,
-      address: office.address,
-      lat: office.lat,
-      lng: office.lng,
-    });
+    this.setState({...this.props.office});
   }
 
   saveEditedDetails() {
     const editedOffice = {
-      id: this.state.office.id,
+      id: this.props.office.id,
       country: this.state.country,
       city: this.state.city,
       address: this.state.address,
@@ -94,30 +66,30 @@ class OfficeDetails extends React.Component {
   }
 
   renderInformation() {
-    const { classes, user } = this.props;
+    const { classes, userRole, office } = this.props;
 
     return (
       <Paper className={classes.officeLocationInfo}>
         <Typography
-          variant='display2'><b>Country:</b> {this.state.country}</Typography>
+          variant='display2'><b>Country:</b> {office.country}</Typography>
         <br />
         <Typography
-          variant='display2'><b>City:</b> {this.state.city}</Typography>
+          variant='display2'><b>City:</b> {office.city}</Typography>
         <br />
         <Typography
-          variant='display2'><b>Address:</b> {this.state.address}</Typography>
+          variant='display2'><b>Address:</b> {office.address}</Typography>
         <br />
-        {RouteRoles.Offices.includes(user.role) &&
+        {RouteRoles.Offices.includes(userRole) &&
           <div>
             <Typography
-              variant='display2'><b>LAT:</b> {this.state.lat}</Typography>
+              variant='display2'><b>LAT:</b> {office.lat}</Typography>
             <br />
           </div>
         }
-        {RouteRoles.Offices.includes(user.role) &&
+        {RouteRoles.Offices.includes(userRole) &&
           <div>
             <Typography
-              variant='display2'><b>LNG:</b> {this.state.lng}</Typography>
+              variant='display2'><b>LNG:</b> {office.lng}</Typography>
             <br />
           </div>
         }
@@ -228,9 +200,9 @@ class OfficeDetails extends React.Component {
   }
 
   renderButtons() {
-    const { classes, user } = this.props;
+    const { classes, userRole } = this.props;
 
-    return RouteRoles.Offices.includes(user.role) ? this.state.isEditMode ? (
+    return RouteRoles.Offices.includes(userRole) ? this.state.isEditMode ? (
       <span>
         <Button variant="raised"
           color="secondary"
@@ -265,8 +237,8 @@ class OfficeDetails extends React.Component {
   }
 
   render() {
-    const { classes, history, fetchOfficeLoading } = this.props;
-    return this.state.office ? (
+    const { classes, history, office, match, fetchOfficeLoading } = this.props;
+    return office && office.id === parseInt(match.params.id) ? (
       <div className={classes.root}>
         <Button variant="flat" onClick={history.goBack}>
           <NavigateBefore />
@@ -275,7 +247,7 @@ class OfficeDetails extends React.Component {
         <Divider className={classes.divider} />
 
         <Grid container spacing={16} justify='center' className={classes.officedetailsContainer}>
-          { fetchOfficeLoading ?
+          {fetchOfficeLoading ?
             <Grid item xs={12}>
               <LinearProgress />
             </Grid>
@@ -288,8 +260,8 @@ class OfficeDetails extends React.Component {
               <Grid item xs={6}>
                 <Paper className={classes.mapElement}>
                   <Map
-                    lat={this.state.office.lat}
-                    lng={this.state.office.lng}
+                    lat={office.lat}
+                    lng={office.lng}
                     googleMapURL={'https://maps.googleapis.com/' +
                       'maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA' +
                       '&v=3.exp&libraries=geometry,drawing,places'}
@@ -310,7 +282,7 @@ OfficeDetails.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
+  userRole: PropTypes.string.isRequired,
   fetchOfficeWithId: PropTypes.func.isRequired,
   updateOfficeWithId: PropTypes.func.isRequired,
   office: PropTypes.shape({
@@ -326,7 +298,7 @@ OfficeDetails.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    user: state.auth.user,
+    userRole: state.auth.user.role,
     office: state.officeDetails.office,
     fetchOfficeLoading: state.officeDetails.fetchOfficeLoading,
     updateOfficeLoading: state.officeDetails.updateOfficeLoading,
