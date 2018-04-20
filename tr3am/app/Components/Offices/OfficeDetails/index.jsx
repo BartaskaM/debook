@@ -61,8 +61,6 @@ class OfficeDetails extends React.Component {
     };
 
     this.props.updateOfficeWithId(editedOffice);
-
-    this.setState({ isEditMode: false });
   }
 
   renderInformation() {
@@ -100,7 +98,7 @@ class OfficeDetails extends React.Component {
   }
 
   renderInformationEditable() {
-    const { classes } = this.props;
+    const { classes, updateOfficeLoading } = this.props;
     return (
       <Paper className={classes.officeLocationInfo}>
         <Typography
@@ -194,6 +192,12 @@ class OfficeDetails extends React.Component {
         />
         <br />
 
+        {!updateOfficeLoading &&
+            <Grid item xs={12}>
+              <LinearProgress className={classes.updateOfficeLoadingBar}/>
+            </Grid>
+        }
+
         {this.renderButtons()}
       </Paper>
     );
@@ -262,9 +266,9 @@ class OfficeDetails extends React.Component {
                   <Map
                     lat={office.lat}
                     lng={office.lng}
-                    googleMapURL={`https://maps.googleapis.com/
-                      maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA
-                      &v=3.exp&libraries=geometry,drawing,places`}
+                    googleMapURL={'https://maps.googleapis.com/'
+                      + 'maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA'
+                      + '&v=3.exp&libraries=geometry,drawing,places'}
                     loadingElement={<div style={{ height: '100%' }} />}
                     containerElement={<div style={{ height: 400 }} />}
                     mapElement={<div style={{ height: '100%' }} />}
@@ -294,6 +298,7 @@ OfficeDetails.propTypes = {
     lng: PropTypes.number,
   }),
   fetchOfficeLoading: PropTypes.bool.isRequired,
+  updateOfficeLoading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => {

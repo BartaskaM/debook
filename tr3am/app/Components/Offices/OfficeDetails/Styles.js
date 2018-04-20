@@ -57,6 +57,9 @@ const Styles = {
     width: 120,
     display: 'inline-block',
   },
+  updateOfficeLoadingBar: {
+    marginTop: 20,
+  },
 };
 
 export default Styles;
