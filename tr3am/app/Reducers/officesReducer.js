@@ -4,10 +4,10 @@ const defaultState = {
   offices: [],
 
   fetchOfficesLoading: false,
-  fetchOfficesError: '',
+  fetchOfficesErrorMessage: '',
 
   createOfficeLoading: false,
-  createOfficeError: '',
+  createOfficeErrorMessage: '',
 
   showAddOfficeModal: false,
 };
@@ -18,7 +18,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchOfficesLoading: true,
-        fetchOfficesError: '',
+        fetchOfficesErrorMessage: '',
       };
     }
     case offices.FETCH_OFFICES_SUCCESS: {
@@ -32,7 +32,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchOfficesLoading: false,
-        fetchOfficesError: action.payload,
+        fetchOfficesErrorMessage: action.payload,
       };
     }
 
@@ -40,7 +40,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         createOfficeLoading: true,
-        createOfficeError: '',
+        createOfficeErrorMessage: '',
       };
     }
     case offices.CREATE_OFFICE_SUCCESS: {
@@ -54,7 +54,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         createOfficeLoading: false,
-        createOfficeError: action.payload,
+        createOfficeErrorMessage: action.payload,
       };
     }
 

@@ -93,9 +93,9 @@ Offices.propTypes = {
     lng: PropTypes.number.isRequired,
   })).isRequired,
   fetchOfficesLoading: PropTypes.bool.isRequired,
-  fetchOfficesError: PropTypes.string.isRequired,
+  fetchOfficesErrorMessage: PropTypes.string.isRequired,
   createOfficeLoading: PropTypes.bool.isRequired,
-  createOfficeError: PropTypes.string.isRequired,
+  createOfficeErrorMessage: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
   showAddOfficeModal: PropTypes.func.isRequired,
   fetchOffices: PropTypes.func.isRequired,
@@ -108,10 +108,10 @@ const mapStateToProps = state => {
 
     offices: state.offices.offices,
     fetchOfficesLoading: state.offices.fetchOfficesLoading,
-    fetchOfficesError: state.offices.fetchOfficesError,
+    fetchOfficesErrorMessage: state.offices.fetchOfficesErrorMessage,
 
     createOfficeLoading: state.offices.createOfficeLoading,
-    createOfficeError: state.offices.createOfficeError,
+    createOfficeErrorMessage: state.offices.createOfficeErrorMessage,
   };
 };
 export default connect(mapStateToProps, officesActions)(

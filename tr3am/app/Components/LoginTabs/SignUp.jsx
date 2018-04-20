@@ -128,7 +128,7 @@ class SignUp extends React.Component {
       classes, 
       signUpError, 
       fetchingSignUp,
-      fetchOfficesError,
+      fetchOfficesErrorMessage,
       fetchOfficesLoading,
       offices, 
     } = this.props;
@@ -258,8 +258,8 @@ class SignUp extends React.Component {
                   ))}
                 </Select>
                 {
-                  fetchOfficesError.length > 0 && 
-                <FormHelperText>{fetchOfficesError}</FormHelperText>
+                  fetchOfficesErrorMessage.length > 0 && 
+                <FormHelperText>{fetchOfficesErrorMessage}</FormHelperText>
                 }
                 {
                   fetchOfficesLoading && 
@@ -316,7 +316,7 @@ SignUp.propTypes = {
     lng: PropTypes.number.isRequired,
   })).isRequired,
   fetchOfficesLoading: PropTypes.bool.isRequired,
-  fetchOfficesError: PropTypes.string.isRequired,
+  fetchOfficesErrorMessage: PropTypes.string.isRequired,
   fetchOffices: PropTypes.func.isRequired,
 };
 
@@ -326,7 +326,7 @@ const mapStateToProps = store => ({
   fetchingSignUp: store.auth.fetchingSignUp,
   offices: store.offices.offices,
   fetchOfficesLoading: store.offices.fetchOfficesLoading,
-  fetchOfficesError: store.offices.fetchOfficesError,
+  fetchOfficesErrorMessage: store.offices.fetchOfficesErrorMessage,
 });
 
 export default connect(mapStateToProps, {
