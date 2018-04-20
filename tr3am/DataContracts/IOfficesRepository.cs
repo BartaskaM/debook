@@ -7,9 +7,9 @@ namespace tr3am.DataContracts
 {
     public interface IOfficesRepository
     {
-        List<Office> GetAll();
+        List<OfficeDTO> GetAll();
         OfficeDTO GetById(int id);
-        Office Create(OfficeItemRequest request);
+        int Create(OfficeItemRequest request);
         void Update(int id, OfficeItemRequest request);
         void Delete(int id);
     }

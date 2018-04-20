@@ -9,9 +9,9 @@ namespace tr3am.DataContracts.Requests.Devices
     public class UpdateDeviceRequest
     {
         [Required]
-        public int Brand { get; set; }
+        public int? Brand { get; set; }
         [Required]
-        public int Model { get; set; }
+        public int? Model { get; set; }
         public string Image { get; set; }
         [MaxLength(255)]
         public string Name { get; set; }
@@ -33,12 +33,12 @@ namespace tr3am.DataContracts.Requests.Devices
         public string Vendor { get; set; }
         public float TaxRate { get; set; }
         [Required]
-        public int Location { get; set; }
+        public int? Location { get; set; }
         [Required]
         public bool Available { get; set; }
         [Required]
         public bool Active { get; set; }
         [Required]
-        public int Custody { get; set; }
+        public int? Custody { get; set; }
     }
 }

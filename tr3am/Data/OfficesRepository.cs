@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
@@ -64,33 +65,25 @@ namespace tr3am.Data
             };
         }
 
-        public List<Office> GetAll()
+        public List<OfficeDTO> GetAll()
         {
-            return _items.ToList();
+            return _items.Select(Mapper.Map<Office,OfficeDTO>).ToList();
         }
 
         public OfficeDTO GetById(int id)
         {
-            var office = _items.FirstOrDefault(x => x.Id == id);
-            if (office == null)
+            var item = _items.FirstOrDefault(x => x.Id == id);
+            if (item == null)
             {
                 throw new InvalidOfficeException();
             }
 
-            return new OfficeDTO
-            {
-                Id = office.Id,
-                City = office.City,
-                Country = office.Country,
-                Address = office.Address,
-                Lat = office.Lat,
-                Lng = office.Lng
-            };
+            return Mapper.Map<Office, OfficeDTO>(item);
         }
 
-        public Office Create(OfficeItemRequest request)
+        public int Create(OfficeItemRequest request)
         {
-            var id = _items.DefaultIfEmpty().Max(x => x.Id) + 1;
+            var id = _items.Any() ? _items.Max(x => x.Id) + 1 : 1;
 
             var item = new Office
             {
@@ -108,8 +101,7 @@ namespace tr3am.Data
             }
 
             _items.Add(item);
-
-            return item;
+            return id;
         }
 
         public bool OfficeExists(Office office)
@@ -129,22 +121,26 @@ namespace tr3am.Data
 
         public void Update(int id, OfficeItemRequest request)
         {
-            var office = _items.FirstOrDefault(x => x.Id == id);
-            if (office == null)
+            var item = _items.FirstOrDefault(x => x.Id == id);
+            if (item == null)
             {
                 throw new InvalidOfficeException();
             }
 
-            office.Country = request.Country;
-            office.City = request.City;
-            office.Address = request.Address;
-            office.Lat = request.Lat;
-            office.Lng = request.Lng;
+            item.Country = request.Country;
+            item.City = request.City;
+            item.Address = request.Address;
+            item.Lat = request.Lat;
+            item.Lng = request.Lng;
         }
 
         public void Delete(int id)
         {
-            var item = _items.Single(x => x.Id == id);
+            var item = _items.FirstOrDefault(x => x.Id == id);
+            if (item == null)
+            {
+                throw new InvalidOfficeException();
+            }
 
             _items.Remove(item);
         }

@@ -17,10 +17,12 @@ namespace tr3am.Controllers
     public class DevicesController : Controller
     {
         private readonly IDevicesRepository _devicesRepository;
+        private readonly IReservationsRepository _reservationsRepository;
 
-        public DevicesController(IDevicesRepository devicesRepository)
+        public DevicesController(IDevicesRepository devicesRepository, IReservationsRepository reservationsRepository)
         {
             _devicesRepository = devicesRepository;
+            _reservationsRepository = reservationsRepository;
         }
 
         [HttpGet]
@@ -51,8 +53,8 @@ namespace tr3am.Controllers
             }
             try
             {
-                var item = _devicesRepository.Create(request);
-                return CreatedAtAction(nameof(GetById), new { id = item }, item);
+                _devicesRepository.Create(request);
+                return NoContent();
             }
             catch(InvalidOfficeException)
             {
@@ -94,11 +96,17 @@ namespace tr3am.Controllers
             {
                 _devicesRepository.Delete(id);
             }
-            catch
+            catch(InvalidDeviceException)
             {
                 return NotFound();
             }
             return NoContent();
+        }
+
+        [HttpGet("{id}/reservations")]
+        public IEnumerable<ReservationDTO> GetDeviceReservations(int id, [FromQuery]bool showAll)
+        {
+            return _reservationsRepository.GetByDeviceId(id,showAll);
         }
     }
 }

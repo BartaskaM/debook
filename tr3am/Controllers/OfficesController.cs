@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
+using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Offices;
 
 namespace tr3am.Controllers
@@ -19,7 +20,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Office> GetAll()
+        public IEnumerable<OfficeDTO> GetAll()
         {
             return _officesRepository.GetAll();
         }
@@ -47,8 +48,8 @@ namespace tr3am.Controllers
 
             try
             {
-                var item = _officesRepository.Create(request);
-                return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+                var itemId = _officesRepository.Create(request);
+                return CreatedAtAction(nameof(GetById), new { id = itemId }, itemId);
             }
             catch (DuplicateOfficeException)
             {
@@ -59,6 +60,10 @@ namespace tr3am.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] OfficeItemRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                BadRequest(ModelState);
+            }
             try
             {
                 _officesRepository.Update(id, request);

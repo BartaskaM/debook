@@ -28,10 +28,11 @@ export const createOffice = (office) => async (dispatch) => {
   
   try {
     const response = await api.post('/offices', office);
+    office['id'] = response.data;
     
     dispatch({
       type: offices.CREATE_OFFICE_SUCCESS,
-      payload: response.data,
+      payload: office,
     });
   } catch (e) {
     dispatch({ 
