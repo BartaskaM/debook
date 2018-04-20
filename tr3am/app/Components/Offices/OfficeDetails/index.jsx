@@ -192,7 +192,7 @@ class OfficeDetails extends React.Component {
         />
         <br />
 
-        {!updateOfficeLoading &&
+        {updateOfficeLoading &&
             <Grid item xs={12}>
               <LinearProgress className={classes.updateOfficeLoadingBar}/>
             </Grid>

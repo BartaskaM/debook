@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import * as officesActions from 'ActionCreators/officesActions';
 import Typography from 'material-ui/Typography';
 import CoordinatesRegEx from 'Constants/CoordinatesRegEx';
+import { LinearProgress } from 'material-ui/Progress';
 
 import Styles from './Styles';
 
@@ -34,10 +35,11 @@ class AddOfficeModal extends React.Component {
       LAT: 0,
       LNG: 0,
       errorMessage: '',
+      createOfficeLoading: false,
     };
     this.submitOffice = this.submitOffice.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
-    this.addNewOffice = this.addNewOffice.bind(this);
+    this.createNewOffice = this.createNewOffice.bind(this);
     this.officeExists = this.officeExists.bind(this);
     this.validateCoordinates = this.validateCoordinates.bind(this);
   }
@@ -46,12 +48,24 @@ class AddOfficeModal extends React.Component {
     this.props.showAddOfficeModal(false);
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.createOfficeLoading != prevState.createOfficeLoading) {
+      if(nextProps.createOfficeLoading == false) {
+        nextProps.history.push(`/offices/${nextProps.offices[nextProps.offices.length - 1].id}`);
+      }
+
+      return {
+        createOfficeLoading: nextProps.createOfficeLoading,
+      };
+    }
+  }
+
   inputHandler(e) {
     this.setState({ errorMessage: '' });
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  addNewOffice() {
+  createNewOffice() {
     const newOffice = {
       country: this.state.country,
       city: this.state.city,
@@ -59,6 +73,7 @@ class AddOfficeModal extends React.Component {
       lat: parseFloat(this.state.LAT),
       lng: parseFloat(this.state.LNG),
     };
+    
     this.props.createOffice(newOffice);
   }
 
@@ -91,12 +106,12 @@ class AddOfficeModal extends React.Component {
     e.preventDefault();
     if (this.validateCoordinates()) {
       if (!this.officeExists()) {
-        this.addNewOffice();
+        this.createNewOffice();
       }
     }
   }
   render() {
-    const { classes } = this.props;
+    const { classes, createOfficeLoading } = this.props;
     return (
       <div>
         <Dialog
@@ -113,7 +128,7 @@ class AddOfficeModal extends React.Component {
               </DialogContentText>
               <form
                 onSubmit={this.submitOffice}
-                id="addNewOfficeForm">
+                id="createNewOfficeForm">
                 <FormGroup>
                   <FormControl className={classes.formField}>
                     <InputLabel className={classes.fontSize}>Country:</InputLabel>
@@ -167,6 +182,9 @@ class AddOfficeModal extends React.Component {
                   </FormControl>
                 </FormGroup>
               </form>
+              {createOfficeLoading &&
+                <LinearProgress className={classes.createOfficeLoadingBar} />
+              }
             </DialogContent>
             <Typography variant='headline' className={classes.errorMessage}>
               {this.state.errorMessage}
@@ -174,7 +192,7 @@ class AddOfficeModal extends React.Component {
             <DialogActions>
               <Button
                 type='submit'
-                form='addNewOfficeForm'
+                form='createNewOfficeForm'
                 color="primary"
                 className={classes.button}>
                 SUBMIT
@@ -206,14 +224,17 @@ AddOfficeModal.propTypes = {
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired,
   })).isRequired,
+  createOfficeLoading: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   showAddOfficeDialog: state.offices.showAddOfficeModal,
+  createOfficeLoading: state.offices.createOfficeLoading,
   offices: state.offices.offices,
   user: state.auth.user,
 });
 
 export default withRouter(connect(mapStateToProps,
-  officesActions)(withStyles(Styles)(AddOfficeModal)));
+  officesActions)(withStyles(Styles)(AddOfficeModal))
+);

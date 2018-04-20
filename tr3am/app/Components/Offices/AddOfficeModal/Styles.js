@@ -26,6 +26,9 @@ const Styles = theme => ({
   formField: {
     marginTop: 10,
   },
+  createOfficeLoadingBar: {
+    marginTop: 20,
+  },
 });
 
 export default Styles;
