@@ -21,7 +21,7 @@ export const fetchOffices = () => async dispatch => {
   }
 };
 
-export const createOffice = (office) => async (dispatch) => {
+export const createOffice = (office, history) => async (dispatch) => {
   dispatch({ 
     type: offices.CREATE_OFFICE_START,
   });
@@ -30,6 +30,8 @@ export const createOffice = (office) => async (dispatch) => {
     const response = await api.post('/offices', office);
     office['id'] = response.data;
     
+    history.push(`/offices/${response.data}`);
+
     dispatch({
       type: offices.CREATE_OFFICE_SUCCESS,
       payload: office,

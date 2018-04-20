@@ -35,7 +35,6 @@ class AddOfficeModal extends React.Component {
       LAT: 0,
       LNG: 0,
       errorMessage: '',
-      createOfficeLoading: false,
     };
     this.submitOffice = this.submitOffice.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
@@ -46,18 +45,6 @@ class AddOfficeModal extends React.Component {
 
   componentWillUnmount() {
     this.props.showAddOfficeModal(false);
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.createOfficeLoading != prevState.createOfficeLoading) {
-      if(nextProps.createOfficeLoading == false) {
-        nextProps.history.push(`/offices/${nextProps.offices[nextProps.offices.length - 1].id}`);
-      }
-
-      return {
-        createOfficeLoading: nextProps.createOfficeLoading,
-      };
-    }
   }
 
   inputHandler(e) {
@@ -73,8 +60,8 @@ class AddOfficeModal extends React.Component {
       lat: parseFloat(this.state.LAT),
       lng: parseFloat(this.state.LNG),
     };
-    
-    this.props.createOffice(newOffice);
+
+    this.props.createOffice(newOffice, this.props.history);
   }
 
   officeExists() {
