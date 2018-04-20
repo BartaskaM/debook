@@ -14,10 +14,8 @@ namespace tr3am.DataContracts.Requests.Offices
         [MaxLength(255)]
         public string Address { get; set; }
         [Required]
-        [MaxLength(12)]
         public double Lat { get; set; }
         [Required]
-        [MaxLength(12)]
         public double Lng { get; set; }
     }
 }

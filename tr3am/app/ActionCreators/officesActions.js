@@ -21,20 +21,21 @@ export const fetchOffices = () => async dispatch => {
   }
 };
 
-export const addOffice = (office) => async (dispatch) => {
+export const createOffice = (office) => async (dispatch) => {
   dispatch({ 
-    type: offices.ADD_OFFICE_START,
+    type: offices.CREATE_OFFICE_START,
   });
   
   try {
-    await api.post('/offices', office);
+    const response = await api.post('/offices', office);
+    
     dispatch({
-      type: offices.ADD_OFFICE_SUCCESS,
-      payload: office,
+      type: offices.CREATE_OFFICE_SUCCESS,
+      payload: response.data,
     });
   } catch (e) {
     dispatch({ 
-      type: offices.ADD_OFFICE_ERROR, 
+      type: offices.CREATE_OFFICE_ERROR, 
       payload: e.toString(), 
     });
   }

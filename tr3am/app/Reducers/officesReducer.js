@@ -6,8 +6,8 @@ const defaultState = {
   fetchOfficesLoading: false,
   fetchOfficesError: '',
 
-  addOfficeLoading: false,
-  addOfficeError: '',
+  createOfficeLoading: false,
+  createOfficeError: '',
 
   showAddOfficeModal: false,
 };
@@ -36,38 +36,25 @@ export default (state = defaultState, action) => {
       };
     }
 
-    case offices.ADD_OFFICE_START: {
+    case offices.CREATE_OFFICE_START: {
       return {
         ...state,
-        addOfficeLoading: true,
-        addOfficeError: false,
+        createOfficeLoading: true,
+        createOfficeError: '',
       };
     }
-    case offices.ADD_OFFICE_SUCCESS: {
+    case offices.CREATE_OFFICE_SUCCESS: {
       return {
         ...state,
-        addOfficeLoading: false,
+        createOfficeLoading: false,
         offices: [...state.offices, action.payload],
       };
     }
-    case offices.ADD_OFFICE_ERROR: {
+    case offices.CREATE_OFFICE_ERROR: {
       return {
         ...state,
-        addOfficeLoading: false,
-        addOfficeError: true,
-      };
-    }
-
-    case offices.UPDATE_OFFICE_SUCCESS: {
-      const newOfficesArray = state.offices;
-      newOfficesArray.splice(
-        newOfficesArray.find(office => office.id === action.payload.id),
-        1,
-        action.payload.office
-      );
-      return { 
-        ...state, 
-        offices: newOfficesArray,
+        createOfficeLoading: false,
+        createOfficeError: action.payload,
       };
     }
 

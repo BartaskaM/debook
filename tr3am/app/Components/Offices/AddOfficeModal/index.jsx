@@ -59,7 +59,7 @@ class AddOfficeModal extends React.Component {
       lat: parseFloat(this.state.LAT),
       lng: parseFloat(this.state.LNG),
     };
-    this.props.addOffice(newOffice);
+    this.props.createOffice(newOffice);
   }
 
   officeExists() {
@@ -194,7 +194,7 @@ class AddOfficeModal extends React.Component {
 }
 
 AddOfficeModal.propTypes = {
-  addOffice: PropTypes.func.isRequired,
+  createOffice: PropTypes.func.isRequired,
   showAddOfficeModal: PropTypes.func.isRequired,
   showAddOfficeDialog: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,

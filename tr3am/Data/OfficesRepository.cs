@@ -102,7 +102,7 @@ namespace tr3am.Data
                 Lng = request.Lng,
             };
 
-            if (!OfficeExists(item))
+            if (OfficeExists(item))
             {
                 throw new DuplicateOfficeException();
             }
