@@ -47,7 +47,7 @@ class OfficeDetails extends React.Component {
   }
 
   resetStateFromProps() {
-    this.setState({...this.props.office});
+    this.setState({ ...this.props.office });
   }
 
   saveEditedDetails() {
@@ -262,9 +262,9 @@ class OfficeDetails extends React.Component {
                   <Map
                     lat={office.lat}
                     lng={office.lng}
-                    googleMapURL={'https://maps.googleapis.com/' +
-                      'maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA' +
-                      '&v=3.exp&libraries=geometry,drawing,places'}
+                    googleMapURL={`https://maps.googleapis.com/
+                      maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA
+                      &v=3.exp&libraries=geometry,drawing,places`}
                     loadingElement={<div style={{ height: '100%' }} />}
                     containerElement={<div style={{ height: 400 }} />}
                     mapElement={<div style={{ height: '100%' }} />}
