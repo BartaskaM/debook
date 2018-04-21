@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import Paper from 'material-ui/Paper';
 import { ListItem } from 'material-ui/List';
 
@@ -17,10 +17,22 @@ const EventItem = ({ event, classes }) => {
           <Typography variant='display1'>
             <Grid container>
               <Grid item xs>{event.action}</Grid>
-              <Grid item xs>{event.device}</Grid>
-              <Grid item xs>{event.user}</Grid>
-              <Grid item xs>{event.office}</Grid>
-              <Grid item xs>{event.datetime.toLocaleString()}</Grid>
+              <Grid item xs>
+                <Link to={`/devices/${event.device.id}`}>
+                  {event.device.identificationNum}
+                </Link>
+              </Grid>
+              <Grid item xs>
+                <Link to={`/users/${event.user.id}`}>
+                  {event.user.email}
+                </Link>
+              </Grid>
+              <Grid item xs>
+                <Link to={`/offices/${event.office.id}`}>
+                  {event.office.city}
+                </Link>
+              </Grid>
+              <Grid item xs>{event.createdOn.toLocaleString()}</Grid>
             </Grid>
           </Typography>
         </Paper>
@@ -34,11 +46,31 @@ EventItem.propTypes = {
   event: PropTypes.shape({
     id: PropTypes.number.isRequired,
     action: PropTypes.string.isRequired,
-    device: PropTypes.string.isRequired,
-    office: PropTypes.string.isRequired,
-    user: PropTypes.string.isRequired,
-    datetime: PropTypes.instanceOf(Date).isRequired,
+    device: PropTypes.object.isRequired,
+    office: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      country: PropTypes.string.isRequired,
+      city: PropTypes.string.isRequired,
+      address: PropTypes.string.isRequired,
+      lat: PropTypes.number.isRequired,
+      lng: PropTypes.number.isRequired,
+    }).isRequired,
+    user: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      office: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        country: PropTypes.string.isRequired,
+        city: PropTypes.string.isRequired,
+        address: PropTypes.string.isRequired,
+        lat: PropTypes.number.isRequired,
+        lng: PropTypes.number.isRequired,
+      }).isRequired,
+    }).isRequired,
   }).isRequired,
+  createdOn: PropTypes.instanceOf(Date).isRequired,
 };
 
 export default withRouter(withStyles(Styles)(EventItem));

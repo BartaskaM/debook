@@ -113,6 +113,7 @@ const mapStateToProps = state => {
     createOfficeErrorMessage: state.offices.createOfficeErrorMessage,
   };
 };
+
 export default connect(mapStateToProps, officesActions)(
   withStyles({ ...Styles, ...StylesUtils })(Offices)
 );
