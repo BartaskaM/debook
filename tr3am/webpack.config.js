@@ -49,7 +49,7 @@ module.exports = {
             'react-hot-loader/babel',
             'babel-plugin-transform-class-properties',
             'babel-plugin-transform-object-rest-spread',
-			'babel-plugin-transform-runtime',
+            'babel-plugin-transform-runtime',
           ],
         },
       },

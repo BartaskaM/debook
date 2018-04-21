@@ -23,6 +23,14 @@ const Styles = {
     width: 180,
     fontSize: 20,
   },
+  cancelButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: 200,
+    height: 60,
+    width: 180,
+    fontSize: 20,
+  },
   backButton: {
     position: 'absolute',
     bottom: 10,
@@ -36,6 +44,21 @@ const Styles = {
   },
   bigFont: {
     fontSize: 18,
+  },
+  inputField: {
+    fontSize: 18,
+    display: 'inline-block',
+    marginTop: 10,
+    marginLeft: 20,
+    width: 250,
+  },
+  inlineBlock: {
+    marginTop: 10,
+    width: 120,
+    display: 'inline-block',
+  },
+  updateOfficeLoadingBar: {
+    marginTop: 20,
   },
 };
 

@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import * as officesActions from 'ActionCreators/officesActions';
 import Typography from 'material-ui/Typography';
 import CoordinatesRegEx from 'Constants/CoordinatesRegEx';
+import { LinearProgress } from 'material-ui/Progress';
 
 import Styles from './Styles';
 
@@ -37,7 +38,7 @@ class AddOfficeModal extends React.Component {
     };
     this.submitOffice = this.submitOffice.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
-    this.addNewOffice = this.addNewOffice.bind(this);
+    this.createNewOffice = this.createNewOffice.bind(this);
     this.officeExists = this.officeExists.bind(this);
     this.validateCoordinates = this.validateCoordinates.bind(this);
   }
@@ -51,8 +52,7 @@ class AddOfficeModal extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  addNewOffice() {
-    const { addOffice, history  } = this.props;
+  createNewOffice() {
     const newOffice = {
       country: this.state.country,
       city: this.state.city,
@@ -60,8 +60,8 @@ class AddOfficeModal extends React.Component {
       lat: parseFloat(this.state.LAT),
       lng: parseFloat(this.state.LNG),
     };
-    const newOfficeID = addOffice(newOffice)['newOfficeID'];
-    history.push(`/offices/${newOfficeID}`);
+
+    this.props.createOffice(newOffice, this.props.history);
   }
 
   officeExists() {
@@ -69,7 +69,7 @@ class AddOfficeModal extends React.Component {
     const specificOffice = (offices.find(x => x.city === this.state.city));
     if (specificOffice != null &&
       specificOffice.country === this.state.country &&
-        specificOffice.address === this.state.address) {
+      specificOffice.address === this.state.address) {
       this.setState({ errorMessage: 'Office already exists' });
       return true;
     }
@@ -89,16 +89,16 @@ class AddOfficeModal extends React.Component {
     }
   }
 
-  submitOffice(e){
+  submitOffice(e) {
     e.preventDefault();
     if (this.validateCoordinates()) {
       if (!this.officeExists()) {
-        this.addNewOffice();
+        this.createNewOffice();
       }
     }
   }
   render() {
-    const { classes } = this.props;
+    const { classes, createOfficeLoading } = this.props;
     return (
       <div>
         <Dialog
@@ -107,94 +107,99 @@ class AddOfficeModal extends React.Component {
           aria-labelledby="form-dialog-title"
           className={classes.modalWidth}
           modal='true'>
-          <DialogTitle className={classes.title} disableTypography>Add new office</DialogTitle>
-          <DialogContent>
-            <DialogContentText className={classes.description}>
-              Please enter all needed data into fields,
-            </DialogContentText>
-            <form
-              onSubmit={this.submitOffice}
-              id="addNewOfficeForm">
-              <FormGroup>
-                <FormControl>
-                  <InputLabel className={classes.fontSize}>Country:</InputLabel>
-                  <Input
-                    inputProps={{
-                      name: 'country',
-                      maxLength: '255',
-                      required: 'required',
-                    }}
-                    onChange={this.inputHandler} />
-                </FormControl>
-                <FormControl>
-                  <InputLabel className={classes.fontSize}>City:</InputLabel>
-                  <Input
-                    inputProps={{
-                      name: 'city',
-                      maxLength: '255',
-                      required: 'required',
-                    }}
-                    onChange={this.inputHandler} />
-                </FormControl>
-                <FormControl>
-                  <InputLabel className={classes.fontSize}>Address:</InputLabel>
-                  <Input
-                    inputProps={{
-                      name: 'address',
-                      maxLength: '255',
-                      required: 'required',
-                    }}
-                    onChange={this.inputHandler} />
-                </FormControl>
-                <FormControl>
-                  <InputLabel className={classes.fontSize}>Coordinates LAT:</InputLabel>
-                  <Input
-                    inputProps={{
-                      name: 'LAT',
-                      maxLength: '12',
-                      required: 'required',
-                    }}
-                    onChange={this.inputHandler} />
-                </FormControl>
-                <FormControl>
-                  <InputLabel className={classes.fontSize}>Coordinates LNG:</InputLabel>
-                  <Input
-                    inputProps={{
-                      name: 'LNG',
-                      maxLength: '12',
-                      required: 'required',
-                    }}
-                    onChange={this.inputHandler} />
-                </FormControl>
-              </FormGroup>
-            </form>
-          </DialogContent>
-          <Typography variant='headline' className={classes.errorMessage}>
-            {this.state.errorMessage}
-          </Typography>
-          <DialogActions>
-            <Button
-              type='submit'
-              form='addNewOfficeForm'
-              color="primary"
-              className={classes.button}>
-              SUBMIT
-            </Button>
-            <Button
-              onClick={() => this.props.showAddOfficeModal(false)}
-              className={classes.button}>
-              CANCEL
-            </Button>
-          </DialogActions>
+          <div className={classes.dialogBox}>
+            <DialogTitle className={classes.title} disableTypography>Add new office</DialogTitle>
+            <DialogContent>
+              <DialogContentText className={classes.description}>
+                Please enter all needed data into fields,
+              </DialogContentText>
+              <form
+                onSubmit={this.submitOffice}
+                id="createNewOfficeForm">
+                <FormGroup>
+                  <FormControl className={classes.formField}>
+                    <InputLabel className={classes.fontSize}>Country:</InputLabel>
+                    <Input
+                      inputProps={{
+                        name: 'country',
+                        maxLength: '255',
+                        required: 'required',
+                      }}
+                      onChange={this.inputHandler} />
+                  </FormControl>
+                  <FormControl className={classes.formField}>
+                    <InputLabel className={classes.fontSize}>City:</InputLabel>
+                    <Input
+                      inputProps={{
+                        name: 'city',
+                        maxLength: '255',
+                        required: 'required',
+                      }}
+                      onChange={this.inputHandler} />
+                  </FormControl>
+                  <FormControl className={classes.formField}>
+                    <InputLabel className={classes.fontSize}>Address:</InputLabel>
+                    <Input
+                      inputProps={{
+                        name: 'address',
+                        maxLength: '255',
+                        required: 'required',
+                      }}
+                      onChange={this.inputHandler} />
+                  </FormControl>
+                  <FormControl className={classes.formField}>
+                    <InputLabel className={classes.fontSize}>Coordinates LAT:</InputLabel>
+                    <Input
+                      inputProps={{
+                        name: 'LAT',
+                        maxLength: '12',
+                        required: 'required',
+                      }}
+                      onChange={this.inputHandler} />
+                  </FormControl>
+                  <FormControl className={classes.formField}>
+                    <InputLabel className={classes.fontSize}>Coordinates LNG:</InputLabel>
+                    <Input
+                      inputProps={{
+                        name: 'LNG',
+                        maxLength: '12',
+                        required: 'required',
+                      }}
+                      onChange={this.inputHandler} />
+                  </FormControl>
+                </FormGroup>
+              </form>
+              {createOfficeLoading &&
+                <LinearProgress className={classes.createOfficeLoadingBar} />
+              }
+            </DialogContent>
+            <Typography variant='headline' className={classes.errorMessage}>
+              {this.state.errorMessage}
+            </Typography>
+            <DialogActions>
+              <Button
+                type='submit'
+                form='createNewOfficeForm'
+                color="primary"
+                className={classes.button}>
+                SUBMIT
+              </Button>
+              <Button
+                onClick={() => this.props.showAddOfficeModal(false)}
+                className={classes.button}>
+                CANCEL
+              </Button>
+            </DialogActions>
+          </div>
         </Dialog>
       </div>
-      
+
     );
   }
 }
 
 AddOfficeModal.propTypes = {
-  addOffice: PropTypes.func.isRequired,
+  createOffice: PropTypes.func.isRequired,
   showAddOfficeModal: PropTypes.func.isRequired,
   showAddOfficeDialog: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
@@ -206,14 +211,17 @@ AddOfficeModal.propTypes = {
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired,
   })).isRequired,
+  createOfficeLoading: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   showAddOfficeDialog: state.offices.showAddOfficeModal,
+  createOfficeLoading: state.offices.createOfficeLoading,
   offices: state.offices.offices,
   user: state.auth.user,
 });
 
 export default withRouter(connect(mapStateToProps,
-  officesActions)(withStyles(Styles)(AddOfficeModal)));
+  officesActions)(withStyles(Styles)(AddOfficeModal))
+);
