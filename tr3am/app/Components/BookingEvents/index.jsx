@@ -87,7 +87,7 @@ BookingEvents.propTypes = {
         lng: PropTypes.number.isRequired,
       }).isRequired,
     }).isRequired,
-    createdOn: PropTypes.instanceOf(Date).isRequired,
+    createdOn: PropTypes.string.isRequired,
   })).isRequired,
   fetchEvents: PropTypes.func.isRequired,
   fetchEventsLoading: PropTypes.bool.isRequired,

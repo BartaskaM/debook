@@ -70,7 +70,7 @@ EventItem.propTypes = {
       }).isRequired,
     }).isRequired,
   }).isRequired,
-  createdOn: PropTypes.instanceOf(Date).isRequired,
+  createdOn: PropTypes.string,
 };
 
 export default withRouter(withStyles(Styles)(EventItem));
