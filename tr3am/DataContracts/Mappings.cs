@@ -16,6 +16,7 @@ namespace tr3am.DataContracts
             {
                 cfg.CreateMap<Model, ModelDTO>();
                 cfg.CreateMap<Brand, BrandDTO>();
+                cfg.CreateMap<BrandDTO, Brand>();
                 cfg.CreateMap<Office, OfficeDTO>();
                 cfg.CreateMap<OfficeDTO, Office>();
                 cfg.CreateMap<User, LogInDTO>();
