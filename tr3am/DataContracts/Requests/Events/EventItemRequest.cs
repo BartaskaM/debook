@@ -9,6 +9,7 @@ namespace tr3am.DataContracts.Requests.Events
     public class EventItemRequest
     {
         [Required]
+        [MaxLength(64)]
         public string Action { get; set; }
         [Required]
         public int Device { get; set; }

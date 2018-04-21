@@ -38,7 +38,7 @@ namespace tr3am.Data
                     User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(1)),
                     CreatedOn = new DateTime(2018, 3, 1, 8, 0, 0),
                 },
-                                new Event
+                new Event
                 {
                     Id = 2,
                     Action = "Check In",
@@ -57,7 +57,7 @@ namespace tr3am.Data
 
         public EventDTO GetById(int id)
         {
-            Event event_ = _items.FirstOrDefault(x => x.Id == id);
+            var event_ = _items.FirstOrDefault(x => x.Id == id);
             if (event_ == null)
             {
                 throw new InvalidEventException();
@@ -100,7 +100,12 @@ namespace tr3am.Data
 
         public void Update(int id, EventItemRequest request)
         {
-            var item = _items.First(x => x.Id == id);
+            var item = _items.FirstOrDefault(x => x.Id == id);
+            if (item == null)
+            {
+                throw new InvalidEventException();
+            }
+
             var office = _officesRepository.GetById(request.Office);
             var device = _devicesRepository.GetById(request.Device);
             var user = _usersRepository.GetById(request.User);
