@@ -26,6 +26,7 @@ namespace tr3am.DataContracts
                 cfg.CreateMap<Device, ShortDeviceDTO>();
                 cfg.CreateMap<FullDeviceDTO, Device>();
                 cfg.CreateMap<Reservation, ReservationDTO>();
+                cfg.CreateMap<Event, EventDTO>();
             });
         }
     }

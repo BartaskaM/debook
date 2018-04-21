@@ -26,6 +26,7 @@ namespace tr3am
             services.AddSingleton<IOfficesRepository, OfficesRepository>();
             services.AddSingleton<IDevicesRepository, DevicesRepository>();
             services.AddSingleton<IUsersRepository, UsersRepository>();
+            services.AddSingleton<IEventsRepository, EventsRepository>();
             services.AddSingleton<IReservationsRepository, ReservationsRepository>();
             services.AddSingleton<IBrandsRepository, BrandsRepository>();
         }
