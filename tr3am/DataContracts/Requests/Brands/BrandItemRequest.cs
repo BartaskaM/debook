@@ -13,6 +13,5 @@ namespace tr3am.DataContracts.Requests.Brands
         [Required]
         [MaxLength(255)]
         public string BrandName { get; set; }
-        public int? ModelCount { get; set; }
     }
 }

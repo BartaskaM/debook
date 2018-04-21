@@ -10,6 +10,6 @@ namespace tr3am.Data.Entities
         public int Id { get; set; }
         public string Image { get; set; }
         public string BrandName { get; set; }
-        public int? ModelCount { get; set; }
+        public List<Model> Models { get; set; }
     }
 }

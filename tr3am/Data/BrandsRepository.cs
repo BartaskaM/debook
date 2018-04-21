@@ -24,28 +24,56 @@ namespace tr3am.Data
                     Id = 1,
                     BrandName = "Huawei",
                     Image = "https://botw-pd.s3.amazonaws.com/styles/logo-thumbnail/s3/062013/huawei_0.jpg?itok=mNbiNOQ6",
-                    ModelCount = 6,
+                    Models = new List<Model>
+                    {
+                        new Model
+                        {
+                            Id = 1,
+                            Name = "P 10+",
+                        },
+                    },
                 },
                 new Brand
                 {
                     Id = 2,
                     BrandName = "Apple",
                     Image = "https://assets.econsultancy.com/images/resized/0002/1108/apple_logo-blog-thumb.png",
-                    ModelCount = 21,
+                    Models = new List<Model>
+                    {
+                        new Model
+                        {
+                            Id = 2,
+                            Name = "Ipad Air",
+                        },
+                    },
                 },
                 new Brand
                 {
                     Id = 3,
                     BrandName = "Samsung",
                     Image = "https://vignette.wikia.nocookie.net/logopedia/images/d/dd/Samsung-logo-7.png/revision/latest/scale-to-width-down/640?cb=20160803140631",
-                    ModelCount = 12,
+                    Models = new List<Model>
+                    {
+                        new Model
+                        {
+                            Id = 3,
+                            Name = "Galaxy S8+",
+                        },
+                    },
                 },
                 new Brand
                 {
                     Id = 4,
                     BrandName = "Sony",
                     Image = "http://logok.org/wp-content/uploads/2014/07/Sony_logo-880x660.png",
-                    ModelCount = 1,
+                    Models = new List<Model>
+                    {
+                        new Model
+                        {
+                            Id = 4,
+                            Name = "Xperia Z+",
+                        },
+                    },
                 },
             };
         }
@@ -75,7 +103,6 @@ namespace tr3am.Data
                 Id = id,
                 BrandName = request.BrandName,
                 Image = request.Image,
-                ModelCount = request.ModelCount,
             };
 
             if (BrandExists(item))
@@ -111,7 +138,6 @@ namespace tr3am.Data
 
             item.BrandName = request.BrandName;
             item.Image = request.Image;
-            item.ModelCount = request.ModelCount;
         }
 
         public void Delete(int id)
