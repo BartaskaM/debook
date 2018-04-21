@@ -193,9 +193,9 @@ class OfficeDetails extends React.Component {
         <br />
 
         {updateOfficeLoading &&
-            <Grid item xs={12}>
-              <LinearProgress className={classes.updateOfficeLoadingBar}/>
-            </Grid>
+          <Grid item xs={12}>
+            <LinearProgress className={classes.updateOfficeLoadingBar} />
+          </Grid>
         }
 
         {this.renderButtons()}
@@ -242,7 +242,7 @@ class OfficeDetails extends React.Component {
 
   render() {
     const { classes, history, office, match, fetchOfficeLoading } = this.props;
-    return office && office.id === parseInt(match.params.id) ? (
+    return (
       <div className={classes.root}>
         <Button variant="flat" onClick={history.goBack}>
           <NavigateBefore />
@@ -255,30 +255,31 @@ class OfficeDetails extends React.Component {
             <Grid item xs={12}>
               <LinearProgress />
             </Grid>
-            : <Grid container>
-              <Grid item xs={6}>
-                {this.state.isEditMode ?
-                  this.renderInformationEditable() :
-                  this.renderInformation()}
-              </Grid>
-              <Grid item xs={6}>
-                <Paper className={classes.mapElement}>
-                  <Map
-                    lat={office.lat}
-                    lng={office.lng}
-                    googleMapURL={'https://maps.googleapis.com/'
-                      + 'maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA'
-                      + '&v=3.exp&libraries=geometry,drawing,places'}
-                    loadingElement={<div style={{ height: '100%' }} />}
-                    containerElement={<div style={{ height: 400 }} />}
-                    mapElement={<div style={{ height: '100%' }} />}
-                  />
-                </Paper>
-              </Grid>
-            </Grid>}
+            : office && office.id === parseInt(match.params.id) ?
+              <Grid container>
+                <Grid item xs={6}>
+                  {this.state.isEditMode ?
+                    this.renderInformationEditable() :
+                    this.renderInformation()}
+                </Grid>
+                <Grid item xs={6}>
+                  <Paper className={classes.mapElement}>
+                    <Map
+                      lat={office.lat}
+                      lng={office.lng}
+                      googleMapURL={'https://maps.googleapis.com/'
+                        + 'maps/api/js?key=AIzaSyD0S0xJVDjm1DrDafpWq6I2ThweGVvcTuA'
+                        + '&v=3.exp&libraries=geometry,drawing,places'}
+                      loadingElement={<div style={{ height: '100%' }} />}
+                      containerElement={<div style={{ height: 400 }} />}
+                      mapElement={<div style={{ height: '100%' }} />}
+                    />
+                  </Paper>
+                </Grid>
+              </Grid> : ''}
         </Grid>
       </div>
-    ) : '';
+    );
   }
 }
 
