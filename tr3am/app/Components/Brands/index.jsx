@@ -47,8 +47,7 @@ class BrandList extends React.Component {
             <Grid item xs={12}>
               <LinearProgress />
             </Grid>
-            :
-            <Grid container>
+            : <Grid container>
               <List className={classes.brandList}>
                 {brands.map(brand => (
                   <BrandsItem key={brand.id} brand={brand} />

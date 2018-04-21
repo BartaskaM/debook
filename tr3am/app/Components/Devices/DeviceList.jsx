@@ -15,7 +15,6 @@ import ReserveModal from 'Components/ReserveModal';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as usersActions from 'ActionCreators/usersActions';
 import Reservations from 'Constants/Reservations';
-import Users from 'Constants/User';
 import Devices from 'Constants/Devices';
 import Device from './Device';
 import ReturnModal from 'Components/ReturnModal';
@@ -41,7 +40,7 @@ class DeviceList extends React.Component {
       reservations,
       setReservations,
       users,
-      setUsers,
+      fetchUsers,
       devices,
       setDevices,
     } = this.props;
@@ -49,7 +48,7 @@ class DeviceList extends React.Component {
       setReservations(Reservations);
     }
     if (users.length === 0) {
-      setUsers(Users);
+      fetchUsers();
     }
     if (devices.length === 0) {
       setDevices(Devices);
@@ -205,15 +204,15 @@ class DeviceList extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
-    return (
+    const { classes, devices, user, users } = this.props;
+    return devices.length != 0 && user && users.length != 0 ? (
       <Grid container spacing={8} className={classes.root}>
         {this.renderDevices()}
         <BookModal />
         <ReserveModal />
         <ReturnModal />
       </Grid>
-    );
+    ) : '';
   }
 }
 
@@ -264,7 +263,7 @@ DeviceList.propTypes = {
   ),
   setReservations: PropTypes.func.isRequired,
   users: PropTypes.array.isRequired,
-  setUsers: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired,
   showReservationDetails: PropTypes.func.isRequired,
   setDevices: PropTypes.func.isRequired,
   checkInDevice: PropTypes.func.isRequired,
