@@ -27,6 +27,7 @@ namespace tr3am
             services.AddSingleton<IDevicesRepository, DevicesRepository>();
             services.AddSingleton<IUsersRepository, UsersRepository>();
             services.AddSingleton<IReservationsRepository, ReservationsRepository>();
+            services.AddSingleton<IBrandsRepository, BrandsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
