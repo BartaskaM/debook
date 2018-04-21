@@ -3,6 +3,9 @@ const Styles = theme => ({
     fullWidth: true,
     maxWidth: 'none',
   },
+  dialogBox: {
+    padding: 25,
+  },
   fontSize: {
     fontSize: theme.typography.pxToRem(20),
   },
@@ -19,6 +22,12 @@ const Styles = theme => ({
   },
   description: {
     fontSize: 16,
+  },
+  formField: {
+    marginTop: 10,
+  },
+  createOfficeLoadingBar: {
+    marginTop: 20,
   },
 });
 

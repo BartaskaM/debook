@@ -64,7 +64,7 @@ class ReturnModal extends React.Component {
       classes, 
       showReturnDialog, 
       offices, 
-      fetchingOffices,
+      fetchOfficesLoading,
     } = this.props;
     return(
       <Dialog
@@ -86,7 +86,7 @@ class ReturnModal extends React.Component {
                   </MenuItem>
                 )}
             </Select>
-            {fetchingOffices &&
+            {fetchOfficesLoading &&
             <CircularProgress size={18} className={classes.buttonProgress}/>}
           </span>
         </DialogContent>
@@ -142,7 +142,7 @@ ReturnModal.propTypes = {
     lng: PropTypes.number.isRequired,
   })).isRequired,
   fetchOffices: PropTypes.func.isRequired,
-  fetchingOffices: PropTypes.bool.isRequired,
+  fetchOfficesLoading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -151,7 +151,7 @@ const mapStateToProps = state => ({
   devices: state.devices.devices,
   user: state.auth.user,
   offices: state.offices.offices,
-  fetchingOffices: state.offices.fetchingOffices,
+  fetchOfficesLoading: state.offices.fetchOfficesLoading,
 });
 
 export default connect(mapStateToProps, { 

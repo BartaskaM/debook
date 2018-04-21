@@ -128,8 +128,8 @@ class SignUp extends React.Component {
       classes, 
       signUpError, 
       fetchingSignUp,
-      fetchOfficesError,
-      fetchingOffices,
+      fetchOfficesErrorMessage,
+      fetchOfficesLoading,
       offices, 
     } = this.props;
     const { 
@@ -241,7 +241,7 @@ class SignUp extends React.Component {
                   value={office}
                   autoWidth={true}
                   onChange={this.handleFormChange}
-                  disabled={fetchingOffices}
+                  disabled={fetchOfficesLoading}
                   className={classes.select}
                   inputProps={{
                     name: 'office',
@@ -258,11 +258,11 @@ class SignUp extends React.Component {
                   ))}
                 </Select>
                 {
-                  fetchOfficesError.length > 0 && 
-                <FormHelperText>{fetchOfficesError}</FormHelperText>
+                  fetchOfficesErrorMessage.length > 0 && 
+                <FormHelperText>{fetchOfficesErrorMessage}</FormHelperText>
                 }
                 {
-                  fetchingOffices && 
+                  fetchOfficesLoading && 
                   <CircularProgress size={24} className={classes.buttonProgress}/>
                 }
               </div>
@@ -315,8 +315,8 @@ SignUp.propTypes = {
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired,
   })).isRequired,
-  fetchingOffices: PropTypes.bool.isRequired,
-  fetchOfficesError: PropTypes.string.isRequired,
+  fetchOfficesLoading: PropTypes.bool.isRequired,
+  fetchOfficesErrorMessage: PropTypes.string.isRequired,
   fetchOffices: PropTypes.func.isRequired,
 };
 
@@ -325,8 +325,8 @@ const mapStateToProps = store => ({
   currentTab: store.auth.currentTab,
   fetchingSignUp: store.auth.fetchingSignUp,
   offices: store.offices.offices,
-  fetchingOffices: store.offices.fetchingOffices,
-  fetchOfficesError: store.offices.fetchOfficesError,
+  fetchOfficesLoading: store.offices.fetchOfficesLoading,
+  fetchOfficesErrorMessage: store.offices.fetchOfficesErrorMessage,
 });
 
 export default connect(mapStateToProps, {

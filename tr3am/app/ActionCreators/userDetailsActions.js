@@ -4,7 +4,7 @@ import { userDetails, auth } from 'Constants/ActionTypes';
 export const fetchUser = (userId) => async dispatch => {
   dispatch({ type: userDetails.FETCH_USER_START });
   try{
-    const response = await api.get(`users/${userId}`);
+    const response = await api.get(`/users/${userId}`);
     dispatch({
       type: userDetails.FETCH_USER_SUCCESS,
       payload: response.data,
@@ -25,7 +25,7 @@ export const setUserDetails = (user) => ({
 export const updateUser = (userInfo, finish, self) => async dispatch => {
   dispatch({ type: userDetails.UPDATE_USER_START });
   try{
-    await api.put(`users/${userInfo.id}`, { ...userInfo, office: userInfo.office.id });
+    await api.put(`/users/${userInfo.id}`, { ...userInfo, office: userInfo.office.id });
     dispatch({
       type: userDetails.UPDATE_USER_SUCCESS,
     });

@@ -1,28 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
-using tr3am.DataContracts.Requests.Offices;
+using tr3am.DataContracts.Requests.Brands;
 
 namespace tr3am.Controllers
 {
-    [Route("api/offices")]
-    public class OfficesController : Controller
+    [Route("api/brands")]
+    public class BrandsController : Controller
     {
-        private readonly IOfficesRepository _officesRepository;
+        private readonly IBrandsRepository _brandsRepository;
 
-        public OfficesController(IOfficesRepository officesRepository)
+        public BrandsController(IBrandsRepository brandsRepository)
         {
-            _officesRepository = officesRepository;
+            _brandsRepository = brandsRepository;
         }
 
         [HttpGet]
-        public IEnumerable<OfficeDTO> GetAll()
+        public IEnumerable<BrandDTO> GetAll()
         {
-            return _officesRepository.GetAll();
+            return _brandsRepository.GetAll();
         }
 
         [HttpGet("{id}")]
@@ -30,16 +32,16 @@ namespace tr3am.Controllers
         {
             try
             {
-                return Ok(_officesRepository.GetById(id));
+                return Ok(_brandsRepository.GetById(id));
             }
-            catch (InvalidOfficeException)
+            catch (InvalidBrandException)
             {
                 return NotFound();
             }
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]OfficeItemRequest request)
+        public IActionResult Create([FromBody]BrandItemRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -48,17 +50,17 @@ namespace tr3am.Controllers
 
             try
             {
-                var itemId = _officesRepository.Create(request);
+                var itemId = _brandsRepository.Create(request);
                 return CreatedAtAction(nameof(GetById), new { id = itemId }, itemId);
             }
-            catch (DuplicateOfficeException)
+            catch (DuplicateBrandException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "An office with those details already exists." });
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "A brand with those details already exists." });
             }
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] OfficeItemRequest request)
+        public IActionResult Update(int id, [FromBody] BrandItemRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -66,9 +68,9 @@ namespace tr3am.Controllers
             }
             try
             {
-                _officesRepository.Update(id, request);
+                _brandsRepository.Update(id, request);
             }
-            catch (InvalidOfficeException)
+            catch (InvalidBrandException)
             {
                 return NotFound();
             }
@@ -81,9 +83,9 @@ namespace tr3am.Controllers
         {
             try
             {
-                _officesRepository.Delete(id);
+                _brandsRepository.Delete(id);
             }
-            catch (InvalidOfficeException)
+            catch (InvalidBrandException)
             {
                 return NotFound();
             }

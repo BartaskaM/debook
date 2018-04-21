@@ -2,30 +2,64 @@ import { offices } from 'Constants/ActionTypes';
 
 const defaultState = {
   offices: [],
+
+  fetchOfficesLoading: false,
+  fetchOfficesErrorMessage: '',
+
+  createOfficeLoading: false,
+  createOfficeErrorMessage: '',
+
   showAddOfficeModal: false,
-  fetchingOffices: false,
-  fetchOfficesError: '',
 };
 
 export default (state = defaultState, action) => {
   switch (action.type) {
-    case offices.ADD_OFFICE: {
-      return { ...state, offices: [...state.offices, action.payload] };
-    }
-    case offices.SET_OFFICES: {
-      return { ...state, offices: [...action.payload] };
-    }
-    case offices.SHOW_ADD_OFFICE_MODAL: {
-      return { ...state, showAddOfficeModal: action.payload }; 
-    }
     case offices.FETCH_OFFICES_START: {
-      return { ...state, fetchingOffices: true, fetchOfficesError: '' };
+      return {
+        ...state,
+        fetchOfficesLoading: true,
+        fetchOfficesErrorMessage: '',
+      };
     }
     case offices.FETCH_OFFICES_SUCCESS: {
-      return { ...state, fetchingOffices: false, offices: action.payload };
+      return {
+        ...state,
+        fetchOfficesLoading: false,
+        offices: action.payload,
+      };
     }
     case offices.FETCH_OFFICES_ERROR: {
-      return { ...state, fetchOfficesError: action.payload, fetchingOffices: false };
+      return {
+        ...state,
+        fetchOfficesLoading: false,
+        fetchOfficesErrorMessage: action.payload,
+      };
+    }
+
+    case offices.CREATE_OFFICE_START: {
+      return {
+        ...state,
+        createOfficeLoading: true,
+        createOfficeErrorMessage: '',
+      };
+    }
+    case offices.CREATE_OFFICE_SUCCESS: {
+      return {
+        ...state,
+        createOfficeLoading: false,
+        offices: [...state.offices, action.payload],
+      };
+    }
+    case offices.CREATE_OFFICE_ERROR: {
+      return {
+        ...state,
+        createOfficeLoading: false,
+        createOfficeErrorMessage: action.payload,
+      };
+    }
+
+    case offices.SHOW_ADD_OFFICE_MODAL: {
+      return { ...state, showAddOfficeModal: action.payload };
     }
     default: return state;
   }
