@@ -61,22 +61,23 @@ class Offices extends React.Component {
             <Grid item xs={12}>
               <LinearProgress />
             </Grid>
-            : <List className={classes.officeList}>
-              {offices.map(office => (
-                <OfficeItem key={office.id} office={office} />
-              ))}
-            </List>}
-          <Grid item xs={12}>
-            {/* TODO: Implement button functionality */}
-
-            <Button
-              variant="raised"
-              color="primary"
-              className={classes.addNewButton}
-              onClick={this.handleAddNewClick}>
-              ADD NEW
-            </Button>
-          </Grid>
+            : <Grid container>
+              <List className={classes.officeList}>
+                {offices.map(office => (
+                  <OfficeItem key={office.id} office={office} />
+                ))}
+              </List>
+              <Grid item xs={12}>
+                <Button
+                  variant="raised"
+                  color="primary"
+                  className={classes.addNewButton}
+                  onClick={this.handleAddNewClick}
+                >
+                  ADD NEW
+                </Button>
+              </Grid>
+            </Grid>}
         </Grid>
       </div>
     );
@@ -104,8 +105,6 @@ Offices.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    user: state.auth.user,
-
     offices: state.offices.offices,
     fetchOfficesLoading: state.offices.fetchOfficesLoading,
     fetchOfficesErrorMessage: state.offices.fetchOfficesErrorMessage,
@@ -114,6 +113,7 @@ const mapStateToProps = state => {
     createOfficeErrorMessage: state.offices.createOfficeErrorMessage,
   };
 };
+
 export default connect(mapStateToProps, officesActions)(
   withStyles({ ...Styles, ...StylesUtils })(Offices)
 );
