@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,7 +24,11 @@ namespace tr3am
         {
             Mappings.SetupMappings();
             services.AddMvc();
-            services.AddSingleton<IOfficesRepository, OfficesRepository>();
+            services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("Tr3amConnection")));
+
+            services.AddScoped<IOfficesRepository, OfficesRepository>();
+
             services.AddSingleton<IDevicesRepository, DevicesRepository>();
             services.AddSingleton<IUsersRepository, UsersRepository>();
             services.AddSingleton<IEventsRepository, EventsRepository>();

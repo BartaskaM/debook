@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using tr3am.Data.Entities;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Offices;
@@ -7,10 +8,10 @@ namespace tr3am.DataContracts
 {
     public interface IOfficesRepository
     {
-        List<OfficeDTO> GetAll();
-        OfficeDTO GetById(int id);
-        int Create(OfficeItemRequest request);
-        void Update(int id, OfficeItemRequest request);
-        void Delete(int id);
+        Task<List<OfficeDTO>> GetAll();
+        Task<OfficeDTO> GetById(int id);
+        Task<int> Create(OfficeItemRequest request);
+        Task Update(int id, OfficeItemRequest request);
+        Task Delete(int id);
     }
 }
