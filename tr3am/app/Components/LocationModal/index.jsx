@@ -11,8 +11,8 @@ import { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import { FormControl } from 'material-ui/Form';
 import Button from 'material-ui/Button';
-
 import { withStyles } from 'material-ui/styles';
+
 import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
 import Offices from 'Constants/Offices';
 import styles from './Style';
@@ -33,11 +33,9 @@ class LocationModal extends React.Component {
     const {
       changeDeviceLocation,
       hideLocationModal,
-      active,
     } = this.props;
 
     changeDeviceLocation(this.state.location);
-    active();
     hideLocationModal();
   }
   render() {

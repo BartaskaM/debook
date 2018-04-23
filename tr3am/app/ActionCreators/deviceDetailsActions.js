@@ -22,3 +22,6 @@ export const changeDeviceLocation = (location) => {
   device.location = location;
   return { type: deviceDetails.SET_DEVICE_DETAILS, payload: device };
 };
+export const changeDevice = (device) => {
+  return { type: deviceDetails.SET_DEVICE_DETAILS, payload: device };
+};

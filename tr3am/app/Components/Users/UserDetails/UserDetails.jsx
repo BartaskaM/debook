@@ -19,7 +19,7 @@ import {
 import validator from 'email-validator';
 
 import { styles } from './Styles';
-import Offices from 'Constants/Offices';
+import * as officesActions from 'ActionCreators/officesActions';
 import users from 'Constants/User';
 import * as usersActions from 'ActionCreators/usersActions';
 
@@ -277,7 +277,11 @@ class UserDetails extends React.Component {
   }
 
   renderProfileEdit(){
-    const { classes, currentUser } = this.props;
+    const { 
+      classes,
+      currentUser,
+      offices,
+    } = this.props;
     const { 
       validFirstName, 
       validLastName, 
@@ -384,9 +388,9 @@ class UserDetails extends React.Component {
                     name: 'office',
                   }}
                 >
-                  {Offices.map(office => (
+                  {offices.map((office, i) => (
                     <MenuItem
-                      key={office.id}
+                      key={i}
                       value={office.city}
                       className={classes.menuItemWidth}
                     >
@@ -529,11 +533,20 @@ UserDetails.propTypes = {
   }).isRequired,
   users: PropTypes.array.isRequired,
   setUsers: PropTypes.func.isRequired,
+  offices: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+  })),
 };
 
 const mapStateToProps = store => ({
   currentUser: store.auth.user,
   users: store.users.users,
+  offices: store.offices.offices,
 });
 
-export default withRouter(connect(mapStateToProps,usersActions)(withStyles(styles)(UserDetails)));
+export default withRouter(connect(mapStateToProps, {
+  usersActions,
+  ...officesActions,
+})(withStyles(styles)(UserDetails)));
