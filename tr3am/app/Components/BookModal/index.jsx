@@ -20,6 +20,7 @@ import {
   checkForReservation,
 } from 'Utils/dateUtils';
 import { fifteenMinutes } from 'Constants/Values';
+import { reservationStatus } from 'Constants/Enums';
 
 class BookModal extends React.Component {
   constructor(props) {
@@ -91,26 +92,21 @@ class BookModal extends React.Component {
 
   bookDevice() {
     const {
-      devices,
       selectedDevice,
       user,
-      setDevices,
-      hideBookModal,
       currentDate,
       returnDate,
     } = this.props;
     this.roundTimes();
     if (!this.checkForErrors(returnDate) && !checkIfLate(currentDate)) {
-      //Update device
-      const updatedDevices = devices.map(device => {
-        if (device.id === selectedDevice) {
-          return { ...device, custody: user.id, available: false };
-        }
-        return device;
-      });
-      setDevices(updatedDevices);
-      hideBookModal();
-      //Post booking info
+      const request = {
+        device: selectedDevice,
+        user: user.id,
+        from: (new Date()).toISOString(),
+        to: returnDate.toISOString(),
+        status: reservationStatus.checkedIn,
+      };
+      this.props.bookDevice(request);
     }
   }
 
@@ -238,6 +234,7 @@ BookModal.propTypes = {
       to: PropTypes.object.isRequired,
     })
   ),
+  bookDevice: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
