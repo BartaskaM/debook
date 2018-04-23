@@ -59,5 +59,8 @@ const Styles =  ({
   mainTextColor: {
     color: '#000000',
   },
+  deviceItem: {
+    width: '100%',
+  },
 });
 export default Styles;

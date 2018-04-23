@@ -11,7 +11,7 @@ const device = ({ classes, device, users }) => {
   const user = device.available ? null :
     users.find(user => user.id === device.custody);
   return (
-    <List>
+    <List className={classes.deviceItem}>
       <ListItem><img className={classes.deviceCardImage} src={device.image} /></ListItem>
       {device.available ?
         <Typography className={classes.availabilityTagAvailable}>Available</Typography>
