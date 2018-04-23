@@ -21,6 +21,7 @@ import {
 } from 'Utils/dateUtils';
 import { fifteenMinutes } from 'Constants/Values';
 import { reservationStatus } from 'Constants/Enums';
+import { LinearProgress, Typography } from 'material-ui';
 
 class BookModal extends React.Component {
   constructor(props) {
@@ -132,6 +133,8 @@ class BookModal extends React.Component {
       showBookDialog,
       hideBookModal,
       returnDateError,
+      booking,
+      bookingError,
     } = this.props;
     return (
       <div>
@@ -175,6 +178,13 @@ class BookModal extends React.Component {
               FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
             <ReservationsTable />
+            { booking && <LinearProgress/> }
+            { 
+              bookingError.length > 0 && 
+              <Typography className={classes.errorMessage} variant="display-1">
+                { bookingError }
+              </Typography>
+            }
           </DialogContent>
           <DialogActions>
             <Button onClick={hideBookModal} color="primary">
@@ -235,6 +245,8 @@ BookModal.propTypes = {
     })
   ),
   bookDevice: PropTypes.func.isRequired,
+  booking: PropTypes.bool.isRequired,
+  bookingError: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -246,6 +258,8 @@ const mapStateToProps = (state) => ({
   devices: state.devices.devices,
   user: state.auth.user,
   reservations: state.devices.reservations,
+  booking: state.devices.booking,
+  bookingError: state.devices.bookingError,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(BookModal));
