@@ -6,6 +6,7 @@ using AutoMapper;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
+using static tr3am.DataContracts.Constants.Time;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Enums;
 using tr3am.DataContracts.Requests.Reservations;
@@ -152,13 +153,12 @@ namespace tr3am.Data
         private void RefreshReservations()
         {
             DateTime now = DateTime.UtcNow;
-            TimeSpan fifteenMinutes = new TimeSpan(0, 15, 0);
             foreach (Reservation x in _items)
             {
                 if (x.Status == Status.Pending)
                 {
                     var z = now - x.From;
-                    if (now - x.From > fifteenMinutes)
+                    if (now - x.From > FifteenMinutes)
                     {
 
                         x.Status = Status.Expired;
@@ -176,8 +176,7 @@ namespace tr3am.Data
 
         private DateTime RoundTime(DateTime date)
         {
-            TimeSpan fifteenMinutes = new TimeSpan(0, 15, 0);
-            return new DateTime((date.Ticks + fifteenMinutes.Ticks / 2) / fifteenMinutes.Ticks * fifteenMinutes.Ticks);
+            return new DateTime((date.Ticks + FifteenMinutes.Ticks / 2) / FifteenMinutes.Ticks * FifteenMinutes.Ticks);
         }
 
         private void CheckIfDateAvailable(DateTime from, DateTime to, Device device)
@@ -207,8 +206,7 @@ namespace tr3am.Data
         }
         private bool CheckIfDateIsWithinReservation(DateTime date, Reservation reservation)
         {
-            TimeSpan fifteenMinutes = new TimeSpan(0, 15, 0);
-            return reservation.To > date && (reservation.From - fifteenMinutes) < date;
+            return reservation.To > date && (reservation.From - FifteenMinutes) < date;
         }
         private bool CheckIfReservationIsWithinDates(DateTime from, DateTime to, Reservation reservation)
         {
