@@ -9,6 +9,8 @@ import Dialog, {
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
+import LinearProgress from 'material-ui/Progress';
+import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
@@ -20,6 +22,7 @@ import {
   checkForReservation,
 } from 'Utils/dateUtils';
 import { fifteenMinutes } from 'Constants/Values';
+import { reservationStatus } from 'Constants/Enums';
 
 class BookModal extends React.Component {
   constructor(props) {
@@ -91,26 +94,21 @@ class BookModal extends React.Component {
 
   bookDevice() {
     const {
-      devices,
       selectedDevice,
       user,
-      setDevices,
-      hideBookModal,
       currentDate,
       returnDate,
     } = this.props;
     this.roundTimes();
     if (!this.checkForErrors(returnDate) && !checkIfLate(currentDate)) {
-      //Update device
-      const updatedDevices = devices.map(device => {
-        if (device.id === selectedDevice) {
-          return { ...device, custody: user.id, available: false };
-        }
-        return device;
-      });
-      setDevices(updatedDevices);
-      hideBookModal();
-      //Post booking info
+      const request = {
+        device: selectedDevice,
+        user: user.id,
+        from: (new Date()).toISOString(),
+        to: returnDate.toISOString(),
+        status: reservationStatus.checkedIn,
+      };
+      this.props.bookDevice(request);
     }
   }
 
@@ -136,6 +134,8 @@ class BookModal extends React.Component {
       showBookDialog,
       hideBookModal,
       returnDateError,
+      booking,
+      bookingErrorMessage,
     } = this.props;
     return (
       <div>
@@ -179,6 +179,13 @@ class BookModal extends React.Component {
               FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
             <ReservationsTable />
+            { booking && <LinearProgress/> }
+            { 
+              bookingErrorMessage.length > 0 && 
+              <Typography className={classes.errorMessage} variant="display-1">
+                { bookingErrorMessage }
+              </Typography>
+            }
           </DialogContent>
           <DialogActions>
             <Button onClick={hideBookModal} color="primary">
@@ -238,6 +245,9 @@ BookModal.propTypes = {
       to: PropTypes.object.isRequired,
     })
   ),
+  bookDevice: PropTypes.func.isRequired,
+  booking: PropTypes.bool.isRequired,
+  bookingErrorMessage: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -249,6 +259,8 @@ const mapStateToProps = (state) => ({
   devices: state.devices.devices,
   user: state.auth.user,
   reservations: state.devices.reservations,
+  booking: state.devices.booking,
+  bookingErrorMessage: state.devices.bookingErrorMessage,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(BookModal));

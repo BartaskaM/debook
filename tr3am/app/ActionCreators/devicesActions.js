@@ -1,4 +1,5 @@
 import { devices } from 'Constants/ActionTypes';
+import api from 'api';
 
 export const setDevices = (deviceArray) => {
   return { type: devices.SET_DEVICES, payload: deviceArray };
@@ -107,4 +108,23 @@ export const showReturnModal = (selectedDevice) => {
 };
 export const checkInDevice = (deviceId, userId) => {
   return { type: devices.CHECK_IN_DEVICE, payload: {deviceId, userId}};
+};
+export const bookDevice = (bookRequest) => async dispatch =>{
+  dispatch({ type: devices.BOOK_START });
+  try{
+    console.log(bookRequest);
+    await api.post('/reservations?booking=true', bookRequest);
+    dispatch({ 
+      type: devices.BOOK_SUCCESS,
+      payload: {
+        bookedDeviceId: bookRequest.device,
+        userId: bookRequest.user,
+      },
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.BOOK_ERROR,
+      payload: e.response.data.message,
+    });
+  }
 };
