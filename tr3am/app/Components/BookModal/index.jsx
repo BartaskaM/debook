@@ -9,6 +9,8 @@ import Dialog, {
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
+import LinearProgress from 'material-ui/Progress';
+import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
@@ -21,7 +23,6 @@ import {
 } from 'Utils/dateUtils';
 import { fifteenMinutes } from 'Constants/Values';
 import { reservationStatus } from 'Constants/Enums';
-import { LinearProgress, Typography } from 'material-ui';
 
 class BookModal extends React.Component {
   constructor(props) {
@@ -134,7 +135,7 @@ class BookModal extends React.Component {
       hideBookModal,
       returnDateError,
       booking,
-      bookingError,
+      bookingErrorMessage,
     } = this.props;
     return (
       <div>
@@ -180,9 +181,9 @@ class BookModal extends React.Component {
             <ReservationsTable />
             { booking && <LinearProgress/> }
             { 
-              bookingError.length > 0 && 
+              bookingErrorMessage.length > 0 && 
               <Typography className={classes.errorMessage} variant="display-1">
-                { bookingError }
+                { bookingErrorMessage }
               </Typography>
             }
           </DialogContent>
@@ -246,7 +247,7 @@ BookModal.propTypes = {
   ),
   bookDevice: PropTypes.func.isRequired,
   booking: PropTypes.bool.isRequired,
-  bookingError: PropTypes.string.isRequired,
+  bookingErrorMessage: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -259,7 +260,7 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
   reservations: state.devices.reservations,
   booking: state.devices.booking,
-  bookingError: state.devices.bookingError,
+  bookingErrorMessage: state.devices.bookingErrorMessage,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(BookModal));

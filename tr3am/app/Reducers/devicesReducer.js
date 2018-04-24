@@ -18,7 +18,7 @@ const defaultState = {
   showReservationDetails: false,
   showReturnModal: false,
   booking: false,
-  bookingError: '',
+  bookingErrorMessage: '',
 };
 
 export default (state = defaultState, action) => {
@@ -166,7 +166,7 @@ export default (state = defaultState, action) => {
       return { ...state, showReturnModal: false };
     }
     case devices.BOOK_START: {
-      return {...state, booking: true, bookingError: ''};
+      return {...state, booking: true, bookingErrorMessage: ''};
     }
     case devices.BOOK_SUCCESS: {
       const { bookedDeviceId, userId } = action.payload;
@@ -187,7 +187,7 @@ export default (state = defaultState, action) => {
       };
     }
     case devices.BOOK_ERROR: {
-      return { ...state, booking: false, bookingError: action.payload };
+      return { ...state, booking: false, bookingErrorMessage: action.payload };
     }
     default: return state;
   }
