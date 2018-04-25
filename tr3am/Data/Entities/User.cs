@@ -16,5 +16,8 @@ namespace tr3am.Data.Entities
         public Office Office { get; set; }
         public string Slack { get; set; }
         public string Role { get; set; }
+        public List<Device> Devices { get; set; }
+        public List<Reservation> Reservations { get; set; }
+        public List<Event> Events { get; set; }
     }
 }

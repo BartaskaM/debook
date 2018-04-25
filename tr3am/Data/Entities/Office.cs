@@ -11,6 +11,7 @@ namespace tr3am.Data.Entities
         public double Lat { get; set; }
         public double Lng { get; set; }
         public List<User> Users { get; set; }
+        public List<Device> Devices { get; set; }
         public List<Event> Events { get; set; }
     }
 }
