@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import Grid from 'material-ui/Grid';
 import Styles from './Styles';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
-import { Link } from 'react-router-dom';
 import Plus from 'material-ui-icons/Add';
 import Clock from 'material-ui-icons/Schedule';
 import BookModal from 'Components/BookModal';
@@ -19,6 +19,7 @@ import Devices from 'Constants/Devices';
 import Device from './Device';
 import ReturnModal from 'Components/ReturnModal';
 import { fifteenMinutes } from 'Constants/Values';
+import { ListItem } from 'material-ui';
 
 class DeviceList extends React.Component {
   constructor(props) {
@@ -138,7 +139,7 @@ class DeviceList extends React.Component {
   }
 
   renderDevices() {
-    const { reservations, user, classes } = this.props;
+    const { reservations, user, classes, history } = this.props;
     const userReservations = reservations
       .filter(res => res.user === user.id);
     return this.filterDevices().map((device, index) => {
@@ -146,12 +147,10 @@ class DeviceList extends React.Component {
       return (
         //Replace list with device component
         <Grid item xs={4} key={index}>
-          <Paper className={classes.devicePaper}>
-            <div className={classes.deviceContainer}>
-              <Link to={`/devices/${device.id.toString()}`}>
-                <Device key={device.id} device={device} />
-              </Link>
-            </div>
+          <Paper className={classes.devicePaper}> 
+            <ListItem button onClick={() => history.push(`/devices/${device.id.toString()}`)}>
+              <Device key={device.id} device={device} />
+            </ListItem>
             <div className={classes.buttonsContainer}>
               <Button
                 variant='raised'
@@ -259,6 +258,7 @@ DeviceList.propTypes = {
   setDevices: PropTypes.func.isRequired,
   checkInDevice: PropTypes.func.isRequired,
   showReturnModal: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 const mapStateToProps = state => {
   return {
@@ -273,7 +273,7 @@ const mapStateToProps = state => {
     users: state.users.users,
   };
 };
-export default connect(mapStateToProps, {
+export default withRouter(connect(mapStateToProps, {
   ...devicesActions,
   ...usersActions,
-})(withStyles(Styles)(DeviceList));
+})(withStyles(Styles)(DeviceList)));

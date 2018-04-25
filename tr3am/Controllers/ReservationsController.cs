@@ -41,7 +41,7 @@ namespace tr3am.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]ReservationRequest request)
+        public IActionResult Create([FromBody]ReservationRequest request, [FromQuery]bool booking)
         {
             if (!ModelState.IsValid)
             {
@@ -50,7 +50,7 @@ namespace tr3am.Controllers
 
             try
             {
-                int id = _reservationsRepository.Create(request);
+                int id = _reservationsRepository.Create(request, booking);
                 return CreatedAtAction(nameof(GetById), new {Id = id}, id);
             }
             catch (InvalidDeviceException)
