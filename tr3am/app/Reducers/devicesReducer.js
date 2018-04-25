@@ -19,6 +19,8 @@ const defaultState = {
   showReturnModal: false,
   booking: false,
   bookingErrorMessage: '',
+  reserving: false,
+  reservingErrorMessage: '',
 };
 
 export default (state = defaultState, action) => {

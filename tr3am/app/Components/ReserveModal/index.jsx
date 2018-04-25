@@ -10,6 +10,8 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 import { withStyles } from 'material-ui/styles';
+import { LinearProgress } from 'material-ui/Progress';
+import Typography from 'material-ui/Typography';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
 import ReservationsTable from '../ReservationsTable';
@@ -21,6 +23,7 @@ import {
   checkForReservation,
 } from 'Utils/dateUtils';
 import { fifteenMinutes } from 'Constants/Values';
+import { reservationStatus } from 'Constants/Enums';
 
 class ReserveModal extends React.Component {
   constructor(props) {
@@ -141,27 +144,30 @@ class ReserveModal extends React.Component {
   }
 
   reserveDevice() {
+    this.roundTimes();
     const {
       selectedDevice,
       currentDate,
       returnDate,
       user,
-      hideReserveModal,
+      reserveDevice,
       setReservations,
       reservations,
     } = this.props;
-    this.roundTimes();
     if (!this.checkForErrors(returnDate, currentDate) && !checkIfLate(currentDate)) {
       const reservation = {
         device: selectedDevice,
         from: currentDate,
         to: returnDate,
         user: user.id,
+        status: reservationStatus.pending,
       };
+      reserveDevice(reservation);
+      //This || will be removed in future implementation
+      //     \/
       const newReservations = [...reservations];
       newReservations.push(reservation);
       setReservations(newReservations);
-      hideReserveModal();
       //Post booking info
     }
   }
@@ -208,6 +214,8 @@ class ReserveModal extends React.Component {
       hideReservationDetails,
       showDetails,
       currentDateError,
+      reserving,
+      reservingErrorMessage,
     } = this.props;
     return (
       <div>
@@ -274,7 +282,14 @@ class ReserveModal extends React.Component {
               InputLabelProps={{ classes: { root: classes.label } }}
               FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
-            {!showDetails && <ReservationsTable />}
+            { !showDetails && <ReservationsTable /> }
+            { reserving && <LinearProgress/> }
+            { 
+              reservingErrorMessage.length > 0 && 
+              <Typography className={classes.errorMessage} variant="display1">
+                { reservingErrorMessage }
+              </Typography>
+            }
           </DialogContent>
           <DialogActions>
             <Button
@@ -351,6 +366,9 @@ ReserveModal.propTypes = {
   hideReservationDetails: PropTypes.func.isRequired,
   setCurrentDateError: PropTypes.func.isRequired,
   currentDateError: PropTypes.string.isRequired,
+  reserveDevice: PropTypes.func.isRequired,
+  reserving: PropTypes.bool.isRequired,
+  reservingErrorMessage: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -364,6 +382,8 @@ const mapStateToProps = (state) => ({
   reservations: state.devices.reservations,
   showDetails: state.devices.showReservationDetails,
   currentDateError: state.devices.currentDateError,
+  reserving: state.devices.reserving,
+  reservingErrorMessage: state.devices.reservingErrorMessage,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(ReserveModal));

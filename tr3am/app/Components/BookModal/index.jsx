@@ -9,7 +9,7 @@ import Dialog, {
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
-import LinearProgress from 'material-ui/Progress';
+import { LinearProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import * as devicesActions from 'ActionCreators/devicesActions';
@@ -182,7 +182,7 @@ class BookModal extends React.Component {
             { booking && <LinearProgress/> }
             { 
               bookingErrorMessage.length > 0 && 
-              <Typography className={classes.errorMessage} variant="display-1">
+              <Typography className={classes.errorMessage} variant="display1">
                 { bookingErrorMessage }
               </Typography>
             }
