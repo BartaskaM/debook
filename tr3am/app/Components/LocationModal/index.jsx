@@ -14,8 +14,8 @@ import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
 
 import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
-import Offices from 'Constants/Offices';
 import styles from './Style';
+import * as officesActions from 'ActionCreators/officesActions';
 
 class LocationModal extends React.Component {
   constructor(props) {
@@ -43,6 +43,7 @@ class LocationModal extends React.Component {
       classes,
       hideLocationModal,
       showLocationDialog,
+      offices,
     } = this.props;
     return (
       <div>
@@ -65,9 +66,9 @@ class LocationModal extends React.Component {
                   name: 'location',
                 }}
               >
-                {Offices.map(office => (
+                {offices.map((office, i) => (
                   <MenuItem
-                    key={office.id}
+                    key={i}
                     value={office.city}
                     className={classes.menuItemWidth}
                   >
@@ -98,10 +99,22 @@ LocationModal.propTypes = {
   changeDeviceLocation: PropTypes.func.isRequired,
   active: PropTypes.func,
   location: PropTypes.string,
+  offices: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
+  })).isRequired,
 };
 
 const mapStateToProps = (state) => ({
   showLocationDialog: state.deviceDetails.showLocationModal,
   device: state.deviceDetails.device,
+  offices: state.offices.offices,
 });
-export default connect(mapStateToProps, deviceDetailsActions)(withStyles(styles)(LocationModal));
+export default connect(mapStateToProps, { 
+  ...officesActions,
+  ...deviceDetailsActions,
+})(withStyles(styles)(LocationModal));
