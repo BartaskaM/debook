@@ -74,7 +74,7 @@ namespace tr3am.Data
             return false;
         }
 
-        public Task Update(int id, OfficeItemRequest request)
+        public async Task Update(int id, OfficeItemRequest request)
         {
             var item = await _dbContext.Offices.FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -88,10 +88,10 @@ namespace tr3am.Data
             item.Lat = request.Lat;
             item.Lng = request.Lng;
 
-            return _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
             var item = await _dbContext.Offices.FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -100,7 +100,7 @@ namespace tr3am.Data
             }
 
             _dbContext.Remove(item);
-            return _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

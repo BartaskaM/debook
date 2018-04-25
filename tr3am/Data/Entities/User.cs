@@ -12,6 +12,7 @@ namespace tr3am.Data.Entities
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public int OfficeId { get; set; }
         public Office Office { get; set; }
         public string Slack { get; set; }
         public string Role { get; set; }
