@@ -112,7 +112,6 @@ export const checkInDevice = (deviceId, userId) => {
 export const bookDevice = (bookRequest) => async dispatch =>{
   dispatch({ type: devices.BOOK_START });
   try{
-    console.log(bookRequest);
     await api.post('/reservations?booking=true', bookRequest);
     dispatch({ 
       type: devices.BOOK_SUCCESS,
@@ -124,6 +123,24 @@ export const bookDevice = (bookRequest) => async dispatch =>{
   } catch(e) {
     dispatch({ 
       type: devices.BOOK_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};
+
+export const reserveDevice = (reserveRequest) => async dispatch =>{
+  dispatch({ type: devices.RESERVE_START });
+  try{
+    await api.post('/reservations', reserveRequest);
+    dispatch({ 
+      type: devices.RESERVE_SUCCESS,
+      payload: {
+        bookedDeviceId: reserveRequest.device,
+      },
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.RESERVE_ERROR,
       payload: e.response.data.message,
     });
   }

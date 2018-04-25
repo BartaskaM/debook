@@ -148,7 +148,10 @@ class DeviceList extends React.Component {
         //Replace list with device component
         <Grid item xs={4} key={index}>
           <Paper className={classes.devicePaper}> 
-            <ListItem button onClick={() => history.push(`/devices/${device.id.toString()}`)}>
+            <ListItem
+              className={classes.deviceItem}
+              button
+              onClick={() => history.push(`/devices/${device.id.toString()}`)}>
               <Device key={device.id} device={device} />
             </ListItem>
             <div className={classes.buttonsContainer}>

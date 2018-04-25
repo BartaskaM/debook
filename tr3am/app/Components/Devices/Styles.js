@@ -28,6 +28,9 @@ const Styles = theme=>({
     position: 'relative',
     paddingBottom: 60,
   },
+  deviceItem: {
+    height: '100%',
+  },
 });
   
 export default Styles;
