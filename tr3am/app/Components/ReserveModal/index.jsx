@@ -12,6 +12,7 @@ import Dialog, {
 import { withStyles } from 'material-ui/styles';
 import { LinearProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
+
 import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
 import ReservationsTable from '../ReservationsTable';
