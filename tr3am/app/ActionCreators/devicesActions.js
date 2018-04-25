@@ -132,7 +132,11 @@ export const bookDevice = (bookRequest) => async dispatch =>{
 export const reserveDevice = (reserveRequest) => async dispatch =>{
   dispatch({ type: devices.RESERVE_START });
   try{
-    await api.post('/reservations', reserveRequest);
+    await api.post('/reservations', { 
+      from: reserveRequest.from.toISOString(),
+      to: reserveRequest.to.toISOString(),
+      ...reserveRequest,
+    });
     dispatch({ 
       type: devices.RESERVE_SUCCESS,
       payload: {

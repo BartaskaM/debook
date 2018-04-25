@@ -12,9 +12,9 @@ import { dateToHours } from 'Utils/dateUtils';
 
 class ReservationsTable extends React.Component {
   renderRows(){
-    const { classes, selectedDevice, reservations, currentDate, users } = this.props;
-    const reservationsForThisDay = reservations.filter(res => res.device === selectedDevice && 
-    res.from.getDate() === currentDate.getDate() && 
+    const { classes, selectedDeviceReservations, currentDate } = this.props;
+    const reservationsForThisDay = selectedDeviceReservations.filter(res => 
+      res.from.getDate() === currentDate.getDate() && 
     res.from.getMonth() === currentDate.getMonth() &&
     res.from.getFullYear() === currentDate.getFullYear());
     return reservationsForThisDay.length == 0 ? 
@@ -30,9 +30,8 @@ class ReservationsTable extends React.Component {
         .sort(res => res.from)
         .map((res, i) => {
           const { from, to, user } = res;
-          const userInfo = users.find(usr => usr.id === user);
           return <Row key={i} first={`${dateToHours(from)} - ${dateToHours(to)}`} 
-            second={`${userInfo.firstName} ${userInfo.lastName}`} 
+            second={`${user.firstName} ${user.lastName}`} 
             styleClass={classes.row}
             addDivider={true}/>;
         }
@@ -57,24 +56,21 @@ class ReservationsTable extends React.Component {
 
 ReservationsTable.propTypes = {
   classes: PropTypes.object.isRequired,
-  selectedDevice: PropTypes.number.isRequired,
-  reservations: PropTypes.arrayOf(
+  selectedDeviceReservations: PropTypes.arrayOf(
     PropTypes.shape({
       device: PropTypes.number.isRequired,
       user: PropTypes.number.isRequired,
       from: PropTypes.object.isRequired,
       to: PropTypes.object.isRequired,
+      status: PropTypes.number.isRequired,
     })
   ),
   currentDate: PropTypes.object.isRequired,
-  users: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
-  selectedDevice: state.devices.selectedDevice,
-  reservations: state.devices.reservations,
   currentDate: state.devices.currentDate,
-  users: state.users.users,
+  selectedDeviceReservations: state.devices.selectedDeviceReservations,
 });
 
 export default connect(mapStateToProps,null)(withStyles(Styles)(ReservationsTable));

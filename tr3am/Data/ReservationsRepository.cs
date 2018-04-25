@@ -176,7 +176,7 @@ namespace tr3am.Data
 
         private DateTime RoundTime(DateTime date)
         {
-            return new DateTime((date.Ticks + FifteenMinutes.Ticks) / FifteenMinutes.Ticks * FifteenMinutes.Ticks);
+            return new DateTime((date.Ticks + FifteenMinutes.Ticks - 1) / FifteenMinutes.Ticks * FifteenMinutes.Ticks, date.Kind);
         }
 
         private void CheckIfDateAvailable(DateTime from, DateTime to, Device device)

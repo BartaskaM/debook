@@ -18,7 +18,7 @@ export const checkIfLate = (date) => {
   return date.getHours() === 23 && date.getMinutes() >= 45;
 };
 export const roundTime = (date) => {
-  return new Date(Math.ceil(date.getTime() / fifteenMinutes) * fifteenMinutes);
+  return new Date(Math.ceil(date.getTime() / fifteenMinutes - 1) * fifteenMinutes);
 };
 export const checkForReservation = (from, to, reservations, selectedDevice) => {
   return reservations.filter(res => res.device === selectedDevice && (

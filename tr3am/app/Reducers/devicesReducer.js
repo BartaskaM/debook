@@ -226,9 +226,19 @@ export default (state = defaultState, action) => {
       };
     }
     case devices.FETCH_DEVICE_RESERVATIONS_SUCCESS: {
+
       return {
         ...state,
-        selectedDeviceReservations: action.payload,
+        selectedDeviceReservations: action.payload.map(x => {
+          const { from, to, ...rest} = x;
+          console.log(from);
+          console.log(new Date(from));
+          return {
+            ...rest,
+            from: new Date(from),
+            to: new Date(to),
+          };
+        }),
         fetchingDeviceReservations: false,
       };
     }
