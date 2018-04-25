@@ -13,7 +13,7 @@ namespace tr3am.DataContracts
         List<ReservationDTO> GetAll(bool showAll = false);
         ReservationDTO GetById(int id);
         List<ReservationDTO> GetByDeviceId(int id, bool showAll = false);
-        int Create(ReservationRequest request);
+        int Create(ReservationRequest request, bool booking);
         void Update(int id, ReservationRequest request);
         void Delete(int id);
     }

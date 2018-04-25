@@ -6,6 +6,7 @@ using AutoMapper;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
+using static tr3am.DataContracts.Constants.Time;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Enums;
 using tr3am.DataContracts.Requests.Reservations;
@@ -30,8 +31,8 @@ namespace tr3am.Data
                     Status = Status.Pending,
                     User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(1)),
                     Device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(1)),
-                    From = DateTime.Now.AddHours(2),
-                    To = DateTime.Now.AddHours(3),
+                    From = DateTime.UtcNow.AddHours(2),
+                    To = DateTime.UtcNow.AddHours(3),
                 },
                 new Reservation()
                 {
@@ -39,8 +40,8 @@ namespace tr3am.Data
                     Status = Status.Pending,
                     User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(2)),
                     Device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(1)),
-                    From = DateTime.Now.AddHours(4),
-                    To = DateTime.Now.AddHours(5),
+                    From = DateTime.UtcNow.AddHours(4),
+                    To = DateTime.UtcNow.AddHours(5),
                 },
                 new Reservation()
                 {
@@ -48,8 +49,8 @@ namespace tr3am.Data
                     Status = Status.Completed,
                     User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(1)),
                     Device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(1)),
-                    From = DateTime.Now.Subtract(new TimeSpan(2, 0, 0)),
-                    To = DateTime.Now.Subtract(new TimeSpan(1, 0, 0)),
+                    From = DateTime.UtcNow.Subtract(new TimeSpan(2, 0, 0)),
+                    To = DateTime.UtcNow.Subtract(new TimeSpan(1, 0, 0)),
                 }
             };
         }
@@ -98,10 +99,12 @@ namespace tr3am.Data
 
         }
 
-        public int Create(ReservationRequest request)
+        public int Create(ReservationRequest request, bool booking)
         {
             int id = _items.Any() ? _items.Max(x => x.Id) + 1 : 1;
             Device device = Mapper.Map<FullDeviceDTO, Device>(_devicesRepository.GetById(request.Device.Value));
+            DateTime roundFrom = booking ? request.From : RoundTime(request.From);
+            DateTime roundTo = RoundTime(request.To);
             CheckIfDateAvailable(request.From, request.To, device);
             UserDTO userDto = _usersRepository.GetById(request.User.Value);
             Reservation reservation = new Reservation
@@ -110,8 +113,8 @@ namespace tr3am.Data
                 User = Mapper.Map<UserDTO, User>(userDto),
                 Status = request.Status,
                 Device = device,
-                From = request.From,
-                To = request.To,
+                From = roundFrom,
+                To = roundTo,
             };
             _items.Add(reservation);
             return id;
@@ -149,14 +152,13 @@ namespace tr3am.Data
 
         private void RefreshReservations()
         {
-            DateTime now = DateTime.Now;
-            TimeSpan fifteenMinutes = new TimeSpan(0, 15, 0);
+            DateTime now = DateTime.UtcNow;
             foreach (Reservation x in _items)
             {
                 if (x.Status == Status.Pending)
                 {
                     var z = now - x.From;
-                    if (now - x.From > fifteenMinutes)
+                    if (now - x.From > FifteenMinutes)
                     {
 
                         x.Status = Status.Expired;
@@ -164,7 +166,7 @@ namespace tr3am.Data
                 }
                 else if (x.Status == Status.CheckedIn)
                 {
-                    if (x.To >= now)
+                    if (x.To <= now)
                     {
                         x.Status = Status.OverDue;
                     }
@@ -172,10 +174,15 @@ namespace tr3am.Data
             }
         }
 
+        private DateTime RoundTime(DateTime date)
+        {
+            return new DateTime((date.Ticks + FifteenMinutes.Ticks) / FifteenMinutes.Ticks * FifteenMinutes.Ticks);
+        }
+
         private void CheckIfDateAvailable(DateTime from, DateTime to, Device device)
         {
-            DateTime now = DateTime.Now;
-            if (from < now)
+            DateTime now = DateTime.UtcNow;
+            if (from.Add(TimeSpan.FromMinutes(1)) < now)
             {
                 throw new PastDateException();
             }
@@ -199,8 +206,7 @@ namespace tr3am.Data
         }
         private bool CheckIfDateIsWithinReservation(DateTime date, Reservation reservation)
         {
-            TimeSpan fifteenMinutes = new TimeSpan(0, 15, 0);
-            return reservation.To > date && (reservation.From - fifteenMinutes) < date;
+            return reservation.To > date && (reservation.From - FifteenMinutes) < date;
         }
         private bool CheckIfReservationIsWithinDates(DateTime from, DateTime to, Reservation reservation)
         {
