@@ -62,7 +62,8 @@ export const setCurrentDateError = (message) => {
 export const setSelectedDevice = (id) => {
   return { type: devices.SET_SELECTED_DEVICE, payload: id };
 };
-export const showReserveModal = (selectedDevice) => {
+export const showReserveModal = (selectedDevice) => dispatch => {
+  dispatch(getDeviceReservations(selectedDevice));
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + 1);
   const returnDate = new Date(currentDate);
@@ -70,7 +71,7 @@ export const showReserveModal = (selectedDevice) => {
   {
     returnDate.setHours(returnDate.getHours() + 1);
   } 
-  return { 
+  dispatch ({ 
     type: devices.SHOW_RESERVE_MODAL, 
     payload: {
       showReserveModal: true,
@@ -78,7 +79,7 @@ export const showReserveModal = (selectedDevice) => {
       returnDate,
       selectedDevice,
     }, 
-  };
+  });
 };
 export const hideReserveModal = () => {
   return { type: devices.HIDE_RESERVE_MODAL };
@@ -141,6 +142,22 @@ export const reserveDevice = (reserveRequest) => async dispatch =>{
   } catch(e) {
     dispatch({ 
       type: devices.RESERVE_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};
+
+export const getDeviceReservations = (deviceId) => async dispatch =>{
+  dispatch({ type: devices.FETCH_DEVICE_RESERVATIONS_START });
+  try{
+    const response = await api.get(`/devices/${deviceId}/reservations`);
+    dispatch({ 
+      type: devices.FETCH_DEVICE_RESERVATIONS_SUCCESS,
+      payload: response.data,
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.FETCH_DEVICE_RESERVATIONS_ERROR,
       payload: e.response.data.message,
     });
   }
