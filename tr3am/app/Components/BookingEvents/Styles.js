@@ -9,6 +9,7 @@ const Styles = {
   paper: {
     padding: 30,
     width: '100%',
+    textAlign: 'center',
   },
 };
 

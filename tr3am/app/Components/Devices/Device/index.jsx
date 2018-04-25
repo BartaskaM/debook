@@ -7,12 +7,12 @@ import { withStyles } from 'material-ui/styles';
 
 import Styles from './Styles';
 
-const device = ({classes, device, users}) => {
+const device = ({ classes, device, users }) => {
   const user = device.available ? null :
     users.find(user => user.id === device.custody);
   return (
-    <List>
-      <ListItem><img className={classes.deviceCardImage} src={device.image}/></ListItem> 
+    <List className={classes.deviceItem}>
+      <ListItem><img className={classes.deviceCardImage} src={device.image} /></ListItem>
       {device.available ?
         <Typography className={classes.availabilityTagAvailable}>Available</Typography>
         :
@@ -20,21 +20,21 @@ const device = ({classes, device, users}) => {
       }
       <Typography className={classes.deviceCardTitle}>{device.brand}, {device.model} </Typography>
       <Typography className={classes.deviceCardMainContent}>
-        Identification number: <span className={classes.mainTextColor}> {device.id}</span> 
-      </Typography>  
-      <Typography className={classes.deviceCardMainContent}>
-         OS: <span className={classes.mainTextColor}> {device.os}</span> 
+        Identification number: <span className={classes.mainTextColor}> {device.id}</span>
       </Typography>
       <Typography className={classes.deviceCardMainContent}>
-        Location: 
-        <span className={classes.mainTextColor}> {device.location} </span> 
+        OS: <span className={classes.mainTextColor}> {device.os}</span>
+      </Typography>
+      <Typography className={classes.deviceCardMainContent}>
+        Location:
+        <span className={classes.mainTextColor}> {device.location} </span>
       </Typography>
       {device.available ? <Typography><br></br> </Typography>
         :
         <Typography className={classes.deviceCardMainContent}>
-          Custody of: 
+          Custody of:
           <span className={classes.mainTextColor}> {`${user.firstName} ${user.lastName}`} </span>
-        </Typography>      
+        </Typography>
       }
     </List>
   );
@@ -50,7 +50,7 @@ device.propTypes = {
     location: PropTypes.string.isRequired,
     custody: PropTypes.number,
     available: PropTypes.bool.isRequired,
-    id: PropTypes.number.isRequired, 
+    id: PropTypes.number.isRequired,
   }).isRequired,
   users: PropTypes.array.isRequired,
 };

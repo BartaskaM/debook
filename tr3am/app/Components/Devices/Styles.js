@@ -9,19 +9,24 @@ const Styles = theme=>({
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
-  button: {
+  buttonLeft: {
     width: '44%',
     margin: '3%',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+  },
+  buttonRight: {
+    width: '44%',
+    margin: '3%',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
   },
   devicePaper: {
     height: '100%',
-  },
-  deviceContainer: {
-    height: '86%',
-    margin: '0 3%',
-  },
-  buttonsContainer: {
-    height: '14%',
+    position: 'relative',
+    paddingBottom: 60,
   },
 });
   

@@ -9,16 +9,16 @@ import { ListItem } from 'material-ui/List';
 
 import Styles from './Styles';
 
-const BrandsItem = ({ classes, brand}) => {
+const BrandsItem = ({ classes, brand }) => {
   return (
     <Grid item xs={12}>
       <ListItem>
         <Paper className={classes.brandPaper}>
           <Typography variant='display1'>
             <Grid container>
-              <Grid item xs><img className={classes.brandLogo} src={brand.image}/></Grid>
-              <Grid item xs>{brand.brand}</Grid>
-              <Grid item xs>{brand.modelCount}</Grid>  
+              <Grid item xs><img className={classes.brandLogo} src={brand.image} /></Grid>
+              <Grid item xs>{brand.brandName}</Grid>
+              <Grid item xs>{brand.models.length}</Grid>
             </Grid>
           </Typography>
         </Paper>
@@ -30,10 +30,10 @@ const BrandsItem = ({ classes, brand}) => {
 BrandsItem.propTypes = {
   classes: PropTypes.object.isRequired,
   brand: PropTypes.shape({
-    image: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
-    brand: PropTypes.string.isRequired,
-    modelCount: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    brandName: PropTypes.string.isRequired,
+    models: PropTypes.array.isRequired,
   }).isRequired,
 };
 

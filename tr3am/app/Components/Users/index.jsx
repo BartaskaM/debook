@@ -1,31 +1,58 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import List from 'material-ui/List';
-import { withStyles } from 'material-ui/styles';
-import { connect } from 'react-redux';
+import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
+import { LinearProgress } from 'material-ui/Progress';
 
 import Styles from './Styles';
-import * as usersActions from 'ActionCreators/usersActions';
-import UsersList from 'Constants/User';
+import StylesUtils from 'Utils/StylesUtils';
 import UserItem from './UserItem';
+import * as usersActions from 'ActionCreators/usersActions';
 
 class Users extends React.Component {
+
   componentDidMount() {
-    //TODO: Fetch users
-    this.props.setUsers(UsersList);
+    this.props.fetchUsers();
+  }
+
+  renderListHeader() {
+    const { classes } = this.props;
+    return (
+      <Grid item xs={12}>
+        <Paper className={classes.headerPaper}>
+          <Typography variant='display1'>
+            <Grid container>
+              <Grid item xs={2}>FirstName</Grid>
+              <Grid item xs={2}>LastName</Grid>
+              <Grid item xs={3}>Email</Grid>
+              <Grid item xs={2}>Office</Grid>
+              <Grid item xs={3}>Slack name</Grid>
+            </Grid>
+          </Typography>
+        </Paper>
+      </Grid>
+    );
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, users, fetchUsersLoading } = this.props;
     return (
       <div className={classes.root}>
         <Grid container spacing={16}>
-          <List className={classes.userList}>
-            {this.props.users.map(user => (
-              <UserItem key={user.id} user={user} />
-            ))}
-          </List>
+          {this.renderListHeader()}
+          {fetchUsersLoading ?
+            <Grid item xs={12}>
+              <LinearProgress />
+            </Grid>
+            : <List className={classes.userList}>
+              {users.map(user => (
+                <UserItem key={user.id} user={user} />
+              ))}
+            </List>}
         </Grid>
       </div>
     );
@@ -39,16 +66,28 @@ Users.propTypes = {
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    office: PropTypes.string.isRequired,
+    office: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      country: PropTypes.string.isRequired,
+      city: PropTypes.string.isRequired,
+      address: PropTypes.string.isRequired,
+      lat: PropTypes.number.isRequired,
+      lng: PropTypes.number.isRequired,
+    }).isRequired,
     slack: PropTypes.string.isRequired,
   })).isRequired,
-  setUsers: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired,
+  fetchUsersLoading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => {
   return {
     users: state.users.users,
+    fetchUsersLoading: state.users.fetchUsersLoading,
+    fetchUsersErrorMessage: state.users.fetchUsersErrorMessage,
   };
 };
 
-export default connect(mapStateToProps, usersActions)(withStyles(Styles)(Users));
+export default connect(mapStateToProps, usersActions)(
+  withStyles({ ...Styles, ...StylesUtils })(Users)
+);
