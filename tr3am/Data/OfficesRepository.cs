@@ -21,7 +21,7 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<List<OfficeDTO>> GetAll()
+        public async Task<IEnumerable<OfficeDTO>> GetAll()
         {
             return await _dbContext.Offices.Select(x => Mapper.Map<Office, OfficeDTO>(x)).ToListAsync();
         }
