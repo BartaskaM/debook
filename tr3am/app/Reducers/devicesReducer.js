@@ -189,6 +189,30 @@ export default (state = defaultState, action) => {
     case devices.BOOK_ERROR: {
       return { ...state, booking: false, bookingErrorMessage: action.payload };
     }
+    case devices.RESERVE_START: {
+      return {...state, reserving: true, reservingErrorMessage: ''};
+    }
+    case devices.RESERVE_SUCCESS: {
+      const { reservedDeviceId } = action.payload;
+      const updatedDevices = state.devices.map(device => {
+        if (device.id === reservedDeviceId) {
+          //Make additional changes in future implementation
+          return device;
+        }
+        return device;
+      });
+      return {
+        ...state,
+        devices: updatedDevices,
+        reserving: false,
+        showReserveModal: false, 
+        currentDateError: ' ', 
+        returnDateError: ' ',
+      };
+    }
+    case devices.RESERVE_ERROR: {
+      return { ...state, reserving: false, reservingErrorMessage: action.payload };
+    }
     default: return state;
   }
 };

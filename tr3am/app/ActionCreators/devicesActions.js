@@ -128,3 +128,22 @@ export const bookDevice = (bookRequest) => async dispatch =>{
     });
   }
 };
+
+export const reserveDevice = (reserveRequest) => async dispatch =>{
+  dispatch({ type: devices.RESERVE_START });
+  try{
+    console.log(reserveRequest);
+    await api.post('/reservations', reserveRequest);
+    dispatch({ 
+      type: devices.RESERVE_SUCCESS,
+      payload: {
+        bookedDeviceId: reserveRequest.device,
+      },
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.RESERVE_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};
