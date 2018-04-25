@@ -221,6 +221,7 @@ export default (state = defaultState, action) => {
     case devices.FETCH_DEVICE_RESERVATIONS_START: {
       return {
         ...state,
+        selectedDeviceReservations: [],
         fetchingDeviceReservations: true,
         fetchingDeviceReservationsErrorMessage: '',
       };
@@ -231,8 +232,6 @@ export default (state = defaultState, action) => {
         ...state,
         selectedDeviceReservations: action.payload.map(x => {
           const { from, to, ...rest} = x;
-          console.log(from);
-          console.log(new Date(from));
           return {
             ...rest,
             from: new Date(from),

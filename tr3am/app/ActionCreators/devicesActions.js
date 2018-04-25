@@ -28,21 +28,21 @@ export const setShowUnavailable = (bool) => {
 export const resetFilters = () => {
   return { type: devices.RESET_FILTERS };
 };
-export const showBookModal = (selectedDevice) => {
-
+export const showBookModal = (selectedDevice) => dispatch => {
+  dispatch(getDeviceReservations(selectedDevice));
   const returnDate = new Date();
   if(returnDate.getHours() !== 23)
   {
     returnDate.setHours(returnDate.getHours() + 1);
   } 
-  return { 
+  dispatch ({ 
     type: devices.SHOW_BOOK_MODAL, 
     payload: {
       currentDate: new Date(),
       returnDate,
       selectedDevice,
     },
-  };
+  });
 };
 export const hideBookModal = () => {
   return { type: devices.HIDE_BOOK_MODAL };
