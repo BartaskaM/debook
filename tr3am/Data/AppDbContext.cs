@@ -12,6 +12,7 @@ namespace tr3am.Data
         public DbSet<Office> Offices { get; set; } 
         public DbSet<User> Users { get; set; }
         public DbSet<Brand> Brands { get; set; }
+        public DbSet<Model> Models { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
