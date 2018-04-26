@@ -75,8 +75,6 @@ namespace tr3am.Data
                 IdentificationNum = request.IdentificationNum.Value,
                 SerialNum = request.SerialNum,
                 OS = request.OS,
-                Group = request.Group,
-                Subgroup = request.SubGroup,
                 Description = request.Description,
                 Purchased = request.Purchased,
                 Vendor = request.Vendor,
@@ -141,8 +139,6 @@ namespace tr3am.Data
             item.IdentificationNum = request.IdentificationNum;
             item.SerialNum = request.SerialNum;
             item.OS = request.OS;
-            item.Group = request.Group;
-            item.Subgroup = request.Subgroup;
             item.Description = request.Description;
             item.Purchased = request.Purchased;
             item.Vendor = request.Vendor;

@@ -122,7 +122,7 @@ class AddOfficeModal extends React.Component {
                     <Input
                       inputProps={{
                         name: 'country',
-                        maxLength: '255',
+                        maxLength: '256',
                         required: 'required',
                       }}
                       onChange={this.inputHandler} />
@@ -132,7 +132,7 @@ class AddOfficeModal extends React.Component {
                     <Input
                       inputProps={{
                         name: 'city',
-                        maxLength: '255',
+                        maxLength: '256',
                         required: 'required',
                       }}
                       onChange={this.inputHandler} />
@@ -142,7 +142,7 @@ class AddOfficeModal extends React.Component {
                     <Input
                       inputProps={{
                         name: 'address',
-                        maxLength: '255',
+                        maxLength: '256',
                         required: 'required',
                       }}
                       onChange={this.inputHandler} />

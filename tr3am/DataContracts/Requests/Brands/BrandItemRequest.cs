@@ -11,7 +11,7 @@ namespace tr3am.DataContracts.Requests.Brands
         [Required]
         public string Image { get; set; }
         [Required]
-        [MaxLength(255)]
+        [MaxLength(256)]
         public string BrandName { get; set; }
     }
 }

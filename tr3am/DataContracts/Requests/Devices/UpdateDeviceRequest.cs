@@ -22,11 +22,7 @@ namespace tr3am.DataContracts.Requests.Devices
         [Required]
         [MaxLength(255)]
         public string OS { get; set; }
-        [MaxLength(255)]
-        public string Group { get; set; }
-        [MaxLength(255)]
-        public string Subgroup { get; set; }
-        [MaxLength(2000)]
+        [MaxLength(1024)]
         public string Description { get; set; }
         public DateTime Purchased { get; set; }
         [MaxLength(255)]
