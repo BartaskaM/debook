@@ -87,7 +87,9 @@ export default (state = defaultState, action) => {
         ...state, 
         showBookModal: false, 
         currentDateError: ' ', 
-        returnDateError: ' ' };
+        returnDateError: ' ',
+        bookingErrorMessage: '',
+      };
     }
     case devices.SET_CURRENT_DATE: {
       return { ...state, currentDate: action.payload };
@@ -130,7 +132,8 @@ export default (state = defaultState, action) => {
         ...state, 
         showReserveModal: false,
         currentDateError: ' ',
-        returnDateError: ' ', 
+        returnDateError: ' ',
+        reservingErrorMessage: '',
       };
     }
     case devices.SET_RESERVATIONS: {

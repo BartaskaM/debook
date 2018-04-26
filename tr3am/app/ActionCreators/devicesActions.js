@@ -1,4 +1,5 @@
 import { devices } from 'Constants/ActionTypes';
+import { roundTime } from 'Utils/dateUtils';
 import api from 'api';
 
 export const setDevices = (deviceArray) => {
@@ -30,7 +31,7 @@ export const resetFilters = () => {
 };
 export const showBookModal = (selectedDevice) => dispatch => {
   dispatch(fetchDeviceReservations(selectedDevice));
-  const returnDate = new Date();
+  const returnDate = roundTime(new Date());
   if(returnDate.getHours() !== 23)
   {
     returnDate.setHours(returnDate.getHours() + 1);
@@ -64,9 +65,9 @@ export const setSelectedDevice = (id) => {
 };
 export const showReserveModal = (selectedDevice) => dispatch => {
   dispatch(fetchDeviceReservations(selectedDevice));
-  const currentDate = new Date();
+  const currentDate = roundTime(new Date());
   currentDate.setDate(currentDate.getDate() + 1);
-  const returnDate = new Date(currentDate);
+  const returnDate = roundTime(new Date(currentDate));
   if(returnDate.getHours() !== 23)
   {
     returnDate.setHours(returnDate.getHours() + 1);
