@@ -12,7 +12,7 @@ import Styles from './Styles';
 const EventItem = ({ event, classes }) => {
   return (
     <Grid item xs>
-      <ListItem>
+      <ListItem button>
         <Paper className={classes.paper}>
           <Typography variant='display1'>
             <Grid container>
