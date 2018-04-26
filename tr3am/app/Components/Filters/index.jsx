@@ -128,7 +128,10 @@ class Filters extends React.Component{
       <Drawer variant="permanent" className={classes.root} classes={{paper: classes.drawerPaper}}>
         <div className={classes.toolbar} />
         <FormControl className={classes.toolbar}>
-          <Button variant='flat' color='secondary' onClick={() => this.props.resetFilters()}>
+          <Button
+            variant='raised'
+            className={classes.button}
+            onClick={() => this.props.resetFilters()}>
           Clear filters
           </Button>
           {this.renderBrandFilter()}
