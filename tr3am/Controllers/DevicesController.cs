@@ -19,9 +19,10 @@ namespace tr3am.Controllers
         private readonly IDevicesRepository _devicesRepository;
         private readonly IReservationsRepository _reservationsRepository;
 
-        public DevicesController(IDevicesRepository devicesRepository)
+        public DevicesController(IDevicesRepository devicesRepository, IReservationsRepository reservationsRepository)
         {
             _devicesRepository = devicesRepository;
+            _reservationsRepository = reservationsRepository;
         }
 
         [HttpGet]
