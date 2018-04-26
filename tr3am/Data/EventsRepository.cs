@@ -56,6 +56,7 @@ namespace tr3am.Data
             {
                 throw new InvalidDeviceException();
             }
+
             var user = await _dbContext.Users
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
             if (user == null)
@@ -100,6 +101,7 @@ namespace tr3am.Data
             {
                 throw new InvalidDeviceException();
             }
+
             var user = await _dbContext.Users
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
             if (user == null)

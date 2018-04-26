@@ -33,8 +33,7 @@ namespace tr3am
             services.AddScoped<IBrandsRepository, BrandsRepository>();
             services.AddScoped<IDevicesRepository, DevicesRepository>();
             services.AddScoped<IEventsRepository, EventsRepository>();
-
-            services.AddSingleton<IReservationsRepository, ReservationsRepository>();
+            services.AddScoped<IReservationsRepository, ReservationsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

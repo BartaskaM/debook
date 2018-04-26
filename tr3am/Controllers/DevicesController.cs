@@ -17,6 +17,7 @@ namespace tr3am.Controllers
     public class DevicesController : Controller
     {
         private readonly IDevicesRepository _devicesRepository;
+        private readonly IReservationsRepository _reservationsRepository;
 
         public DevicesController(IDevicesRepository devicesRepository)
         {
@@ -100,11 +101,11 @@ namespace tr3am.Controllers
                 return NotFound();
             }
         }
-        // TODO: Reimplament this after reworking reservations
-        /*[HttpGet("{id}/reservations")]
-        public IEnumerable<ReservationDTO> GetDeviceReservations(int id, [FromQuery]bool showAll)
+
+        [HttpGet("{id}/reservations")]
+        public async Task<IEnumerable<ReservationDTO>> GetDeviceReservations(int id, [FromQuery]bool showAll)
         {
-            return _reservationsRepository.GetByDeviceId(id,showAll);
-        }*/
+            return await _reservationsRepository.GetByDeviceId(id, showAll);
+        }
     }
 }

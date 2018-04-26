@@ -11,9 +11,9 @@ namespace tr3am.DataContracts.Requests.Reservations
     public class ReservationRequest
     {
         [Required]
-        public int? User { get; set; }
+        public int UserId { get; set; }
         [Required]
-        public int? Device { get; set; }
+        public int DeviceId { get; set; }
         [Required]
         public DateTime From { get; set; }
         [Required]

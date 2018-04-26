@@ -22,17 +22,17 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ReservationDTO> GetAll([FromQuery]bool showAll)
+        public async Task<IEnumerable<ReservationDTO>> GetAll([FromQuery]bool showAll)
         {
-            return _reservationsRepository.GetAll(showAll);
+            return await _reservationsRepository.GetAll(showAll);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                return Ok(_reservationsRepository.GetById(id));
+                return Ok(await _reservationsRepository.GetById(id));
             }
             catch (InvalidOfficeException)
             {
@@ -41,25 +41,24 @@ namespace tr3am.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]ReservationRequest request, [FromQuery]bool booking)
+        public async Task<IActionResult> Create([FromBody]ReservationRequest request, [FromQuery]bool booking)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
-                int id = _reservationsRepository.Create(request, booking);
-                return CreatedAtAction(nameof(GetById), new {Id = id}, id);
+                int id = await _reservationsRepository.Create(request, booking);
+                return CreatedAtAction(nameof(GetById), new { Id = id }, id);
             }
             catch (InvalidDeviceException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new {Message = "This device doesn't exist"});
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This device doesn't exist" });
             }
             catch (InvalidUserException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new {Message = "This user doesn't exist"});
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This user doesn't exist" });
             }
             catch (UsedDateException)
             {
@@ -77,16 +76,15 @@ namespace tr3am.Controllers
         }
 
         [HttpPost("{id}")]
-        public IActionResult Update(int id, [FromBody]ReservationRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody]ReservationRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
-                _reservationsRepository.Update(id, request);
+                await _reservationsRepository.Update(id, request);
                 return NoContent();
             }
             catch (InvalidReservationException)
@@ -95,20 +93,20 @@ namespace tr3am.Controllers
             }
             catch (InvalidDeviceException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new {Message = "This device doesn't exist"});
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This device doesn't exist" });
             }
             catch (InvalidUserException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new {Message = "This user doesn't exist"});
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This user doesn't exist" });
             }
             catch (UsedDateException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new {Message = "This date is already reserved"});
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This date is already reserved" });
             }
             catch (NegativeDateException)
             {
                 return StatusCode(StatusCodes.Status409Conflict,
-                    new {Message = "To date must be greater than from date"});
+                    new { Message = "To date must be greater than from date" });
             }
             catch (PastDateException)
             {
@@ -117,11 +115,11 @@ namespace tr3am.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                _reservationsRepository.Delete(id);
+                await _reservationsRepository.Delete(id);
                 return NoContent();
             }
             catch (InvalidReservationException)
