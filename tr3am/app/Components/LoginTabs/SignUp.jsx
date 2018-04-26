@@ -36,6 +36,7 @@ class SignUp extends React.Component {
       firstName: '',
       lastName: '',
       slackName: '',
+      currentTab: props.currentTab,
     };
 
     this.submitSignUpForm = this.submitSignUpForm.bind(this);
@@ -49,8 +50,11 @@ class SignUp extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, previousState){
-    if(nextProps.currentTab === 0){
-      return {
+    let changes = { currentTab: nextProps.currentTab };
+    if(nextProps.currentTab === 0 || 
+      ( previousState.currentTab === 0 && nextProps.currentTab === 1)){
+      changes = {
+        ...changes,
         firstName: '',
         lastName: '',
         email: '',
@@ -62,7 +66,7 @@ class SignUp extends React.Component {
         emailErrorMessage: '',
       };
     }
-    return previousState;
+    return changes;
   }
 
   submitSignUpForm(e) {
