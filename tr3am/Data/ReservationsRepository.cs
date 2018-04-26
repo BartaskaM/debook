@@ -30,6 +30,8 @@ namespace tr3am.Data
             if (showAll)
             {
                 return await _dbContext.Reservations
+                    .Include(x => x.User)
+                    .Include(x => x.Device)
                     .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
                     .ToListAsync();
             }
@@ -46,6 +48,8 @@ namespace tr3am.Data
         public async Task<ReservationDTO> GetById(int id)
         {
             var item = await _dbContext.Reservations
+                .Include(x => x.User)
+                .Include(x => x.Device)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {

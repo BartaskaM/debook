@@ -26,7 +26,7 @@ namespace tr3am.Controllers
             }
             try
             {
-                return Ok(_auth.LogIn(request));
+                return Ok(_auth.LogIn(request).Result);
             }
             catch(InvalidUserException)
             {

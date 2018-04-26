@@ -24,6 +24,7 @@ namespace tr3am.Data
         public async Task<IEnumerable<BrandDTO>> GetAll()
         {
             return await _dbContext.Brands
+                .Include(x => x.Models)
                 .Select(x => Mapper.Map<Brand, BrandDTO>(x))
                 .ToListAsync();
         }
@@ -31,6 +32,7 @@ namespace tr3am.Data
         public async Task<BrandDTO> GetById(int id)
         {
             var item = await _dbContext.Brands
+                .Include(x => x.Models)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {

@@ -25,6 +25,9 @@ namespace tr3am.Data
         public async Task<IEnumerable<EventDTO>> GetAll()
         {
             return await _dbContext.Events
+                .Include(x => x.Office)
+                .Include(x => x.User)
+                .Include(x => x.Device)
                 .Select(x => Mapper.Map<Event,EventDTO>(x))
                 .ToListAsync();
         }
@@ -32,6 +35,9 @@ namespace tr3am.Data
         public async Task<EventDTO> GetById(int id)
         {
             var item = await _dbContext.Events
+                .Include(x => x.Office)
+                .Include(x => x.User)
+                .Include(x => x.Device)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {

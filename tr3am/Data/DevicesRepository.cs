@@ -24,6 +24,10 @@ namespace tr3am.Data
         public async Task<IEnumerable<ShortDeviceDTO>> GetAll()
         {
             return await _dbContext.Devices
+                .Include(x => x.Office)
+                .Include(x => x.User)
+                .Include(x => x.Brand)
+                .Include(x => x.Model)
                 .Where(x => x.Active)
                 .Select(x => Mapper.Map<Device,ShortDeviceDTO>(x)).ToListAsync();
         }
@@ -31,6 +35,10 @@ namespace tr3am.Data
         public async Task<FullDeviceDTO> GetById(int id)
         {
             var item = await _dbContext.Devices
+                .Include(x => x.Office)
+                .Include(x => x.User)
+                .Include(x => x.Brand)
+                .Include(x => x.Model)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if(item == null)
             {

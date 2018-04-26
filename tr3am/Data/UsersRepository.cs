@@ -24,6 +24,7 @@ namespace tr3am.Data
         public async Task<LogInDTO> LogIn(LogInRequest request)
         {
             var item = await _dbContext.Users
+                .Include(x => x.Office)
                 .FirstOrDefaultAsync(x => x.Email == request.Email);
             if(item == null || item.Password != request.Password)
             {
@@ -36,6 +37,7 @@ namespace tr3am.Data
         public async Task<IEnumerable<UserDTO>> GetAll()
         {
             return await _dbContext.Users
+                .Include(x => x.Office)
                 .Select(x => Mapper.Map<User, UserDTO>(x))
                 .ToListAsync();
         }
