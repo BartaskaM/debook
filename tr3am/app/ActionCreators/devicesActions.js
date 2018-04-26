@@ -29,7 +29,7 @@ export const resetFilters = () => {
   return { type: devices.RESET_FILTERS };
 };
 export const showBookModal = (selectedDevice) => dispatch => {
-  dispatch(getDeviceReservations(selectedDevice));
+  dispatch(fetchDeviceReservations(selectedDevice));
   const returnDate = new Date();
   if(returnDate.getHours() !== 23)
   {
@@ -63,7 +63,7 @@ export const setSelectedDevice = (id) => {
   return { type: devices.SET_SELECTED_DEVICE, payload: id };
 };
 export const showReserveModal = (selectedDevice) => dispatch => {
-  dispatch(getDeviceReservations(selectedDevice));
+  dispatch(fetchDeviceReservations(selectedDevice));
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + 1);
   const returnDate = new Date(currentDate);
@@ -151,7 +151,7 @@ export const reserveDevice = (reserveRequest) => async dispatch =>{
   }
 };
 
-export const getDeviceReservations = (deviceId) => async dispatch =>{
+export const fetchDeviceReservations = (deviceId) => async dispatch =>{
   dispatch({ type: devices.FETCH_DEVICE_RESERVATIONS_START });
   try{
     const response = await api.get(`/devices/${deviceId}/reservations`);

@@ -24,18 +24,9 @@ class ReservationsTable extends React.Component {
     res.from.getMonth() === currentDate.getMonth() &&
     res.from.getFullYear() === currentDate.getFullYear());
     return fetchingDeviceReservations ?
-      <Grid item xs={12}>
-        <LinearProgress/>
-      </Grid> :
+      this.renderLoadingBar() :
       reservationsForThisDay.length == 0 ? 
-        <Grid item xs={12}>
-          <ListItem>
-            <Grid container>
-              <Grid item xs={12}><Divider /></Grid>
-              <Grid item xs={12}>No reservations today.</Grid>
-            </Grid>
-          </ListItem>
-        </Grid> :
+        this.renderNoReservations() :
         reservationsForThisDay
           .sort(res => res.from)
           .map((res, i) => {
@@ -46,6 +37,27 @@ class ReservationsTable extends React.Component {
               addDivider={true}/>;
           }
           );
+  }
+
+  renderNoReservations(){
+    return (
+      <Grid item xs={12}>
+        <ListItem>
+          <Grid container>
+            <Grid item xs={12}><Divider /></Grid>
+            <Grid item xs={12}>No reservations today.</Grid>
+          </Grid>
+        </ListItem>
+      </Grid>
+    );
+  }
+
+  renderLoadingBar(){
+    return (
+      <Grid item xs={12}>
+        <LinearProgress/>
+      </Grid>
+    );
   }
 
   render(){
