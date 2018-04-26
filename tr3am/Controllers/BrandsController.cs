@@ -22,17 +22,17 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<BrandDTO> GetAll()
+        public async Task<IEnumerable<BrandDTO>> GetAll()
         {
-            return _brandsRepository.GetAll();
+            return await _brandsRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                return Ok(_brandsRepository.GetById(id));
+                return Ok(await _brandsRepository.GetById(id));
             }
             catch (InvalidBrandException)
             {
@@ -41,7 +41,7 @@ namespace tr3am.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]BrandItemRequest request)
+        public async Task<IActionResult> Create([FromBody]BrandItemRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -50,7 +50,7 @@ namespace tr3am.Controllers
 
             try
             {
-                var itemId = _brandsRepository.Create(request);
+                var itemId = await _brandsRepository.Create(request);
                 return CreatedAtAction(nameof(GetById), new { id = itemId }, itemId);
             }
             catch (DuplicateBrandException)
@@ -60,7 +60,7 @@ namespace tr3am.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] BrandItemRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody] BrandItemRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -68,29 +68,27 @@ namespace tr3am.Controllers
             }
             try
             {
-                _brandsRepository.Update(id, request);
+                await _brandsRepository.Update(id, request);
+                return NoContent();
             }
             catch (InvalidBrandException)
             {
                 return NotFound();
             }
-
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                _brandsRepository.Delete(id);
+                await _brandsRepository.Delete(id);
+                return NoContent();
             }
             catch (InvalidBrandException)
             {
                 return NotFound();
             }
-
-            return NoContent();
         }
     }
 }

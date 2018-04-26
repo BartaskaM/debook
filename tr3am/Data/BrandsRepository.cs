@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,79 +14,24 @@ namespace tr3am.Data
 {
     public class BrandsRepository : IBrandsRepository
     {
-        private readonly List<Brand> _items;
+        private readonly AppDbContext _dbContext;
 
-        public BrandsRepository()
+        public BrandsRepository(AppDbContext dbContext)
         {
-            _items = new List<Brand>
-            {
-                new Brand
-                {
-                    Id = 1,
-                    BrandName = "Huawei",
-                    Image = "https://botw-pd.s3.amazonaws.com/styles/logo-thumbnail/s3/062013/huawei_0.jpg?itok=mNbiNOQ6",
-                    Models = new List<Model>
-                    {
-                        new Model
-                        {
-                            Id = 1,
-                            Name = "P 10+",
-                        },
-                    },
-                },
-                new Brand
-                {
-                    Id = 2,
-                    BrandName = "Apple",
-                    Image = "https://assets.econsultancy.com/images/resized/0002/1108/apple_logo-blog-thumb.png",
-                    Models = new List<Model>
-                    {
-                        new Model
-                        {
-                            Id = 2,
-                            Name = "Ipad Air",
-                        },
-                    },
-                },
-                new Brand
-                {
-                    Id = 3,
-                    BrandName = "Samsung",
-                    Image = "https://vignette.wikia.nocookie.net/logopedia/images/d/dd/Samsung-logo-7.png/revision/latest/scale-to-width-down/640?cb=20160803140631",
-                    Models = new List<Model>
-                    {
-                        new Model
-                        {
-                            Id = 3,
-                            Name = "Galaxy S8+",
-                        },
-                    },
-                },
-                new Brand
-                {
-                    Id = 4,
-                    BrandName = "Sony",
-                    Image = "http://logok.org/wp-content/uploads/2014/07/Sony_logo-880x660.png",
-                    Models = new List<Model>
-                    {
-                        new Model
-                        {
-                            Id = 4,
-                            Name = "Xperia Z+",
-                        },
-                    },
-                },
-            };
+            _dbContext = dbContext;
         }
 
-        public List<BrandDTO> GetAll()
+        public async Task<IEnumerable<BrandDTO>> GetAll()
         {
-            return _items.Select(Mapper.Map<Brand, BrandDTO>).ToList();
+            return await _dbContext.Brands
+                .Select(x => Mapper.Map<Brand, BrandDTO>(x))
+                .ToListAsync();
         }
 
-        public BrandDTO GetById(int id)
+        public async Task<BrandDTO> GetById(int id)
         {
-            var item = _items.FirstOrDefault(x => x.Id == id);
+            var item = await _dbContext.Brands
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidBrandException();
@@ -94,31 +40,31 @@ namespace tr3am.Data
             return Mapper.Map<Brand, BrandDTO>(item);
         }
 
-        public int Create(BrandItemRequest request)
+        public async Task<int> Create(BrandItemRequest request)
         {
-            var id = _items.Any() ? _items.Max(x => x.Id) + 1 : 1;
-
-            var item = new Brand
+            var newItem = new Brand
             {
-                Id = id,
                 BrandName = request.BrandName,
                 Image = request.Image,
             };
 
-            if (BrandExists(item))
+            if (await BrandExists(newItem))
             {
                 throw new DuplicateBrandException();
             }
 
-            _items.Add(item);
-            return id;
+            _dbContext.Add(newItem);
+            await _dbContext.SaveChangesAsync();
+
+            return newItem.Id;
         }
 
-        public bool BrandExists(Brand brand)
+        public async Task<bool> BrandExists(Brand brand)
         {
-            var result = _items.Find(x =>
-            x.BrandName == brand.BrandName &&
-            x.Image == brand.Image);
+            var result = await _dbContext.Brands
+                .FirstOrDefaultAsync(x => 
+                x.BrandName == brand.BrandName ||
+                x.Image == brand.Image);
 
             if (result != null)
             {
@@ -128,9 +74,10 @@ namespace tr3am.Data
             return false;
         }
 
-        public void Update(int id, BrandItemRequest request)
+        public async Task Update(int id, BrandItemRequest request)
         {
-            var item = _items.FirstOrDefault(x => x.Id == id);
+            var item = await _dbContext.Brands
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidBrandException();
@@ -138,17 +85,21 @@ namespace tr3am.Data
 
             item.BrandName = request.BrandName;
             item.Image = request.Image;
+
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var item = _items.FirstOrDefault(x => x.Id == id);
+            var item = _dbContext.Brands
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidBrandException();
             }
 
-            _items.Remove(item);
+            _dbContext.Remove(item);
+            await _dbContext.SaveChangesAsync();
         }
 
     }

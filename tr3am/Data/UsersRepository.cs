@@ -42,7 +42,8 @@ namespace tr3am.Data
 
         public async Task<UserDTO> GetById(int id)
         {
-            var item = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var item = await _dbContext.Users
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidUserException();
@@ -92,13 +93,15 @@ namespace tr3am.Data
                 throw new InvalidUserException();
             }
 
-            var office = _dbContext.Offices.FirstOrDefaultAsync(x => x.Id == request.OfficeId);
+            var office = _dbContext.Offices
+                .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
             if (office == null)
             {
                 throw new InvalidOfficeException();
             }
 
-            if (item.Email != request.Email && await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == request.Email) != null)
+            if (item.Email != request.Email && await _dbContext.Users
+                .FirstOrDefaultAsync(x => x.Email == request.Email) != null)
             {
                 throw new DuplicateEmailException();
             }
@@ -120,7 +123,8 @@ namespace tr3am.Data
 
         public async Task Delete(int id)
         {
-            var item = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var item = await _dbContext.Users
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidUserException();
