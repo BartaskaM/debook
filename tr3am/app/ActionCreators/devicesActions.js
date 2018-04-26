@@ -28,21 +28,21 @@ export const setShowUnavailable = (bool) => {
 export const resetFilters = () => {
   return { type: devices.RESET_FILTERS };
 };
-export const showBookModal = (selectedDevice) => {
-
+export const showBookModal = (selectedDevice) => dispatch => {
+  dispatch(fetchDeviceReservations(selectedDevice));
   const returnDate = new Date();
   if(returnDate.getHours() !== 23)
   {
     returnDate.setHours(returnDate.getHours() + 1);
   } 
-  return { 
+  dispatch ({ 
     type: devices.SHOW_BOOK_MODAL, 
     payload: {
       currentDate: new Date(),
       returnDate,
       selectedDevice,
     },
-  };
+  });
 };
 export const hideBookModal = () => {
   return { type: devices.HIDE_BOOK_MODAL };
@@ -62,7 +62,8 @@ export const setCurrentDateError = (message) => {
 export const setSelectedDevice = (id) => {
   return { type: devices.SET_SELECTED_DEVICE, payload: id };
 };
-export const showReserveModal = (selectedDevice) => {
+export const showReserveModal = (selectedDevice) => dispatch => {
+  dispatch(fetchDeviceReservations(selectedDevice));
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + 1);
   const returnDate = new Date(currentDate);
@@ -70,7 +71,7 @@ export const showReserveModal = (selectedDevice) => {
   {
     returnDate.setHours(returnDate.getHours() + 1);
   } 
-  return { 
+  dispatch ({ 
     type: devices.SHOW_RESERVE_MODAL, 
     payload: {
       showReserveModal: true,
@@ -78,7 +79,7 @@ export const showReserveModal = (selectedDevice) => {
       returnDate,
       selectedDevice,
     }, 
-  };
+  });
 };
 export const hideReserveModal = () => {
   return { type: devices.HIDE_RESERVE_MODAL };
@@ -131,7 +132,11 @@ export const bookDevice = (bookRequest) => async dispatch =>{
 export const reserveDevice = (reserveRequest) => async dispatch =>{
   dispatch({ type: devices.RESERVE_START });
   try{
-    await api.post('/reservations', reserveRequest);
+    await api.post('/reservations', { 
+      from: reserveRequest.from.toISOString(),
+      to: reserveRequest.to.toISOString(),
+      ...reserveRequest,
+    });
     dispatch({ 
       type: devices.RESERVE_SUCCESS,
       payload: {
@@ -141,6 +146,22 @@ export const reserveDevice = (reserveRequest) => async dispatch =>{
   } catch(e) {
     dispatch({ 
       type: devices.RESERVE_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};
+
+export const fetchDeviceReservations = (deviceId) => async dispatch =>{
+  dispatch({ type: devices.FETCH_DEVICE_RESERVATIONS_START });
+  try{
+    const response = await api.get(`/devices/${deviceId}/reservations`);
+    dispatch({ 
+      type: devices.FETCH_DEVICE_RESERVATIONS_SUCCESS,
+      payload: response.data,
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.FETCH_DEVICE_RESERVATIONS_ERROR,
       payload: e.response.data.message,
     });
   }

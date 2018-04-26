@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import List from 'material-ui/List';
+import List, { ListItem } from 'material-ui/List';
 import Grid from 'material-ui/Grid';
+import Divider from 'material-ui/Divider';
+import { LinearProgress } from 'material-ui/Progress';
+
 import Row from './row';
 import { withStyles } from 'material-ui/styles';
 import Styles from './Styles';
@@ -10,37 +13,64 @@ import { dateToHours } from 'Utils/dateUtils';
 
 class ReservationsTable extends React.Component {
   renderRows(){
-    const { classes, selectedDevice, reservations, currentDate, users } = this.props;
-    return reservations.filter(res => res.device === selectedDevice && 
-    res.from.getDate() === currentDate.getDate() && 
+    const {
+      classes,
+      selectedDeviceReservations,
+      currentDate,
+      fetchingDeviceReservations,
+    } = this.props;
+    
+    const reservationsForThisDay = selectedDeviceReservations.filter(res => 
+      res.from.getDate() === currentDate.getDate() && 
     res.from.getMonth() === currentDate.getMonth() &&
-    res.from.getFullYear() === currentDate.getFullYear())
-      .sort(res => res.from)
-      .map((res, i) => {
-        const { from, to, user } = res;
-        const userInfo = users.find(usr => usr.id === user);
-        return <Row key={i} first={`${dateToHours(from)} - ${dateToHours(to)}`} 
-          second={`${userInfo.firstName} ${userInfo.lastName}`} 
-          styleClass={classes.row}
-          addDivider={true}/>;
-      }
-      );
+    res.from.getFullYear() === currentDate.getFullYear());
+
+    return fetchingDeviceReservations ?
+      this.renderLoadingBar() :
+      reservationsForThisDay.length == 0 ? 
+        this.renderNoReservations() :
+        reservationsForThisDay
+          .sort(res => res.from)
+          .map((res, i) => {
+            const { from, to, user } = res;
+            return <Row key={i} first={`${dateToHours(from)} - ${dateToHours(to)}`} 
+              second={`${user.firstName} ${user.lastName}`} 
+              styleClass={classes.row}
+              addDivider={true}/>;
+          }
+          );
+  }
+
+  renderNoReservations(){
+    return (
+      <Grid item xs={12}>
+        <ListItem>
+          <Grid container>
+            <Grid item xs={12}><Divider /></Grid>
+            <Grid item xs={12}>No reservations today.</Grid>
+          </Grid>
+        </ListItem>
+      </Grid>
+    );
+  }
+
+  renderLoadingBar(){
+    return (
+      <Grid item xs={12}>
+        <LinearProgress/>
+      </Grid>
+    );
   }
 
   render(){
     const { 
       classes, 
-      reservations, 
-      selectedDevice, 
-      currentDate, 
     } = this.props;
     return (
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <List className={classes.officeList}>
-            {reservations.filter( res => res.device === selectedDevice &&
-            res.from.getDate() === currentDate.getDate()).length > 0 && 
-            <Row first="TIME" second="RESERVED BY" styleClass={classes.topRow}/>}
+            <Row first="TIME" second="RESERVED BY" styleClass={classes.topRow}/>
             {this.renderRows()}
           </List>
         </Grid>
@@ -50,24 +80,23 @@ class ReservationsTable extends React.Component {
 
 ReservationsTable.propTypes = {
   classes: PropTypes.object.isRequired,
-  selectedDevice: PropTypes.number.isRequired,
-  reservations: PropTypes.arrayOf(
+  selectedDeviceReservations: PropTypes.arrayOf(
     PropTypes.shape({
       device: PropTypes.number.isRequired,
       user: PropTypes.number.isRequired,
       from: PropTypes.object.isRequired,
       to: PropTypes.object.isRequired,
+      status: PropTypes.number.isRequired,
     })
   ),
   currentDate: PropTypes.object.isRequired,
-  users: PropTypes.array.isRequired,
+  fetchingDeviceReservations: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
-  selectedDevice: state.devices.selectedDevice,
-  reservations: state.devices.reservations,
   currentDate: state.devices.currentDate,
-  users: state.users.users,
+  selectedDeviceReservations: state.devices.selectedDeviceReservations,
+  fetchingDeviceReservations: state.devices.fetchingDeviceReservations,
 });
 
 export default connect(mapStateToProps,null)(withStyles(Styles)(ReservationsTable));

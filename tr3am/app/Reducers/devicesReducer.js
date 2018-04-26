@@ -21,6 +21,9 @@ const defaultState = {
   bookingErrorMessage: '',
   reserving: false,
   reservingErrorMessage: '',
+  fetchingDeviceReservations: false,
+  fetchingDeviceReservationsErrorMessage: '',
+  selectedDeviceReservations: [],
 };
 
 export default (state = defaultState, action) => {
@@ -214,6 +217,36 @@ export default (state = defaultState, action) => {
     }
     case devices.RESERVE_ERROR: {
       return { ...state, reserving: false, reservingErrorMessage: action.payload };
+    }
+    case devices.FETCH_DEVICE_RESERVATIONS_START: {
+      return {
+        ...state,
+        selectedDeviceReservations: [],
+        fetchingDeviceReservations: true,
+        fetchingDeviceReservationsErrorMessage: '',
+      };
+    }
+    case devices.FETCH_DEVICE_RESERVATIONS_SUCCESS: {
+
+      return {
+        ...state,
+        selectedDeviceReservations: action.payload.map(x => {
+          const { from, to, ...rest} = x;
+          return {
+            ...rest,
+            from: new Date(from),
+            to: new Date(to),
+          };
+        }),
+        fetchingDeviceReservations: false,
+      };
+    }
+    case devices.FETCH_DEVICE_RESERVATIONS_ERROR: {
+      return { 
+        ...state,
+        fetchingDeviceReservations: false,
+        fetchingDeviceReservationsErrorMessage: action.payload,
+      };
     }
     default: return state;
   }
