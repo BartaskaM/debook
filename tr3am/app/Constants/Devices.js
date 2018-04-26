@@ -18,8 +18,8 @@ const Devices =
         model: 'Ipad Pro 10.5", 256GB',
         os: 'macOS High Sierra (version 10.13)',
         location: 'Murrica',
-        custody: 2,
-        available: false,
+        custody: null,
+        available: true,
         active: true,
       },
       {

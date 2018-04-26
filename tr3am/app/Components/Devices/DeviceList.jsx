@@ -1,25 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import Grid from 'material-ui/Grid';
 import Styles from './Styles';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
-import { Link } from 'react-router-dom';
 import Plus from 'material-ui-icons/Add';
 import Clock from 'material-ui-icons/Schedule';
+import Description from 'material-ui-icons/Description';
 import BookModal from 'Components/BookModal';
 import ReserveModal from 'Components/ReserveModal';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as usersActions from 'ActionCreators/usersActions';
 import Reservations from 'Constants/Reservations';
-import Users from 'Constants/User';
 import Devices from 'Constants/Devices';
 import Device from './Device';
 import ReturnModal from 'Components/ReturnModal';
 import { fifteenMinutes } from 'Constants/Values';
+import { ListItem } from 'material-ui';
 
 class DeviceList extends React.Component {
   constructor(props) {
@@ -38,36 +39,27 @@ class DeviceList extends React.Component {
 
   componentDidMount() {
     const {
-      reservations,
       setReservations,
-      users,
-      setUsers,
-      devices,
+      fetchUsers,
       setDevices,
     } = this.props;
-    if (reservations.length === 0) {
-      setReservations(Reservations);
-    }
-    if (users.length === 0) {
-      setUsers(Users);
-    }
-    if (devices.length === 0) {
-      setDevices(Devices);
-    }
+    setReservations(Reservations);
+    fetchUsers();
+    setDevices(Devices);
     //Refresh button values every 10 s
     this.interval = setInterval(this.getBookButtonValues, 10000);
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     clearInterval(this.interval);
   }
 
-  static getDerivedStateFromProps(nextProps){
+  static getDerivedStateFromProps(nextProps) {
     const { devices, user, reservations } = nextProps;
     return { bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user, reservations) };
   }
 
-  static formBookButtonValuesArray(devices, user, reservations){
+  static formBookButtonValuesArray(devices, user, reservations) {
     const bookButtonValues = [];
     devices.forEach(device => {
       if (device.available) {
@@ -89,7 +81,7 @@ class DeviceList extends React.Component {
     return bookButtonValues;
   }
 
-  getBookButtonValues(){
+  getBookButtonValues() {
     const { user, reservations, devices } = this.props;
     this.setState({
       bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user, reservations),
@@ -127,10 +119,10 @@ class DeviceList extends React.Component {
     return devicesToRender;
   }
 
-  static canCheckIn(reservation){
-    if(reservation){
+  static canCheckIn(reservation) {
+    if (reservation) {
       const now = new Date();
-      if(reservation.from - now < fifteenMinutes){
+      if (reservation.from - now < fifteenMinutes) {
         return true;
       } else {
         return false;
@@ -138,7 +130,7 @@ class DeviceList extends React.Component {
     }
   }
 
-  handleBookClick(device, userReservationForThisDevice){
+  handleBookClick(device, userReservationForThisDevice) {
     const { showReturnModal, checkInDevice, user } = this.props;
     return device.custody ?
       showReturnModal(device.id) :
@@ -148,7 +140,7 @@ class DeviceList extends React.Component {
   }
 
   renderDevices() {
-    const { reservations, user, classes } = this.props;
+    const { reservations, user, classes, history } = this.props;
     const userReservations = reservations
       .filter(res => res.user === user.id);
     return this.filterDevices().map((device, index) => {
@@ -156,12 +148,13 @@ class DeviceList extends React.Component {
       return (
         //Replace list with device component
         <Grid item xs={4} key={index}>
-          <Paper className={classes.devicePaper}>
-            <div className={classes.deviceContainer}>
-              <Link to={`/devices/${device.id.toString()}`}>
-                <Device key={device.id} device={device}/>
-              </Link>
-            </div>
+          <Paper className={classes.devicePaper}> 
+            <ListItem
+              className={classes.deviceItem}
+              button
+              onClick={() => history.push(`/devices/${device.id.toString()}`)}>
+              <Device key={device.id} device={device} />
+            </ListItem>
             <div className={classes.buttonsContainer}>
               <Button
                 variant='raised'
@@ -181,7 +174,11 @@ class DeviceList extends React.Component {
                   userReservationForThisDevice ?
                     () => this.openReservationDetails(userReservationForThisDevice) :
                     () => this.openReserveDialog(device.id)}>
-                <Clock className={classes.leftIcon} />
+                {
+                  userReservationForThisDevice ?
+                    <Description className={classes.leftIcon}/> :
+                    <Clock className={classes.leftIcon}/>
+                }
                 {userReservationForThisDevice ? 'Reservation details' : 'Reserve'}
               </Button>
             </div>
@@ -205,8 +202,8 @@ class DeviceList extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
-    return (
+    const { classes, devices, user, users } = this.props;
+    return devices.length != 0 && user && users.length != 0 ? (
       <Grid container spacing={8} className={classes.root}>
         {this.renderDevices()}
         <Grid item xs={12}>
@@ -224,7 +221,7 @@ class DeviceList extends React.Component {
         <ReserveModal />
         <ReturnModal />
       </Grid>
-    );
+    ) : '';
   }
 }
 
@@ -275,11 +272,12 @@ DeviceList.propTypes = {
   ),
   setReservations: PropTypes.func.isRequired,
   users: PropTypes.array.isRequired,
-  setUsers: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired,
   showReservationDetails: PropTypes.func.isRequired,
   setDevices: PropTypes.func.isRequired,
   checkInDevice: PropTypes.func.isRequired,
   showReturnModal: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 const mapStateToProps = state => {
   return {
@@ -294,7 +292,7 @@ const mapStateToProps = state => {
     users: state.users.users,
   };
 };
-export default connect(mapStateToProps, {
+export default withRouter(connect(mapStateToProps, {
   ...devicesActions,
   ...usersActions,
-})(withStyles(Styles)(DeviceList));
+})(withStyles(Styles)(DeviceList)));

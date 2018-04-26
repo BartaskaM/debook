@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Select from 'material-ui/Select';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
@@ -15,7 +14,6 @@ import Menu, { MenuItem } from 'material-ui/Menu';
 import { AccountCircle } from 'material-ui-icons';
 
 import Styles from './Styles';
-import Categories from 'Constants/Categories';
 import PathsWithLists from 'Constants/PathsWithLists';
 import * as devicesActions from '../../ActionCreators/devicesActions';
 import * as authActions from '../../ActionCreators/authActions';
@@ -92,30 +90,6 @@ class Header extends React.Component {
               id: 'search',
             }}
           />
-        </FormControl>
-
-        <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="category-select" className={classes.fontSize}>Category</InputLabel>
-          <Select
-            value={this.state.category}
-            autoWidth={true}
-            onChange={this.handleCategoryChange}
-            className={classes.fontSize}
-            inputProps={{
-              name: 'category',
-              id: 'category-select',
-            }}
-          >
-            {Categories.map(category => (
-              <MenuItem
-                key={category.id}
-                value={category.title}
-                className={classes.fontSize}
-              >
-                {category.title}
-              </MenuItem>
-            ))}
-          </Select>
         </FormControl>
       </span>
     ) : '';
