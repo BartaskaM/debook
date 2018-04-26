@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
+using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Events;
 
 namespace tr3am.Controllers
@@ -22,17 +23,21 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Event> GetAll()
+        public async Task<IEnumerable<EventDTO>> GetAll()
         {
-            return _eventsRepository.GetAll();
+            return await _eventsRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
-                return Ok(_eventsRepository.GetById(id));
+                return Ok(await _eventsRepository.GetById(id));
             }
             catch (InvalidEventException)
             {
@@ -41,7 +46,7 @@ namespace tr3am.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]EventItemRequest request)
+        public async Task<IActionResult> Create([FromBody]EventItemRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -49,32 +54,36 @@ namespace tr3am.Controllers
             }
             try
             {
-                _eventsRepository.Create(request);
+                await _eventsRepository.Create(request);
                 return NoContent();
             }
             catch (InvalidOfficeException)
             {
-                string errorText = String.Format("Office with ID: {0} doesn't exist", request.Office.ToString());
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId.ToString());
                 return StatusCode(StatusCodes.Status409Conflict, new { Error = errorText });
             }
             catch (InvalidDeviceException)
             {
-                string errorText = String.Format("Device with ID: {0} doesn't exist", request.Device.ToString());
+                string errorText = String.Format("Device with ID: {0} doesn't exist", request.DeviceId.ToString());
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (InvalidUserException)
             {
-                string errorText = String.Format("User with ID: {0} doesn't exist", request.User.ToString());
+                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId.ToString());
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]EventItemRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody]EventItemRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
-                _eventsRepository.Update(id, request);
+                await _eventsRepository.Update(id, request);
                 return NoContent();
             }
             catch (InvalidEventException)
@@ -83,27 +92,27 @@ namespace tr3am.Controllers
             }
             catch (InvalidOfficeException)
             {
-                string errorText = String.Format("Office with ID: {0} doesn't exist", request.Office.ToString());
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId.ToString());
                 return StatusCode(StatusCodes.Status409Conflict, new { Error = errorText });
             }
             catch (InvalidUserException)
             {
-                string errorText = String.Format("User with ID: {0} doesn't exist", request.User.ToString());
+                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId.ToString());
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (InvalidDeviceException)
             {
-                string errorText = String.Format("Device with ID: {0} doesn't exist", request.Device.ToString());
+                string errorText = String.Format("Device with ID: {0} doesn't exist", request.DeviceId.ToString());
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                _eventsRepository.Delete(id);
+                await _eventsRepository.Delete(id);
                 return NoContent();
             }
             catch (InvalidEventException)

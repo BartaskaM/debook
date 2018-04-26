@@ -14,6 +14,8 @@ namespace tr3am.Data
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Model> Models { get; set; }
         public DbSet<Device> Devices { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

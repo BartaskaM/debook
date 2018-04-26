@@ -32,8 +32,8 @@ namespace tr3am
             services.AddScoped<IAuth, UsersRepository>();
             services.AddScoped<IBrandsRepository, BrandsRepository>();
             services.AddScoped<IDevicesRepository, DevicesRepository>();
+            services.AddScoped<IEventsRepository, EventsRepository>();
 
-            services.AddSingleton<IEventsRepository, EventsRepository>();
             services.AddSingleton<IReservationsRepository, ReservationsRepository>();
         }
 

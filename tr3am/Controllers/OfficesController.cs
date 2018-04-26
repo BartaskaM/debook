@@ -46,7 +46,6 @@ namespace tr3am.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
                 var itemId = await _officesRepository.Create(request);
