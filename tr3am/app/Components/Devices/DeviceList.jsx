@@ -10,6 +10,7 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import Plus from 'material-ui-icons/Add';
 import Clock from 'material-ui-icons/Schedule';
+import Description from 'material-ui-icons/Description';
 import BookModal from 'Components/BookModal';
 import ReserveModal from 'Components/ReserveModal';
 import * as devicesActions from 'ActionCreators/devicesActions';
@@ -173,7 +174,11 @@ class DeviceList extends React.Component {
                   userReservationForThisDevice ?
                     () => this.openReservationDetails(userReservationForThisDevice) :
                     () => this.openReserveDialog(device.id)}>
-                <Clock className={classes.leftIcon} />
+                {
+                  userReservationForThisDevice ?
+                    <Description className={classes.leftIcon}/> :
+                    <Clock className={classes.leftIcon}/>
+                }
                 {userReservationForThisDevice ? 'Reservation details' : 'Reserve'}
               </Button>
             </div>
