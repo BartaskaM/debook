@@ -10,7 +10,7 @@ namespace tr3am.Data.Entities
     {
         public int Id { get; set; }
         [Required]
-        [MaxLength(255)]
+        [MaxLength(256)]
         public string Name { get; set; }
         public int BrandId { get; set; }
         public Brand Brand { get; set; }
