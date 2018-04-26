@@ -19,10 +19,12 @@ class ReservationsTable extends React.Component {
       currentDate,
       fetchingDeviceReservations,
     } = this.props;
+    
     const reservationsForThisDay = selectedDeviceReservations.filter(res => 
       res.from.getDate() === currentDate.getDate() && 
     res.from.getMonth() === currentDate.getMonth() &&
     res.from.getFullYear() === currentDate.getFullYear());
+
     return fetchingDeviceReservations ?
       this.renderLoadingBar() :
       reservationsForThisDay.length == 0 ? 
