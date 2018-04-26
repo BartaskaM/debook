@@ -7,6 +7,7 @@ import {
   Paper,
   Grid,
 } from 'material-ui';
+import { connect } from 'react-redux';
 import { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import {
@@ -17,14 +18,13 @@ import TextField from 'material-ui/TextField';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 
-import { 
-  dateToFullYear,
-  //roundTime,
-} from 'Utils/dateUtils';
+import { dateToFullYear } from 'Utils/dateUtils';
 
 import Styles from './Styles';
-import Brands from 'Constants/Brands';
-//import dateToFullYear from 'Utils/dateUtils';
+//import Brands from 'Constants/Brands';
+import * as authActions from 'ActionCreators/authActions';
+import * as officesActions from 'ActionCreators/officesActions';
+import * as brandsActions from 'ActionCreators/brandsActions';
 
 class NewDevice extends React.Component {
   constructor(props) {
@@ -33,6 +33,7 @@ class NewDevice extends React.Component {
     this.state = {
       deviceActive: true,
       deviceName: '',
+      // brand: props.brands[0] ? props.brands[0].id : null,
       brand: '',
       model: '',
       date: '',
@@ -41,6 +42,7 @@ class NewDevice extends React.Component {
       group: '',
       subgroup: '',
       description: '',
+      // location: props.offices[0] ? props.offices[0].id : null,
       location: '',
       vendor: '',
       taxRate: '',
@@ -55,9 +57,30 @@ class NewDevice extends React.Component {
     
   }
 
+  componentDidMount(){
+    this.props.fetchOffices();
+    this.props.fetchBrands();
+  }
+
   submitNewDeviceForm(e) {
     e.preventDefault();
-    console.log(this.state.date);
+    const results = {
+      Active: this.state.deviceActive,
+      Name: this.state.deviceName,
+      Brand: this.state.brand,
+      Model: this.state.model,
+      PurchaseDate: this.state.date,
+      Serial: this.state.serialNumber,
+      OS: this.state.os,
+      Greoup: this.state.group,
+      Subgroup: this.state.subgroup,
+      Description: this.state.description,
+      Location: this.state.location,
+      Vendor: this.state.vendor,
+      TaxRate: this.state.taxRate,
+      Someday: this.state.monthYear,
+    };
+    console.log(results);
     //console.log(new Date(Date.now()).toLocaleString());
     
   }
@@ -69,6 +92,8 @@ class NewDevice extends React.Component {
   render() {
     const { 
       classes, 
+      offices,
+      brands, 
     } = this.props;
     const {
       deviceActive,
@@ -130,7 +155,7 @@ class NewDevice extends React.Component {
                 </FormControl>
                 <FormControl className={classes.newDeviceFormField}>
                   <InputLabel className={classes.fontSize}>Brand</InputLabel>
-                  <div  className={classes.wrapper}>
+                  <div className={classes.wrapper}>
                     <Select
                       value={brand}
                       autoWidth={true}
@@ -140,13 +165,13 @@ class NewDevice extends React.Component {
                       onChange={this.inputHandler}
                       className={classes.select}
                     >
-                      {Brands.map((brand) => (
+                      {brands.map((brand, i) => (
                         <MenuItem
-                          key={brand}
-                          value={brand}
+                          key={i}
+                          value={brand.id}
                           className={classes.menuItemWidth}
                         >
-                          {brand}
+                          {brand.brandName}
                         </MenuItem>
                       ))}
                     </Select>
@@ -164,12 +189,15 @@ class NewDevice extends React.Component {
                       onChange={this.inputHandler}
                       className={classes.select}
                     >
-                      <MenuItem
-                        value={'iPhone'}
-                        className={classes.menuItemWidth}>iPhone</MenuItem>
-                      <MenuItem
-                        value={'Galaxy S9'}
-                        className={classes.menuItemWidth}>Galaxy S9</MenuItem>
+                      {/* {brands.models.map((model, i) => (
+                        <MenuItem
+                          key={i}
+                          value={model.id}
+                          className={classes.menuItemWidth}
+                        >
+                          {model.name}
+                        </MenuItem>
+                      ))} */}
                     </Select>
                   </div>
                 </FormControl>
@@ -256,12 +284,15 @@ class NewDevice extends React.Component {
                       onChange={this.inputHandler}
                       className={classes.select}
                     >
-                      <MenuItem 
-                        value={'Kaunas'}
-                        className={classes.menuItemWidth}>Kaunas</MenuItem>
-                      <MenuItem 
-                        value={'Vilnius'}
-                        className={classes.menuItemWidth}>Vilnius</MenuItem>
+                      {offices.map((office, i) => (
+                        <MenuItem
+                          key={i}
+                          value={office.id}
+                          className={classes.menuItemWidth}
+                        >
+                          {office.city}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </div>
                 </FormControl>
@@ -330,6 +361,36 @@ class NewDevice extends React.Component {
 NewDevice.propTypes = {
   history: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
+  fetchOffices: PropTypes.func.isRequired,
+  fetchBrands: PropTypes.func.isRequired,
+  offices: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
+  })).isRequired,
+  brands: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    brandName: PropTypes.string.isRequired,
+    models: PropTypes.array.isRequired,
+  })).isRequired,
 };
 
-export default withStyles(Styles)(NewDevice);
+const mapStateToProps = store => ({
+  // signUpError: store.auth.signUpError,
+  // currentTab: store.auth.currentTab,
+  // fetchingSignUp: store.auth.fetchingSignUp,
+  offices: store.offices.offices,
+  brands: store.brands.brands,
+  // fetchOfficesLoading: store.offices.fetchOfficesLoading,
+  // fetchOfficesErrorMessage: store.offices.fetchOfficesErrorMessage,
+});
+
+export default connect(mapStateToProps, {
+  ...authActions, 
+  ...officesActions,
+  ...brandsActions,
+})(withStyles(Styles)(NewDevice));
