@@ -209,6 +209,17 @@ class DeviceList extends React.Component {
     return (
       <Grid container spacing={8} className={classes.root}>
         {this.renderDevices()}
+        <Grid item xs={12}>
+          <Link to={'/newdevice'}>
+            <Button
+              variant="raised"
+              color="primary"
+              className={classes.addNewButton}>
+              ADD NEW
+            </Button>
+          </Link>
+
+        </Grid>
         <BookModal />
         <ReserveModal />
         <ReturnModal />

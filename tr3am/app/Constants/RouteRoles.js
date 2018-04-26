@@ -34,3 +34,7 @@ export const Events = [
   'admin',
   'user',
 ];
+
+export const NewDevice = [
+  'admin',
+];

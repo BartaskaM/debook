@@ -15,6 +15,7 @@ import OfficeDetails from 'Components/Offices/OfficeDetails';
 import BookingEvents from 'Components/BookingEvents';
 import ErrorComponent from 'Components/Errors/Basic';
 import BrandList from 'Components/Brands';
+import NewDevice from 'Components/Devices/NewDevice';
 
 class MainContainer extends React.Component {
   render() {
@@ -77,7 +78,14 @@ class MainContainer extends React.Component {
             </div>
           )} allowedRoles={RouteRoles.Brands} />
         } />
+        <Route exact path='/newdevice' render={() =>
+          <Auth component={() => (
+            <div>
 
+              <NewDevice />
+            </div>
+          )} allowedRoles={RouteRoles.Brands} />
+        } />
       </div>
     );
   }
