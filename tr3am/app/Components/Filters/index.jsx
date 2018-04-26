@@ -27,9 +27,16 @@ class Filters extends React.Component{
     this.handleOfficeChange = this.handleOfficeChange.bind(this);
   }
 
+  componentDidMount(){
+    const { setShowAvailable, addOfficeFilter, user } = this.props;
+    setShowAvailable(true);
+    addOfficeFilter(user.office.city);
+  }
+
   componentWillUnmount(){
     this.props.resetFilters();
   }
+
   handleBrandChange(brand){
     const { brandFilter, addBrandFilter, removeBrandFilter } = this.props;
     const indexOfBrand = brandFilter.indexOf(brand);
@@ -194,6 +201,21 @@ Filters.propTypes = {
   setShowAvailable: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   resetFilters: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    office: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      country: PropTypes.string.isRequired,
+      city: PropTypes.string.isRequired,
+      lat: PropTypes.number.isRequired,
+      lng: PropTypes.number.isRequired,
+      address: PropTypes.string.isRequired,
+    }).isRequired,
+    slack: PropTypes.string.isRequired,
+  }),
 };
 const mapStateToProps = state => {
   return {
@@ -202,6 +224,7 @@ const mapStateToProps = state => {
     officeFilter: state.devices.officeFilter,
     showAvailable: state.devices.showAvailable,
     showUnavailable: state.devices.showUnavailable,
+    user: state.auth.user,
   };
 };
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Filters));
