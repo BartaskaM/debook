@@ -3,7 +3,7 @@ const Styles = theme => ({
     padding: 20,
     margin: 20,
   },
-  signUpFormField: {
+  newDeviceFormField: {
     marginTop: 25,
   },
   fontSize: {
@@ -17,7 +17,7 @@ const Styles = theme => ({
     fontSize: 14,
     width: 420,
   },
-  signUpButton: {
+  button: {
     height: 50,
     fontSize: 14,
   },
