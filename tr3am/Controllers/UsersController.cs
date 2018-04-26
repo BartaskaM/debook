@@ -22,17 +22,17 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<UserDTO> GetAll()
+        public async Task<IEnumerable<UserDTO>> GetAll()
         {
-            return _usersRepository.GetAll();
+            return await _usersRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                return Ok(_usersRepository.GetById(id));
+                return Ok(await _usersRepository.GetById(id));
             }
             catch (InvalidUserException)
             {
@@ -41,7 +41,7 @@ namespace tr3am.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]CreateUserRequest request)
+        public async Task<IActionResult> Create([FromBody]CreateUserRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace tr3am.Controllers
             }
             try
             {
-                int id = _usersRepository.Create(request);
+                int id = await _usersRepository.Create(request);
                 return CreatedAtAction(nameof(GetById), new { Id = id }, id);
             }
             catch (InvalidOfficeException)
@@ -63,7 +63,7 @@ namespace tr3am.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] UpdateUserRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateUserRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +71,7 @@ namespace tr3am.Controllers
             }
             try
             {
-                _usersRepository.Update(id, request);
+                await _usersRepository.Update(id, request);
                 return NoContent();
             }
             catch(InvalidUserException)
@@ -89,17 +89,17 @@ namespace tr3am.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                _usersRepository.Delete(id);
+                await _usersRepository.Delete(id);
+                return NoContent();
             }
             catch (InvalidUserException)
             {
                 return NotFound();
             }
-            return NoContent();
         }
     }
 }

@@ -28,9 +28,9 @@ namespace tr3am
             options.UseSqlServer(Configuration.GetConnectionString("Tr3amConnection")));
 
             services.AddScoped<IOfficesRepository, OfficesRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
 
             services.AddSingleton<IDevicesRepository, DevicesRepository>();
-            services.AddSingleton<IUsersRepository, UsersRepository>();
             services.AddSingleton<IEventsRepository, EventsRepository>();
             services.AddSingleton<IReservationsRepository, ReservationsRepository>();
             services.AddSingleton<IBrandsRepository, BrandsRepository>();

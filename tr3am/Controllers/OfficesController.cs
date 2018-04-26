@@ -68,13 +68,12 @@ namespace tr3am.Controllers
             try
             {
                 await _officesRepository.Update(id, request);
+                return NoContent();
             }
             catch (InvalidOfficeException)
             {
                 return NotFound();
             }
-
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -83,13 +82,12 @@ namespace tr3am.Controllers
             try
             {
                 await _officesRepository.Delete(id);
+                return NoContent();
             }
             catch (InvalidOfficeException)
             {
                 return NotFound();
             }
-
-            return NoContent();
         }
     }
 }

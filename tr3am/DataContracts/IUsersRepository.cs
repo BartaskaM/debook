@@ -9,11 +9,11 @@ namespace tr3am.DataContracts
 {
     public interface IUsersRepository
     {
-        List<UserDTO> GetAll();
-        UserDTO GetById(int id);
-        int Create(CreateUserRequest request);
-        void Update(int id, UpdateUserRequest request);
-        void Delete(int id);
-        LogInDTO LogIn(LogInRequest request);
+        Task<IEnumerable<UserDTO>> GetAll();
+        Task<UserDTO> GetById(int id);
+        Task<int> Create(CreateUserRequest request);
+        Task Update(int id, UpdateUserRequest request);
+        Task Delete(int id);
+        Task<LogInDTO> LogIn(LogInRequest request);
     }
 }
