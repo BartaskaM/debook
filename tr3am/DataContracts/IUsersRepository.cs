@@ -14,6 +14,5 @@ namespace tr3am.DataContracts
         Task<int> Create(CreateUserRequest request);
         Task Update(int id, UpdateUserRequest request);
         Task Delete(int id);
-        Task<LogInDTO> LogIn(LogInRequest request);
     }
 }

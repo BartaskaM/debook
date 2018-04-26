@@ -12,7 +12,7 @@ using tr3am.DataContracts.Requests.Users;
 
 namespace tr3am.Data
 {
-    public class UsersRepository : IUsersRepository
+    public class UsersRepository : IUsersRepository, IAuth
     {
         private readonly AppDbContext _dbContext;
 

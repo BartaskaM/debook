@@ -16,9 +16,9 @@ namespace tr3am.Controllers
     {
         private readonly IUsersRepository _usersRepository;
 
-        public UsersController(IUsersRepository officesRepository)
+        public UsersController(IUsersRepository usersRepository)
         {
-            _usersRepository = officesRepository;
+            _usersRepository = usersRepository;
         }
 
         [HttpGet]

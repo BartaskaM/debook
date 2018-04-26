@@ -13,6 +13,7 @@ namespace tr3am.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Model> Models { get; set; }
+        public DbSet<Device> Devices { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

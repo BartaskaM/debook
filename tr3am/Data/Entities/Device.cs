@@ -18,10 +18,10 @@ namespace tr3am.Data.Entities
         public Model Model { get; set; }
         public int IdentificationNum { get; set; }
         public string OS { get; set; }
-        public int LocationId { get; set; }
-        public Office Location { get; set; }
-        public int CustodyId { get; set; }
-        public User Custody { get; set; }
+        public int OfficeId { get; set; }
+        public Office Office { get; set; }
+        public int? UserId { get; set; }
+        public User User { get; set; }
         public string Name { get; set; }
         public string SerialNum { get; set; }
         public string Group { get; set; }
