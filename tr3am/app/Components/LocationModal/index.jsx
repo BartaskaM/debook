@@ -66,9 +66,9 @@ class LocationModal extends React.Component {
                   name: 'location',
                 }}
               >
-                {offices.map((office, i) => (
+                {offices.map((office) => (
                   <MenuItem
-                    key={i}
+                    key={office.id}
                     value={office.city}
                     className={classes.menuItemWidth}
                   >

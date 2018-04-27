@@ -58,7 +58,7 @@ class DeviceDetails extends React.Component {
       //Handle device return
       device.available = !device.available;
       device.custody = 'New guy';
-      device.booked_from = this.getParsedDate();
+      device.bookedFrom = this.getParsedDate();
       changeDevice(device);
     }
   }
@@ -105,7 +105,7 @@ class DeviceDetails extends React.Component {
                     </Grid>
                     <Row
                       label="Booked from"
-                      value={device.booked_from} />
+                      value={device.bookedFrom} />
                   </Grid>
                   <Grid item md={11} xs={11}>
                     <Divider className={classes.divider} />
@@ -116,10 +116,10 @@ class DeviceDetails extends React.Component {
                   </Grid>
                   <Row
                     label="ID#"
-                    value={device.identification_num} />
+                    value={device.identificationNum} />
                   <Row
                     label="Serial number"
-                    value={device.serial_num} />
+                    value={device.serialNum} />
                   <Row
                     label="OS"
                     value={device.os} />
@@ -134,7 +134,7 @@ class DeviceDetails extends React.Component {
                     value={device.description} />
                   <Row
                     label="Check-in due"
-                    value={device.check_in_due} />
+                    value={device.checkInDue} />
                   <Row
                     label="Location"
                     value={device.location} />
@@ -146,7 +146,7 @@ class DeviceDetails extends React.Component {
                     value={device.vendor} />
                   <Row
                     label="Tax rate"
-                    value={device.tax_rate} />
+                    value={device.taxRate} />
                 </Grid>
               </Paper>
             </Grid>
@@ -207,18 +207,18 @@ DeviceDetails.propTypes = {
     id: PropTypes.number,
     image: PropTypes.string,
     name: PropTypes.string,
-    custody_of: PropTypes.string,
-    booked_from: PropTypes.string,
-    identification_num: PropTypes.string,
-    serial_num: PropTypes.string,
+    custodyOf: PropTypes.string,
+    bookedFrom: PropTypes.string,
+    identificationNum: PropTypes.string,
+    serialNum: PropTypes.string,
     os: PropTypes.string,
     group: PropTypes.string,
     subgroup: PropTypes.string,
     description: PropTypes.string,
-    check_in_due: PropTypes.string,
+    checkInDue: PropTypes.string,
     purchased: PropTypes.string,
     vendor: PropTypes.string,
-    tax_rate: PropTypes.string,
+    taxRate: PropTypes.string,
   }),
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
