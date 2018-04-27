@@ -18,7 +18,7 @@ namespace tr3am.Controllers
             _auth = auth;
         }
         [HttpPost("api/login")]
-        public IActionResult LogIn([FromBody]LogInRequest request)
+        public async Task<IActionResult> LogIn([FromBody]LogInRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -26,7 +26,7 @@ namespace tr3am.Controllers
             }
             try
             {
-                return Ok(_auth.LogIn(request).Result);
+                return Ok(await _auth.LogIn(request));
             }
             catch(InvalidUserException)
             {
