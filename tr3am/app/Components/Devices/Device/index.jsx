@@ -32,7 +32,7 @@ const device = ({ classes, device, users }) => {
         <span className={classes.mainTextColor}> {device.location} </span>
       </Typography>
       {device.available ? 
-        <Typography className={classes.deviceCardMainContent}><br></br> </Typography>
+        <Typography className={classes.deviceCardMainContent}></Typography>
         :
         <Typography className={classes.deviceCardMainContent}>
           Custody of:

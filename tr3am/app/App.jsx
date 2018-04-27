@@ -14,15 +14,15 @@ import history from 'history';
 
 const App = () => (
   <MuiThemeProvider theme={theme}>
-    <Provider store={store}>
-      <Router history={history}>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Provider store={store}>
+        <Router history={history}>
           <CssBaseline>
             <Route path='/' component={MainContainer} />
           </CssBaseline>
-        </MuiPickersUtilsProvider>
-      </Router>
-    </Provider>
+        </Router>
+      </Provider>
+    </MuiPickersUtilsProvider>
   </MuiThemeProvider>
 );
 
