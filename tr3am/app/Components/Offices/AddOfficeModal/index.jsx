@@ -178,16 +178,16 @@ class AddOfficeModal extends React.Component {
             </Typography>
             <DialogActions>
               <Button
+                onClick={() => this.props.showAddOfficeModal(false)}
+                className={classes.button}>
+                CANCEL
+              </Button>
+              <Button
                 type='submit'
                 form='createNewOfficeForm'
                 color="primary"
                 className={classes.button}>
                 SUBMIT
-              </Button>
-              <Button
-                onClick={() => this.props.showAddOfficeModal(false)}
-                className={classes.button}>
-                CANCEL
               </Button>
             </DialogActions>
           </div>
