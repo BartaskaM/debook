@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -15,6 +14,7 @@ import {
 } from 'material-ui/Form';
 import { InputLabel } from 'material-ui/Input';
 import TimeInput from 'material-ui-time-picker';
+import { DatePicker } from 'material-ui-pickers';
 import { withStyles } from 'material-ui/styles';
 import { LinearProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
@@ -23,7 +23,6 @@ import * as devicesActions from 'ActionCreators/devicesActions';
 import Styles from './Styles';
 import ReservationsTable from '../ReservationsTable';
 import { 
-  dateToFullYear,
   checkIfLate, 
   roundTime,
   checkForReservation,
@@ -40,10 +39,10 @@ class ReserveModal extends React.Component {
     this.handleStartChange = this.handleStartChange.bind(this);
     this.cancelReservation = this.cancelReservation.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+    this.removeFocusClassFromElement = this.removeFocusClassFromElement.bind(this);
   }
 
-  handleDateChange(e) {
-    const [year, month, day] = e.target.value.split('-').map(x => parseInt(x));
+  handleDateChange(date) {
     const {
       setReturnDate,
       setCurrentDate,
@@ -51,10 +50,10 @@ class ReserveModal extends React.Component {
       returnDate,
     } = this.props;
     const endDate = new Date(returnDate);
-    endDate.setFullYear(year, month - 1, day);
+    endDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
     setReturnDate(endDate);
     const startDate = new Date(currentDate);
-    startDate.setFullYear(year, month - 1, day);
+    startDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
     setCurrentDate(startDate);
     this.checkForErrors(endDate, startDate);
   }
@@ -176,6 +175,10 @@ class ReserveModal extends React.Component {
     this.checkForErrors(returnDate, currentDate);
   }
   
+  removeFocusClassFromElement(){
+    document.querySelector('.MuiFormLabel-focused-83').classList.remove('MuiFormLabel-focused-83');
+  }
+
   render() {
     const {
       classes,
@@ -212,15 +215,17 @@ class ReserveModal extends React.Component {
                 less than 15 minutes until next reservation or midnight.`
               }
             </DialogContentText>
-            <TextField
+            <DatePicker
               disabled={showDetails}
               label="Reservation day"
-              value={dateToFullYear(currentDate)}
+              showTodayButton
+              disablePast
+              format="DD/MM/YYYY"
+              value={currentDate}
               onChange={this.handleDateChange}
-              type="date"
+              onBlur={this.removeFocusClassFromElement}
               className={classes.inputField}
               InputLabelProps={{ classes: { root: classes.label } }}
-              FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
             <FormControl
               error={currentDateError.length > 1}
