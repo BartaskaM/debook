@@ -9,6 +9,12 @@ import Dialog, {
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
+import {
+  FormControl,
+  FormHelperText,
+} from 'material-ui/Form';
+import { InputLabel } from 'material-ui/Input';
+import TimeInput from 'material-ui-time-picker';
 import { withStyles } from 'material-ui/styles';
 import { LinearProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
@@ -18,7 +24,6 @@ import Styles from './Styles';
 import ReservationsTable from '../ReservationsTable';
 import { 
   dateToFullYear,
-  dateToHours, 
   checkIfLate, 
   roundTime,
   checkForReservation,
@@ -54,57 +59,24 @@ class ReserveModal extends React.Component {
     this.checkForErrors(endDate, startDate);
   }
 
-  handleMinuteChange(h, m, nextDate, previousDate) {
-    if (m === 0) {
-      //Handle hour increment
-      if (previousDate.getMinutes() === 45) {
-        if (previousDate.getHours() === 23) {
-          nextDate.setHours(0);
-        } else {
-          nextDate.setHours(h + 1);
-        }
-      }
-    } else if (m === 45) {
-      //Handle hour decrement
-      if (previousDate.getMinutes() === 0) {
-        if (previousDate.getHours() === 0) {
-          nextDate.setHours(23);
-        } else {
-          nextDate.setHours(h - 1);
-        }
-      }
-    } else {
-      nextDate.setHours(h);
-    }
-    nextDate.setMinutes(m);
-  }
-
-  handleReturnChange(e) {
+  handleReturnChange(time) {
     const { currentDate, returnDate, setReturnDate } = this.props;
-    const [h, m] = e.target.value.split(':').map(x => parseInt(x));
-    const previousDate = returnDate;
-    const nextDate = new Date(previousDate.getTime());
-    if (h === previousDate.getHours()) {
-      this.handleMinuteChange(h, m, nextDate, previousDate);
-    } else {
-      nextDate.setHours(h);
-    }
-    setReturnDate(nextDate);
-    this.checkForErrors(nextDate, currentDate);
+    let newDate = new Date(returnDate);
+    newDate.setHours(time.getHours());
+    newDate.setMinutes(time.getMinutes());
+    newDate = roundTime(newDate);
+    setReturnDate(newDate);
+    this.checkForErrors(newDate, currentDate);
   }
 
-  handleStartChange(e) {
+  handleStartChange(time) {
     const { currentDate, returnDate, setCurrentDate } = this.props;
-    const [h, m] = e.target.value.split(':').map(x => parseInt(x));
-    const previousDate = currentDate;
-    const nextDate = new Date(previousDate.getTime());
-    if (h === previousDate.getHours()) {
-      this.handleMinuteChange(h, m, nextDate, previousDate);
-    } else {
-      nextDate.setHours(h);
-    }
-    setCurrentDate(nextDate);
-    this.checkForErrors(returnDate, nextDate);
+    let newDate = new Date(currentDate);
+    newDate.setHours(time.getHours());
+    newDate.setMinutes(time.getMinutes());
+    newDate = roundTime(newDate);
+    setCurrentDate(newDate);
+    this.checkForErrors(returnDate, newDate);
   }
 
   checkIfFuture(date){
@@ -250,39 +222,26 @@ class ReserveModal extends React.Component {
               InputLabelProps={{ classes: { root: classes.label } }}
               FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
-            <TextField
-              disabled={showDetails}
-              autoFocus
-              label="Pick up time"
-              type="time"
+            <FormControl
               error={currentDateError.length > 1}
-              helperText={currentDateError}
-              value={dateToHours(currentDate)}
-              onChange={this.handleStartChange}
-              onBlur={this.handleBlur}
-              inputProps={{
-                step: 900,
-              }}
-              className={classes.inputField}
-              InputLabelProps={{ classes: { root: classes.label } }}
-              FormHelperTextProps={{ classes: { root: classes.helperText } }}
-            />
-            <TextField
               disabled={showDetails}
-              label="Drop off time"
-              type="time"
+              className={classes.inputField}>
+              <InputLabel className={classes.label}>Pick up time</InputLabel>
+              <TimeInput mode="24h" value={currentDate} 
+                onChange={time => this.handleStartChange(time)}
+                onBlur={this.handleBlur}/>
+              <FormHelperText className={classes.helperText}>{currentDateError}</FormHelperText>
+            </FormControl>
+            <FormControl
               error={returnDateError.length > 1}
-              helperText={returnDateError}
-              value={dateToHours(returnDate)}
-              onChange={this.handleReturnChange}
-              onBlur={this.handleBlur}
-              inputProps={{
-                step: 900,
-              }}
-              className={classes.inputField}
-              InputLabelProps={{ classes: { root: classes.label } }}
-              FormHelperTextProps={{ classes: { root: classes.helperText } }}
-            />
+              disabled={showDetails}
+              className={classes.inputField}>
+              <InputLabel className={classes.label}>Drop off time</InputLabel>
+              <TimeInput mode="24h" value={returnDate} 
+                onChange={time => this.handleReturnChange(time)}
+                onBlur={this.handleBlur}/>
+              <FormHelperText className={classes.helperText}>{returnDateError}</FormHelperText>
+            </FormControl>
             { !showDetails && <ReservationsTable /> }
             { reserving && <LinearProgress/> }
             { 
