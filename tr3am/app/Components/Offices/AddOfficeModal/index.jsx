@@ -84,7 +84,7 @@ class AddOfficeModal extends React.Component {
     if (regLAT.exec(this.state.LAT) && regLNG.exec(this.state.LNG)) {
       return true;
     } else {
-      this.setState({ errorMessage: 'Wrong coordinates format' });
+      this.setState({ errorMessage: 'Wrong coordinates format. Use format: 00.000000' });
       return false;
     }
   }
@@ -154,6 +154,7 @@ class AddOfficeModal extends React.Component {
                         name: 'LAT',
                         maxLength: '12',
                         required: 'required',
+                        placeholder: '12.123456',
                       }}
                       onChange={this.inputHandler} />
                   </FormControl>
@@ -164,6 +165,7 @@ class AddOfficeModal extends React.Component {
                         name: 'LNG',
                         maxLength: '12',
                         required: 'required',
+                        placeholder: '12.123456',
                       }}
                       onChange={this.inputHandler} />
                   </FormControl>
