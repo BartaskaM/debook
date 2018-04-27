@@ -58,7 +58,18 @@ namespace tr3am.Controllers
             }
             catch(InvalidOfficeException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This office doesn't exist" });
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = errorText });
+            }
+            catch (InvalidBrandException)
+            {
+                string errorText = String.Format("Brand with ID: {0} doesn't exist", request.UserId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
+            catch (InvalidModelException)
+            {
+                string errorText = String.Format("Model with ID: {0} doesn't exist", request.UserId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }
 
@@ -80,11 +91,23 @@ namespace tr3am.Controllers
             }
             catch(InvalidOfficeException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This office doesn't exist" });
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = errorText });
             }
-            catch(InvalidUserException)
+            catch (InvalidUserException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This user doesn't exist" });
+                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
+            catch (InvalidBrandException)
+            {
+                string errorText = String.Format("Brand with ID: {0} doesn't exist", request.UserId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
+            catch (InvalidModelException)
+            {
+                string errorText = String.Format("Model with ID: {0} doesn't exist", request.UserId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
 
         }

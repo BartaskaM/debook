@@ -54,15 +54,18 @@ namespace tr3am.Controllers
             }
             catch (InvalidDeviceException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This device doesn't exist" });
+                string errorText = String.Format("Device with ID: {0} doesn't exist", request.DeviceId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (InvalidUserException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This user doesn't exist" });
+                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (UsedDateException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This date is already reserved" });
+                return StatusCode(StatusCodes.Status409Conflict, 
+                    new { Message = "This date is already reserved" });
             }
             catch (NegativeDateException)
             {
@@ -71,7 +74,8 @@ namespace tr3am.Controllers
             }
             catch (PastDateException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "Reserve for future dates" });
+                return StatusCode(StatusCodes.Status409Conflict, 
+                    new { Message = "Reserve for future dates" });
             }
         }
 
@@ -93,11 +97,13 @@ namespace tr3am.Controllers
             }
             catch (InvalidDeviceException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This device doesn't exist" });
+                string errorText = String.Format("Device with ID: {0} doesn't exist", request.DeviceId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (InvalidUserException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This user doesn't exist" });
+                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (UsedDateException)
             {

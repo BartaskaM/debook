@@ -54,7 +54,8 @@ namespace tr3am.Controllers
             }
             catch (InvalidOfficeException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This office doesn't exist." });
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = errorText });
             }
             catch (DuplicateEmailException)
             {
@@ -80,7 +81,8 @@ namespace tr3am.Controllers
             }
             catch (InvalidOfficeException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This office doesn't exist." });
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = errorText });
             }
             catch (DuplicateEmailException)
             {
