@@ -30,6 +30,7 @@ namespace tr3am.Data
             if (showAll)
             {
                 return await _dbContext.Reservations
+                    .AsNoTracking()
                     .Include(x => x.User)
                     .Include(x => x.Device)
                     .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
@@ -38,6 +39,7 @@ namespace tr3am.Data
             else
             {
                 return await _dbContext.Reservations
+                    .AsNoTracking()
                     .Where(x =>
                         x.Status == Status.CheckedIn || x.Status == Status.Pending || x.Status == Status.OverDue)
                     .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
@@ -47,7 +49,10 @@ namespace tr3am.Data
 
         public async Task<ReservationDTO> GetById(int id)
         {
+            await RefreshReservations();
+
             var item = await _dbContext.Reservations
+                .AsNoTracking()
                 .Include(x => x.User)
                 .Include(x => x.Device)
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -66,6 +71,7 @@ namespace tr3am.Data
             if (showAll)
             {
                 return await _dbContext.Reservations
+                    .AsNoTracking()
                     .Where(x => x.Device.Id == id)
                     .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
                     .ToListAsync();
@@ -73,6 +79,7 @@ namespace tr3am.Data
             else
             {
                 return await _dbContext.Reservations
+                    .AsNoTracking()
                     .Where(x => x.Device.Id == id && (x.Status == Status.CheckedIn || x.Status == Status.OverDue ||
                                                x.Status == Status.Pending))
                     .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
@@ -91,6 +98,7 @@ namespace tr3am.Data
             }
 
             var user = await _dbContext.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
             if (user == null)
             {
@@ -127,6 +135,7 @@ namespace tr3am.Data
             }
 
             var device = await _dbContext.Devices
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
             if (device == null)
             {
@@ -134,6 +143,7 @@ namespace tr3am.Data
             }
 
             var user = await _dbContext.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
             if (user == null)
             {
@@ -205,19 +215,19 @@ namespace tr3am.Data
                 throw new NegativeDateException();
             }
 
-            var items = await _dbContext.Reservations
-                .Where(x => x.Device.Id == device.Id && 
-                (x.Status == Status.CheckedIn || x.Status == Status.OverDue || 
-                x.Status == Status.Pending)).ToListAsync();
-            foreach (var reservation in items)
-            {
-                if (CheckIfDateIsWithinReservation(from, reservation) ||
-                    CheckIfDateIsWithinReservation(to, reservation) ||
-                    CheckIfReservationIsWithinDates(from, to, reservation))
+            await _dbContext.Reservations
+                .Where(x => x.Device.Id == device.Id &&
+                (x.Status == Status.CheckedIn || x.Status == Status.OverDue
+                || x.Status == Status.Pending))
+                .ForEachAsync(x =>
                 {
-                    throw new UsedDateException();
-                }
-            }
+                    if (CheckIfDateIsWithinReservation(from, x)
+                        || CheckIfDateIsWithinReservation(to, x)
+                        || CheckIfReservationIsWithinDates(from, to, x))
+                    {
+                        throw new UsedDateException();
+                    }
+                });
         }
         private bool CheckIfDateIsWithinReservation(DateTime date, Reservation reservation)
         {

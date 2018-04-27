@@ -25,16 +25,18 @@ namespace tr3am.Data
         public async Task<IEnumerable<EventDTO>> GetAll()
         {
             return await _dbContext.Events
+                .AsNoTracking()
                 .Include(x => x.Office)
                 .Include(x => x.User)
                 .Include(x => x.Device)
-                .Select(x => Mapper.Map<Event,EventDTO>(x))
+                .Select(x => Mapper.Map<Event, EventDTO>(x))
                 .ToListAsync();
         }
 
         public async Task<EventDTO> GetById(int id)
         {
             var item = await _dbContext.Events
+                .AsNoTracking()
                 .Include(x => x.Office)
                 .Include(x => x.User)
                 .Include(x => x.Device)
@@ -50,6 +52,7 @@ namespace tr3am.Data
         public async Task<int> Create(EventItemRequest request)
         {
             var office = await _dbContext.Offices
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
             if (office == null)
             {
@@ -57,6 +60,7 @@ namespace tr3am.Data
             }
 
             var device = await _dbContext.Devices
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
             if (device == null)
             {
@@ -64,6 +68,7 @@ namespace tr3am.Data
             }
 
             var user = await _dbContext.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
             if (user == null)
             {
@@ -95,6 +100,7 @@ namespace tr3am.Data
             }
 
             var office = await _dbContext.Offices
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
             if (office == null)
             {
@@ -102,6 +108,7 @@ namespace tr3am.Data
             }
 
             var device = await _dbContext.Devices
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
             if (device == null)
             {
@@ -109,6 +116,7 @@ namespace tr3am.Data
             }
 
             var user = await _dbContext.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
             if (user == null)
             {

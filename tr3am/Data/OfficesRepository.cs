@@ -23,12 +23,17 @@ namespace tr3am.Data
 
         public async Task<IEnumerable<OfficeDTO>> GetAll()
         {
-            return await _dbContext.Offices.Select(x => Mapper.Map<Office, OfficeDTO>(x)).ToListAsync();
+            return await _dbContext.Offices
+                .AsNoTracking()
+                .Select(x => Mapper.Map<Office, OfficeDTO>(x))
+                .ToListAsync();
         }
 
         public async Task<OfficeDTO> GetById(int id)
         {
-            var item = await _dbContext.Offices.FirstOrDefaultAsync(x => x.Id == id);
+            var item = await _dbContext.Offices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidOfficeException();
@@ -39,7 +44,7 @@ namespace tr3am.Data
 
         public async Task<int> Create(OfficeItemRequest request)
         {
-            var item = new Office
+            var newItem = new Office
             {
                 Country = request.Country,
                 City = request.City,
@@ -48,23 +53,25 @@ namespace tr3am.Data
                 Lng = request.Lng,
             };
 
-            if (await OfficeExists(item))
+            if (await OfficeExists(newItem))
             {
                 throw new DuplicateOfficeException();
             }
 
-            _dbContext.Offices.Add(item);
+            _dbContext.Offices.Add(newItem);
             await _dbContext.SaveChangesAsync();
 
-            return item.Id;
+            return newItem.Id;
         }
 
         public async Task<bool> OfficeExists(Office office)
         {
-            var result = await _dbContext.Offices.FirstOrDefaultAsync(x =>
-            x.Country == office.Country &&
-            x.City == office.City &&
-            x.Address == office.Address);
+            var result = await _dbContext.Offices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x =>
+                x.Country == office.Country &&
+                x.City == office.City &&
+                x.Address == office.Address);
 
             if (result != null)
             {
@@ -76,7 +83,8 @@ namespace tr3am.Data
 
         public async Task Update(int id, OfficeItemRequest request)
         {
-            var item = await _dbContext.Offices.FirstOrDefaultAsync(x => x.Id == id);
+            var item = await _dbContext.Offices.
+                FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidOfficeException();
@@ -93,7 +101,8 @@ namespace tr3am.Data
 
         public async Task Delete(int id)
         {
-            var item = await _dbContext.Offices.FirstOrDefaultAsync(x => x.Id == id);
+            var item = await _dbContext.Offices
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidOfficeException();

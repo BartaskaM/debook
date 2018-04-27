@@ -24,6 +24,7 @@ namespace tr3am.Data
         public async Task<LogInDTO> LogIn(LogInRequest request)
         {
             var item = await _dbContext.Users
+                .AsNoTracking()
                 .Include(x => x.Office)
                 .FirstOrDefaultAsync(x => x.Email == request.Email);
             if(item == null || item.Password != request.Password)
@@ -37,6 +38,7 @@ namespace tr3am.Data
         public async Task<IEnumerable<UserDTO>> GetAll()
         {
             return await _dbContext.Users
+                .AsNoTracking()
                 .Include(x => x.Office)
                 .Select(x => Mapper.Map<User, UserDTO>(x))
                 .ToListAsync();
@@ -45,6 +47,7 @@ namespace tr3am.Data
         public async Task<UserDTO> GetById(int id)
         {
             var item = await _dbContext.Users
+                .AsNoTracking()
                 .Include(x => x.Office)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -58,13 +61,14 @@ namespace tr3am.Data
         public async Task<int> Create(CreateUserRequest request)
         {
             var office = await _dbContext.Offices
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
-
             if (office == null)
             {
                 throw new InvalidOfficeException();
             }
             if (_dbContext.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Email == request.Email) != null)
             {
                 throw new DuplicateEmailException();
@@ -97,6 +101,7 @@ namespace tr3am.Data
             }
 
             var office = _dbContext.Offices
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
             if (office == null)
             {
@@ -104,6 +109,7 @@ namespace tr3am.Data
             }
 
             if (item.Email != request.Email && await _dbContext.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Email == request.Email) != null)
             {
                 throw new DuplicateEmailException();
