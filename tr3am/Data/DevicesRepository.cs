@@ -52,34 +52,36 @@ namespace tr3am.Data
 
         public async Task<int> Create(CreateDeviceRequest request)
         {
-            var office = await _dbContext.Offices
+            var office = _dbContext.Offices
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
-            if (office == null)
+
+            var brand = _dbContext.Brands
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.BrandId);
+
+            var model = _dbContext.Models
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.ModelId);
+
+            await Task.WhenAll(new Task[] { office, brand, model });
+            if (office.Result == null)
             {
                 throw new InvalidOfficeException();
             }
-
-            var brand = await _dbContext.Brands
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.BrandId);
-            if (brand == null)
+            if (brand.Result == null)
             {
                 throw new InvalidBrandException();
             }
-
-            var model = await _dbContext.Models
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.ModelId);
-            if (model == null)
+            if (model.Result == null)
             {
                 throw new InvalidModelException();
             }
 
             var newItem = new Device
             {
-                BrandId = brand.Id,
-                ModelId = model.Id,
+                BrandId = brand.Result.Id,
+                ModelId = model.Result.Id,
                 Available = true,
                 Active = true,
                 Image = request.Image,
@@ -92,7 +94,7 @@ namespace tr3am.Data
                 Purchased = request.Purchased,
                 Vendor = request.Vendor,
                 TaxRate = request.TaxRate,
-                OfficeId = office.Id,
+                OfficeId = office.Result.Id,
             };
 
             _dbContext.Add(newItem);
@@ -122,32 +124,34 @@ namespace tr3am.Data
                 }
             }
 
-            var office = await _dbContext.Offices
+            var office = _dbContext.Offices
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
-            if (office == null)
+
+            var brand = _dbContext.Brands
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.BrandId);
+
+            var model = _dbContext.Models
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.ModelId);
+
+            await Task.WhenAll(new Task[] { office, brand, model });
+            if (office.Result == null)
             {
                 throw new InvalidOfficeException();
             }
-
-            var brand = await _dbContext.Brands
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.BrandId);
-            if (brand == null)
+            if (brand.Result == null)
             {
                 throw new InvalidBrandException();
             }
-
-            var model = await _dbContext.Models
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.ModelId);
-            if (model == null)
+            if (model.Result == null)
             {
                 throw new InvalidModelException();
             }
 
-            item.BrandId = brand.Id;
-            item.ModelId = model.Id;
+            item.BrandId = brand.Result.Id;
+            item.ModelId = model.Result.Id;
             item.Available = request.Available;
             item.Active = request.Active;
             item.Image = request.Image;
@@ -160,7 +164,7 @@ namespace tr3am.Data
             item.Purchased = request.Purchased;
             item.Vendor = request.Vendor;
             item.TaxRate = request.TaxRate;
-            item.OfficeId = office.Id;
+            item.OfficeId = office.Result.Id;
 
             await _dbContext.SaveChangesAsync();
         }

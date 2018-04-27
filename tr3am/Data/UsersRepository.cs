@@ -67,7 +67,7 @@ namespace tr3am.Data
             {
                 throw new InvalidOfficeException();
             }
-            if (_dbContext.Users
+            if (await _dbContext.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Email == request.Email) != null)
             {

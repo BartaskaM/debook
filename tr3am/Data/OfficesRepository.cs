@@ -66,14 +66,14 @@ namespace tr3am.Data
 
         public async Task<bool> OfficeExists(Office office)
         {
-            var result = await _dbContext.Offices
+            var item = await _dbContext.Offices
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
                 x.Country == office.Country &&
                 x.City == office.City &&
                 x.Address == office.Address);
 
-            if (result != null)
+            if (item != null)
             {
                 return true;
             }

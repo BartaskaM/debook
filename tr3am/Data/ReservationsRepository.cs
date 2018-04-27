@@ -90,17 +90,21 @@ namespace tr3am.Data
 
         public async Task<int> Create(ReservationRequest request, bool booking)
         {
-            var device = await _dbContext.Devices
-                .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
-            if (device == null)
+            var device = _dbContext.Devices
+               .AsNoTracking()
+               .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
+
+
+            var user = _dbContext.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.UserId);
+
+            await Task.WhenAll(new Task[] { device, user });
+            if (device.Result == null)
             {
                 throw new InvalidDeviceException();
             }
-
-            var user = await _dbContext.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.UserId);
-            if (user == null)
+            if (user.Result == null)
             {
                 throw new InvalidUserException();
             }
@@ -108,13 +112,13 @@ namespace tr3am.Data
             DateTime roundFrom = booking ? request.From : RoundTime(request.From);
             DateTime roundTo = RoundTime(request.To);
 
-            await CheckIfDateAvailable(request.From, request.To, device);
+            await CheckIfDateAvailable(request.From, request.To, device.Result);
 
             var newItem = new Reservation
             {
-                UserId = user.Id,
+                UserId = user.Result.Id,
                 Status = request.Status,
-                DeviceId = device.Id,
+                DeviceId = device.Result.Id,
                 From = roundFrom,
                 To = roundTo,
             };
@@ -134,27 +138,30 @@ namespace tr3am.Data
                 throw new InvalidReservationException();
             }
 
-            var device = await _dbContext.Devices
+            var device = _dbContext.Devices
+               .AsNoTracking()
+               .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
+
+
+            var user = _dbContext.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
-            if (device == null)
+                .FirstOrDefaultAsync(x => x.Id == request.UserId);
+
+            await Task.WhenAll(new Task[] { device, user });
+            if (device.Result == null)
             {
                 throw new InvalidDeviceException();
             }
-
-            var user = await _dbContext.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.UserId);
-            if (user == null)
+            if (user.Result == null)
             {
                 throw new InvalidUserException();
             }
 
-            await CheckIfDateAvailable(request.From, request.To, device);
+            await CheckIfDateAvailable(request.From, request.To, device.Result);
 
             item.Status = request.Status;
-            item.DeviceId = device.Id;
-            item.UserId = user.Id;
+            item.DeviceId = device.Result.Id;
+            item.UserId = user.Result.Id;
             item.From = request.From;
             item.To = request.To;
         }
