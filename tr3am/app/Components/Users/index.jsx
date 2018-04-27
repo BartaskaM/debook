@@ -74,7 +74,7 @@ Users.propTypes = {
       lat: PropTypes.number.isRequired,
       lng: PropTypes.number.isRequired,
     }).isRequired,
-    slack: PropTypes.string.isRequired,
+    slack: PropTypes.string,
   })).isRequired,
   fetchUsers: PropTypes.func.isRequired,
   fetchUsersLoading: PropTypes.bool.isRequired,

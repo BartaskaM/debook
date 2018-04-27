@@ -45,6 +45,7 @@ namespace tr3am.Data
         public async Task<UserDTO> GetById(int id)
         {
             var item = await _dbContext.Users
+                .Include(x => x.Office)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
