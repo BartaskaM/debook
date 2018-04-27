@@ -12,7 +12,7 @@ import Styles from './Styles';
 const BrandsItem = ({ classes, brand }) => {
   return (
     <Grid item xs={12}>
-      <ListItem>
+      <ListItem button>
         <Paper className={classes.brandPaper}>
           <Typography variant='display1'>
             <Grid container>

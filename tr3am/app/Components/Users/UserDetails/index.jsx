@@ -544,6 +544,7 @@ class UserDetails extends React.Component {
       classes,
       history,
       user,
+      currentUser,
       fetchingUser,
       updatingUser,
     } = this.props;
@@ -560,7 +561,18 @@ class UserDetails extends React.Component {
             {updatingUser && <LinearProgress/>} 
             <Paper className={classes.paper}>
               <Divider className={classes.divider} />
-              <span className={classes.header}>Profile</span>
+              {
+                <span className={classes.header}>
+                  {
+                    this.props.match.path === '/profile' ?
+                      'Profile' :
+                      parseInt(this.props.match.params.id) === currentUser.id ?
+                        'Profile' :
+                        'User info'
+                  }
+                </span>
+              }
+
               <Divider className={classes.divider} />
               <Grid container className={classes.table}>
                 {this.state.edit ? this.renderProfileEdit() : this.renderProfileInfo()}
