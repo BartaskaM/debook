@@ -17,31 +17,22 @@ import ReservationsTable from 'Components/ReservationsTable';
 import ReservationsCalendar from 'Components/ReservationsCalendar';
 import Row from './Row';
 import { styles } from './Styles';
+import LocationModal from 'Components/LocationModal';
 import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
-import * as devicesActions from 'ActionCreators/devicesActions';
 
 class DeviceDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      device: null,
-    };
     this.handleEditClick = this.handleCheckClick.bind(this);
     this.getParsedDate = this.getParsedDate.bind(this);
     this.renderError = this.renderError.bind(this);
+    this.openLocationDialog = this.openLocationDialog.bind(this);
   }
   componentDidMount() {
     const id = parseInt(this.props.match.params.id);
     if (id) {
       this.props.getDeviceWithId(id);
-      this.props.setSelectedDevice(id);
     }
-  }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.device != prevState.device) {
-      return { device: nextProps.device };
-    }
-    return { device: null };
   }
   renderError() {
     return <div><h1>Something went WRONG. Please try again. </h1></div>;
@@ -57,47 +48,51 @@ class DeviceDetails extends React.Component {
     return date;
   }
   handleCheckClick() {
-    const device = this.state.device;
+    const { 
+      device,
+      changeDevice,
+    } = this.props;
     if (device.custody.length === 0) {
       this.open(device.id);
     } else {
       //Handle device return
       device.available = !device.available;
       device.custody = 'New guy';
-      device.booked_from = this.getParsedDate();
+      device.bookedFrom = this.getParsedDate();
+      changeDevice(device);
     }
-
-    this.setState({ device });
   }
+
   render() {
-    const { classes, history } = this.props;
+    const { classes, history, device } = this.props;
     return (
-      this.state.device ?
+      device ?
         <div className={classes.root}>
           <Button variant="flat" onClick={history.goBack}>
             <NavigateBefore />
             <span className={classes.bigFont} >Back</span>
           </Button>
           <Divider className={classes.divider} />
-          <Grid container spacing={16}>
-            <Grid item md={3}>
+          <LocationModal />
+          <Grid container spacing={8}>
+            <Grid item md>
               <img
                 className={classes.image}
-                src={this.state.device.image}
+                src={device.image}
               />
             </Grid>
-            <Grid item md={6}>
+            <Grid item md={6} xs={12}>
               <Paper className={classes.table}>
                 <Grid container className={classes.table}>
                   <Grid item md={11}>
                     <Typography className={classes.title} variant="display3" align="left">
-                      {this.state.device.name}
+                      {device.name}
                     </Typography>
                   </Grid>
-                  <Grid item md={11} className={classes.custody}>
+                  <Grid item md={11} xs={11} className={classes.custody}>
                     <Grid container item>
                       <Grid item md={2} className={classes.label}>Custody of:</Grid>
-                      <Grid item md={9}>{this.state.device.custody}
+                      <Grid item md={9}>{device.custody}
                         <Tooltip
                           id="tooltip-bottom"
                           enterDelay={100}
@@ -110,9 +105,9 @@ class DeviceDetails extends React.Component {
                     </Grid>
                     <Row
                       label="Booked from"
-                      value={this.state.device.booked_from} />
+                      value={device.bookedFrom} />
                   </Grid>
-                  <Grid item md={11}>
+                  <Grid item md={11} xs={11}>
                     <Divider className={classes.divider} />
                     <Typography className={classes.title} variant="display1" align="left">
                       ITEM DETAILS
@@ -121,37 +116,37 @@ class DeviceDetails extends React.Component {
                   </Grid>
                   <Row
                     label="ID#"
-                    value={this.state.device.identification_num} />
+                    value={device.identificationNum} />
                   <Row
                     label="Serial number"
-                    value={this.state.device.serial_num} />
+                    value={device.serialNum} />
                   <Row
                     label="OS"
-                    value={this.state.device.os} />
+                    value={device.os} />
                   <Row
                     label="Group"
-                    value={this.state.device.group} />
+                    value={device.group} />
                   <Row
                     label="Subgroup"
-                    value={this.state.device.subgroup} />
+                    value={device.subgroup} />
                   <Row
                     label="Description"
-                    value={this.state.device.description} />
+                    value={device.description} />
                   <Row
                     label="Check-in due"
-                    value={this.state.device.check_in_due} />
+                    value={device.checkInDue} />
                   <Row
                     label="Location"
-                    value={this.state.device.location} />
+                    value={device.location} />
                   <Row
                     label="Purchased on:"
-                    value={this.state.device.purchased} />
+                    value={device.purchased} />
                   <Row
                     label="Vendor"
-                    value={this.state.device.vendor} />
+                    value={device.vendor} />
                   <Row
                     label="Tax rate"
-                    value={this.state.device.tax_rate} />
+                    value={device.taxRate} />
                 </Grid>
               </Paper>
             </Grid>
@@ -164,20 +159,25 @@ class DeviceDetails extends React.Component {
                 variant='raised'
                 size='large'
                 disabled={
-                  this.state.device.available ? false : true
+                  device.available ? false : true
                 }
                 className={classes.button}
-                color={this.state.device.available ? 'primary' : 'secondary'}
+                color={device.available ? 'primary' : 'secondary'}
                 onClick={() => this.handleCheckClick()}>
                 <Plus />
-                {this.state.device.available ?
+                {device.available ?
                   'Book device' :
                   'Device is booked'}
               </Button>
               <Button variant="raised" size="large" color="primary" className={classes.button}>
                 RESERVATION
               </Button>
-              <Button variant="raised" size="large" color="secondary" className={classes.button}>
+              <Button
+                variant="raised"
+                size="large"
+                color="secondary"
+                className={classes.button}
+                onClick={this.openLocationDialog}>
                 CHANGE LOCATION
               </Button>
               <Paper className={classes.reservationsRoot}>
@@ -190,11 +190,15 @@ class DeviceDetails extends React.Component {
         : this.renderError()
     );
   }
+  openLocationDialog() {
+    this.props.showLocationModal();
+  }
 }
 
 DeviceDetails.propTypes = {
   classes: PropTypes.object.isRequired,
   getDeviceWithId: PropTypes.func.isRequired,
+  showLocationModal: PropTypes.func.isRequired,
   device: PropTypes.shape({
     location: PropTypes.string,
     custody: PropTypes.string,
@@ -203,32 +207,33 @@ DeviceDetails.propTypes = {
     id: PropTypes.number,
     image: PropTypes.string,
     name: PropTypes.string,
-    custody_of: PropTypes.string,
-    booked_from: PropTypes.string,
-    identification_num: PropTypes.string,
-    serial_num: PropTypes.string,
+    custodyOf: PropTypes.string,
+    bookedFrom: PropTypes.string,
+    identificationNum: PropTypes.string,
+    serialNum: PropTypes.string,
     os: PropTypes.string,
     group: PropTypes.string,
     subgroup: PropTypes.string,
     description: PropTypes.string,
-    check_in_due: PropTypes.string,
+    checkInDue: PropTypes.string,
     purchased: PropTypes.string,
     vendor: PropTypes.string,
-    tax_rate: PropTypes.string,
+    taxRate: PropTypes.string,
   }),
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  setSelectedDevice: PropTypes.func.isRequired,
+  changeDevice: PropTypes.func,
 };
 
 const mapStateToProps = state => {
   return {
     device: state.deviceDetails.device,
+    showLocationModal: state.deviceDetails.showLocationModal,
   };
 };
 
 export default withRouter(
-  connect(mapStateToProps, {...deviceDetailsActions, ...devicesActions})(
+  connect(mapStateToProps, {...deviceDetailsActions})(
     withStyles(styles)(DeviceDetails)
   )
 );
