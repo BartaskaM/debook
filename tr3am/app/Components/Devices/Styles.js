@@ -26,7 +26,7 @@ const Styles = theme=>({
   devicePaper: {
     height: '100%',
     position: 'relative',
-    paddingBottom: 60,
+    paddingBottom: 55,
   },
   deviceItem: {
     height: '100%',

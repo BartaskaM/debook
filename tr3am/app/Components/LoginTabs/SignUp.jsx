@@ -45,10 +45,6 @@ class SignUp extends React.Component {
     this.validatePassword = this.validatePassword.bind(this);
   }
 
-  componentDidMount(){
-    this.props.fetchOffices();
-  }
-
   static getDerivedStateFromProps(nextProps, previousState){
     let changes = { currentTab: nextProps.currentTab };
     if(nextProps.currentTab === 0 || 
@@ -65,6 +61,12 @@ class SignUp extends React.Component {
         passwordErrorMessage: '',
         emailErrorMessage: '',
       };
+    }
+    if( previousState.currentTab === 0 &&
+      nextProps.currentTab === 1 &&
+      nextProps.offices.length === 0 &&
+      !nextProps.fetchingOffices){
+      nextProps.fetchOffices();
     }
     return changes;
   }

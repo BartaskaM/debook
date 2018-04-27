@@ -66,6 +66,8 @@ export const devices = {
 
 export const deviceDetails = {
   SET_DEVICE_DETAILS: 'SET_DEVICE_DETAILS',
+  HIDE_LOCATION_MODAL: 'HIDE_LOCATION_MODAL',
+  SHOW_LOCATION_MODAL: 'SHOW_LOCATION_MODAL',
 };
 
 export const offices = {

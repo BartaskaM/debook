@@ -25,10 +25,10 @@ class BookingEvents extends React.Component {
       <Grid item xs={12}>
         <Paper className={classes.headerPaper}>
           <Typography variant='display1'>
-            <Grid container>
+            <Grid container className={classes.headerContainer}>
               <Grid item xs>Action</Grid>
-              <Grid item xs>Device id num</Grid>
-              <Grid item xs>User email</Grid>
+              <Grid item xs>Device ID</Grid>
+              <Grid item xs>User</Grid>
               <Grid item xs>Office</Grid>
               <Grid item xs>Date</Grid>
             </Grid>

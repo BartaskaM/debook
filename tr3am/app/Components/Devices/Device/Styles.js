@@ -48,6 +48,8 @@ const Styles =  ({
     marginRight: 0,
     marginBottom: 5,
     marginLeft: 20,
+    height: 57,
+    overflow: 'hidden',
   },
   deviceCardMainContent: {
     fontSize: 12,
@@ -55,6 +57,7 @@ const Styles =  ({
     letterSpacing: .6,
     color: '#999',
     marginLeft: 20,
+    height: 20,
   },
   mainTextColor: {
     color: '#000000',
