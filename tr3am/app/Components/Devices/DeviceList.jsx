@@ -155,6 +155,7 @@ class DeviceList extends React.Component {
             <ListItem
               className={classes.deviceItem}
               button
+              dense
               onClick={() => history.push(`/devices/${device.id.toString()}`)}>
               <Device key={device.id} device={device} />
             </ListItem>
