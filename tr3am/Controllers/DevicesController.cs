@@ -63,12 +63,12 @@ namespace tr3am.Controllers
             }
             catch (InvalidBrandException)
             {
-                string errorText = String.Format("Brand with ID: {0} doesn't exist", request.UserId);
+                string errorText = String.Format("Brand with ID: {0} doesn't exist", request.BrandId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (InvalidModelException)
             {
-                string errorText = String.Format("Model with ID: {0} doesn't exist", request.UserId);
+                string errorText = String.Format("Model with ID: {0} doesn't exist", request.ModelId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }
@@ -101,12 +101,12 @@ namespace tr3am.Controllers
             }
             catch (InvalidBrandException)
             {
-                string errorText = String.Format("Brand with ID: {0} doesn't exist", request.UserId);
+                string errorText = String.Format("Brand with ID: {0} doesn't exist", request.BrandId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (InvalidModelException)
             {
-                string errorText = String.Format("Model with ID: {0} doesn't exist", request.UserId);
+                string errorText = String.Format("Model with ID: {0} doesn't exist", request.ModelId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
 

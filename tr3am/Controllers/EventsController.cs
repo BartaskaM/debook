@@ -92,17 +92,17 @@ namespace tr3am.Controllers
             }
             catch (InvalidOfficeException)
             {
-                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId.ToString());
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Error = errorText });
             }
             catch (InvalidUserException)
             {
-                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId.ToString());
+                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (InvalidDeviceException)
             {
-                string errorText = String.Format("Device with ID: {0} doesn't exist", request.DeviceId.ToString());
+                string errorText = String.Format("Device with ID: {0} doesn't exist", request.DeviceId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }
