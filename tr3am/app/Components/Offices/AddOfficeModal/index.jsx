@@ -60,7 +60,7 @@ class AddOfficeModal extends React.Component {
       lat: parseFloat(this.state.LAT),
       lng: parseFloat(this.state.LNG),
     };
-
+    
     this.props.createOffice(newOffice, this.props.history);
   }
 
@@ -152,6 +152,8 @@ class AddOfficeModal extends React.Component {
                     <Input
                       inputProps={{
                         name: 'LAT',
+                        type: 'number',
+                        step: '0.000001',
                         maxLength: '12',
                         required: 'required',
                         placeholder: '12.123456',
@@ -163,6 +165,8 @@ class AddOfficeModal extends React.Component {
                     <Input
                       inputProps={{
                         name: 'LNG',
+                        type: 'number',
+                        step: '0.000001',
                         maxLength: '12',
                         required: 'required',
                         placeholder: '12.123456',
