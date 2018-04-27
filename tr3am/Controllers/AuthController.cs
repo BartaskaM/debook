@@ -12,13 +12,13 @@ namespace tr3am.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly IUsersRepository _usersRepository;
-        public AuthController(IUsersRepository usersRepository)
+        private readonly IAuth _auth;
+        public AuthController(IAuth auth)
         {
-            _usersRepository = usersRepository;
+            _auth = auth;
         }
         [HttpPost("api/login")]
-        public IActionResult LogIn([FromBody]LogInRequest request)
+        public async Task<IActionResult> LogIn([FromBody]LogInRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -26,7 +26,7 @@ namespace tr3am.Controllers
             }
             try
             {
-                return Ok(_usersRepository.LogIn(request));
+                return Ok(await _auth.LogIn(request));
             }
             catch(InvalidUserException)
             {

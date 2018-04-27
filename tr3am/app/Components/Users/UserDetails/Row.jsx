@@ -29,7 +29,7 @@ const Row = (props) => {
 
 Row.propTypes = {
   label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   classes: PropTypes.object.isRequired,
   edit: PropTypes.bool.isRequired,
   changeInfo: PropTypes.func.isRequired,

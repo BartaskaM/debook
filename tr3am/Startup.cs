@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,12 +24,16 @@ namespace tr3am
         {
             Mappings.SetupMappings();
             services.AddMvc();
-            services.AddSingleton<IOfficesRepository, OfficesRepository>();
-            services.AddSingleton<IDevicesRepository, DevicesRepository>();
-            services.AddSingleton<IUsersRepository, UsersRepository>();
-            services.AddSingleton<IEventsRepository, EventsRepository>();
-            services.AddSingleton<IReservationsRepository, ReservationsRepository>();
-            services.AddSingleton<IBrandsRepository, BrandsRepository>();
+            services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("Tr3amConnection")));
+
+            services.AddScoped<IOfficesRepository, OfficesRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IAuth, UsersRepository>();
+            services.AddScoped<IBrandsRepository, BrandsRepository>();
+            services.AddScoped<IDevicesRepository, DevicesRepository>();
+            services.AddScoped<IEventsRepository, EventsRepository>();
+            services.AddScoped<IReservationsRepository, ReservationsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -114,7 +114,7 @@ class OfficeDetails extends React.Component {
           inputProps={{
             type: 'text',
             name: 'country',
-            maxLength: '255',
+            maxLength: '256',
             required: 'required',
           }}
         />
@@ -132,7 +132,7 @@ class OfficeDetails extends React.Component {
           inputProps={{
             type: 'text',
             name: 'city',
-            maxLength: '255',
+            maxLength: '256',
             required: 'required',
           }}
         />
@@ -150,7 +150,7 @@ class OfficeDetails extends React.Component {
           inputProps={{
             type: 'text',
             name: 'address',
-            maxLength: '255',
+            maxLength: '256',
             required: 'required',
           }}
         />

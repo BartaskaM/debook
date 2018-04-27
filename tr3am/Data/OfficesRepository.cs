@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
@@ -11,68 +14,26 @@ namespace tr3am.Data
 {
     public class OfficesRepository : IOfficesRepository
     {
-        private readonly List<Office> _items;
+        private readonly AppDbContext _dbContext;
 
-        public OfficesRepository()
+        public OfficesRepository(AppDbContext dbContext)
         {
-            _items = new List<Office>
-            {
-                new Office
-                {
-                    Id = 1,
-                    Country = "Lithuania",
-                    City = "Kaunas",
-                    Address = "11D A. Juozapavičiaus pr.",
-                    Lat = 54.864296,
-                    Lng = 23.945239,
-                },
-                new Office
-                {
-                    Id = 2,
-                    Country = "Lithuania",
-                    City = "Vilnius",
-                    Address = "135 Zalgirio g.",
-                    Lat = 54.704881,
-                    Lng = 25.271658,
-                },
-                new Office
-                {
-                    Id = 3,
-                    Country = "United States of America",
-                    City = "Chicago",
-                    Address = "343 W. Erie St. Suite 600",
-                    Lat = 41.893646,
-                    Lng = -87.637532,
-                },
-                new Office
-                {
-                    Id = 4,
-                    Country = "Canada",
-                    City = "Toronto",
-                    Address = "36 Toronto Street Suite 260",
-                    Lat = 43.650579,
-                    Lng = -79.376536,
-                },
-                new Office
-                {
-                    Id = 5,
-                    Country = "United Kingdom",
-                    City = "London",
-                    Address = "1 Mark Square",
-                    Lat = 51.524425,
-                    Lng = -0.082300,
-                },
-            };
+            _dbContext = dbContext;
         }
 
-        public List<OfficeDTO> GetAll()
+        public async Task<IEnumerable<OfficeDTO>> GetAll()
         {
-            return _items.Select(Mapper.Map<Office,OfficeDTO>).ToList();
+            return await _dbContext.Offices
+                .AsNoTracking()
+                .Select(x => Mapper.Map<Office, OfficeDTO>(x))
+                .ToListAsync();
         }
 
-        public OfficeDTO GetById(int id)
+        public async Task<OfficeDTO> GetById(int id)
         {
-            var item = _items.FirstOrDefault(x => x.Id == id);
+            var item = await _dbContext.Offices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidOfficeException();
@@ -81,13 +42,10 @@ namespace tr3am.Data
             return Mapper.Map<Office, OfficeDTO>(item);
         }
 
-        public int Create(OfficeItemRequest request)
+        public async Task<int> Create(OfficeItemRequest request)
         {
-            var id = _items.Any() ? _items.Max(x => x.Id) + 1 : 1;
-
-            var item = new Office
+            var newItem = new Office
             {
-                Id = id,
                 Country = request.Country,
                 City = request.City,
                 Address = request.Address,
@@ -95,23 +53,27 @@ namespace tr3am.Data
                 Lng = request.Lng,
             };
 
-            if (OfficeExists(item))
+            if (await OfficeExists(newItem))
             {
                 throw new DuplicateOfficeException();
             }
 
-            _items.Add(item);
-            return id;
+            _dbContext.Offices.Add(newItem);
+            await _dbContext.SaveChangesAsync();
+
+            return newItem.Id;
         }
 
-        public bool OfficeExists(Office office)
+        public async Task<bool> OfficeExists(Office office)
         {
-            var result = _items.Find(x =>
-            x.Country == office.Country &&
-            x.City == office.City &&
-            x.Address == office.Address);
+            var item = await _dbContext.Offices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x =>
+                x.Country == office.Country &&
+                x.City == office.City &&
+                x.Address == office.Address);
 
-            if (result != null)
+            if (item != null)
             {
                 return true;
             }
@@ -119,9 +81,10 @@ namespace tr3am.Data
             return false;
         }
 
-        public void Update(int id, OfficeItemRequest request)
+        public async Task Update(int id, OfficeItemRequest request)
         {
-            var item = _items.FirstOrDefault(x => x.Id == id);
+            var item = await _dbContext.Offices.
+                FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidOfficeException();
@@ -132,17 +95,21 @@ namespace tr3am.Data
             item.Address = request.Address;
             item.Lat = request.Lat;
             item.Lng = request.Lng;
+
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var item = _items.FirstOrDefault(x => x.Id == id);
+            var item = await _dbContext.Offices
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidOfficeException();
             }
 
-            _items.Remove(item);
+            _dbContext.Remove(item);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

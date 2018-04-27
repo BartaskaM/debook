@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Entities;
@@ -20,17 +21,17 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<OfficeDTO> GetAll()
+        public async Task<IEnumerable<OfficeDTO>> GetAll()
         {
-            return _officesRepository.GetAll();
+            return await _officesRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                return Ok(_officesRepository.GetById(id));
+                return Ok(await _officesRepository.GetById(id));
             }
             catch (InvalidOfficeException)
             {
@@ -39,16 +40,15 @@ namespace tr3am.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]OfficeItemRequest request)
+        public async Task<IActionResult> Create([FromBody]OfficeItemRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
-                var itemId = _officesRepository.Create(request);
+                var itemId = await _officesRepository.Create(request);
                 return CreatedAtAction(nameof(GetById), new { id = itemId }, itemId);
             }
             catch (DuplicateOfficeException)
@@ -58,7 +58,7 @@ namespace tr3am.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] OfficeItemRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody] OfficeItemRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -66,29 +66,27 @@ namespace tr3am.Controllers
             }
             try
             {
-                _officesRepository.Update(id, request);
+                await _officesRepository.Update(id, request);
+                return NoContent();
             }
             catch (InvalidOfficeException)
             {
                 return NotFound();
             }
-
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                _officesRepository.Delete(id);
+                await _officesRepository.Delete(id);
+                return NoContent();
             }
             catch (InvalidOfficeException)
             {
                 return NotFound();
             }
-
-            return NoContent();
         }
     }
 }

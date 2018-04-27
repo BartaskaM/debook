@@ -26,17 +26,17 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ShortDeviceDTO> GetAll()
+        public async Task<IEnumerable<ShortDeviceDTO>> GetAll()
         {
-            return _devicesRepository.GetAll();
+            return await _devicesRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                return Ok(_devicesRepository.GetById(id));
+                return Ok(await _devicesRepository.GetById(id));
             }
             catch(InvalidDeviceException)
             {
@@ -45,7 +45,7 @@ namespace tr3am.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]CreateDeviceRequest request)
+        public async Task<IActionResult> Create([FromBody]CreateDeviceRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -53,17 +53,28 @@ namespace tr3am.Controllers
             }
             try
             {
-                _devicesRepository.Create(request);
+                await _devicesRepository.Create(request);
                 return NoContent();
             }
             catch(InvalidOfficeException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This office doesn't exist" });
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = errorText });
+            }
+            catch (InvalidBrandException)
+            {
+                string errorText = String.Format("Brand with ID: {0} doesn't exist", request.BrandId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
+            catch (InvalidModelException)
+            {
+                string errorText = String.Format("Model with ID: {0} doesn't exist", request.ModelId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] UpdateDeviceRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateDeviceRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +82,7 @@ namespace tr3am.Controllers
             }
             try
             {
-                _devicesRepository.Update(id, request);
+                await _devicesRepository.Update(id, request);
                 return NoContent();
             }
             catch(InvalidDeviceException)
@@ -80,33 +91,45 @@ namespace tr3am.Controllers
             }
             catch(InvalidOfficeException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This office doesn't exist" });
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Error = errorText });
             }
-            catch(InvalidUserException)
+            catch (InvalidUserException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Error = "This user doesn't exist" });
+                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
+            catch (InvalidBrandException)
+            {
+                string errorText = String.Format("Brand with ID: {0} doesn't exist", request.BrandId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
+            catch (InvalidModelException)
+            {
+                string errorText = String.Format("Model with ID: {0} doesn't exist", request.ModelId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
 
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                _devicesRepository.Delete(id);
+                await _devicesRepository.Delete(id);
+                return NoContent();
             }
             catch(InvalidDeviceException)
             {
                 return NotFound();
             }
-            return NoContent();
         }
 
         [HttpGet("{id}/reservations")]
-        public IEnumerable<ReservationDTO> GetDeviceReservations(int id, [FromQuery]bool showAll)
+        public async Task<IEnumerable<ReservationDTO>> GetDeviceReservations(int id, [FromQuery]bool showAll)
         {
-            return _reservationsRepository.GetByDeviceId(id,showAll);
+            return await _reservationsRepository.GetByDeviceId(id, showAll);
         }
     }
 }

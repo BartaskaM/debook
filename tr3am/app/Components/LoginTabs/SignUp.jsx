@@ -170,7 +170,7 @@ class SignUp extends React.Component {
                 inputProps={{
                   type: 'email',
                   name: 'email',
-                  maxLength: '64',
+                  maxLength: '256',
                   required: 'required',
                 }}
               />
@@ -221,7 +221,7 @@ class SignUp extends React.Component {
                 inputProps={{
                   type: 'text',
                   name: 'firstName',
-                  maxLength: '32',
+                  maxLength: '256',
                   required: 'required',
                 }}
               />
@@ -235,7 +235,7 @@ class SignUp extends React.Component {
                 inputProps={{
                   type: 'text',
                   name: 'lastName',
-                  maxLength: '32',
+                  maxLength: '256',
                   required: 'required',
                 }}
               />

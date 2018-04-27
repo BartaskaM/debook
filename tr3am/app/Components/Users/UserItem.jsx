@@ -50,7 +50,7 @@ UserItem.propTypes = {
       lat: PropTypes.number.isRequired,
       lng: PropTypes.number.isRequired,
     }).isRequired,
-    slack: PropTypes.string.isRequired,
+    slack: PropTypes.string,
     role: PropTypes.string.isRequired,
   }).isRequired,
 };
