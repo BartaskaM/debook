@@ -47,7 +47,7 @@ UserItem.propTypes = {
       lng: PropTypes.number.isRequired,
     }).isRequired,
     slack: PropTypes.string,
-    role: PropTypes.string,
+    role: PropTypes.string.isRequired,
   }).isRequired,
 };
 
