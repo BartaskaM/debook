@@ -19,17 +19,20 @@ const device = ({ classes, device, users }) => {
         <Typography className={classes.availabilityTagUnavailable}>Unavailable</Typography>
       }
       <Typography className={classes.deviceCardTitle}>
-        {device.brand}, {device.model}
+        {device.brand.brandName}, {device.model.name}
       </Typography>
       <Typography className={classes.deviceCardMainContent}>
-        Identification number: <span className={classes.mainTextColor}> {device.id}</span>
+        Identification number: 
+        <span className={classes.mainTextColor}> 
+          {device.identificationNum}
+        </span>
       </Typography>
       <Typography noWrap className={classes.deviceCardMainContent}>
         OS: <span className={classes.mainTextColor}> {device.os}</span>
       </Typography>
       <Typography className={classes.deviceCardMainContent}>
         Location:
-        <span className={classes.mainTextColor}> {device.location} </span>
+        <span className={classes.mainTextColor}> {device.location.city} </span>
       </Typography>
       {device.available ? 
         <Typography className={classes.deviceCardMainContent}></Typography>
@@ -46,14 +49,41 @@ const device = ({ classes, device, users }) => {
 device.propTypes = {
   classes: PropTypes.object.isRequired,
   device: PropTypes.shape({
-    image: PropTypes.string.isRequired,
-    brand: PropTypes.string.isRequired,
-    model: PropTypes.string.isRequired,
-    os: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired,
-    custody: PropTypes.number,
-    available: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    available: PropTypes.bool.isRequired,
+    brand: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      brandName: PropTypes.string.isRequired,
+    }).isRequired,
+    model: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    identificationNum: PropTypes.number.isRequired,
+    os: PropTypes.string.isRequired,
+    location: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      city: PropTypes.string.isRequired,
+    }).isRequired,
+    custody: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+    }),
+    userBooking: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.string.isRequired,
+      to: PropTypes.string.isRequired,
+      status: PropTypes.number.isRequired,
+    }),
+    userReservation: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.string.isRequired,
+      to: PropTypes.string.isRequired,
+      status: PropTypes.number.isRequired,
+    }),
   }).isRequired,
   users: PropTypes.array.isRequired,
 };

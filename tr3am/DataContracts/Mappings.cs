@@ -27,17 +27,21 @@ namespace tr3am.DataContracts
                 cfg.CreateMap<OfficeDto, Office>();
                 cfg.CreateMap<User, LogInDto>();
                 cfg.CreateMap<User, UserDTO>();
+                cfg.CreateMap<User, ShortUserDto>();
                 cfg.CreateMap<UserDTO, User>();
                 cfg.CreateMap<Device, FullDeviceDto>();
                 cfg.CreateMap<Device, ShortDeviceDto>()
                     .ForMember(dest => dest.UserBooking, opt =>
                         opt.ResolveUsing<UserBookingResolver>())
                     .ForMember(dest => dest.UserReservation, opt =>
-                        opt.ResolveUsing<UserReservationResolver>());
+                        opt.ResolveUsing<UserReservationResolver>())
+                    .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Office))
+                    .ForMember(dest => dest.Custody, opt => opt.MapFrom(src => src.User));
                 cfg.CreateMap<FullDeviceDto, Device>();
                 cfg.CreateMap<Reservation, ReservationDto>();
                 cfg.CreateMap<Reservation, UserDeviceReservationDto>();
                 cfg.CreateMap<Event, EventDto>();
+                
             });
         }
     }

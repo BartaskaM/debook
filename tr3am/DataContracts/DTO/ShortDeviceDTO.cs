@@ -16,7 +16,7 @@ namespace tr3am.DataContracts.DTO
         public int IdentificationNum { get; set; }
         public string OS { get; set; }
         public ShortOfficeDto Location { get; set; }
-        public UserDTO Custody { get; set; }
+        public ShortUserDto Custody { get; set; }
         public UserDeviceReservationDto UserBooking { get; set; }
         public UserDeviceReservationDto UserReservation { get; set; }
     }

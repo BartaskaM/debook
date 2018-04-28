@@ -173,7 +173,7 @@ export const fetchDevices = (userId) => async dispatch =>{
   try{
     //Use identity later on
     const response = await api.get(`/devices?userId=${userId}`);
-    const devices = response.data.map(dev => ({
+    const fetchedDevices = response.data.map(dev => ({
       userBooking: dev.userBooking ? 
         {
           from: new Date(dev.userBooking.from),
@@ -191,7 +191,7 @@ export const fetchDevices = (userId) => async dispatch =>{
     );
     dispatch({ 
       type: devices.FETCH_DEVICES_SUCCESS,
-      payload: devices,
+      payload: fetchedDevices,
     });
   } catch(e) {
     dispatch({ 

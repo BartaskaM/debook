@@ -18,7 +18,6 @@ import ReserveModal from 'Components/ReserveModal';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as usersActions from 'ActionCreators/usersActions';
 import Reservations from 'Constants/Reservations';
-import Devices from 'Constants/Devices';
 import Device from './Device';
 import ReturnModal from 'Components/ReturnModal';
 import { fifteenMinutes } from 'Constants/Values';
@@ -27,7 +26,6 @@ import { ListItem } from 'material-ui';
 class DeviceList extends React.Component {
   constructor(props) {
     super(props);
-    this.renderDevices = this.renderDevices.bind(this);
     this.renderDevices = this.renderDevices.bind(this);
     this.openBookDialog = this.openBookDialog.bind(this);
     this.openReserveDialog = this.openReserveDialog.bind(this);
@@ -43,11 +41,9 @@ class DeviceList extends React.Component {
     const {
       setReservations,
       fetchUsers,
-      setDevices,
     } = this.props;
     setReservations(Reservations);
     fetchUsers();
-    setDevices(Devices);
     //Refresh button values every 10 s
     this.interval = setInterval(this.getBookButtonValues, 10000);
   }
@@ -100,11 +96,11 @@ class DeviceList extends React.Component {
       officeFilter,
     } = this.props;
     let devicesToRender = devices
-      .filter(device => device.active &&
-        device.model.toLowerCase().includes(modelFilter.toLowerCase()));
+      .filter(device =>
+        device.model.name.toLowerCase().includes(modelFilter.toLowerCase()));
     if (brandFilter.length > 0) {
       devicesToRender = devicesToRender.filter(device =>
-        brandFilter.includes(device.brand));
+        brandFilter.includes(device.brand.brandName));
     }
     if (officeFilter.length > 0) {
       devicesToRender = devicesToRender.filter(device =>
@@ -226,14 +222,41 @@ class DeviceList extends React.Component {
 
 DeviceList.propTypes = {
   devices: PropTypes.arrayOf(PropTypes.shape({
-    brand: PropTypes.string.isRequired,
-    model: PropTypes.string.isRequired,
-    os: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired,
-    custody: PropTypes.number,
-    available: PropTypes.bool.isRequired,
-    active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    available: PropTypes.bool.isRequired,
+    brand: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      brandName: PropTypes.string.isRequired,
+    }).isRequired,
+    model: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    identificationNum: PropTypes.number.isRequired,
+    os: PropTypes.string.isRequired,
+    location: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      city: PropTypes.string.isRequired,
+    }).isRequired,
+    custody: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+    }),
+    userBooking: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.string.isRequired,
+      to: PropTypes.string.isRequired,
+      status: PropTypes.number.isRequired,
+    }),
+    userReservation: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.string.isRequired,
+      to: PropTypes.string.isRequired,
+      status: PropTypes.number.isRequired,
+    }),
   })).isRequired,
   classes: PropTypes.object.isRequired,
   user: PropTypes.shape({
@@ -249,7 +272,7 @@ DeviceList.propTypes = {
       lng: PropTypes.number.isRequired,
       address: PropTypes.string.isRequired,
     }).isRequired,
-    slack: PropTypes.string.isRequired,
+    slack: PropTypes.string,
   }),
   modelFilter: PropTypes.string.isRequired,
   brandFilter: PropTypes.array.isRequired,
