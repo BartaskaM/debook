@@ -7,9 +7,8 @@ import { withStyles } from 'material-ui/styles';
 
 import Styles from './Styles';
 
-const device = ({ classes, device, users }) => {
-  const user = device.available ? null :
-    users.find(user => user.id === device.custody);
+const device = ({ classes, device }) => {
+  const user = device.available ? null : device.custody;
   return (
     <List className={classes.deviceItem}>
       <ListItem><img className={classes.deviceCardImage} src={device.image} /></ListItem>

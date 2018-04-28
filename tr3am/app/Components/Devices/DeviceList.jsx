@@ -57,19 +57,17 @@ class DeviceList extends React.Component {
     return { bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user, reservations) };
   }
 
-  static formBookButtonValuesArray(devices, user, reservations) {
+  static formBookButtonValuesArray(devices, user) {
     const bookButtonValues = [];
     devices.forEach(device => {
       if (device.available) {
-        const userReservationForThisDevice = reservations
-          .find(res => res.device === device.id && user.id === res.user);
-        if (DeviceList.canCheckIn(userReservationForThisDevice)) {
+        if (DeviceList.canCheckIn(device.userReservation)) {
           bookButtonValues[device.id] = 'Check-in';
         } else {
           bookButtonValues[device.id] = 'Book device';
         }
       } else {
-        if (device.custody === user.id) {
+        if (device.custody.id === user.id) {
           bookButtonValues[device.id] = 'Return device';
         } else {
           bookButtonValues[device.id] = 'Device is booked';
@@ -80,9 +78,9 @@ class DeviceList extends React.Component {
   }
 
   getBookButtonValues() {
-    const { user, reservations, devices } = this.props;
+    const { user, devices } = this.props;
     this.setState({
-      bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user, reservations),
+      bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user),
     });
   }
 
@@ -128,11 +126,11 @@ class DeviceList extends React.Component {
     }
   }
 
-  handleBookClick(device, userReservationForThisDevice) {
+  handleBookClick(device) {
     const { showReturnModal, checkInDevice, user } = this.props;
     return device.custody ?
       showReturnModal(device.id) :
-      DeviceList.canCheckIn(userReservationForThisDevice) ?
+      DeviceList.canCheckIn(device.userReservation) ?
         checkInDevice(device.id, user.id) :
         this.openBookDialog(device.id);
   }
@@ -159,7 +157,7 @@ class DeviceList extends React.Component {
               <Button
                 variant='raised'
                 disabled={
-                  device.available ? false : device.custody === user.id ? false : true
+                  device.available ? false : device.custody.id === user.id ? false : true
                 }
                 color={device.available ? 'primary' : 'secondary'}
                 className={classes.buttonLeft}
