@@ -22,7 +22,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ReservationDTO>> GetAll([FromQuery]bool showAll)
+        public async Task<IEnumerable<ReservationDto>> GetAll([FromQuery]bool showAll)
         {
             return await _reservationsRepository.GetAll(showAll);
         }

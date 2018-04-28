@@ -21,16 +21,16 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<BrandDTO>> GetAll()
+        public async Task<IEnumerable<BrandDto>> GetAll()
         {
             return await _dbContext.Brands
                 .AsNoTracking()
                 .Include(x => x.Models)
-                .Select(x => Mapper.Map<Brand, BrandDTO>(x))
+                .Select(x => Mapper.Map<Brand, BrandDto>(x))
                 .ToListAsync();
         }
 
-        public async Task<BrandDTO> GetById(int id)
+        public async Task<BrandDto> GetById(int id)
         {
             var item = await _dbContext.Brands
                 .AsNoTracking()
@@ -41,7 +41,7 @@ namespace tr3am.Data
                 throw new InvalidBrandException();
             }
 
-            return Mapper.Map<Brand, BrandDTO>(item);
+            return Mapper.Map<Brand, BrandDto>(item);
         }
 
         public async Task<int> Create(BrandItemRequest request)

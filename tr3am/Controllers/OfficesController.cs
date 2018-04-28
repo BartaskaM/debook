@@ -21,7 +21,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<OfficeDTO>> GetAll()
+        public async Task<IEnumerable<OfficeDto>> GetAll()
         {
             return await _officesRepository.GetAll();
         }

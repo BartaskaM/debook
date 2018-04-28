@@ -26,9 +26,9 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ShortDeviceDTO>> GetAll()
+        public async Task<IEnumerable<ShortDeviceDto>> GetAll([FromQuery]int userId)
         {
-            return await _devicesRepository.GetAll();
+            return await _devicesRepository.GetAll(userId);
         }
 
         [HttpGet("{id}")]
@@ -127,7 +127,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet("{id}/reservations")]
-        public async Task<IEnumerable<ReservationDTO>> GetDeviceReservations(int id, [FromQuery]bool showAll)
+        public async Task<IEnumerable<ReservationDto>> GetDeviceReservations(int id, [FromQuery]bool showAll)
         {
             return await _reservationsRepository.GetByDeviceId(id, showAll);
         }

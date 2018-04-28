@@ -9,6 +9,6 @@ namespace tr3am.DataContracts
 {
     public interface IAuth
     {
-        Task<LogInDTO> LogIn(LogInRequest request);
+        Task<LogInDto> LogIn(LogInRequest request);
     }
 }

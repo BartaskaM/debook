@@ -22,7 +22,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<BrandDTO>> GetAll()
+        public async Task<IEnumerable<BrandDto>> GetAll()
         {
             return await _brandsRepository.GetAll();
         }

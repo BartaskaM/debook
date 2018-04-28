@@ -21,15 +21,15 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<OfficeDTO>> GetAll()
+        public async Task<IEnumerable<OfficeDto>> GetAll()
         {
             return await _dbContext.Offices
                 .AsNoTracking()
-                .Select(x => Mapper.Map<Office, OfficeDTO>(x))
+                .Select(x => Mapper.Map<Office, OfficeDto>(x))
                 .ToListAsync();
         }
 
-        public async Task<OfficeDTO> GetById(int id)
+        public async Task<OfficeDto> GetById(int id)
         {
             var item = await _dbContext.Offices
                 .AsNoTracking()
@@ -39,7 +39,7 @@ namespace tr3am.Data
                 throw new InvalidOfficeException();
             }
 
-            return Mapper.Map<Office, OfficeDTO>(item);
+            return Mapper.Map<Office, OfficeDto>(item);
         }
 
         public async Task<int> Create(OfficeItemRequest request)

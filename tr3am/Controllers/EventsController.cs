@@ -23,7 +23,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<EventDTO>> GetAll()
+        public async Task<IEnumerable<EventDto>> GetAll()
         {
             return await _eventsRepository.GetAll();
         }

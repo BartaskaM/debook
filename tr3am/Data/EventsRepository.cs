@@ -22,18 +22,18 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<EventDTO>> GetAll()
+        public async Task<IEnumerable<EventDto>> GetAll()
         {
             return await _dbContext.Events
                 .AsNoTracking()
                 .Include(x => x.Office)
                 .Include(x => x.User)
                 .Include(x => x.Device)
-                .Select(x => Mapper.Map<Event, EventDTO>(x))
+                .Select(x => Mapper.Map<Event, EventDto>(x))
                 .ToListAsync();
         }
 
-        public async Task<EventDTO> GetById(int id)
+        public async Task<EventDto> GetById(int id)
         {
             var item = await _dbContext.Events
                 .AsNoTracking()
@@ -46,7 +46,7 @@ namespace tr3am.Data
                 throw new InvalidEventException();
             }
 
-            return Mapper.Map<Event, EventDTO>(item);
+            return Mapper.Map<Event, EventDto>(item);
         }
 
         public async Task<int> Create(EventItemRequest request)

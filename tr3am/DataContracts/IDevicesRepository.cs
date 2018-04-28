@@ -10,8 +10,8 @@ namespace tr3am.DataContracts
 {
     public interface IDevicesRepository
     {
-        Task<IEnumerable<ShortDeviceDTO>> GetAll();
-        Task<FullDeviceDTO> GetById(int id);
+        Task<IEnumerable<ShortDeviceDto>> GetAll(int userId);
+        Task<FullDeviceDto> GetById(int id);
         Task<int> Create(CreateDeviceRequest request);
         Task Update(int id, UpdateDeviceRequest request);
         Task Delete(int id);

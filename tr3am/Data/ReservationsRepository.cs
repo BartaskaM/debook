@@ -23,7 +23,7 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<ReservationDTO>> GetAll(bool showAll)
+        public async Task<IEnumerable<ReservationDto>> GetAll(bool showAll)
         {
             await RefreshReservations();
 
@@ -33,7 +33,7 @@ namespace tr3am.Data
                     .AsNoTracking()
                     .Include(x => x.User)
                     .Include(x => x.Device)
-                    .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
+                    .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
                     .ToListAsync();
             }
             else
@@ -42,12 +42,12 @@ namespace tr3am.Data
                     .AsNoTracking()
                     .Where(x =>
                         x.Status == Status.CheckedIn || x.Status == Status.Pending || x.Status == Status.OverDue)
-                    .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
+                    .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
                     .ToListAsync();
             }
         }
 
-        public async Task<ReservationDTO> GetById(int id)
+        public async Task<ReservationDto> GetById(int id)
         {
             await RefreshReservations();
 
@@ -61,10 +61,10 @@ namespace tr3am.Data
                 throw new InvalidReservationException();
             }
 
-            return Mapper.Map<Reservation, ReservationDTO>(item);
+            return Mapper.Map<Reservation, ReservationDto>(item);
         }
 
-        public async Task<IEnumerable<ReservationDTO>> GetByDeviceId(int id, bool showAll)
+        public async Task<IEnumerable<ReservationDto>> GetByDeviceId(int id, bool showAll)
         {
             await RefreshReservations();
 
@@ -73,7 +73,7 @@ namespace tr3am.Data
                 return await _dbContext.Reservations
                     .AsNoTracking()
                     .Where(x => x.Device.Id == id)
-                    .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
+                    .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
                     .ToListAsync();
             }
             else
@@ -82,7 +82,7 @@ namespace tr3am.Data
                     .AsNoTracking()
                     .Where(x => x.Device.Id == id && (x.Status == Status.CheckedIn || x.Status == Status.OverDue ||
                                                x.Status == Status.Pending))
-                    .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
+                    .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
                     .ToListAsync();
             }
 

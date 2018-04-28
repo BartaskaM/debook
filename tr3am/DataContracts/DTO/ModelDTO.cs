@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace tr3am.DataContracts.DTO
 {
-    public class ModelDTO
+    public class ModelDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
