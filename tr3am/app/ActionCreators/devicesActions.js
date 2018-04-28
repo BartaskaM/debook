@@ -167,3 +167,36 @@ export const fetchDeviceReservations = (deviceId) => async dispatch =>{
     });
   }
 };
+
+export const fetchDevices = (userId) => async dispatch =>{
+  dispatch({ type: devices.FETCH_DEVICES_START });
+  try{
+    //Use identity later on
+    const response = await api.get(`/devices?userId=${userId}`);
+    const devices = response.data.map(dev => ({
+      userBooking: dev.userBooking ? 
+        {
+          from: new Date(dev.userBooking.from),
+          to: new Date(dev.userBooking.to),
+          ...dev.userBooking,
+        } : null,
+      userReservation: dev.userReservation ? 
+        {
+          from: new Date(dev.userReservation.from),
+          to: new Date(dev.userReservation.to),
+          ...dev.userBooking,
+        } : null,
+      ...dev,
+    })
+    );
+    dispatch({ 
+      type: devices.FETCH_DEVICES_SUCCESS,
+      payload: devices,
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.FETCH_DEVICES_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};

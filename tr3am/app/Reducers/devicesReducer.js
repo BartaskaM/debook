@@ -24,6 +24,8 @@ const defaultState = {
   fetchingDeviceReservations: false,
   fetchingDeviceReservationsErrorMessage: '',
   selectedDeviceReservations: [],
+  fetchingDevices: false,
+  fetchingDevicesErrorMessage: '',
 };
 
 export default (state = defaultState, action) => {
@@ -230,7 +232,6 @@ export default (state = defaultState, action) => {
       };
     }
     case devices.FETCH_DEVICE_RESERVATIONS_SUCCESS: {
-
       return {
         ...state,
         selectedDeviceReservations: action.payload.map(x => {
@@ -249,6 +250,27 @@ export default (state = defaultState, action) => {
         ...state,
         fetchingDeviceReservations: false,
         fetchingDeviceReservationsErrorMessage: action.payload,
+      };
+    }
+    case devices.FETCH_DEVICES_START: {
+      return {
+        ...state,
+        fetchingDevices: true,
+        fetchingDevicesErrorMessage: '',
+      };
+    }
+    case devices.FETCH_DEVICES_SUCCESS: {
+      return {
+        ...state,
+        devices: action.payload,
+        fetchingDevices: false,
+      };
+    }
+    case devices.FETCH_DEVICES_ERROR: {
+      return { 
+        ...state,
+        fetchingDevices: false,
+        fetchingDevicesErrorMessage: action.payload,
       };
     }
     default: return state;

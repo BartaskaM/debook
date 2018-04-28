@@ -72,6 +72,7 @@ namespace tr3am.Data
             {
                 return await _dbContext.Reservations
                     .AsNoTracking()
+                    .Include(x => x.User)
                     .Where(x => x.Device.Id == id)
                     .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
                     .ToListAsync();
