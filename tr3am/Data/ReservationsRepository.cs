@@ -223,19 +223,19 @@ namespace tr3am.Data
                 throw new NegativeDateException();
             }
 
-            await _dbContext.Reservations
-                .Where(x => x.Device.Id == device.Id &&
-                (x.Status == Status.CheckedIn || x.Status == Status.OverDue
-                || x.Status == Status.Pending))
-                .ForEachAsync(x =>
-                {
-                    if (CheckIfDateIsWithinReservation(from, x)
-                        || CheckIfDateIsWithinReservation(to, x)
-                        || CheckIfReservationIsWithinDates(from, to, x))
-                    {
-                        throw new UsedDateException();
-                    }
-                });
+            var conflictingReservationsCount = await _dbContext.Reservations
+                .CountAsync(x => x.Device.Id == device.Id &&
+                            (x.Status == Status.CheckedIn || x.Status == Status.OverDue
+                                                          || x.Status == Status.Pending) &&
+                            (CheckIfDateIsWithinReservation(from, x)
+                             || CheckIfDateIsWithinReservation(to, x)
+                             || CheckIfReservationIsWithinDates(from, to, x))
+                );
+            if (conflictingReservationsCount > 0)
+            {
+                throw new UsedDateException();
+            }
+
         }
         private bool CheckIfDateIsWithinReservation(DateTime date, Reservation reservation)
         {

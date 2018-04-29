@@ -75,8 +75,8 @@ class BookModal extends React.Component {
     this.roundTimes();
     if (!this.checkForErrors(returnDate) && !checkIfLate(currentDate)) {
       const request = {
-        device: selectedDevice,
-        user: user.id,
+        deviceId: selectedDevice,
+        userId: user.id,
         from: (new Date()).toISOString(),
         to: returnDate.toISOString(),
         status: reservationStatus.checkedIn,
