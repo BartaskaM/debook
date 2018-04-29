@@ -10,11 +10,11 @@ namespace tr3am.DataContracts
 {
     public interface IReservationsRepository
     {
-        List<ReservationDTO> GetAll(bool showAll = false);
-        ReservationDTO GetById(int id);
-        List<ReservationDTO> GetByDeviceId(int id, bool showAll = false);
-        int Create(ReservationRequest request, bool booking);
-        void Update(int id, ReservationRequest request);
-        void Delete(int id);
+        Task<IEnumerable<ReservationDTO>> GetAll(bool showAll = false);
+        Task<ReservationDTO> GetById(int id);
+        Task<IEnumerable<ReservationDTO>> GetByDeviceId(int id, bool showAll = false);
+        Task<int> Create(ReservationRequest request, bool booking);
+        Task Update(int id, ReservationRequest request);
+        Task Delete(int id);
     }
 }

@@ -8,7 +8,9 @@ import Styles from './Styles';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
-import Plus from 'material-ui-icons/Add';
+import Add from 'material-ui-icons/Add';
+import Remove from 'material-ui-icons/Remove';
+import Done from 'material-ui-icons/Done';
 import Clock from 'material-ui-icons/Schedule';
 import Description from 'material-ui-icons/Description';
 import BookModal from 'Components/BookModal';
@@ -141,6 +143,7 @@ class DeviceList extends React.Component {
 
   renderDevices() {
     const { reservations, user, classes, history } = this.props;
+    const { bookButtonValues } = this.state;
     const userReservations = reservations
       .filter(res => res.user === user.id);
     return this.filterDevices().map((device, index) => {
@@ -152,6 +155,7 @@ class DeviceList extends React.Component {
             <ListItem
               className={classes.deviceItem}
               button
+              dense
               onClick={() => history.push(`/devices/${device.id.toString()}`)}>
               <Device key={device.id} device={device} />
             </ListItem>
@@ -164,8 +168,14 @@ class DeviceList extends React.Component {
                 color={device.available ? 'primary' : 'secondary'}
                 className={classes.buttonLeft}
                 onClick={() => this.handleBookClick(device, userReservationForThisDevice)}>
-                <Plus className={classes.leftIcon} />
-                {this.state.bookButtonValues[device.id]}
+                {
+                  bookButtonValues[device.id] === 'Return device' ?
+                    <Remove className={classes.leftIcon} /> :
+                    bookButtonValues[device.id] === 'Check-in' ?
+                      <Done className={classes.leftIcon} /> :
+                      <Add className={classes.leftIcon} />
+                }
+                {bookButtonValues[device.id]}
               </Button>
               <Button
                 variant="raised"

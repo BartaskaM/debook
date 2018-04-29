@@ -36,6 +36,7 @@ class SignUp extends React.Component {
       firstName: '',
       lastName: '',
       slackName: '',
+      currentTab: props.currentTab,
     };
 
     this.submitSignUpForm = this.submitSignUpForm.bind(this);
@@ -44,13 +45,12 @@ class SignUp extends React.Component {
     this.validatePassword = this.validatePassword.bind(this);
   }
 
-  componentDidMount(){
-    this.props.fetchOffices();
-  }
-
   static getDerivedStateFromProps(nextProps, previousState){
-    if(nextProps.currentTab === 0){
-      return {
+    let changes = { currentTab: nextProps.currentTab };
+    if(nextProps.currentTab === 0 || 
+      ( previousState.currentTab === 0 && nextProps.currentTab === 1)){
+      changes = {
+        ...changes,
         firstName: '',
         lastName: '',
         email: '',
@@ -62,7 +62,13 @@ class SignUp extends React.Component {
         emailErrorMessage: '',
       };
     }
-    return previousState;
+    if( previousState.currentTab === 0 &&
+      nextProps.currentTab === 1 &&
+      nextProps.offices.length === 0 &&
+      !nextProps.fetchingOffices){
+      nextProps.fetchOffices();
+    }
+    return changes;
   }
 
   submitSignUpForm(e) {
@@ -164,7 +170,7 @@ class SignUp extends React.Component {
                 inputProps={{
                   type: 'email',
                   name: 'email',
-                  maxLength: '64',
+                  maxLength: '256',
                   required: 'required',
                 }}
               />
@@ -215,7 +221,7 @@ class SignUp extends React.Component {
                 inputProps={{
                   type: 'text',
                   name: 'firstName',
-                  maxLength: '32',
+                  maxLength: '256',
                   required: 'required',
                 }}
               />
@@ -229,7 +235,7 @@ class SignUp extends React.Component {
                 inputProps={{
                   type: 'text',
                   name: 'lastName',
-                  maxLength: '32',
+                  maxLength: '256',
                   required: 'required',
                 }}
               />

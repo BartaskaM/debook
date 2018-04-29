@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,130 +15,140 @@ namespace tr3am.Data
 {
     public class EventsRepository : IEventsRepository
     {
-        private readonly List<Event> _items;
-        private readonly IOfficesRepository _officesRepository;
-        private readonly IUsersRepository _usersRepository;
-        private readonly IDevicesRepository _devicesRepository;
+        private readonly AppDbContext _dbContext;
 
-        public EventsRepository(IOfficesRepository officesRepository, IUsersRepository usersRepository, IDevicesRepository devicesRepository)
+        public EventsRepository(AppDbContext dbContext)
         {
-            _officesRepository = officesRepository;
-            _usersRepository = usersRepository;
-            _devicesRepository = devicesRepository;
-            OfficeDTO office = _officesRepository.GetById(1);
-            UserDTO user = _usersRepository.GetById(1);
-            FullDeviceDTO device = _devicesRepository.GetById(1);
-            _items = new List<Event>
-            {
-                new Event
-                {
-                    Id = 1,
-                    Action = "Check In",
-                    Device = Mapper.Map<FullDeviceDTO,Device>(_devicesRepository.GetById(1)),
-                    Office = Mapper.Map<OfficeDTO,Office>(_officesRepository.GetById(1)),
-                    User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(1)),
-                    CreatedOn = new DateTime(2018, 3, 1, 8, 0, 0),
-                },
-                new Event
-                {
-                    Id = 2,
-                    Action = "Check In",
-                    Device = Mapper.Map<FullDeviceDTO,Device>(_devicesRepository.GetById(1)),
-                    Office = Mapper.Map<OfficeDTO,Office>(_officesRepository.GetById(2)),
-                    User = Mapper.Map<UserDTO,User>(_usersRepository.GetById(2)),
-                    CreatedOn = new DateTime(2018, 4, 2, 8, 0, 0),
-                },
-            };
+            _dbContext = dbContext;
         }
 
-        public List<Event> GetAll()
+        public async Task<IEnumerable<EventDTO>> GetAll()
         {
-            return _items.ToList();
+            return await _dbContext.Events
+                .AsNoTracking()
+                .Include(x => x.Office)
+                .Include(x => x.User)
+                .Include(x => x.Device)
+                .Select(x => Mapper.Map<Event, EventDTO>(x))
+                .ToListAsync();
         }
 
-        public EventDTO GetById(int id)
+        public async Task<EventDTO> GetById(int id)
         {
-            var event_ = _items.FirstOrDefault(x => x.Id == id);
-            if (event_ == null)
+            var item = await _dbContext.Events
+                .AsNoTracking()
+                .Include(x => x.Office)
+                .Include(x => x.User)
+                .Include(x => x.Device)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (item == null)
             {
                 throw new InvalidEventException();
             }
 
-            return Mapper.Map<Event, EventDTO>(event_);
+            return Mapper.Map<Event, EventDTO>(item);
         }
 
-        public int Create(EventItemRequest request)
+        public async Task<int> Create(EventItemRequest request)
         {
-            var id = _items.Count() != 0 ? _items.Max(x => x.Id) + 1 : 1;
-            var office = _officesRepository.GetById(request.Office);
-            var device = _devicesRepository.GetById(request.Device);
-            var user = _usersRepository.GetById(request.User);
+            var office = _dbContext.Offices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
 
-            if (office == null)
+            var device = _dbContext.Devices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
+            
+
+            var user = _dbContext.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.UserId);
+
+            await Task.WhenAll(new Task[] { office, device, user });
+            if (office.Result == null)
             {
                 throw new InvalidOfficeException();
             }
-            if (device == null)
+            if (device.Result == null)
             {
                 throw new InvalidDeviceException();
             }
-            if (user == null)
+            if (user.Result == null)
             {
                 throw new InvalidUserException();
             }
-            var item = new Event
+
+            var newItem = new Event
             {
-                Id = id,
                 Action = request.Action,
-                Device = Mapper.Map<FullDeviceDTO, Device>(device),
-                Office = Mapper.Map<OfficeDTO, Office>(office),
-                User = Mapper.Map<UserDTO, User>(user),
+                DeviceId = device.Result.Id,
+                OfficeId = office.Result.Id,
+                UserId = user.Result.Id,
                 CreatedOn = request.Date_time,
             };
-            _items.Add(item);
-            return id;
+
+            _dbContext.Events.Add(newItem);
+            await _dbContext.SaveChangesAsync();
+
+            return newItem.Id;
         }
 
-        public void Update(int id, EventItemRequest request)
+        public async Task Update(int id, EventItemRequest request)
         {
-            var item = _items.FirstOrDefault(x => x.Id == id);
+            var item = await _dbContext.Events
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidEventException();
             }
 
-            var office = _officesRepository.GetById(request.Office);
-            var device = _devicesRepository.GetById(request.Device);
-            var user = _usersRepository.GetById(request.User);
+            var office = _dbContext.Offices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
 
-            if (office == null)
+            var device = _dbContext.Devices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
+
+
+            var user = _dbContext.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.UserId);
+
+            await Task.WhenAll(new Task[] { office, device, user });
+            if (office.Result == null)
             {
                 throw new InvalidOfficeException();
             }
-            if (device == null)
+            if (device.Result == null)
             {
                 throw new InvalidDeviceException();
             }
-            if (user == null)
+            if (user.Result == null)
             {
                 throw new InvalidUserException();
             }
+
             item.Action = request.Action;
-            item.Device = Mapper.Map<FullDeviceDTO, Device>(device);
-            item.Office = Mapper.Map<OfficeDTO, Office>(office);
-            item.User = Mapper.Map<UserDTO, User>(user);
+            item.DeviceId = device.Result.Id;
+            item.OfficeId = office.Result.Id;
+            item.UserId = user.Result.Id;
             item.CreatedOn = request.Date_time;
+
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var item = _items.FirstOrDefault(x => x.Id == id);
-
+            var item = await _dbContext.Events
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidEventException();
             }
-            _items.Remove(item);
+
+            _dbContext.Remove(item);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

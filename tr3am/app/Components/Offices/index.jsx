@@ -37,7 +37,7 @@ class Offices extends React.Component {
       <Grid item xs={12}>
         <Paper className={classes.headerPaper}>
           <Typography variant='display1'>
-            <Grid container>
+            <Grid container className={classes.headerContainer}>
               <Grid item xs>Country</Grid>
               <Grid item xs={2}>City</Grid>
               <Grid item xs={3}>Address</Grid>

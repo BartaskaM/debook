@@ -18,18 +18,21 @@ const device = ({ classes, device, users }) => {
         :
         <Typography className={classes.availabilityTagUnavailable}>Unavailable</Typography>
       }
-      <Typography className={classes.deviceCardTitle}>{device.brand}, {device.model} </Typography>
+      <Typography className={classes.deviceCardTitle}>
+        {device.brand}, {device.model}
+      </Typography>
       <Typography className={classes.deviceCardMainContent}>
         Identification number: <span className={classes.mainTextColor}> {device.id}</span>
       </Typography>
-      <Typography className={classes.deviceCardMainContent}>
+      <Typography noWrap className={classes.deviceCardMainContent}>
         OS: <span className={classes.mainTextColor}> {device.os}</span>
       </Typography>
       <Typography className={classes.deviceCardMainContent}>
         Location:
         <span className={classes.mainTextColor}> {device.location} </span>
       </Typography>
-      {device.available ? <Typography><br></br> </Typography>
+      {device.available ? 
+        <Typography className={classes.deviceCardMainContent}></Typography>
         :
         <Typography className={classes.deviceCardMainContent}>
           Custody of:

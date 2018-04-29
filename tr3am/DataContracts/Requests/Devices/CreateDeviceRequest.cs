@@ -9,9 +9,9 @@ namespace tr3am.DataContracts.Requests.Devices
     public class CreateDeviceRequest
     {
         [Required]
-        public int? Brand { get; set; }
+        public int BrandId { get; set; }
         [Required]
-        public int? Model { get; set; }
+        public int ModelId { get; set; }
         public string Image { get; set; }
         [MaxLength(255)]
         public string Name { get; set; }
@@ -23,11 +23,7 @@ namespace tr3am.DataContracts.Requests.Devices
         [Required]
         [MaxLength(255)]
         public string OS { get; set; }
-        [MaxLength(255)]
-        public string Group { get; set; }
-        [MaxLength(255)]
-        public string Subgroup { get; set; }
-        [MaxLength(2000)]
+        [MaxLength(1024)]
         public string Description { get; set; }
         [Required]
         public DateTime Purchased { get; set; }
@@ -35,6 +31,6 @@ namespace tr3am.DataContracts.Requests.Devices
         public string Vendor { get; set; }
         public float TaxRate { get; set; }
         [Required]
-        public int? Location { get; set; }
+        public int OfficeId { get; set; }
     }
 }

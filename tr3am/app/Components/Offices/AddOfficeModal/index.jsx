@@ -60,7 +60,7 @@ class AddOfficeModal extends React.Component {
       lat: parseFloat(this.state.LAT),
       lng: parseFloat(this.state.LNG),
     };
-
+    
     this.props.createOffice(newOffice, this.props.history);
   }
 
@@ -84,7 +84,7 @@ class AddOfficeModal extends React.Component {
     if (regLAT.exec(this.state.LAT) && regLNG.exec(this.state.LNG)) {
       return true;
     } else {
-      this.setState({ errorMessage: 'Wrong coordinates format' });
+      this.setState({ errorMessage: 'Wrong coordinates format. Use format: 00.000000' });
       return false;
     }
   }
@@ -122,7 +122,7 @@ class AddOfficeModal extends React.Component {
                     <Input
                       inputProps={{
                         name: 'country',
-                        maxLength: '255',
+                        maxLength: '256',
                         required: 'required',
                       }}
                       onChange={this.inputHandler} />
@@ -132,7 +132,7 @@ class AddOfficeModal extends React.Component {
                     <Input
                       inputProps={{
                         name: 'city',
-                        maxLength: '255',
+                        maxLength: '256',
                         required: 'required',
                       }}
                       onChange={this.inputHandler} />
@@ -142,7 +142,7 @@ class AddOfficeModal extends React.Component {
                     <Input
                       inputProps={{
                         name: 'address',
-                        maxLength: '255',
+                        maxLength: '256',
                         required: 'required',
                       }}
                       onChange={this.inputHandler} />
@@ -152,8 +152,11 @@ class AddOfficeModal extends React.Component {
                     <Input
                       inputProps={{
                         name: 'LAT',
+                        type: 'number',
+                        step: '0.000001',
                         maxLength: '12',
                         required: 'required',
+                        placeholder: '12.123456',
                       }}
                       onChange={this.inputHandler} />
                   </FormControl>
@@ -162,8 +165,11 @@ class AddOfficeModal extends React.Component {
                     <Input
                       inputProps={{
                         name: 'LNG',
+                        type: 'number',
+                        step: '0.000001',
                         maxLength: '12',
                         required: 'required',
+                        placeholder: '12.123456',
                       }}
                       onChange={this.inputHandler} />
                   </FormControl>
@@ -178,16 +184,16 @@ class AddOfficeModal extends React.Component {
             </Typography>
             <DialogActions>
               <Button
+                onClick={() => this.props.showAddOfficeModal(false)}
+                className={classes.button}>
+                CANCEL
+              </Button>
+              <Button
                 type='submit'
                 form='createNewOfficeForm'
                 color="primary"
                 className={classes.button}>
                 SUBMIT
-              </Button>
-              <Button
-                onClick={() => this.props.showAddOfficeModal(false)}
-                className={classes.button}>
-                CANCEL
               </Button>
             </DialogActions>
           </div>

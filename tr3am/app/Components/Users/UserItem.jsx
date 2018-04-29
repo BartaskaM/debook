@@ -5,6 +5,7 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import { withRouter } from 'react-router-dom';
+import VerifiedUser from 'material-ui-icons/VerifiedUser';
 
 import { ListItem } from 'material-ui/List';
 
@@ -21,7 +22,10 @@ const UserItem = ({ classes, user, history }) => {
               <Grid item xs={2}>{user.lastName}</Grid>
               <Grid item xs={3}>{user.email}</Grid>
               <Grid item xs={2}>{user.office.city}</Grid>
-              <Grid item xs={3}>{user.slack}</Grid>
+              <Grid item xs={2}>{user.slack ? user.slack : '-'}</Grid>
+              <Grid item xs={1}>
+                {user.role === 'admin' && <VerifiedUser/>}
+              </Grid>
             </Grid>
           </Typography>
         </Paper>
@@ -46,7 +50,7 @@ UserItem.propTypes = {
       lat: PropTypes.number.isRequired,
       lng: PropTypes.number.isRequired,
     }).isRequired,
-    slack: PropTypes.string.isRequired,
+    slack: PropTypes.string,
     role: PropTypes.string.isRequired,
   }).isRequired,
 };

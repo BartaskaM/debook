@@ -26,7 +26,7 @@ class BrandList extends React.Component {
       <Grid item xs={12}>
         <Paper className={classes.headerPaper}>
           <Typography variant='display1'>
-            <Grid container>
+            <Grid container className={classes.headerContainer}>
               <Grid item xs>Logo</Grid>
               <Grid item xs>Name</Grid>
               <Grid item xs>Model count</Grid>

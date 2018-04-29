@@ -25,12 +25,13 @@ class Users extends React.Component {
       <Grid item xs={12}>
         <Paper className={classes.headerPaper}>
           <Typography variant='display1'>
-            <Grid container>
+            <Grid container className={classes.headerContainer}>
               <Grid item xs={2}>FirstName</Grid>
               <Grid item xs={2}>LastName</Grid>
               <Grid item xs={3}>Email</Grid>
               <Grid item xs={2}>Office</Grid>
-              <Grid item xs={3}>Slack name</Grid>
+              <Grid item xs={2}>Slack name</Grid>
+              <Grid item xs={1}></Grid>
             </Grid>
           </Typography>
         </Paper>
@@ -74,7 +75,7 @@ Users.propTypes = {
       lat: PropTypes.number.isRequired,
       lng: PropTypes.number.isRequired,
     }).isRequired,
-    slack: PropTypes.string.isRequired,
+    slack: PropTypes.string,
   })).isRequired,
   fetchUsers: PropTypes.func.isRequired,
   fetchUsersLoading: PropTypes.bool.isRequired,

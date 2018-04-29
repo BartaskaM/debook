@@ -10,9 +10,10 @@ import { ListItem } from 'material-ui/List';
 import Styles from './Styles';
 
 const EventItem = ({ event, classes }) => {
+  const createdOn = new Date(event.createdOn);
   return (
     <Grid item xs>
-      <ListItem>
+      <ListItem button>
         <Paper className={classes.paper}>
           <Typography variant='display1'>
             <Grid container>
@@ -24,7 +25,7 @@ const EventItem = ({ event, classes }) => {
               </Grid>
               <Grid item xs>
                 <Link to={`/users/${event.user.id}`}>
-                  {event.user.email}
+                  {`${event.user.firstName} ${event.user.lastName}`}
                 </Link>
               </Grid>
               <Grid item xs>
@@ -32,7 +33,12 @@ const EventItem = ({ event, classes }) => {
                   {event.office.city}
                 </Link>
               </Grid>
-              <Grid item xs>{event.createdOn.toLocaleString()}</Grid>
+              <Grid item xs>
+                {
+                  `${createdOn.toLocaleDateString()}, 
+                  ${createdOn.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`
+                }
+              </Grid>
             </Grid>
           </Typography>
         </Paper>
