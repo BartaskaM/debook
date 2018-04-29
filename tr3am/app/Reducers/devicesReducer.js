@@ -27,6 +27,8 @@ const defaultState = {
   selectedDeviceReservations: [],
   fetchingDevices: false,
   fetchingDevicesErrorMessage: '',
+  returningDevice: false,
+  returningDeviceErrorMessage: '',
 };
 
 export default (state = defaultState, action) => {

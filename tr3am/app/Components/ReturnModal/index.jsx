@@ -11,8 +11,8 @@ import Select from 'material-ui/Select';
 import Button from 'material-ui/Button';
 import { MenuItem } from 'material-ui/Menu';
 import  { withStyles } from 'material-ui/styles';
-import { CircularProgress } from 'material-ui/Progress';
-
+import { CircularProgress, LinearProgress } from 'material-ui/Progress';
+import Typography from 'material-ui/Typography';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as officesActions from 'ActionCreators/officesActions';
 import Styles from './Styles';
@@ -64,6 +64,8 @@ class ReturnModal extends React.Component {
       showReturnDialog, 
       offices, 
       fetchOfficesLoading,
+      returningDevice,
+      returningDeviceErrorMessage,
     } = this.props;
     return(
       <Dialog
@@ -88,6 +90,13 @@ class ReturnModal extends React.Component {
             {fetchOfficesLoading &&
             <CircularProgress size={18} className={classes.buttonProgress}/>}
           </span>
+          { 
+            returningDeviceErrorMessage.length > 0 && 
+              <Typography className={classes.errorMessage} variant="display1">
+                { returningDeviceErrorMessage }
+              </Typography>
+          }
+          {returningDevice && <LinearProgress className={classes.loader}/>}
         </DialogContent>
         <DialogActions>
           <Button onClick={this.close} color="primary">
@@ -170,6 +179,8 @@ ReturnModal.propTypes = {
   fetchOffices: PropTypes.func.isRequired,
   fetchOfficesLoading: PropTypes.bool.isRequired,
   returnDevice: PropTypes.func.isRequired,
+  returningDeviceErrorMessage: PropTypes.string.isRequired,
+  returningDevice: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -179,6 +190,8 @@ const mapStateToProps = state => ({
   user: state.auth.user,
   offices: state.offices.offices,
   fetchOfficesLoading: state.offices.fetchOfficesLoading,
+  returningDeviceErrorMessage: state.devices.returningDeviceErrorMessage,
+  returningDevice: state.devices.returningDevice,
 });
 
 export default connect(mapStateToProps, { 
