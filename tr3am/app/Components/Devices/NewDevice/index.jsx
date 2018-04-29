@@ -34,9 +34,9 @@ class NewDevice extends React.Component {
     this.state = {
       deviceActive: true,
       deviceName: '',
-      // brand: props.brands[0] ? props.brands[0].id : null,
       brand: '',
       model: '',
+      modelForm: '',
       newModel: false,
       date: '',
       serialNumber: '',
@@ -44,7 +44,6 @@ class NewDevice extends React.Component {
       group: '',
       subgroup: '',
       description: '',
-      // location: props.offices[0] ? props.offices[0].id : null,
       location: '',
       vendor: '',
       taxRate: '',
@@ -57,6 +56,8 @@ class NewDevice extends React.Component {
     this.inputHandler = this.inputHandler.bind(this);
     this.inputHandlerForModel = this.inputHandlerForModel.bind(this);
     this.submitNewDeviceForm = this.submitNewDeviceForm.bind(this);
+    this.isDeviceUnique = this.isDeviceUnique.bind(this);
+    this.addNewModel = this.addNewModel.bind(this);
     
   }
 
@@ -68,24 +69,24 @@ class NewDevice extends React.Component {
   submitNewDeviceForm(e) {
     e.preventDefault();
     const results = {
-      Active: this.state.deviceActive,
-      Name: this.state.deviceName,
-      Brand: this.state.brand,
-      Model: this.state.model,
+      active: this.state.deviceActive,
+      name: this.state.deviceName,
+      brand: this.state.brand,
+      modelForm: this.state.modelForm,
+      model: this.state.model,
       newModel: this.state.newModel,
-      PurchaseDate: this.state.date,
-      Serial: this.state.serialNumber,
-      OS: this.state.os,
-      Greoup: this.state.group,
-      Subgroup: this.state.subgroup,
-      Description: this.state.description,
-      Location: this.state.location,
-      Vendor: this.state.vendor,
-      TaxRate: this.state.taxRate,
-      Someday: this.state.monthYear,
+      purchaseDate: this.state.date,
+      serial: this.state.serialNumber,
+      os: this.state.os,
+      group: this.state.group,
+      subgroup: this.state.subgroup,
+      description: this.state.description,
+      location: this.state.location,
+      vendor: this.state.vendor,
+      taxRate: this.state.taxRate,
+      someday: this.state.monthYear,
     };
     console.log(results);
-    
   }
 
   inputHandler(e) {
@@ -95,10 +96,25 @@ class NewDevice extends React.Component {
   inputHandlerForModel(e) {
     if (e.target.value === true)
     {
-      this.setState({ ['newModel']: e.target.value });
+      this.setState({ [e.target.name]: e.target.value });
+      this.setState({ ['newModel']: true });
     }
     else
+    {
       this.setState({ [e.target.name]: e.target.value });
+      this.setState({ ['newModel']: false });
+      this.setState({ ['model']: e.target.value });
+    }
+  }
+
+  isDeviceUnique()
+  {
+    return false;
+  }
+
+  addNewModel()
+  {
+    
   }
 
   render() {
@@ -122,6 +138,7 @@ class NewDevice extends React.Component {
       vendor,
       taxRate,
       monthYear,
+      modelForm,
     } = this.state;
 
     const newModelForm = this.state.newModel 
@@ -140,7 +157,7 @@ class NewDevice extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Grid justify='center'>
+        <Grid container justify='center'>
           <Paper className={classes.root}>
             <form method='POST' onSubmit={this.submitNewDeviceForm}>
               <FormGroup>
@@ -211,24 +228,15 @@ class NewDevice extends React.Component {
                   <InputLabel className={classes.fontSize}>Model</InputLabel>
                   <div  className={classes.wrapper}>
                     <Select
-                      value={model}
+                      value={modelForm}
                       autoWidth={true}
                       inputProps={{
-                        name: 'model',
+                        name: 'modelForm',
                         required: 'required',
                       }}
                       onChange={this.inputHandlerForModel}
                       className={classes.select}
                     >
-                      {/* {brands.models.map((model, i) => (
-                        <MenuItem
-                          key={i}
-                          value={model.id}
-                          className={classes.menuItemWidth}
-                        >
-                          {model.name}
-                        </MenuItem>
-                      ))} */}
                       <MenuItem
                         value={true}
                         className={classes.menuItemWidth}>Other model</MenuItem>
