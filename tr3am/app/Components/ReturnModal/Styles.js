@@ -26,6 +26,12 @@ const Styles = theme=>({
     top: '25%',
     right: -20,
   },
+  loader: {
+    marginTop: 20,
+  },
+  errorMessage: {
+    color: 'red',
+  },
 });
   
 export default Styles;

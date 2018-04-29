@@ -228,3 +228,22 @@ export const fetchDevices = (userId) => async dispatch =>{
     });
   }
 };
+
+export const returnDevice = (booking) => async dispatch =>{
+  dispatch({ type: devices.RETURN_DEVICE_START });
+  try{
+    await api.put(`/reservations/${booking.id}`, booking);
+    dispatch({ 
+      type: devices.RETURN_DEVICE_SUCCESS,
+      payload: {
+        deviceId: booking.deviceId,
+        officeId: booking.officeId,
+      },
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.RETURN_DEVICE_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};

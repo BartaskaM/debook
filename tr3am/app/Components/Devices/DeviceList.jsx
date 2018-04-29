@@ -48,11 +48,11 @@ class DeviceList extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps) {
-    const { devices, user, reservations } = nextProps;
-    return { bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user, reservations) };
+    const { devices } = nextProps;
+    return { bookButtonValues: DeviceList.formBookButtonValuesArray(devices) };
   }
 
-  static formBookButtonValuesArray(devices, user) {
+  static formBookButtonValuesArray(devices) {
     const bookButtonValues = [];
     devices.forEach(device => {
       if (device.available) {
@@ -62,7 +62,7 @@ class DeviceList extends React.Component {
           bookButtonValues[device.id] = 'Book device';
         }
       } else {
-        if (device.custody.id === user.id) {
+        if (device.userBooking) {
           bookButtonValues[device.id] = 'Return device';
         } else {
           bookButtonValues[device.id] = 'Device is booked';
@@ -73,9 +73,9 @@ class DeviceList extends React.Component {
   }
 
   getBookButtonValues() {
-    const { user, devices } = this.props;
+    const { devices } = this.props;
     this.setState({
-      bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user),
+      bookButtonValues: DeviceList.formBookButtonValuesArray(devices),
     });
   }
 
@@ -97,11 +97,11 @@ class DeviceList extends React.Component {
     }
     if (officeFilter.length > 0) {
       devicesToRender = devicesToRender.filter(device =>
-        officeFilter.includes(device.location));
+        officeFilter.includes(device.location.city) || device.userBooking);
     }
     if (showAvailable != showUnavailable) {
       if (showAvailable) {
-        devicesToRender = devicesToRender.filter(device => device.available);
+        devicesToRender = devicesToRender.filter(device => device.available || device.userBooking);
       }
       if (showUnavailable) {
         devicesToRender = devicesToRender.filter(device => !device.available);
@@ -131,7 +131,7 @@ class DeviceList extends React.Component {
   }
 
   renderDevices() {
-    const { user, classes, history, fetchingDevices } = this.props;
+    const { classes, history, fetchingDevices } = this.props;
     const { bookButtonValues } = this.state;
     const filteredDevices = this.filterDevices();
     return filteredDevices.length === 0 ?
@@ -155,7 +155,7 @@ class DeviceList extends React.Component {
                 <Button
                   variant='raised'
                   disabled={
-                    device.available ? false : device.custody.id === user.id ? false : true
+                    device.available ? false : device.userBooking ? false : true
                   }
                   color={device.available ? 'primary' : 'secondary'}
                   className={classes.buttonLeft}

@@ -22,7 +22,7 @@ const UserItem = ({ classes, user, history }) => {
               <Grid item xs={2}>{user.lastName}</Grid>
               <Grid item xs={3}>{user.email}</Grid>
               <Grid item xs={2}>{user.office.city}</Grid>
-              <Grid item xs={2}>{user.slack}</Grid>
+              <Grid item xs={2}>{user.slack || '-'}</Grid>
               <Grid item xs={1}>
                 {user.role === 'admin' && <VerifiedUser/>}
               </Grid>

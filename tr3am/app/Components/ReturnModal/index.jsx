@@ -11,16 +11,19 @@ import Select from 'material-ui/Select';
 import Button from 'material-ui/Button';
 import { MenuItem } from 'material-ui/Menu';
 import  { withStyles } from 'material-ui/styles';
-import { CircularProgress } from 'material-ui/Progress';
+import { CircularProgress, LinearProgress } from 'material-ui/Progress';
+import Typography from 'material-ui/Typography';
+
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as officesActions from 'ActionCreators/officesActions';
 import Styles from './Styles';
+import { reservationStatus } from 'Constants/Enums';
 
 class ReturnModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      selectedOffice: props.user.office.city,
+      selectedOffice: props.user.office.id,
     };
     this.handleChange = this.handleChange.bind(this);
     this.returnDevice = this.returnDevice.bind(this);
@@ -32,21 +35,18 @@ class ReturnModal extends React.Component {
   }
 
   returnDevice(){
-    const { devices, setDevices, selectedDevice } = this.props;
-    const newDevices = devices.map(device => {
-      if (device.id === selectedDevice) {
-        return {
-          ...device,
-          available: true,
-          custody: null,
-          location: this.state.selectedOffice,
-        };
-      }
-      return device;
-    });
-    setDevices(newDevices);
-    this.close();
-    //Post changes
+    const { user, devices, returnDevice, selectedDevice } = this.props;
+    const deviceBooking = devices.find(dev => dev.id == selectedDevice).userBooking;
+    const request = {
+      id: deviceBooking.id,
+      userId: user.id,
+      deviceId: selectedDevice,
+      from: deviceBooking.from.toISOString(),
+      to: deviceBooking.to.toISOString(),
+      status: reservationStatus.completed,
+      officeId: this.state.selectedOffice,
+    };
+    returnDevice(request);
   }
   
   handleChange(e){
@@ -65,6 +65,8 @@ class ReturnModal extends React.Component {
       showReturnDialog, 
       offices, 
       fetchOfficesLoading,
+      returningDevice,
+      returningDeviceErrorMessage,
     } = this.props;
     return(
       <Dialog
@@ -81,7 +83,7 @@ class ReturnModal extends React.Component {
             <Select value={this.state.selectedOffice} onChange={this.handleChange}>
               {offices
                 .map( (office, i) =>
-                  <MenuItem key={i} value={office.city}>
+                  <MenuItem key={i} value={office.id}>
                     {office.city}
                   </MenuItem>
                 )}
@@ -89,6 +91,13 @@ class ReturnModal extends React.Component {
             {fetchOfficesLoading &&
             <CircularProgress size={18} className={classes.buttonProgress}/>}
           </span>
+          { 
+            returningDeviceErrorMessage.length > 0 && 
+              <Typography className={classes.errorMessage} variant="display1">
+                { returningDeviceErrorMessage }
+              </Typography>
+          }
+          {returningDevice && <LinearProgress className={classes.loader}/>}
         </DialogContent>
         <DialogActions>
           <Button onClick={this.close} color="primary">
@@ -170,6 +179,9 @@ ReturnModal.propTypes = {
   })).isRequired,
   fetchOffices: PropTypes.func.isRequired,
   fetchOfficesLoading: PropTypes.bool.isRequired,
+  returnDevice: PropTypes.func.isRequired,
+  returningDeviceErrorMessage: PropTypes.string.isRequired,
+  returningDevice: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -179,6 +191,8 @@ const mapStateToProps = state => ({
   user: state.auth.user,
   offices: state.offices.offices,
   fetchOfficesLoading: state.offices.fetchOfficesLoading,
+  returningDeviceErrorMessage: state.devices.returningDeviceErrorMessage,
+  returningDevice: state.devices.returningDevice,
 });
 
 export default connect(mapStateToProps, { 

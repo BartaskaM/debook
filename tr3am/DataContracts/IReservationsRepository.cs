@@ -11,7 +11,7 @@ namespace tr3am.DataContracts
         Task<ReservationDto> GetById(int id);
         Task<IEnumerable<ReservationDto>> GetByDeviceId(int id, bool showAll = false);
         Task<int> Create(ReservationRequest request, bool booking);
-        Task Update(int id, ReservationRequest request);
+        Task Update(int id, ReservationUpdateRequest request);
         Task Delete(int id);
     }
 }

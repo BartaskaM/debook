@@ -134,7 +134,7 @@ namespace tr3am.Data
             return newItem.Id;
         }
 
-        public async Task Update(int id, ReservationRequest request)
+        public async Task Update(int id, ReservationUpdateRequest request)
         {
             var item = await _dbContext.Reservations
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -143,32 +143,46 @@ namespace tr3am.Data
                 throw new InvalidReservationException();
             }
 
-            var device = _dbContext.Devices
-               .AsNoTracking()
-               .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
+            var office = _dbContext.Offices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
 
+            var device = _dbContext.Devices
+               .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
 
             var user = _dbContext.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-            await Task.WhenAll(device, user);
+            await Task.WhenAll(device, user, office);
+
             if (device.Result == null)
             {
                 throw new InvalidDeviceException();
             }
+
             if (user.Result == null)
             {
                 throw new InvalidUserException();
             }
 
-            await CheckIfDateAvailable(request.From, request.To, device.Result);
+            if (office.Result == null)
+            {
+                throw new InvalidOfficeException();
+            }
 
             item.Status = request.Status;
             item.DeviceId = device.Result.Id;
             item.UserId = user.Result.Id;
             item.From = request.From;
             item.To = request.To;
+            if (request.Status == Status.Completed)
+            {
+                device.Result.UserId = null;
+                device.Result.Available = true;
+                device.Result.OfficeId = request.OfficeId;
+            }
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
@@ -206,6 +220,8 @@ namespace tr3am.Data
                     }
                 }
             });
+
+            await _dbContext.SaveChangesAsync();
         }
 
         private DateTime RoundTime(DateTime date)
@@ -227,19 +243,21 @@ namespace tr3am.Data
                 throw new NegativeDateException();
             }
 
-            var conflictingReservationsCount = await _dbContext.Reservations
-                .CountAsync(x => x.Device.Id == device.Id &&
+            var reservations = await _dbContext.Reservations
+                .Where(x => x.Device.Id == device.Id &&
                             (x.Status == Status.CheckedIn || x.Status == Status.OverDue
-                                                          || x.Status == Status.Pending) &&
-                            (CheckIfDateIsWithinReservation(from, x)
-                             || CheckIfDateIsWithinReservation(to, x)
-                             || CheckIfReservationIsWithinDates(from, to, x))
-                );
-            if (conflictingReservationsCount > 0)
-            {
-                throw new UsedDateException();
-            }
+                                                          || x.Status == Status.Pending))
+                .ToListAsync();
 
+            foreach (var reservation in reservations)
+            {
+                if (CheckIfDateIsWithinReservation(from, reservation)
+                    || CheckIfDateIsWithinReservation(to, reservation)
+                    || CheckIfReservationIsWithinDates(from, to, reservation))
+                {
+                    throw new UsedDateException();
+                }
+            }
         }
         private bool CheckIfDateIsWithinReservation(DateTime date, Reservation reservation)
         {
@@ -249,5 +267,6 @@ namespace tr3am.Data
         {
             return reservation.To < to && reservation.From > from;
         }
+
     }
 }

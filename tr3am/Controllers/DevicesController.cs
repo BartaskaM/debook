@@ -126,8 +126,7 @@ namespace tr3am.Controllers
         [HttpGet("{id}/reservations")]
         public async Task<IEnumerable<ReservationDto>> GetDeviceReservations(int id, [FromQuery]bool showAll)
         {
-            var x = await _reservationsRepository.GetByDeviceId(id, showAll);
-            return x;
+            return await _reservationsRepository.GetByDeviceId(id, showAll);
         }
     }
 }
