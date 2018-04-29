@@ -322,7 +322,7 @@ SignUp.propTypes = {
     lng: PropTypes.number.isRequired,
   })).isRequired,
   fetchOfficesLoading: PropTypes.bool.isRequired,
-  fetchOfficesErrorMessage: PropTypes.string.isRequired,
+  fetchOfficesErrorMessage: PropTypes.string,
   fetchOffices: PropTypes.func.isRequired,
 };
 

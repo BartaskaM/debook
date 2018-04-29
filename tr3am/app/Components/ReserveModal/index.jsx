@@ -185,8 +185,8 @@ class ReserveModal extends React.Component {
       currentDateError,
       reserving,
       reservingErrorMessage,
-      cancelingReservation,
-      cancelingReservationErrorMessage,
+      cancelReservationLoading,
+      cancelReservationErrorMessage,
     } = this.props;
     return (
       <div>
@@ -242,7 +242,7 @@ class ReserveModal extends React.Component {
               <FormHelperText className={classes.helperText}>{returnDateError}</FormHelperText>
             </FormControl>
             { !showDetails && <ReservationsTable /> }
-            { (reserving || cancelingReservation) && <LinearProgress/> }
+            { (reserving || cancelReservationLoading) && <LinearProgress/> }
             { 
               reservingErrorMessage && 
               <Typography className={classes.errorMessage} variant="display1">
@@ -250,9 +250,9 @@ class ReserveModal extends React.Component {
               </Typography>
             }
             { 
-              cancelingReservationErrorMessage && 
+              cancelReservationErrorMessage && 
               <Typography className={classes.errorMessage} variant="display1">
-                { cancelingReservationErrorMessage }
+                { cancelReservationErrorMessage }
               </Typography>
             }
           </DialogContent>
@@ -360,10 +360,10 @@ ReserveModal.propTypes = {
   currentDateError: PropTypes.string.isRequired,
   reserveDevice: PropTypes.func.isRequired,
   reserving: PropTypes.bool.isRequired,
-  reservingErrorMessage: PropTypes.string.isRequired,
+  reservingErrorMessage: PropTypes.string,
   cancelReservation: PropTypes.func.isRequired,
-  cancelingReservation: PropTypes.bool.isRequired,
-  cancelingReservationErrorMessage: PropTypes.string.isRequired,
+  cancelReservationLoading: PropTypes.bool.isRequired,
+  cancelReservationErrorMessage: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
@@ -379,8 +379,8 @@ const mapStateToProps = (state) => ({
   currentDateError: state.devices.currentDateError,
   reserving: state.devices.reserving,
   reservingErrorMessage: state.devices.reservingErrorMessage,
-  cancelingReservation: state.devices.cancelingReservation,
-  cancelingReservationErrorMessage: state.devices.cancelingReservationErrorMessage,
+  cancelReservationLoading: state.devices.cancelReservationLoading,
+  cancelReservationErrorMessage: state.devices.cancelReservationErrorMessage,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(ReserveModal));

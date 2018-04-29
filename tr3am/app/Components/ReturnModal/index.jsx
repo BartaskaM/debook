@@ -180,7 +180,7 @@ ReturnModal.propTypes = {
   fetchOffices: PropTypes.func.isRequired,
   fetchOfficesLoading: PropTypes.bool.isRequired,
   returnDevice: PropTypes.func.isRequired,
-  returningDeviceErrorMessage: PropTypes.string.isRequired,
+  returningDeviceErrorMessage: PropTypes.string,
   returningDevice: PropTypes.bool.isRequired,
 };
 
