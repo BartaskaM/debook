@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +21,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ReservationDTO>> GetAll([FromQuery]bool showAll)
+        public async Task<IEnumerable<ReservationDto>> GetAll([FromQuery]bool showAll)
         {
             return await _reservationsRepository.GetAll(showAll);
         }

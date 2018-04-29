@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
@@ -26,9 +23,9 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ShortDeviceDTO>> GetAll()
+        public async Task<IEnumerable<ShortDeviceDto>> GetAll([FromQuery]int userId)
         {
-            return await _devicesRepository.GetAll();
+            return await _devicesRepository.GetAll(userId);
         }
 
         [HttpGet("{id}")]
@@ -127,9 +124,10 @@ namespace tr3am.Controllers
         }
 
         [HttpGet("{id}/reservations")]
-        public async Task<IEnumerable<ReservationDTO>> GetDeviceReservations(int id, [FromQuery]bool showAll)
+        public async Task<IEnumerable<ReservationDto>> GetDeviceReservations(int id, [FromQuery]bool showAll)
         {
-            return await _reservationsRepository.GetByDeviceId(id, showAll);
+            var x = await _reservationsRepository.GetByDeviceId(id, showAll);
+            return x;
         }
     }
 }

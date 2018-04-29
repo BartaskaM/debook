@@ -39,7 +39,6 @@ class ReserveModal extends React.Component {
     this.handleStartChange = this.handleStartChange.bind(this);
     this.cancelReservation = this.cancelReservation.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
-    this.removeFocusClassFromElement = this.removeFocusClassFromElement.bind(this);
   }
 
   handleDateChange(date) {
@@ -123,24 +122,16 @@ class ReserveModal extends React.Component {
       returnDate,
       user,
       reserveDevice,
-      setReservations,
-      reservations,
     } = this.props;
     if (!this.checkForErrors(returnDate, currentDate) && !checkIfLate(currentDate)) {
       const reservation = {
-        device: selectedDevice,
+        deviceId: selectedDevice,
         from: currentDate,
         to: returnDate,
-        user: user.id,
+        userId: user.id,
         status: reservationStatus.pending,
       };
-      reserveDevice(reservation);
-      //This || will be removed in future implementation
-      //     \/
-      const newReservations = [...reservations];
-      newReservations.push(reservation);
-      setReservations(newReservations);
-      //Post booking info
+      reserveDevice(reservation, user);
     }
   }
 
@@ -173,10 +164,6 @@ class ReserveModal extends React.Component {
     const { currentDate, returnDate } = this.props;
     this.roundTimes();
     this.checkForErrors(returnDate, currentDate);
-  }
-  
-  removeFocusClassFromElement(){
-    document.querySelector('.MuiFormLabel-focused-83').classList.remove('MuiFormLabel-focused-83');
   }
 
   render() {
@@ -223,7 +210,6 @@ class ReserveModal extends React.Component {
               format="DD/MM/YYYY"
               value={currentDate}
               onChange={this.handleDateChange}
-              onBlur={this.removeFocusClassFromElement}
               className={classes.inputField}
               InputLabelProps={{ classes: { root: classes.label } }}
             />
@@ -283,21 +269,48 @@ class ReserveModal extends React.Component {
 
 ReserveModal.propTypes = {
   setReturnDate: PropTypes.func.isRequired,
-  returnDate: PropTypes.object.isRequired,
-  currentDate: PropTypes.object.isRequired,
+  returnDate: PropTypes.instanceOf(Date).isRequired,
+  currentDate: PropTypes.instanceOf(Date).isRequired,
   returnDateError: PropTypes.string.isRequired,
   setReturnDateError: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   selectedDevice: PropTypes.number,
   devices: PropTypes.arrayOf(PropTypes.shape({
-    brand: PropTypes.string.isRequired,
-    model: PropTypes.string.isRequired,
-    os: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired,
-    custody: PropTypes.number,
-    available: PropTypes.bool.isRequired,
-    active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    available: PropTypes.bool.isRequired,
+    brand: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      brandName: PropTypes.string.isRequired,
+    }).isRequired,
+    model: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    identificationNum: PropTypes.number.isRequired,
+    os: PropTypes.string.isRequired,
+    location: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      city: PropTypes.string.isRequired,
+    }).isRequired,
+    custody: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+    }),
+    userBooking: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
+      status: PropTypes.number.isRequired,
+    }),
+    userReservation: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
+      status: PropTypes.number.isRequired,
+    }),
   })).isRequired,
   user: PropTypes.shape({
     id: PropTypes.number.isRequired,
@@ -312,7 +325,7 @@ ReserveModal.propTypes = {
       lng: PropTypes.number.isRequired,
       address: PropTypes.string.isRequired,
     }).isRequired,
-    slack: PropTypes.string.isRequired,
+    slack: PropTypes.string,
   }),
   setDevices: PropTypes.func.isRequired,
   setCurrentDate: PropTypes.func.isRequired,

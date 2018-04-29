@@ -66,7 +66,7 @@ MainTabs.propTypes = {
       lng: PropTypes.number.isRequired,
       address: PropTypes.string.isRequired,
     }).isRequired,
-    slack: PropTypes.string.isRequired,
+    slack: PropTypes.string,
     role: PropTypes.string.isRequired,
   }).isRequired,
 };

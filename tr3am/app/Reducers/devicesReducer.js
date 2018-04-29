@@ -24,6 +24,8 @@ const defaultState = {
   fetchingDeviceReservations: false,
   fetchingDeviceReservationsErrorMessage: '',
   selectedDeviceReservations: [],
+  fetchingDevices: false,
+  fetchingDevicesErrorMessage: '',
 };
 
 export default (state = defaultState, action) => {
@@ -177,11 +179,15 @@ export default (state = defaultState, action) => {
       return {...state, booking: true, bookingErrorMessage: ''};
     }
     case devices.BOOK_SUCCESS: {
-      const { bookedDeviceId, userId } = action.payload;
+      const { bookedDeviceId, user, userBooking } = action.payload;
       const updatedDevices = state.devices.map(device => {
         if (device.id === bookedDeviceId) {
-          //Make additional changes in future implementation
-          return { ...device, custody: userId, available: false };
+          return { 
+            ...device,
+            custody: user,
+            userBooking,
+            available: false,
+          };
         }
         return device;
       });
@@ -201,11 +207,14 @@ export default (state = defaultState, action) => {
       return {...state, reserving: true, reservingErrorMessage: ''};
     }
     case devices.RESERVE_SUCCESS: {
-      const { reservedDeviceId } = action.payload;
+      const { reservedDeviceId, userReservation } = action.payload;
       const updatedDevices = state.devices.map(device => {
         if (device.id === reservedDeviceId) {
           //Make additional changes in future implementation
-          return device;
+          return {
+            ...device,
+            userReservation,
+          };
         }
         return device;
       });
@@ -230,17 +239,9 @@ export default (state = defaultState, action) => {
       };
     }
     case devices.FETCH_DEVICE_RESERVATIONS_SUCCESS: {
-
       return {
         ...state,
-        selectedDeviceReservations: action.payload.map(x => {
-          const { from, to, ...rest} = x;
-          return {
-            ...rest,
-            from: new Date(from),
-            to: new Date(to),
-          };
-        }),
+        selectedDeviceReservations: action.payload,
         fetchingDeviceReservations: false,
       };
     }
@@ -249,6 +250,27 @@ export default (state = defaultState, action) => {
         ...state,
         fetchingDeviceReservations: false,
         fetchingDeviceReservationsErrorMessage: action.payload,
+      };
+    }
+    case devices.FETCH_DEVICES_START: {
+      return {
+        ...state,
+        fetchingDevices: true,
+        fetchingDevicesErrorMessage: '',
+      };
+    }
+    case devices.FETCH_DEVICES_SUCCESS: {
+      return {
+        ...state,
+        devices: action.payload,
+        fetchingDevices: false,
+      };
+    }
+    case devices.FETCH_DEVICES_ERROR: {
+      return { 
+        ...state,
+        fetchingDevices: false,
+        fetchingDevicesErrorMessage: action.payload,
       };
     }
     default: return state;

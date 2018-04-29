@@ -31,6 +31,10 @@ const Styles = theme=>({
   deviceItem: {
     height: '100%',
   },
+  noItems: {
+    width: '100%',
+    padding: 20,
+  },
 });
   
 export default Styles;
