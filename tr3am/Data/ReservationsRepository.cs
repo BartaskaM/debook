@@ -220,6 +220,8 @@ namespace tr3am.Data
                     }
                 }
             });
+
+            await _dbContext.SaveChangesAsync();
         }
 
         private DateTime RoundTime(DateTime date)
@@ -241,19 +243,21 @@ namespace tr3am.Data
                 throw new NegativeDateException();
             }
 
-            var conflictingReservationsCount = await _dbContext.Reservations
-                .CountAsync(x => x.Device.Id == device.Id &&
+            var reservations = await _dbContext.Reservations
+                .Where(x => x.Device.Id == device.Id &&
                             (x.Status == Status.CheckedIn || x.Status == Status.OverDue
-                                                          || x.Status == Status.Pending) &&
-                            (CheckIfDateIsWithinReservation(from, x)
-                             || CheckIfDateIsWithinReservation(to, x)
-                             || CheckIfReservationIsWithinDates(from, to, x))
-                );
-            if (conflictingReservationsCount > 0)
-            {
-                throw new UsedDateException();
-            }
+                                                          || x.Status == Status.Pending))
+                .ToListAsync();
 
+            foreach (var reservation in reservations)
+            {
+                if (CheckIfDateIsWithinReservation(from, reservation)
+                    || CheckIfDateIsWithinReservation(to, reservation)
+                    || CheckIfReservationIsWithinDates(from, to, reservation))
+                {
+                    throw new UsedDateException();
+                }
+            }
         }
         private bool CheckIfDateIsWithinReservation(DateTime date, Reservation reservation)
         {
@@ -263,5 +267,6 @@ namespace tr3am.Data
         {
             return reservation.To < to && reservation.From > from;
         }
+
     }
 }
