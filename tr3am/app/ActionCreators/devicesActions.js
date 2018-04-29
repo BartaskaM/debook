@@ -264,9 +264,13 @@ export const cancelReservation = (reservation) => async dispatch => {
 };
 
 export const checkIn = (reservation, user) => async dispatch => {
-  dispatch({ type: devices.CHECK_IN_START });
+  dispatch({ type: devices.CHECK_IN_START, payload: reservation.deviceId });
   try{
-    await api.put(`/reservations/${reservation.id}`, reservation);
+    await api.put(`/reservations/${reservation.id}`, {
+      ...reservation,
+      from: reservation.from.toISOString(),
+      to: reservation.from.toISOString(),
+    });
     dispatch({ 
       type: devices.CHECK_IN_SUCCESS,
       payload: {

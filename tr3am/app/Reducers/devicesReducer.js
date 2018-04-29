@@ -295,7 +295,7 @@ export default (state = defaultState, action) => {
           }
           return dev;
         }),
-        fetchingDevices: false,
+        returningDevice: false,
         showReturnModal: false,
       };
     }
@@ -340,7 +340,7 @@ export default (state = defaultState, action) => {
     case devices.CHECK_IN_START: {
       return {
         ...state,
-        checkInLoading: true,
+        checkInLoading: action.payload,
         checkInErrorMessage: null,
       };
     }

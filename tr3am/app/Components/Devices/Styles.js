@@ -35,6 +35,9 @@ const Styles = theme=>({
     width: '100%',
     padding: 20,
   },
+  itemContainer: {
+    width: '100%',
+  },
 });
   
 export default Styles;
