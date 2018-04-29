@@ -28,7 +28,7 @@ class ReservationsTable extends React.Component {
       reservationsForThisDay.length == 0 ? 
         this.renderNoReservations() :
         reservationsForThisDay
-          .sort(res => res.from)
+          .sort((a, b) => a.from.getTime() - b.from.getTime())
           .map((res, i) => {
             const { from, to, user } = res;
             return <Row key={i} first={`${dateToHours(from)} - ${dateToHours(to)}`} 
