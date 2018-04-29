@@ -100,7 +100,7 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-            await Task.WhenAll(new Task[] { device, user });
+            await Task.WhenAll(device, user);
             if (device.Result == null)
             {
                 throw new InvalidDeviceException();
@@ -148,7 +148,7 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-            await Task.WhenAll(new Task[] { device, user });
+            await Task.WhenAll(device, user);
             if (device.Result == null)
             {
                 throw new InvalidDeviceException();

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -66,7 +65,7 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.ModelId);
 
-            await Task.WhenAll(new Task[] { office, brand, model });
+            await Task.WhenAll(office, brand, model);
             if (office.Result == null)
             {
                 throw new InvalidOfficeException();
@@ -138,7 +137,7 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.ModelId);
 
-            await Task.WhenAll(new Task[] { office, brand, model });
+            await Task.WhenAll(office, brand, model);
             if (office.Result == null)
             {
                 throw new InvalidOfficeException();

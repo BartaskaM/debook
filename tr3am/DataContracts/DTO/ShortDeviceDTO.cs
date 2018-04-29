@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using tr3am.DataContracts.DTO;
-
-namespace tr3am.DataContracts.DTO
+﻿namespace tr3am.DataContracts.DTO
 {
     public class ShortDeviceDto
     {

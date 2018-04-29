@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore.Storage.Internal;
 using tr3am.Data.Entities;
 using tr3am.DataContracts.AutoMapper;
 using tr3am.DataContracts.DTO;
-using tr3am.DataContracts.Enums;
 
 namespace tr3am.DataContracts
 {

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -64,7 +63,7 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-            await Task.WhenAll(new Task[] { office, device, user });
+            await Task.WhenAll(office, device, user);
             if (office.Result == null)
             {
                 throw new InvalidOfficeException();
@@ -115,7 +114,7 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-            await Task.WhenAll(new Task[] { office, device, user });
+            await Task.WhenAll(office, device, user);
             if (office.Result == null)
             {
                 throw new InvalidOfficeException();

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using tr3am.Data.Entities;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Offices;
 
