@@ -142,7 +142,6 @@ class ReserveModal extends React.Component {
       selectedDevice,
       cancelReservation,
     } = this.props;
-    console.log(selectedDevice);
     const deviceBooking = devices.find(dev => dev.id == selectedDevice).userReservation;
     const request = {
       id: deviceBooking.id,
@@ -186,6 +185,8 @@ class ReserveModal extends React.Component {
       currentDateError,
       reserving,
       reservingErrorMessage,
+      cancelingReservation,
+      cancelingReservationErrorMessage,
     } = this.props;
     return (
       <div>
@@ -241,11 +242,17 @@ class ReserveModal extends React.Component {
               <FormHelperText className={classes.helperText}>{returnDateError}</FormHelperText>
             </FormControl>
             { !showDetails && <ReservationsTable /> }
-            { reserving && <LinearProgress/> }
+            { (reserving || cancelingReservation) && <LinearProgress/> }
             { 
               reservingErrorMessage.length > 0 && 
               <Typography className={classes.errorMessage} variant="display1">
                 { reservingErrorMessage }
+              </Typography>
+            }
+            { 
+              cancelingReservationErrorMessage.length > 0 && 
+              <Typography className={classes.errorMessage} variant="display1">
+                { cancelingReservationErrorMessage }
               </Typography>
             }
           </DialogContent>
@@ -355,6 +362,8 @@ ReserveModal.propTypes = {
   reserving: PropTypes.bool.isRequired,
   reservingErrorMessage: PropTypes.string.isRequired,
   cancelReservation: PropTypes.func.isRequired,
+  cancelingReservation: PropTypes.bool.isRequired,
+  cancelingReservationErrorMessage: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -370,6 +379,8 @@ const mapStateToProps = (state) => ({
   currentDateError: state.devices.currentDateError,
   reserving: state.devices.reserving,
   reservingErrorMessage: state.devices.reservingErrorMessage,
+  cancelingReservation: state.devices.cancelingReservation,
+  cancelingReservationErrorMessage: state.devices.cancelingReservationErrorMessage,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(ReserveModal));

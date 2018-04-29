@@ -319,8 +319,8 @@ export default (state = defaultState, action) => {
     case devices.CANCEL_RESERVATION_START: {
       return {
         ...state,
-        returningDevice: true,
-        returningDeviceErrorMessage: '',
+        cancelingReservation: true,
+        cancelingReservationErrorMessage: '',
       };
     }
     case devices.CANCEL_RESERVATION_SUCCESS: {
