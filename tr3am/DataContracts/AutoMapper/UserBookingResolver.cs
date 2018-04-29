@@ -21,8 +21,8 @@ namespace tr3am.DataContracts.AutoMapper
                 .Select(res => new UserDeviceReservationDto
                 {
                     Id = res.Id,
-                    From = res.From,
-                    To = res.To,
+                    From = DateTime.SpecifyKind(res.From, DateTimeKind.Utc),
+                    To = DateTime.SpecifyKind(res.To, DateTimeKind.Utc),
                     Status = res.Status,
                 })
                 .FirstOrDefault();

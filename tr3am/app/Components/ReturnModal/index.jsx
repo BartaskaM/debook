@@ -148,14 +148,14 @@ ReturnModal.propTypes = {
     }),
     userBooking: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      from: PropTypes.string.isRequired,
-      to: PropTypes.string.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
       status: PropTypes.number.isRequired,
     }),
     userReservation: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      from: PropTypes.string.isRequired,
-      to: PropTypes.string.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
       status: PropTypes.number.isRequired,
     }),
   })).isRequired,

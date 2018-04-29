@@ -38,8 +38,16 @@ namespace tr3am.DataContracts
                     .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Office))
                     .ForMember(dest => dest.Custody, opt => opt.MapFrom(src => src.User));
                 cfg.CreateMap<FullDeviceDto, Device>();
-                cfg.CreateMap<Reservation, ReservationDto>();
-                cfg.CreateMap<Reservation, UserDeviceReservationDto>();
+                cfg.CreateMap<Reservation, ReservationDto>()
+                    .ForMember(dest => dest.From,
+                        opt => opt.MapFrom(src => DateTime.SpecifyKind(src.From, DateTimeKind.Utc)))
+                    .ForMember(dest => dest.To,
+                        opt => opt.MapFrom(src => DateTime.SpecifyKind(src.To, DateTimeKind.Utc)));
+                cfg.CreateMap<Reservation, UserDeviceReservationDto>()
+                    .ForMember(dest => dest.From,
+                        opt => opt.MapFrom(src => DateTime.SpecifyKind(src.From, DateTimeKind.Utc)))
+                    .ForMember(dest => dest.To,
+                        opt => opt.MapFrom(src => DateTime.SpecifyKind(src.To, DateTimeKind.Utc)));
                 cfg.CreateMap<Event, EventDto>();
                 
             });

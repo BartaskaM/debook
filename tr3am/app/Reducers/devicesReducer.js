@@ -179,11 +179,15 @@ export default (state = defaultState, action) => {
       return {...state, booking: true, bookingErrorMessage: ''};
     }
     case devices.BOOK_SUCCESS: {
-      const { bookedDeviceId, userId } = action.payload;
+      const { bookedDeviceId, user, userBooking } = action.payload;
       const updatedDevices = state.devices.map(device => {
         if (device.id === bookedDeviceId) {
-          //Make additional changes in future implementation
-          return { ...device, custody: userId, available: false };
+          return { 
+            ...device,
+            custody: user,
+            userBooking,
+            available: false,
+          };
         }
         return device;
       });
@@ -203,11 +207,14 @@ export default (state = defaultState, action) => {
       return {...state, reserving: true, reservingErrorMessage: ''};
     }
     case devices.RESERVE_SUCCESS: {
-      const { reservedDeviceId } = action.payload;
+      const { reservedDeviceId, userReservation } = action.payload;
       const updatedDevices = state.devices.map(device => {
         if (device.id === reservedDeviceId) {
           //Make additional changes in future implementation
-          return device;
+          return {
+            ...device,
+            userReservation,
+          };
         }
         return device;
       });

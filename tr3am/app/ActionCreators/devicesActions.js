@@ -111,15 +111,27 @@ export const showReturnModal = (selectedDevice) => {
 export const checkInDevice = (deviceId, userId) => {
   return { type: devices.CHECK_IN_DEVICE, payload: {deviceId, userId}};
 };
-export const bookDevice = (bookRequest) => async dispatch =>{
+export const bookDevice = (bookRequest, user) => async dispatch =>{
   dispatch({ type: devices.BOOK_START });
   try{
-    await api.post('/reservations?booking=true', bookRequest);
+    const id = await api.post('/reservations?booking=true', bookRequest);
+    const userBooking = {
+      id,
+      from: bookRequest.from,
+      to: bookRequest.to,
+      status: bookRequest.status,
+    };
     dispatch({ 
       type: devices.BOOK_SUCCESS,
       payload: {
         bookedDeviceId: bookRequest.device,
-        userId: bookRequest.user,
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        },
+        userBooking,
       },
     });
   } catch(e) {
@@ -133,15 +145,22 @@ export const bookDevice = (bookRequest) => async dispatch =>{
 export const reserveDevice = (reserveRequest) => async dispatch =>{
   dispatch({ type: devices.RESERVE_START });
   try{
-    await api.post('/reservations', { 
+    const id = await api.post('/reservations', { 
       from: reserveRequest.from.toISOString(),
       to: reserveRequest.to.toISOString(),
       ...reserveRequest,
     });
+    const userReservation = {
+      id,
+      from: reserveRequest.from,
+      to: reserveRequest.to,
+      status: reserveRequest.status,
+    };
     dispatch({ 
       type: devices.RESERVE_SUCCESS,
       payload: {
         bookedDeviceId: reserveRequest.device,
+        userReservation,
       },
     });
   } catch(e) {
@@ -179,6 +198,7 @@ export const fetchDevices = (userId) => async dispatch =>{
     //Use identity later on
     const response = await api.get(`/devices?userId=${userId}`);
     const fetchedDevices = response.data.map(dev => ({
+      ...dev,
       userBooking: dev.userBooking ? 
         {
           ...dev.userBooking,
@@ -187,11 +207,10 @@ export const fetchDevices = (userId) => async dispatch =>{
         } : null,
       userReservation: dev.userReservation ? 
         {
-          ...dev.userBooking,
+          ...dev.userReservation,
           from: new Date(dev.userReservation.from),
           to: new Date(dev.userReservation.to),
         } : null,
-      ...dev,
     })
     );
     dispatch({ 

@@ -93,7 +93,7 @@ ReservationsTable.propTypes = {
       status: PropTypes.number.isRequired,
     })
   ),
-  currentDate: PropTypes.object.isRequired,
+  currentDate: PropTypes.instanceOf(Date).isRequired,
   fetchingDeviceReservations: PropTypes.bool.isRequired,
 };
 

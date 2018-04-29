@@ -122,8 +122,6 @@ class ReserveModal extends React.Component {
       returnDate,
       user,
       reserveDevice,
-      setReservations,
-      reservations,
     } = this.props;
     if (!this.checkForErrors(returnDate, currentDate) && !checkIfLate(currentDate)) {
       const reservation = {
@@ -133,13 +131,7 @@ class ReserveModal extends React.Component {
         user: user.id,
         status: reservationStatus.pending,
       };
-      reserveDevice(reservation);
-      //This || will be removed in future implementation
-      //     \/
-      const newReservations = [...reservations];
-      newReservations.push(reservation);
-      setReservations(newReservations);
-      //Post booking info
+      reserveDevice(reservation, user);
     }
   }
 
@@ -277,8 +269,8 @@ class ReserveModal extends React.Component {
 
 ReserveModal.propTypes = {
   setReturnDate: PropTypes.func.isRequired,
-  returnDate: PropTypes.object.isRequired,
-  currentDate: PropTypes.object.isRequired,
+  returnDate: PropTypes.instanceOf(Date).isRequired,
+  currentDate: PropTypes.instanceOf(Date).isRequired,
   returnDateError: PropTypes.string.isRequired,
   setReturnDateError: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
@@ -309,14 +301,14 @@ ReserveModal.propTypes = {
     }),
     userBooking: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      from: PropTypes.string.isRequired,
-      to: PropTypes.string.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
       status: PropTypes.number.isRequired,
     }),
     userReservation: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      from: PropTypes.string.isRequired,
-      to: PropTypes.string.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
       status: PropTypes.number.isRequired,
     }),
   })).isRequired,

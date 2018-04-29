@@ -200,6 +200,7 @@ class DeviceList extends React.Component {
 
   openReservationDetails(reservation) {
     const { from, to, device } = reservation;
+    console.log(reservation);
     this.props.showReservationDetails(from, to, device);
   }
 
@@ -244,14 +245,14 @@ DeviceList.propTypes = {
     }),
     userBooking: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      from: PropTypes.string.isRequired,
-      to: PropTypes.string.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
       status: PropTypes.number.isRequired,
     }),
     userReservation: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      from: PropTypes.string.isRequired,
-      to: PropTypes.string.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
       status: PropTypes.number.isRequired,
     }),
   })).isRequired,

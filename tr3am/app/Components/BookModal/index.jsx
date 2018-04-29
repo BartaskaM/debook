@@ -50,13 +50,14 @@ class BookModal extends React.Component {
       currentDate,
       setReturnDateError,
       returnDateError,
-      reservations,
+      selectedDeviceReservations,
       selectedDevice,
     } = this.props;
     if (nextDate - currentDate < fifteenMinutes) {
       err = true;
       setReturnDateError('Book for minimum 15 minutes!');
-    } else if (checkForReservation(currentDate, nextDate, reservations, selectedDevice)) {
+    } else if (checkForReservation(currentDate, nextDate,
+      selectedDeviceReservations, selectedDevice)) {
       err = true;
       setReturnDateError('This time is reserved!');
     } else if (returnDateError.length > 1) {
@@ -81,7 +82,7 @@ class BookModal extends React.Component {
         to: returnDate.toISOString(),
         status: reservationStatus.checkedIn,
       };
-      this.props.bookDevice(request);
+      this.props.bookDevice(request, user);
     }
   }
 
@@ -168,8 +169,8 @@ class BookModal extends React.Component {
 BookModal.propTypes = {
   setReturnDate: PropTypes.func.isRequired,
   showBookDialog: PropTypes.bool.isRequired,
-  returnDate: PropTypes.object.isRequired,
-  currentDate: PropTypes.object.isRequired,
+  returnDate: PropTypes.instanceOf(Date).isRequired,
+  currentDate: PropTypes.instanceOf(Date).isRequired,
   returnDateError: PropTypes.string.isRequired,
   setReturnDateError: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
@@ -200,14 +201,14 @@ BookModal.propTypes = {
     }),
     userBooking: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      from: PropTypes.string.isRequired,
-      to: PropTypes.string.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
       status: PropTypes.number.isRequired,
     }),
     userReservation: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      from: PropTypes.string.isRequired,
-      to: PropTypes.string.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
       status: PropTypes.number.isRequired,
     }),
   })).isRequired,
@@ -228,12 +229,18 @@ BookModal.propTypes = {
   }),
   setDevices: PropTypes.func.isRequired,
   hideBookModal: PropTypes.func.isRequired,
-  reservations: PropTypes.arrayOf(
+  selectedDeviceReservations: PropTypes.arrayOf(
     PropTypes.shape({
-      device: PropTypes.number.isRequired,
-      user: PropTypes.number.isRequired,
+      deviceId: PropTypes.number.isRequired,
+      user: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        firstName: PropTypes.string.isRequired,
+        lastName: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+      }).isRequired,
       from: PropTypes.object.isRequired,
       to: PropTypes.object.isRequired,
+      status: PropTypes.number.isRequired,
     })
   ),
   bookDevice: PropTypes.func.isRequired,
@@ -249,9 +256,9 @@ const mapStateToProps = (state) => ({
   selectedDevice: state.devices.selectedDevice,
   devices: state.devices.devices,
   user: state.auth.user,
-  reservations: state.devices.reservations,
   booking: state.devices.booking,
   bookingErrorMessage: state.devices.bookingErrorMessage,
+  selectedDeviceReservations: state.devices.selectedDeviceReservations,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(BookModal));
