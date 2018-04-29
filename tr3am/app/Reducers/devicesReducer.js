@@ -347,6 +347,37 @@ export default (state = defaultState, action) => {
         cancelingReservationErrorMessage: action.payload,
       };
     }
+    case devices.CHECK_IN_START: {
+      return {
+        ...state,
+        cancelingReservation: true,
+        cancelingReservationErrorMessage: null,
+      };
+    }
+    case devices.CHECK_IN_SUCCESS: {
+      const { deviceId } = action.payload;
+      return {
+        ...state,
+        devices: state.devices.map(device => {
+          if(device.id == deviceId){
+            return {
+              ...device,
+              userReservation: null,
+            };
+          }
+          return device;
+        }),
+        cancelingReservation: false,
+        showReserveModal: false,
+      };
+    }
+    case devices.CHECK_IN_ERROR: {
+      return { 
+        ...state,
+        cancelingReservation: false,
+        cancelingReservationErrorMessage: action.payload,
+      };
+    }
     default: return state;
   }
 };

@@ -248,19 +248,37 @@ export const returnDevice = (booking) => async dispatch =>{
   }
 };
 
-export const cancelReservation = (booking) => async dispatch =>{
+export const cancelReservation = (reservation) => async dispatch => {
   dispatch({ type: devices.CANCEL_RESERVATION_START });
   try{
-    await api.put(`/reservations/${booking.id}`, booking);
+    await api.put(`/reservations/${reservation.id}`, reservation);
     dispatch({ 
       type: devices.CANCEL_RESERVATION_SUCCESS,
       payload: {
-        deviceId: booking.deviceId,
+        deviceId: reservation.deviceId,
       },
     });
   } catch(e) {
     dispatch({ 
       type: devices.CANCEL_RESERVATION_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};
+
+export const checkIn = reservation => async dispatch => {
+  dispatch({ type: devices.CHECK_IN_START });
+  try{
+    await api.put(`/reservations/${reservation.id}`, reservation);
+    dispatch({ 
+      type: devices.CHECK_IN_SUCCESS,
+      payload: {
+        deviceId: reservation.deviceId,
+      },
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.CHECK_IN_ERROR,
       payload: e.response.data.message,
     });
   }
