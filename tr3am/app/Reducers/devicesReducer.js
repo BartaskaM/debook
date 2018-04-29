@@ -1,4 +1,5 @@
 import { devices } from 'Constants/ActionTypes';
+import store from 'Store';
 
 const defaultState = {
   devices: [],
@@ -271,6 +272,43 @@ export default (state = defaultState, action) => {
         ...state,
         fetchingDevices: false,
         fetchingDevicesErrorMessage: action.payload,
+      };
+    }
+    case devices.RETURN_DEVICE_START: {
+      return {
+        ...state,
+        returningDevice: true,
+        returningDeviceErrorMessage: '',
+      };
+    }
+    case devices.RETURN_DEVICE_SUCCESS: {
+      const { officeId, deviceId } = action.payload;
+      const office = store.getState().offices.offices.find(x => x.id === officeId);
+      return {
+        ...state,
+        devices: state.devices.map(dev => {
+          if(dev.id == deviceId){
+            return {
+              ...dev,
+              available: true,
+              custody: null,
+              location: {
+                id: office.id,
+                city: office.city,
+              },
+            };
+          }
+          return dev;
+        }),
+        fetchingDevices: false,
+        showReturnModal: false,
+      };
+    }
+    case devices.RETURN_DEVICE_ERROR: {
+      return { 
+        ...state,
+        returningDevice: false,
+        returningDeviceErrorMessage: action.payload,
       };
     }
     default: return state;

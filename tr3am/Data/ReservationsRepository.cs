@@ -134,7 +134,7 @@ namespace tr3am.Data
             return newItem.Id;
         }
 
-        public async Task Update(int id, ReservationRequest request)
+        public async Task Update(int id, ReservationUpdateRequest request)
         {
             var item = await _dbContext.Reservations
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -143,32 +143,46 @@ namespace tr3am.Data
                 throw new InvalidReservationException();
             }
 
-            var device = _dbContext.Devices
-               .AsNoTracking()
-               .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
+            var office = _dbContext.Offices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
 
+            var device = _dbContext.Devices
+               .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
 
             var user = _dbContext.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-            await Task.WhenAll(device, user);
+            await Task.WhenAll(device, user, office);
+
             if (device.Result == null)
             {
                 throw new InvalidDeviceException();
             }
+
             if (user.Result == null)
             {
                 throw new InvalidUserException();
             }
 
-            await CheckIfDateAvailable(request.From, request.To, device.Result);
+            if (office.Result == null)
+            {
+                throw new InvalidOfficeException();
+            }
 
             item.Status = request.Status;
             item.DeviceId = device.Result.Id;
             item.UserId = user.Result.Id;
             item.From = request.From;
             item.To = request.To;
+            if (request.Status == Status.Completed)
+            {
+                device.Result.UserId = null;
+                device.Result.Available = true;
+                device.Result.OfficeId = request.OfficeId;
+            }
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
