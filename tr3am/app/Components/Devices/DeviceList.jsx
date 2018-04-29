@@ -97,11 +97,11 @@ class DeviceList extends React.Component {
     }
     if (officeFilter.length > 0) {
       devicesToRender = devicesToRender.filter(device =>
-        officeFilter.includes(device.location));
+        officeFilter.includes(device.location.city) || device.userBooking);
     }
     if (showAvailable != showUnavailable) {
       if (showAvailable) {
-        devicesToRender = devicesToRender.filter(device => device.available);
+        devicesToRender = devicesToRender.filter(device => device.available || device.userBooking);
       }
       if (showUnavailable) {
         devicesToRender = devicesToRender.filter(device => !device.available);
