@@ -29,8 +29,8 @@ const defaultState = {
   fetchingDevicesErrorMessage: null,
   returningDevice: false,
   returningDeviceErrorMessage: null,
-  cancelingReservation: false,
-  cancelingReservationErrorMessage: null,
+  cancelReservationLoading: false,
+  cancelReservationErrorMessage: null,
 };
 
 export default (state = defaultState, action) => {
@@ -282,7 +282,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         returningDevice: true,
-        returningDeviceErrorMessage: null
+        returningDeviceErrorMessage: null,
       };
     }
     case devices.RETURN_DEVICE_SUCCESS: {
@@ -319,8 +319,8 @@ export default (state = defaultState, action) => {
     case devices.CANCEL_RESERVATION_START: {
       return {
         ...state,
-        cancelingReservation: true,
-        cancelingReservationErrorMessage: null,
+        cancelReservationLoading: true,
+        cancelReservationErrorMessage: null,
       };
     }
     case devices.CANCEL_RESERVATION_SUCCESS: {
@@ -336,15 +336,15 @@ export default (state = defaultState, action) => {
           }
           return device;
         }),
-        cancelingReservation: false,
+        cancelReservationLoading: false,
         showReserveModal: false,
       };
     }
     case devices.CANCEL_RESERVATION_ERROR: {
       return { 
         ...state,
-        cancelingReservation: false,
-        cancelingReservationErrorMessage: action.payload,
+        cancelReservationLoading: false,
+        cancelReservationErrorMessage: action.payload,
       };
     }
     case devices.CHECK_IN_START: {

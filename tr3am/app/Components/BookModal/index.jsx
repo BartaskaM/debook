@@ -245,7 +245,7 @@ BookModal.propTypes = {
   ),
   bookDevice: PropTypes.func.isRequired,
   booking: PropTypes.bool.isRequired,
-  bookingErrorMessage: PropTypes.string.isRequired,
+  bookingErrorMessage: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
