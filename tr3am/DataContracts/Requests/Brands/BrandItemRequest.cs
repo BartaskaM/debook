@@ -8,6 +8,6 @@ namespace tr3am.DataContracts.Requests.Brands
         public string Image { get; set; }
         [Required]
         [MaxLength(256)]
-        public string BrandName { get; set; }
+        public string Name { get; set; }
     }
 }

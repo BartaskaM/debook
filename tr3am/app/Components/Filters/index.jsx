@@ -185,7 +185,7 @@ Filters.propTypes = {
     available: PropTypes.bool.isRequired,
     brand: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      brandName: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
     }).isRequired,
     model: PropTypes.shape({
       id: PropTypes.number.isRequired,

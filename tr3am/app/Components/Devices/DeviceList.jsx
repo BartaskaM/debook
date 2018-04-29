@@ -93,7 +93,7 @@ class DeviceList extends React.Component {
         device.model.name.toLowerCase().includes(modelFilter.toLowerCase()));
     if (brandFilter.length > 0) {
       devicesToRender = devicesToRender.filter(device =>
-        brandFilter.includes(device.brand.brandName));
+        brandFilter.includes(device.brand.name));
     }
     if (officeFilter.length > 0) {
       devicesToRender = devicesToRender.filter(device =>
@@ -224,7 +224,7 @@ DeviceList.propTypes = {
     available: PropTypes.bool.isRequired,
     brand: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      brandName: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
     }).isRequired,
     model: PropTypes.shape({
       id: PropTypes.number.isRequired,
