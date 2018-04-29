@@ -19,7 +19,6 @@ namespace tr3am.DataContracts.Requests.Reservations
         public DateTime To { get; set; }
         [Required]
         public Status Status { get; set; }
-        [Required]
-        public int OfficeId { get; set; }
+        public int? OfficeId { get; set; }
     }
 }

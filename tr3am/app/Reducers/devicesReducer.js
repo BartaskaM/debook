@@ -29,6 +29,8 @@ const defaultState = {
   fetchingDevicesErrorMessage: '',
   returningDevice: false,
   returningDeviceErrorMessage: '',
+  cancelingReservation: false,
+  cancelingReservationErrorMessage: '',
 };
 
 export default (state = defaultState, action) => {
@@ -294,6 +296,7 @@ export default (state = defaultState, action) => {
               ...dev,
               available: true,
               custody: null,
+              userBooking: null,
               location: {
                 id: office.id,
                 city: office.city,
@@ -311,6 +314,37 @@ export default (state = defaultState, action) => {
         ...state,
         returningDevice: false,
         returningDeviceErrorMessage: action.payload,
+      };
+    }
+    case devices.CANCEL_RESERVATION_START: {
+      return {
+        ...state,
+        returningDevice: true,
+        returningDeviceErrorMessage: '',
+      };
+    }
+    case devices.CANCEL_RESERVATION_SUCCESS: {
+      const { deviceId } = action.payload;
+      return {
+        ...state,
+        devices: state.devices.map(dev => {
+          if(dev.id == deviceId){
+            return {
+              ...dev,
+              userReservation: null,
+            };
+          }
+          return dev;
+        }),
+        cancelingReservation: false,
+        showReserveModal: false,
+      };
+    }
+    case devices.CANCEL_RESERVATION_ERROR: {
+      return { 
+        ...state,
+        cancelingReservation: false,
+        cancelingReservationErrorMessage: action.payload,
       };
     }
     default: return state;

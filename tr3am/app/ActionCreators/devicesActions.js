@@ -247,3 +247,21 @@ export const returnDevice = (booking) => async dispatch =>{
     });
   }
 };
+
+export const cancelReservation = (booking) => async dispatch =>{
+  dispatch({ type: devices.CANCEL_RESERVATION_START });
+  try{
+    await api.put(`/reservations/${booking.id}`, booking);
+    dispatch({ 
+      type: devices.CANCEL_RESERVATION_SUCCESS,
+      payload: {
+        deviceId: booking.deviceId,
+      },
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.CANCEL_RESERVATION_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};

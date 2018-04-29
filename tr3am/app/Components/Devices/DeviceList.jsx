@@ -139,10 +139,10 @@ class DeviceList extends React.Component {
         <div className={classes.noItems}>
           <Typography align="center" variant="display3">No items found</Typography>
         </div> :
-      filteredDevices.map((device, index) => {
+      filteredDevices.map(device => {
         return (
         //Replace list with device component
-          <Grid item xs={4} key={index}>
+          <Grid item xs={4} key={device.id}>
             <Paper className={classes.devicePaper}> 
               <ListItem
                 className={classes.deviceItem}
@@ -174,7 +174,7 @@ class DeviceList extends React.Component {
                   className={classes.buttonRight}
                   onClick={
                     device.userReservation ?
-                      () => this.openReservationDetails(device.userReservation) :
+                      () => this.openReservationDetails(device.userReservation, device.id) :
                       () => this.openReserveDialog(device.id)}>
                   {
                     device.userReservation ?
@@ -198,9 +198,9 @@ class DeviceList extends React.Component {
     this.props.showReserveModal(deviceId);
   }
 
-  openReservationDetails(reservation) {
-    const { from, to, device } = reservation;
-    this.props.showReservationDetails(from, to, device);
+  openReservationDetails(reservation, deviceId) {
+    const { from, to } = reservation;
+    this.props.showReservationDetails(from, to, deviceId);
   }
 
   render() {

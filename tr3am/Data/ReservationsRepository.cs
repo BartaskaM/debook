@@ -166,21 +166,21 @@ namespace tr3am.Data
                 throw new InvalidUserException();
             }
 
-            if (office.Result == null)
-            {
-                throw new InvalidOfficeException();
-            }
-
             item.Status = request.Status;
             item.DeviceId = device.Result.Id;
             item.UserId = user.Result.Id;
             item.From = request.From;
             item.To = request.To;
+
             if (request.Status == Status.Completed)
             {
+                if (office.Result == null)
+                {
+                    throw new InvalidOfficeException();
+                }
                 device.Result.UserId = null;
                 device.Result.Available = true;
-                device.Result.OfficeId = request.OfficeId;
+                device.Result.OfficeId = request.OfficeId.Value;
             }
             await _dbContext.SaveChangesAsync();
         }

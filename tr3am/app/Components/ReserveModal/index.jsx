@@ -137,16 +137,23 @@ class ReserveModal extends React.Component {
 
   cancelReservation() {
     const {
-      reservations,
       user,
-      setReservations,
+      devices,
       selectedDevice,
-      hideReservationDetails,
+      cancelReservation,
     } = this.props;
-    const newReservations = reservations
-      .filter(res => !(res.user == user.id && res.device == selectedDevice));
-    setReservations(newReservations);
-    hideReservationDetails();
+    console.log(selectedDevice);
+    const deviceBooking = devices.find(dev => dev.id == selectedDevice).userReservation;
+    const request = {
+      id: deviceBooking.id,
+      userId: user.id,
+      deviceId: selectedDevice,
+      from: deviceBooking.from.toISOString(),
+      to: deviceBooking.to.toISOString(),
+      status: reservationStatus.canceled,
+    };
+    cancelReservation(request);
+
   }
 
   roundTimes() {
@@ -347,6 +354,7 @@ ReserveModal.propTypes = {
   reserveDevice: PropTypes.func.isRequired,
   reserving: PropTypes.bool.isRequired,
   reservingErrorMessage: PropTypes.string.isRequired,
+  cancelReservation: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
