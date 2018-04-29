@@ -32,7 +32,6 @@ namespace tr3am.Data
                 return await _dbContext.Reservations
                     .AsNoTracking()
                     .Include(x => x.User)
-                    .Include(x => x.Device)
                     .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
                     .ToListAsync();
             }
@@ -40,6 +39,7 @@ namespace tr3am.Data
             {
                 return await _dbContext.Reservations
                     .AsNoTracking()
+                    .Include(x => x.User)
                     .Where(x =>
                         x.Status == Status.CheckedIn || x.Status == Status.Pending || x.Status == Status.OverDue)
                     .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
@@ -54,7 +54,6 @@ namespace tr3am.Data
             var item = await _dbContext.Reservations
                 .AsNoTracking()
                 .Include(x => x.User)
-                .Include(x => x.Device)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
@@ -81,6 +80,7 @@ namespace tr3am.Data
             {
                 return await _dbContext.Reservations
                     .AsNoTracking()
+                    .Include(x => x.User)
                     .Where(x => x.Device.Id == id && (x.Status == Status.CheckedIn || x.Status == Status.OverDue ||
                                                x.Status == Status.Pending))
                     .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
