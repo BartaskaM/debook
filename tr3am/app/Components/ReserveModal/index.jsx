@@ -39,7 +39,6 @@ class ReserveModal extends React.Component {
     this.handleStartChange = this.handleStartChange.bind(this);
     this.cancelReservation = this.cancelReservation.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
-    this.removeFocusClassFromElement = this.removeFocusClassFromElement.bind(this);
   }
 
   handleDateChange(date) {
@@ -174,10 +173,6 @@ class ReserveModal extends React.Component {
     this.roundTimes();
     this.checkForErrors(returnDate, currentDate);
   }
-  
-  removeFocusClassFromElement(){
-    document.querySelector('.MuiFormLabel-focused-83').classList.remove('MuiFormLabel-focused-83');
-  }
 
   render() {
     const {
@@ -223,7 +218,6 @@ class ReserveModal extends React.Component {
               format="DD/MM/YYYY"
               value={currentDate}
               onChange={this.handleDateChange}
-              onBlur={this.removeFocusClassFromElement}
               className={classes.inputField}
               InputLabelProps={{ classes: { root: classes.label } }}
             />

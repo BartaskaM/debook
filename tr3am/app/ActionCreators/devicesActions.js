@@ -156,9 +156,14 @@ export const fetchDeviceReservations = (deviceId) => async dispatch =>{
   dispatch({ type: devices.FETCH_DEVICE_RESERVATIONS_START });
   try{
     const response = await api.get(`/devices/${deviceId}/reservations`);
+    const fetchedReservations = response.data.map(res => ({
+      ...res,
+      from: new Date(res.from),
+      to: new Date(res.to),
+    }));
     dispatch({ 
       type: devices.FETCH_DEVICE_RESERVATIONS_SUCCESS,
-      payload: response.data,
+      payload: fetchedReservations,
     });
   } catch(e) {
     dispatch({ 
@@ -176,15 +181,15 @@ export const fetchDevices = (userId) => async dispatch =>{
     const fetchedDevices = response.data.map(dev => ({
       userBooking: dev.userBooking ? 
         {
+          ...dev.userBooking,
           from: new Date(dev.userBooking.from),
           to: new Date(dev.userBooking.to),
-          ...dev.userBooking,
         } : null,
       userReservation: dev.userReservation ? 
         {
+          ...dev.userBooking,
           from: new Date(dev.userReservation.from),
           to: new Date(dev.userReservation.to),
-          ...dev.userBooking,
         } : null,
       ...dev,
     })

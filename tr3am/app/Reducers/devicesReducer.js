@@ -234,14 +234,7 @@ export default (state = defaultState, action) => {
     case devices.FETCH_DEVICE_RESERVATIONS_SUCCESS: {
       return {
         ...state,
-        selectedDeviceReservations: action.payload.map(x => {
-          const { from, to, ...rest} = x;
-          return {
-            ...rest,
-            from: new Date(from),
-            to: new Date(to),
-          };
-        }),
+        selectedDeviceReservations: action.payload,
         fetchingDeviceReservations: false,
       };
     }
