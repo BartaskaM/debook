@@ -108,9 +108,6 @@ export const hideReturnModal = () => {
 export const showReturnModal = (selectedDevice) => {
   return { type: devices.SHOW_RETURN_MODAL, payload: selectedDevice };
 };
-export const checkInDevice = (deviceId, userId) => {
-  return { type: devices.CHECK_IN_DEVICE, payload: {deviceId, userId}};
-};
 export const bookDevice = (bookRequest, user) => async dispatch =>{
   dispatch({ type: devices.BOOK_START });
   try{
@@ -266,7 +263,7 @@ export const cancelReservation = (reservation) => async dispatch => {
   }
 };
 
-export const checkIn = reservation => async dispatch => {
+export const checkIn = (reservation, user) => async dispatch => {
   dispatch({ type: devices.CHECK_IN_START });
   try{
     await api.put(`/reservations/${reservation.id}`, reservation);
@@ -274,6 +271,8 @@ export const checkIn = reservation => async dispatch => {
       type: devices.CHECK_IN_SUCCESS,
       payload: {
         deviceId: reservation.deviceId,
+        userBooking: reservation,
+        user,
       },
     });
   } catch(e) {

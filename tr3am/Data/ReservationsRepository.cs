@@ -172,6 +172,12 @@ namespace tr3am.Data
             item.From = request.From;
             item.To = request.To;
 
+            if (request.Status == Status.CheckedIn)
+            {
+                device.Result.UserId = request.UserId;
+                device.Result.Available = false;
+            }
+
             if (request.Status == Status.Completed)
             {
                 if (office.Result == null)

@@ -8,6 +8,7 @@ import Styles from './Styles';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
+import { ListItem } from 'material-ui/List';
 import { LinearProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
 import Add from 'material-ui-icons/Add';
@@ -15,6 +16,7 @@ import Remove from 'material-ui-icons/Remove';
 import Done from 'material-ui-icons/Done';
 import Clock from 'material-ui-icons/Schedule';
 import Description from 'material-ui-icons/Description';
+
 import BookModal from 'Components/BookModal';
 import ReserveModal from 'Components/ReserveModal';
 import * as devicesActions from 'ActionCreators/devicesActions';
@@ -22,7 +24,7 @@ import * as usersActions from 'ActionCreators/usersActions';
 import Device from './Device';
 import ReturnModal from 'Components/ReturnModal';
 import { fifteenMinutes } from 'Constants/Values';
-import { ListItem } from 'material-ui';
+import { reservationStatus } from 'Constants/Enums';
 
 class DeviceList extends React.Component {
   constructor(props) {
@@ -122,11 +124,23 @@ class DeviceList extends React.Component {
   }
 
   handleBookClick(device) {
-    const { showReturnModal, checkInDevice, user } = this.props;
+    const { showReturnModal, checkIn, user } = this.props;
     return device.custody ?
       showReturnModal(device.id) :
       DeviceList.canCheckIn(device.userReservation) ?
-        checkInDevice(device.id, user.id) :
+        checkIn({
+          id: device.userReservation.id,
+          userId: user.id,
+          deviceId: device.id,
+          from: device.userReservation.from.toISOString(),
+          to: device.userReservation.to.toISOString(),
+          status: reservationStatus.checkedIn,
+        }, {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        }) :
         this.openBookDialog(device.id);
   }
 
@@ -282,10 +296,10 @@ DeviceList.propTypes = {
   setSelectedDevice: PropTypes.func.isRequired,
   showReserveModal: PropTypes.func.isRequired,
   showReservationDetails: PropTypes.func.isRequired,
-  checkInDevice: PropTypes.func.isRequired,
   showReturnModal: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   fetchingDevices: PropTypes.bool.isRequired,
+  checkIn: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {
