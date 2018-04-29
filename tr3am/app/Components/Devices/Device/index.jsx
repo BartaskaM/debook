@@ -18,7 +18,7 @@ const device = ({ classes, device }) => {
         <Typography className={classes.availabilityTagUnavailable}>Unavailable</Typography>
       }
       <Typography className={classes.deviceCardTitle}>
-        {device.brand.brandName}, {device.model.name}
+        {device.brand.name}, {device.model.name}
       </Typography>
       <Typography className={classes.deviceCardMainContent}>
         Identification number: 
@@ -53,7 +53,7 @@ device.propTypes = {
     available: PropTypes.bool.isRequired,
     brand: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      brandName: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
     }).isRequired,
     model: PropTypes.shape({
       id: PropTypes.number.isRequired,

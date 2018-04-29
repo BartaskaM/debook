@@ -47,7 +47,7 @@ namespace tr3am.Data
         {
             var newItem = new Brand
             {
-                BrandName = request.BrandName,
+                Name = request.Name,
                 Image = request.Image,
             };
 
@@ -66,7 +66,7 @@ namespace tr3am.Data
         {
             var result = await _dbContext.Brands
                 .FirstOrDefaultAsync(x =>
-                x.BrandName == brand.BrandName ||
+                x.Name == brand.Name ||
                 x.Image == brand.Image);
 
             if (result != null)
@@ -86,7 +86,7 @@ namespace tr3am.Data
                 throw new InvalidBrandException();
             }
 
-            item.BrandName = request.BrandName;
+            item.Name = request.Name;
             item.Image = request.Image;
 
             await _dbContext.SaveChangesAsync();

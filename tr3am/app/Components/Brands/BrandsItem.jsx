@@ -17,7 +17,7 @@ const BrandsItem = ({ classes, brand }) => {
           <Typography variant='display1'>
             <Grid container>
               <Grid item xs><img className={classes.brandLogo} src={brand.image} /></Grid>
-              <Grid item xs>{brand.brandName}</Grid>
+              <Grid item xs>{brand.name}</Grid>
               <Grid item xs>{brand.models.length}</Grid>
             </Grid>
           </Typography>
@@ -32,7 +32,7 @@ BrandsItem.propTypes = {
   brand: PropTypes.shape({
     id: PropTypes.number.isRequired,
     image: PropTypes.string.isRequired,
-    brandName: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     models: PropTypes.array.isRequired,
   }).isRequired,
 };

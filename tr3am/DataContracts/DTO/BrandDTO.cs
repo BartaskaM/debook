@@ -6,7 +6,7 @@ namespace tr3am.DataContracts.DTO
     {
         public int Id { get; set; }
         public string Image { get; set; }
-        public string BrandName { get; set; }
+        public string Name { get; set; }
         public List<ModelDto> Models { get; set; }
     }
 }
