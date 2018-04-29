@@ -19,7 +19,6 @@ import BookModal from 'Components/BookModal';
 import ReserveModal from 'Components/ReserveModal';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as usersActions from 'ActionCreators/usersActions';
-import Reservations from 'Constants/Reservations';
 import Device from './Device';
 import ReturnModal from 'Components/ReturnModal';
 import { fifteenMinutes } from 'Constants/Values';
@@ -40,12 +39,6 @@ class DeviceList extends React.Component {
   }
 
   componentDidMount() {
-    const {
-      setReservations,
-      fetchUsers,
-    } = this.props;
-    setReservations(Reservations);
-    fetchUsers();
     //Refresh button values every 10 s
     this.interval = setInterval(this.getBookButtonValues, 10000);
   }
@@ -288,11 +281,7 @@ DeviceList.propTypes = {
   showBookModal: PropTypes.func.isRequired,
   setSelectedDevice: PropTypes.func.isRequired,
   showReserveModal: PropTypes.func.isRequired,
-  setReservations: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired,
-  fetchUsers: PropTypes.func.isRequired,
   showReservationDetails: PropTypes.func.isRequired,
-  setDevices: PropTypes.func.isRequired,
   checkInDevice: PropTypes.func.isRequired,
   showReturnModal: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
@@ -307,8 +296,6 @@ const mapStateToProps = state => {
     showAvailable: state.devices.showAvailable,
     showUnavailable: state.devices.showUnavailable,
     user: state.auth.user,
-    reservations: state.devices.reservations,
-    users: state.users.users,
     fetchingDevices: state.devices.fetchingDevices,
   };
 };
