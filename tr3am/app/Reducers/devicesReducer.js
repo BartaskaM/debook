@@ -180,7 +180,6 @@ export default (state = defaultState, action) => {
     }
     case devices.BOOK_SUCCESS: {
       const { bookedDeviceId, user, userBooking } = action.payload;
-      console.log(action.payload);
       const updatedDevices = state.devices.map(device => {
         if (device.id === bookedDeviceId) {
           return { 

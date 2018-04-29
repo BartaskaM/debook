@@ -200,7 +200,6 @@ class DeviceList extends React.Component {
 
   openReservationDetails(reservation) {
     const { from, to, device } = reservation;
-    console.log(reservation);
     this.props.showReservationDetails(from, to, device);
   }
 
