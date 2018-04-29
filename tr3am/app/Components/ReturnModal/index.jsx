@@ -13,6 +13,7 @@ import { MenuItem } from 'material-ui/Menu';
 import  { withStyles } from 'material-ui/styles';
 import { CircularProgress, LinearProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
+
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as officesActions from 'ActionCreators/officesActions';
 import Styles from './Styles';
