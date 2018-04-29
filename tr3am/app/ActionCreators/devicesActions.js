@@ -114,9 +114,13 @@ export const checkInDevice = (deviceId, userId) => {
 export const bookDevice = (bookRequest, user) => async dispatch =>{
   dispatch({ type: devices.BOOK_START });
   try{
-    const id = await api.post('/reservations?booking=true', bookRequest);
+    const request = await api.post('/reservations?booking=true', { 
+      ...bookRequest,
+      from: bookRequest.from.toISOString(),
+      to: bookRequest.to.toISOString(),
+    });
     const userBooking = {
-      id,
+      id: request.data,
       from: bookRequest.from,
       to: bookRequest.to,
       status: bookRequest.status,
@@ -124,7 +128,7 @@ export const bookDevice = (bookRequest, user) => async dispatch =>{
     dispatch({ 
       type: devices.BOOK_SUCCESS,
       payload: {
-        bookedDeviceId: bookRequest.device,
+        bookedDeviceId: bookRequest.deviceId,
         user: {
           id: user.id,
           firstName: user.firstName,
@@ -145,13 +149,13 @@ export const bookDevice = (bookRequest, user) => async dispatch =>{
 export const reserveDevice = (reserveRequest) => async dispatch =>{
   dispatch({ type: devices.RESERVE_START });
   try{
-    const id = await api.post('/reservations', { 
+    const request = await api.post('/reservations', { 
+      ...reserveRequest,
       from: reserveRequest.from.toISOString(),
       to: reserveRequest.to.toISOString(),
-      ...reserveRequest,
     });
     const userReservation = {
-      id,
+      id: request.data,
       from: reserveRequest.from,
       to: reserveRequest.to,
       status: reserveRequest.status,
@@ -201,13 +205,13 @@ export const fetchDevices = (userId) => async dispatch =>{
       ...dev,
       userBooking: dev.userBooking ? 
         {
-          ...dev.userBooking,
+          ...(dev.userBooking),
           from: new Date(dev.userBooking.from),
           to: new Date(dev.userBooking.to),
         } : null,
       userReservation: dev.userReservation ? 
         {
-          ...dev.userReservation,
+          ...(dev.userReservation),
           from: new Date(dev.userReservation.from),
           to: new Date(dev.userReservation.to),
         } : null,

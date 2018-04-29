@@ -78,8 +78,8 @@ class BookModal extends React.Component {
       const request = {
         deviceId: selectedDevice,
         userId: user.id,
-        from: (new Date()).toISOString(),
-        to: returnDate.toISOString(),
+        from: new Date(),
+        to: returnDate,
         status: reservationStatus.checkedIn,
       };
       this.props.bookDevice(request, user);

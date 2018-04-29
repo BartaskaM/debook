@@ -125,6 +125,10 @@ namespace tr3am.Data
             };
 
             _dbContext.Reservations.Add(newItem);
+            if (booking)
+            {
+                device.Result.UserId = request.UserId;
+            }
             await _dbContext.SaveChangesAsync();
 
             return newItem.Id;
