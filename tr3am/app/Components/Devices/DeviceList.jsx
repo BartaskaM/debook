@@ -8,6 +8,8 @@ import Styles from './Styles';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
+import { LinearProgress } from 'material-ui/Progress';
+import Typography from 'material-ui/Typography';
 import Add from 'material-ui-icons/Add';
 import Remove from 'material-ui-icons/Remove';
 import Done from 'material-ui-icons/Done';
@@ -17,8 +19,6 @@ import BookModal from 'Components/BookModal';
 import ReserveModal from 'Components/ReserveModal';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as usersActions from 'ActionCreators/usersActions';
-import Reservations from 'Constants/Reservations';
-import Devices from 'Constants/Devices';
 import Device from './Device';
 import ReturnModal from 'Components/ReturnModal';
 import { fifteenMinutes } from 'Constants/Values';
@@ -27,7 +27,6 @@ import { ListItem } from 'material-ui';
 class DeviceList extends React.Component {
   constructor(props) {
     super(props);
-    this.renderDevices = this.renderDevices.bind(this);
     this.renderDevices = this.renderDevices.bind(this);
     this.openBookDialog = this.openBookDialog.bind(this);
     this.openReserveDialog = this.openReserveDialog.bind(this);
@@ -40,14 +39,6 @@ class DeviceList extends React.Component {
   }
 
   componentDidMount() {
-    const {
-      setReservations,
-      fetchUsers,
-      setDevices,
-    } = this.props;
-    setReservations(Reservations);
-    fetchUsers();
-    setDevices(Devices);
     //Refresh button values every 10 s
     this.interval = setInterval(this.getBookButtonValues, 10000);
   }
@@ -57,23 +48,21 @@ class DeviceList extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps) {
-    const { devices, user, reservations } = nextProps;
-    return { bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user, reservations) };
+    const { devices } = nextProps;
+    return { bookButtonValues: DeviceList.formBookButtonValuesArray(devices) };
   }
 
-  static formBookButtonValuesArray(devices, user, reservations) {
+  static formBookButtonValuesArray(devices) {
     const bookButtonValues = [];
     devices.forEach(device => {
       if (device.available) {
-        const userReservationForThisDevice = reservations
-          .find(res => res.device === device.id && user.id === res.user);
-        if (DeviceList.canCheckIn(userReservationForThisDevice)) {
+        if (DeviceList.canCheckIn(device.userReservation)) {
           bookButtonValues[device.id] = 'Check-in';
         } else {
           bookButtonValues[device.id] = 'Book device';
         }
       } else {
-        if (device.custody === user.id) {
+        if (device.userBooking) {
           bookButtonValues[device.id] = 'Return device';
         } else {
           bookButtonValues[device.id] = 'Device is booked';
@@ -84,9 +73,9 @@ class DeviceList extends React.Component {
   }
 
   getBookButtonValues() {
-    const { user, reservations, devices } = this.props;
+    const { devices } = this.props;
     this.setState({
-      bookButtonValues: DeviceList.formBookButtonValuesArray(devices, user, reservations),
+      bookButtonValues: DeviceList.formBookButtonValuesArray(devices),
     });
   }
 
@@ -100,19 +89,19 @@ class DeviceList extends React.Component {
       officeFilter,
     } = this.props;
     let devicesToRender = devices
-      .filter(device => device.active &&
-        device.model.toLowerCase().includes(modelFilter.toLowerCase()));
+      .filter(device =>
+        device.model.name.toLowerCase().includes(modelFilter.toLowerCase()));
     if (brandFilter.length > 0) {
       devicesToRender = devicesToRender.filter(device =>
-        brandFilter.includes(device.brand));
+        brandFilter.includes(device.brand.name));
     }
     if (officeFilter.length > 0) {
       devicesToRender = devicesToRender.filter(device =>
-        officeFilter.includes(device.location));
+        officeFilter.includes(device.location.city) || device.userBooking);
     }
     if (showAvailable != showUnavailable) {
       if (showAvailable) {
-        devicesToRender = devicesToRender.filter(device => device.available);
+        devicesToRender = devicesToRender.filter(device => device.available || device.userBooking);
       }
       if (showUnavailable) {
         devicesToRender = devicesToRender.filter(device => !device.available);
@@ -132,70 +121,73 @@ class DeviceList extends React.Component {
     }
   }
 
-  handleBookClick(device, userReservationForThisDevice) {
+  handleBookClick(device) {
     const { showReturnModal, checkInDevice, user } = this.props;
     return device.custody ?
       showReturnModal(device.id) :
-      DeviceList.canCheckIn(userReservationForThisDevice) ?
+      DeviceList.canCheckIn(device.userReservation) ?
         checkInDevice(device.id, user.id) :
         this.openBookDialog(device.id);
   }
 
   renderDevices() {
-    const { reservations, user, classes, history } = this.props;
+    const { classes, history, fetchingDevices } = this.props;
     const { bookButtonValues } = this.state;
-    const userReservations = reservations
-      .filter(res => res.user === user.id);
-    return this.filterDevices().map((device, index) => {
-      const userReservationForThisDevice = userReservations.find(res => res.device == device.id);
-      return (
+    const filteredDevices = this.filterDevices();
+    return filteredDevices.length === 0 ?
+      fetchingDevices ? null : 
+        <div className={classes.noItems}>
+          <Typography align="center" variant="display3">No items found</Typography>
+        </div> :
+      filteredDevices.map((device, index) => {
+        return (
         //Replace list with device component
-        <Grid item xs={4} key={index}>
-          <Paper className={classes.devicePaper}> 
-            <ListItem
-              className={classes.deviceItem}
-              button
-              dense
-              onClick={() => history.push(`/devices/${device.id.toString()}`)}>
-              <Device key={device.id} device={device} />
-            </ListItem>
-            <div className={classes.buttonsContainer}>
-              <Button
-                variant='raised'
-                disabled={
-                  device.available ? false : device.custody === user.id ? false : true
-                }
-                color={device.available ? 'primary' : 'secondary'}
-                className={classes.buttonLeft}
-                onClick={() => this.handleBookClick(device, userReservationForThisDevice)}>
-                {
-                  bookButtonValues[device.id] === 'Return device' ?
-                    <Remove className={classes.leftIcon} /> :
-                    bookButtonValues[device.id] === 'Check-in' ?
-                      <Done className={classes.leftIcon} /> :
-                      <Add className={classes.leftIcon} />
-                }
-                {bookButtonValues[device.id]}
-              </Button>
-              <Button
-                variant="raised"
-                className={classes.buttonRight}
-                onClick={
-                  userReservationForThisDevice ?
-                    () => this.openReservationDetails(userReservationForThisDevice) :
-                    () => this.openReserveDialog(device.id)}>
-                {
-                  userReservationForThisDevice ?
-                    <Description className={classes.leftIcon}/> :
-                    <Clock className={classes.leftIcon}/>
-                }
-                {userReservationForThisDevice ? 'Reservation details' : 'Reserve'}
-              </Button>
-            </div>
-          </Paper>
-        </Grid>
-      );
-    });
+          <Grid item xs={4} key={index}>
+            <Paper className={classes.devicePaper}> 
+              <ListItem
+                className={classes.deviceItem}
+                button
+                dense
+                onClick={() => history.push(`/devices/${device.id.toString()}`)}>
+                <Device key={device.id} device={device} />
+              </ListItem>
+              <div className={classes.buttonsContainer}>
+                <Button
+                  variant='raised'
+                  disabled={
+                    device.available ? false : device.userBooking ? false : true
+                  }
+                  color={device.available ? 'primary' : 'secondary'}
+                  className={classes.buttonLeft}
+                  onClick={() => this.handleBookClick(device)}>
+                  {
+                    bookButtonValues[device.id] === 'Return device' ?
+                      <Remove className={classes.leftIcon} /> :
+                      bookButtonValues[device.id] === 'Check-in' ?
+                        <Done className={classes.leftIcon} /> :
+                        <Add className={classes.leftIcon} />
+                  }
+                  {bookButtonValues[device.id]}
+                </Button>
+                <Button
+                  variant="raised"
+                  className={classes.buttonRight}
+                  onClick={
+                    device.userReservation ?
+                      () => this.openReservationDetails(device.userReservation) :
+                      () => this.openReserveDialog(device.id)}>
+                  {
+                    device.userReservation ?
+                      <Description className={classes.leftIcon}/> :
+                      <Clock className={classes.leftIcon}/>
+                  }
+                  {device.userReservation ? 'Reservation details' : 'Reserve'}
+                </Button>
+              </div>
+            </Paper>
+          </Grid>
+        );
+      });
   }
 
   openBookDialog(deviceId) {
@@ -212,28 +204,56 @@ class DeviceList extends React.Component {
   }
 
   render() {
-    const { classes, devices, user, users } = this.props;
-    return devices.length != 0 && user && users.length != 0 ? (
+    const { classes, fetchingDevices } = this.props;
+    return (
       <Grid container spacing={8} className={classes.root}>
-        {this.renderDevices()}
+        { fetchingDevices && <Grid item xs={12}><LinearProgress/></Grid> }
+        { this.renderDevices() }
         <BookModal />
         <ReserveModal />
         <ReturnModal />
       </Grid>
-    ) : '';
+    );
   }
 }
 
 DeviceList.propTypes = {
   devices: PropTypes.arrayOf(PropTypes.shape({
-    brand: PropTypes.string.isRequired,
-    model: PropTypes.string.isRequired,
-    os: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired,
-    custody: PropTypes.number,
-    available: PropTypes.bool.isRequired,
-    active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    available: PropTypes.bool.isRequired,
+    brand: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    model: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    identificationNum: PropTypes.number.isRequired,
+    os: PropTypes.string.isRequired,
+    location: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      city: PropTypes.string.isRequired,
+    }).isRequired,
+    custody: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+    }),
+    userBooking: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
+      status: PropTypes.number.isRequired,
+    }),
+    userReservation: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
+      status: PropTypes.number.isRequired,
+    }),
   })).isRequired,
   classes: PropTypes.object.isRequired,
   user: PropTypes.shape({
@@ -249,7 +269,7 @@ DeviceList.propTypes = {
       lng: PropTypes.number.isRequired,
       address: PropTypes.string.isRequired,
     }).isRequired,
-    slack: PropTypes.string.isRequired,
+    slack: PropTypes.string,
   }),
   modelFilter: PropTypes.string.isRequired,
   brandFilter: PropTypes.array.isRequired,
@@ -261,22 +281,11 @@ DeviceList.propTypes = {
   showBookModal: PropTypes.func.isRequired,
   setSelectedDevice: PropTypes.func.isRequired,
   showReserveModal: PropTypes.func.isRequired,
-  reservations: PropTypes.arrayOf(
-    PropTypes.shape({
-      device: PropTypes.number.isRequired,
-      user: PropTypes.number.isRequired,
-      from: PropTypes.object.isRequired,
-      to: PropTypes.object.isRequired,
-    })
-  ),
-  setReservations: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired,
-  fetchUsers: PropTypes.func.isRequired,
   showReservationDetails: PropTypes.func.isRequired,
-  setDevices: PropTypes.func.isRequired,
   checkInDevice: PropTypes.func.isRequired,
   showReturnModal: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  fetchingDevices: PropTypes.bool.isRequired,
 };
 const mapStateToProps = state => {
   return {
@@ -287,8 +296,7 @@ const mapStateToProps = state => {
     showAvailable: state.devices.showAvailable,
     showUnavailable: state.devices.showUnavailable,
     user: state.auth.user,
-    reservations: state.devices.reservations,
-    users: state.users.users,
+    fetchingDevices: state.devices.fetchingDevices,
   };
 };
 export default withRouter(connect(mapStateToProps, {

@@ -74,7 +74,7 @@ BrandList.propTypes = {
   brands: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     image: PropTypes.string.isRequired,
-    brandName: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     models: PropTypes.array.isRequired,
   })).isRequired,
   fetchBrandsLoading: PropTypes.bool.isRequired,

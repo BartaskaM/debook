@@ -111,15 +111,31 @@ export const showReturnModal = (selectedDevice) => {
 export const checkInDevice = (deviceId, userId) => {
   return { type: devices.CHECK_IN_DEVICE, payload: {deviceId, userId}};
 };
-export const bookDevice = (bookRequest) => async dispatch =>{
+export const bookDevice = (bookRequest, user) => async dispatch =>{
   dispatch({ type: devices.BOOK_START });
   try{
-    await api.post('/reservations?booking=true', bookRequest);
+    const request = await api.post('/reservations?booking=true', { 
+      ...bookRequest,
+      from: bookRequest.from.toISOString(),
+      to: bookRequest.to.toISOString(),
+    });
+    const userBooking = {
+      id: request.data,
+      from: bookRequest.from,
+      to: bookRequest.to,
+      status: bookRequest.status,
+    };
     dispatch({ 
       type: devices.BOOK_SUCCESS,
       payload: {
-        bookedDeviceId: bookRequest.device,
-        userId: bookRequest.user,
+        bookedDeviceId: bookRequest.deviceId,
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        },
+        userBooking,
       },
     });
   } catch(e) {
@@ -133,15 +149,22 @@ export const bookDevice = (bookRequest) => async dispatch =>{
 export const reserveDevice = (reserveRequest) => async dispatch =>{
   dispatch({ type: devices.RESERVE_START });
   try{
-    await api.post('/reservations', { 
+    const request = await api.post('/reservations', { 
+      ...reserveRequest,
       from: reserveRequest.from.toISOString(),
       to: reserveRequest.to.toISOString(),
-      ...reserveRequest,
     });
+    const userReservation = {
+      id: request.data,
+      from: reserveRequest.from,
+      to: reserveRequest.to,
+      status: reserveRequest.status,
+    };
     dispatch({ 
       type: devices.RESERVE_SUCCESS,
       payload: {
-        bookedDeviceId: reserveRequest.device,
+        reservedDeviceId: reserveRequest.deviceId,
+        userReservation,
       },
     });
   } catch(e) {
@@ -156,13 +179,70 @@ export const fetchDeviceReservations = (deviceId) => async dispatch =>{
   dispatch({ type: devices.FETCH_DEVICE_RESERVATIONS_START });
   try{
     const response = await api.get(`/devices/${deviceId}/reservations`);
+    const fetchedReservations = response.data.map(res => ({
+      ...res,
+      from: new Date(res.from),
+      to: new Date(res.to),
+    }));
     dispatch({ 
       type: devices.FETCH_DEVICE_RESERVATIONS_SUCCESS,
-      payload: response.data,
+      payload: fetchedReservations,
     });
   } catch(e) {
     dispatch({ 
       type: devices.FETCH_DEVICE_RESERVATIONS_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};
+
+export const fetchDevices = (userId) => async dispatch =>{
+  dispatch({ type: devices.FETCH_DEVICES_START });
+  try{
+    //Use identity later on
+    const response = await api.get(`/devices?userId=${userId}`);
+    const fetchedDevices = response.data.map(dev => ({
+      ...dev,
+      userBooking: dev.userBooking ? 
+        {
+          ...(dev.userBooking),
+          from: new Date(dev.userBooking.from),
+          to: new Date(dev.userBooking.to),
+        } : null,
+      userReservation: dev.userReservation ? 
+        {
+          ...(dev.userReservation),
+          from: new Date(dev.userReservation.from),
+          to: new Date(dev.userReservation.to),
+        } : null,
+    })
+    );
+    dispatch({ 
+      type: devices.FETCH_DEVICES_SUCCESS,
+      payload: fetchedDevices,
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.FETCH_DEVICES_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};
+
+export const returnDevice = (booking) => async dispatch =>{
+  dispatch({ type: devices.RETURN_DEVICE_START });
+  try{
+    await api.put(`/reservations/${booking.id}`, booking);
+    dispatch({ 
+      type: devices.RETURN_DEVICE_SUCCESS,
+      payload: {
+        deviceId: booking.deviceId,
+        officeId: booking.officeId,
+      },
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.RETURN_DEVICE_ERROR,
       payload: e.response.data.message,
     });
   }

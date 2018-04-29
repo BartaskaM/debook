@@ -25,7 +25,7 @@ class ReservationsCalendar extends React.Component {
 }
 
 ReservationsCalendar.propTypes = {
-  currentDate: PropTypes.object.isRequired,
+  currentDate: PropTypes.instanceOf(Date).isRequired,
   setCurrentDate: PropTypes.func.isRequired,
   reservations: PropTypes.array.isRequired,
   classes: PropTypes.object.isRequired,

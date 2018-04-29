@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +20,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<BrandDTO>> GetAll()
+        public async Task<IEnumerable<BrandDto>> GetAll()
         {
             return await _brandsRepository.GetAll();
         }

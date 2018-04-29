@@ -21,7 +21,7 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<LogInDTO> LogIn(LogInRequest request)
+        public async Task<LogInDto> LogIn(LogInRequest request)
         {
             var item = await _dbContext.Users
                 .AsNoTracking()
@@ -32,7 +32,7 @@ namespace tr3am.Data
                 throw new InvalidUserException();
             }
 
-            return Mapper.Map<User, LogInDTO>(item);
+            return Mapper.Map<User, LogInDto>(item);
         }
 
         public async Task<IEnumerable<UserDTO>> GetAll()
