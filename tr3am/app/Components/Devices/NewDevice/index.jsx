@@ -1,3 +1,5 @@
+// Date field has errors on setting
+
 import React from 'react';
 import {
   Input,
@@ -19,13 +21,15 @@ import TextField from 'material-ui/TextField';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 
-import { dateToFullYear } from 'Utils/dateUtils';
+// import { dateToFullYear } from 'Utils/dateUtils';
 
 import Styles from './Styles';
 //import Brands from 'Constants/Brands';
 import * as authActions from 'ActionCreators/authActions';
 import * as officesActions from 'ActionCreators/officesActions';
 import * as brandsActions from 'ActionCreators/brandsActions';
+import * as devicesActions from 'ActionCreators/devicesActions';
+import devices from 'Constants/Devices';
 
 class NewDevice extends React.Component {
   constructor(props) {
@@ -38,7 +42,7 @@ class NewDevice extends React.Component {
       model: '',
       modelForm: '',
       newModel: false,
-      date: '',
+      purchaseDate: '',
       serialNumber: '',
       os: '',
       group: '',
@@ -47,46 +51,63 @@ class NewDevice extends React.Component {
       location: '',
       vendor: '',
       taxRate: '',
-      monthYear: '',
+      image: '',
+      serialErrorMessage: '',
+      locationErrorMessage: '',
+      brandErrorMessage: '',
+      modelErrorMessage: '',
+      dateErrorMessage: '',
+      errorInForm: '',
     };
-
-    this.setState.date = dateToFullYear(new Date(Date.now()));
-    this.setState.monthYear = dateToFullYear(new Date(Date.now()));
 
     this.inputHandler = this.inputHandler.bind(this);
     this.inputHandlerForModel = this.inputHandlerForModel.bind(this);
     this.submitNewDeviceForm = this.submitNewDeviceForm.bind(this);
     this.isDeviceUnique = this.isDeviceUnique.bind(this);
     this.addNewModel = this.addNewModel.bind(this);
+    this.areAllSelected = this.areAllSelected.bind(this);
     
   }
 
   componentDidMount(){
     this.props.fetchOffices();
     this.props.fetchBrands();
+    this.props.setDevices(devices);
   }
 
   submitNewDeviceForm(e) {
     e.preventDefault();
-    const results = {
-      active: this.state.deviceActive,
-      name: this.state.deviceName,
-      brand: this.state.brand,
-      modelForm: this.state.modelForm,
-      model: this.state.model,
-      newModel: this.state.newModel,
-      purchaseDate: this.state.date,
-      serial: this.state.serialNumber,
-      os: this.state.os,
-      group: this.state.group,
-      subgroup: this.state.subgroup,
-      description: this.state.description,
-      location: this.state.location,
-      vendor: this.state.vendor,
-      taxRate: this.state.taxRate,
-      someday: this.state.monthYear,
-    };
-    console.log(results);
+    console.log('Calling for errors');
+    if (this.areAllSelected()) {
+      console.log('All fields filled');
+      this.setState({ ['errorInForm']: '' });
+      if (this.isDeviceUnique()) {
+        if (this.state.newModel) {
+          this.setState({['model']: this.addNewModel()});
+        }
+        const results = {
+          active: this.state.deviceActive,
+          name: this.state.deviceName,
+          brand: this.state.brand,
+          model: this.state.model,
+          purchaseDate: this.state.date,
+          serial: this.state.serialNumber,
+          os: this.state.os,
+          group: this.state.group,
+          subgroup: this.state.subgroup,
+          description: this.state.description,
+          location: this.state.location,
+          vendor: this.state.vendor,
+          taxRate: this.state.taxRate,
+          image: this.state.image,
+        };
+        console.log(results);
+      }
+      else
+        this.setState({ ['errorInForm']: 'Check entered data' });
+    }
+    else
+      this.setState({ ['errorInForm']: 'Check entered data' });
   }
 
   inputHandler(e) {
@@ -94,27 +115,68 @@ class NewDevice extends React.Component {
   }
 
   inputHandlerForModel(e) {
-    if (e.target.value === true)
-    {
+    if (e.target.value === true) {
       this.setState({ [e.target.name]: e.target.value });
       this.setState({ ['newModel']: true });
     }
-    else
-    {
+    else {
       this.setState({ [e.target.name]: e.target.value });
       this.setState({ ['newModel']: false });
       this.setState({ ['model']: e.target.value });
     }
   }
 
+  areAllSelected()
+  {
+    console.log('Checking errors');
+    if (this.state.brand === ''){
+      console.log('Error 1');
+      this.setState({ ['brandErrorMessage']: 'Select brand model' });
+      return false;
+    }
+    else
+      this.setState({ ['brandErrorMessage']: '' });
+    if (this.state.model === ''){
+      console.log('Error 2');
+      this.setState({ ['modelErrorMessage']: 'Select device model' });
+      return false;
+    }
+    else
+      this.setState({ ['modelErrorMessage']: '' });
+    if (this.state.location === ''){
+      console.log('Error 3');
+      this.setState({ ['locationErrorMessage']: 'Select location' });
+      return false;
+    }
+    else
+      this.setState({ ['locationErrorMessage']: '' });
+    if (this.state.purchaseDate === ''){
+      console.log('Error 4');
+      this.setState({ ['dateErrorMessage']: 'Select purchase date' });
+      return false;
+    }
+    else
+      this.setState({ ['dateErrorMessage']: '' });
+    return true;
+  }
+
   isDeviceUnique()
   {
-    return false;
+    const { devices } = this.props;
+    const specificDevice = (devices.find(x => x.serialNumber === this.state.serialNumber));
+    if (specificDevice != null) {
+      this.setState({ serialErrorMessage: 'This device already exists' });
+      return false;
+    }
+    else {
+      return true;
+    }
   }
 
   addNewModel()
   {
-    
+    const newModelID = 1;
+    return newModelID;
   }
 
   render() {
@@ -137,7 +199,7 @@ class NewDevice extends React.Component {
       location,
       vendor,
       taxRate,
-      monthYear,
+      image,
       modelForm,
     } = this.state;
 
@@ -224,6 +286,9 @@ class NewDevice extends React.Component {
                     </Select>
                   </div>
                 </FormControl>
+                <Typography variant='headline' className={classes.errorMessage}>
+                  {this.state.brandErrorMessage}
+                </Typography>
                 <FormControl className={classes.newDeviceFormField}>
                   <InputLabel className={classes.fontSize}>Model</InputLabel>
                   <div  className={classes.wrapper}>
@@ -246,20 +311,20 @@ class NewDevice extends React.Component {
                 <FormControl>
                   {newModelForm}
                 </FormControl>
+                <Typography variant='headline' className={classes.errorMessage}>
+                  {this.state.modelErrorMessage}
+                </Typography>
                 <FormControl className={classes.newDeviceFormField}>
-                  <TextField
-                    id='monthYear'
-                    label="Device year and month"
-                    type="date"
-                    defaultValue={monthYear}
-                    inputProps={{
-                      name: 'monthYear',
-                    }}
+                  <InputLabel className={classes.fontSize}>Image URL</InputLabel>
+                  <Input
+                    value={image}
                     onChange={this.inputHandler}
+                    inputProps={{
+                      name: 'image',
+                      maxLength: '255',
+                      required: 'required',
+                    }}
                     className={classes.fontSize}
-                    InputLabelProps={{
-                      classes: { root: classes.label },
-                      shrink: true }}
                   />
                 </FormControl>
                 <FormControl className={classes.newDeviceFormField}>
@@ -275,6 +340,9 @@ class NewDevice extends React.Component {
                     className={classes.fontSize}
                   />
                 </FormControl>
+                <Typography variant='headline' className={classes.errorMessage}>
+                  {this.state.serialErrorMessage}
+                </Typography>
                 <FormControl className={classes.newDeviceFormField}>
                   <InputLabel className={classes.fontSize}>OS</InputLabel>
                   <Input
@@ -349,9 +417,12 @@ class NewDevice extends React.Component {
                     </Select>
                   </div>
                 </FormControl>
+                <Typography variant='headline' className={classes.errorMessage}>
+                  {this.state.locationErrorMessage}
+                </Typography>
                 <FormControl className={classes.newDeviceFormField}>
                   <TextField
-                    id="date"
+                    id="purchaseDate"
                     label="Device purchase date"
                     type="date"
                     defaultValue={date}
@@ -359,11 +430,15 @@ class NewDevice extends React.Component {
                       shrink: true,
                     }}
                     inputProps={{
-                      name: 'date',
+                      name: 'purchaseDate',
+                      required: 'required',
                     }}
                     onChange={this.inputHandler}
                   />
                 </FormControl>
+                <Typography variant='headline' className={classes.errorMessage}>
+                  {this.state.dateErrorMessage}
+                </Typography>
                 <FormControl className={classes.newDeviceFormField}>
                   <InputLabel className={classes.fontSize}>Vendor</InputLabel>
                   <Input
@@ -388,6 +463,9 @@ class NewDevice extends React.Component {
                     className={classes.fontSize}
                   />
                 </FormControl>
+                <Typography variant='headline' className={classes.errorMessage}>
+                  {this.state.errorInForm}
+                </Typography>
                 {/* </Grid> */}
 
                 <FormControl>
@@ -441,6 +519,17 @@ NewDevice.propTypes = {
     brandName: PropTypes.string.isRequired,
     models: PropTypes.array.isRequired,
   })).isRequired,
+  devices: PropTypes.arrayOf(PropTypes.shape({
+    brand: PropTypes.string.isRequired,
+    model: PropTypes.string.isRequired,
+    os: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired,
+    custody: PropTypes.number,
+    available: PropTypes.bool.isRequired,
+    active: PropTypes.bool.isRequired,
+    id: PropTypes.number.isRequired,
+  })).isRequired,
+  setDevices: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = store => ({
@@ -449,6 +538,7 @@ const mapStateToProps = store => ({
   // fetchingSignUp: store.auth.fetchingSignUp,
   offices: store.offices.offices,
   brands: store.brands.brands,
+  devices: store.devices.devices,
   // fetchOfficesLoading: store.offices.fetchOfficesLoading,
   // fetchOfficesErrorMessage: store.offices.fetchOfficesErrorMessage,
 });
@@ -457,4 +547,5 @@ export default withRouter(connect(mapStateToProps, {
   ...authActions, 
   ...officesActions,
   ...brandsActions,
+  ...devicesActions,
 })(withStyles(Styles)(NewDevice)));
