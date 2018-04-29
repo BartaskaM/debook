@@ -8,6 +8,8 @@ import Styles from './Styles';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
+import { LinearProgress } from 'material-ui/Progress';
+import Typography from 'material-ui/Typography';
 import Add from 'material-ui-icons/Add';
 import Remove from 'material-ui-icons/Remove';
 import Done from 'material-ui-icons/Done';
@@ -136,60 +138,63 @@ class DeviceList extends React.Component {
   }
 
   renderDevices() {
-    const { reservations, user, classes, history } = this.props;
+    const { user, classes, history, fetchingDevices } = this.props;
     const { bookButtonValues } = this.state;
-    const userReservations = reservations
-      .filter(res => res.user === user.id);
-    return this.filterDevices().map((device, index) => {
-      const userReservationForThisDevice = userReservations.find(res => res.device == device.id);
-      return (
+    const filteredDevices = this.filterDevices();
+    return filteredDevices.length === 0 ?
+      fetchingDevices ? null : 
+        <div className={classes.noItems}>
+          <Typography align="center" variant="display3">No items found</Typography>
+        </div> :
+      filteredDevices.map((device, index) => {
+        return (
         //Replace list with device component
-        <Grid item xs={4} key={index}>
-          <Paper className={classes.devicePaper}> 
-            <ListItem
-              className={classes.deviceItem}
-              button
-              dense
-              onClick={() => history.push(`/devices/${device.id.toString()}`)}>
-              <Device key={device.id} device={device} />
-            </ListItem>
-            <div className={classes.buttonsContainer}>
-              <Button
-                variant='raised'
-                disabled={
-                  device.available ? false : device.custody.id === user.id ? false : true
-                }
-                color={device.available ? 'primary' : 'secondary'}
-                className={classes.buttonLeft}
-                onClick={() => this.handleBookClick(device, userReservationForThisDevice)}>
-                {
-                  bookButtonValues[device.id] === 'Return device' ?
-                    <Remove className={classes.leftIcon} /> :
-                    bookButtonValues[device.id] === 'Check-in' ?
-                      <Done className={classes.leftIcon} /> :
-                      <Add className={classes.leftIcon} />
-                }
-                {bookButtonValues[device.id]}
-              </Button>
-              <Button
-                variant="raised"
-                className={classes.buttonRight}
-                onClick={
-                  userReservationForThisDevice ?
-                    () => this.openReservationDetails(userReservationForThisDevice) :
-                    () => this.openReserveDialog(device.id)}>
-                {
-                  userReservationForThisDevice ?
-                    <Description className={classes.leftIcon}/> :
-                    <Clock className={classes.leftIcon}/>
-                }
-                {userReservationForThisDevice ? 'Reservation details' : 'Reserve'}
-              </Button>
-            </div>
-          </Paper>
-        </Grid>
-      );
-    });
+          <Grid item xs={4} key={index}>
+            <Paper className={classes.devicePaper}> 
+              <ListItem
+                className={classes.deviceItem}
+                button
+                dense
+                onClick={() => history.push(`/devices/${device.id.toString()}`)}>
+                <Device key={device.id} device={device} />
+              </ListItem>
+              <div className={classes.buttonsContainer}>
+                <Button
+                  variant='raised'
+                  disabled={
+                    device.available ? false : device.custody.id === user.id ? false : true
+                  }
+                  color={device.available ? 'primary' : 'secondary'}
+                  className={classes.buttonLeft}
+                  onClick={() => this.handleBookClick(device)}>
+                  {
+                    bookButtonValues[device.id] === 'Return device' ?
+                      <Remove className={classes.leftIcon} /> :
+                      bookButtonValues[device.id] === 'Check-in' ?
+                        <Done className={classes.leftIcon} /> :
+                        <Add className={classes.leftIcon} />
+                  }
+                  {bookButtonValues[device.id]}
+                </Button>
+                <Button
+                  variant="raised"
+                  className={classes.buttonRight}
+                  onClick={
+                    device.userReservation ?
+                      () => this.openReservationDetails(device.userReservation) :
+                      () => this.openReserveDialog(device.id)}>
+                  {
+                    device.userReservation ?
+                      <Description className={classes.leftIcon}/> :
+                      <Clock className={classes.leftIcon}/>
+                  }
+                  {device.userReservation ? 'Reservation details' : 'Reserve'}
+                </Button>
+              </div>
+            </Paper>
+          </Grid>
+        );
+      });
   }
 
   openBookDialog(deviceId) {
@@ -206,15 +211,16 @@ class DeviceList extends React.Component {
   }
 
   render() {
-    const { classes, devices, user, users } = this.props;
-    return devices.length != 0 && user && users.length != 0 ? (
+    const { classes, fetchingDevices } = this.props;
+    return (
       <Grid container spacing={8} className={classes.root}>
-        {this.renderDevices()}
+        { fetchingDevices && <Grid item xs={12}><LinearProgress/></Grid> }
+        { this.renderDevices() }
         <BookModal />
         <ReserveModal />
         <ReturnModal />
       </Grid>
-    ) : '';
+    );
   }
 }
 
@@ -282,14 +288,6 @@ DeviceList.propTypes = {
   showBookModal: PropTypes.func.isRequired,
   setSelectedDevice: PropTypes.func.isRequired,
   showReserveModal: PropTypes.func.isRequired,
-  reservations: PropTypes.arrayOf(
-    PropTypes.shape({
-      device: PropTypes.number.isRequired,
-      user: PropTypes.number.isRequired,
-      from: PropTypes.object.isRequired,
-      to: PropTypes.object.isRequired,
-    })
-  ),
   setReservations: PropTypes.func.isRequired,
   users: PropTypes.array.isRequired,
   fetchUsers: PropTypes.func.isRequired,
@@ -298,6 +296,7 @@ DeviceList.propTypes = {
   checkInDevice: PropTypes.func.isRequired,
   showReturnModal: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  fetchingDevices: PropTypes.bool.isRequired,
 };
 const mapStateToProps = state => {
   return {
@@ -310,6 +309,7 @@ const mapStateToProps = state => {
     user: state.auth.user,
     reservations: state.devices.reservations,
     users: state.users.users,
+    fetchingDevices: state.devices.fetchingDevices,
   };
 };
 export default withRouter(connect(mapStateToProps, {
