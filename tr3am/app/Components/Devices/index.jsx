@@ -23,6 +23,5 @@ class Devices extends React.Component {
 }
 Devices.propTypes = {
   setDevices: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
 };
 export default connect(null, devicesActions)(Devices);

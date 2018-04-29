@@ -28,15 +28,23 @@ const Styles = theme => ({
     margin: theme.spacing.unit,
     position: 'relative',
   },
-  buttonProgress: {
-    position: 'absolute',
-    top: '50%',
-    right: 20,
-    marginTop: -12,
-    marginLeft: -12,
+  buttonLeft: {
+    height: 50,
+    fontSize: 14,
+    width: '44%',
+    margin: '3%',
+    position: 'left',
+    bottom: 0,
+    left: 0,
   },
-  progressBar: {
-    marginBottom: 12,
+  buttonRight: {
+    height: 50,
+    fontSize: 14,
+    width: '44%',
+    margin: '3%',
+    position: 'right',
+    bottom: 0,
+    right: 0,
   },
 });
   

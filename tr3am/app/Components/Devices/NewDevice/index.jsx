@@ -14,6 +14,7 @@ import {
   FormControl,
   FormGroup,
 } from 'material-ui/Form';
+import { withRouter, Link } from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
@@ -36,6 +37,7 @@ class NewDevice extends React.Component {
       // brand: props.brands[0] ? props.brands[0].id : null,
       brand: '',
       model: '',
+      newModel: false,
       date: '',
       serialNumber: '',
       os: '',
@@ -53,6 +55,7 @@ class NewDevice extends React.Component {
     this.setState.monthYear = dateToFullYear(new Date(Date.now()));
 
     this.inputHandler = this.inputHandler.bind(this);
+    this.inputHandlerForModel = this.inputHandlerForModel.bind(this);
     this.submitNewDeviceForm = this.submitNewDeviceForm.bind(this);
     
   }
@@ -69,6 +72,7 @@ class NewDevice extends React.Component {
       Name: this.state.deviceName,
       Brand: this.state.brand,
       Model: this.state.model,
+      newModel: this.state.newModel,
       PurchaseDate: this.state.date,
       Serial: this.state.serialNumber,
       OS: this.state.os,
@@ -81,12 +85,20 @@ class NewDevice extends React.Component {
       Someday: this.state.monthYear,
     };
     console.log(results);
-    //console.log(new Date(Date.now()).toLocaleString());
     
   }
 
   inputHandler(e) {
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  inputHandlerForModel(e) {
+    if (e.target.value === true)
+    {
+      this.setState({ ['newModel']: e.target.value });
+    }
+    else
+      this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
@@ -111,13 +123,28 @@ class NewDevice extends React.Component {
       taxRate,
       monthYear,
     } = this.state;
+
+    const newModelForm = this.state.newModel 
+      ? <div>
+        <InputLabel className={classes.fontSize}>Other model</InputLabel>
+        <Input
+          value={model}
+          onChange={this.inputHandler}
+          inputProps={{
+            name: 'model',
+          }}
+          className={classes.fontSize}
+        />
+      </div>
+      : null;
+
     return (
       <div className={classes.root}>
-        <Grid item xs={12} justify='center'>
-          <Grid item xs={3} />
-          <Paper>
+        <Grid justify='center'>
+          <Paper className={classes.root}>
             <form method='POST' onSubmit={this.submitNewDeviceForm}>
               <FormGroup>
+                {/* <Grid item xs={6}> */}
                 <Typography variant='headline'>
           Please fill in you details for new device in the form below
                 </Typography>
@@ -129,9 +156,10 @@ class NewDevice extends React.Component {
                       autoWidth={true}
                       inputProps={{
                         name: 'deviceActive',
+                        required: 'required',
                       }}
                       onChange={this.inputHandler}
-                      className={classes.fontSize}
+                      className={classes.select}
                     >
                       <MenuItem
                         value={true}
@@ -149,6 +177,7 @@ class NewDevice extends React.Component {
                     onChange={this.inputHandler}
                     inputProps={{
                       name: 'deviceName',
+                      maxLength: '255',
                     }}
                     className={classes.fontSize}
                   />
@@ -161,6 +190,7 @@ class NewDevice extends React.Component {
                       autoWidth={true}
                       inputProps={{
                         name: 'brand',
+                        required: 'required',
                       }}
                       onChange={this.inputHandler}
                       className={classes.select}
@@ -185,8 +215,9 @@ class NewDevice extends React.Component {
                       autoWidth={true}
                       inputProps={{
                         name: 'model',
+                        required: 'required',
                       }}
-                      onChange={this.inputHandler}
+                      onChange={this.inputHandlerForModel}
                       className={classes.select}
                     >
                       {/* {brands.models.map((model, i) => (
@@ -198,8 +229,14 @@ class NewDevice extends React.Component {
                           {model.name}
                         </MenuItem>
                       ))} */}
+                      <MenuItem
+                        value={true}
+                        className={classes.menuItemWidth}>Other model</MenuItem>
                     </Select>
                   </div>
+                </FormControl>
+                <FormControl>
+                  {newModelForm}
                 </FormControl>
                 <FormControl className={classes.newDeviceFormField}>
                   <TextField
@@ -224,6 +261,8 @@ class NewDevice extends React.Component {
                     onChange={this.inputHandler}
                     inputProps={{
                       name: 'serialNumber',
+                      maxLength: '255',
+                      required: 'required',
                     }}
                     className={classes.fontSize}
                   />
@@ -235,6 +274,8 @@ class NewDevice extends React.Component {
                     onChange={this.inputHandler}
                     inputProps={{
                       name: 'os',
+                      maxLength: '255',
+                      required: 'required',
                     }}
                     className={classes.fontSize}
                   />
@@ -246,6 +287,7 @@ class NewDevice extends React.Component {
                     onChange={this.inputHandler}
                     inputProps={{
                       name: 'group',
+                      maxLength: '255',
                     }}
                     className={classes.fontSize}
                   />
@@ -257,6 +299,7 @@ class NewDevice extends React.Component {
                     onChange={this.inputHandler}
                     inputProps={{
                       name: 'subgroup',
+                      maxLength: '255',
                     }}
                     className={classes.fontSize}
                   />
@@ -268,6 +311,7 @@ class NewDevice extends React.Component {
                     onChange={this.inputHandler}
                     inputProps={{
                       name: 'description',
+                      maxLength: '2000',
                     }}
                     className={classes.fontSize}
                   />
@@ -280,6 +324,7 @@ class NewDevice extends React.Component {
                       autoWidth={true}
                       inputProps={{
                         name: 'location',
+                        required: 'required',
                       }}
                       onChange={this.inputHandler}
                       className={classes.select}
@@ -318,6 +363,7 @@ class NewDevice extends React.Component {
                     onChange={this.inputHandler}
                     inputProps={{
                       name: 'vendor',
+                      required: 'required',
                     }}
                     className={classes.fontSize}
                   />
@@ -329,25 +375,35 @@ class NewDevice extends React.Component {
                     onChange={this.inputHandler}
                     inputProps={{
                       name: 'taxRate',
+                      required: 'required',
                     }}
                     className={classes.fontSize}
                   />
                 </FormControl>
+                {/* </Grid> */}
+
                 <FormControl>
+                  {/* <Grid Grid item xs={12} sm={6}> */}
                   <Button
                     type='submit'
                     variant="raised"
                     color="primary"
+                    className={classes.buttonLeft}
                   >
                 SAVE DEVICE
                   </Button>
-                  <Button
-                    variant="raised"
-                    color="primary"
-                    onClick={history.goBack}
-                  >
-                CANCEL
-                  </Button>
+                  {/* </Grid> */}
+                  {/* <Grid Grid item xs={12} sm={6}> */}
+                  <Link to={'/devices'}>
+                    <Button
+                      variant="raised"
+                      color="primary"
+                      className={classes.buttonRight}
+                    >
+                    CANCEL
+                    </Button>
+                  </Link>
+                  {/* </Grid> */}
                 </FormControl>
               </FormGroup>
             </form>
@@ -389,8 +445,8 @@ const mapStateToProps = store => ({
   // fetchOfficesErrorMessage: store.offices.fetchOfficesErrorMessage,
 });
 
-export default connect(mapStateToProps, {
+export default withRouter(connect(mapStateToProps, {
   ...authActions, 
   ...officesActions,
   ...brandsActions,
-})(withStyles(Styles)(NewDevice));
+})(withStyles(Styles)(NewDevice)));
