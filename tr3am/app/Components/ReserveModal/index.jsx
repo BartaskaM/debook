@@ -125,10 +125,10 @@ class ReserveModal extends React.Component {
     } = this.props;
     if (!this.checkForErrors(returnDate, currentDate) && !checkIfLate(currentDate)) {
       const reservation = {
-        device: selectedDevice,
+        deviceId: selectedDevice,
         from: currentDate,
         to: returnDate,
-        user: user.id,
+        userId: user.id,
         status: reservationStatus.pending,
       };
       reserveDevice(reservation, user);

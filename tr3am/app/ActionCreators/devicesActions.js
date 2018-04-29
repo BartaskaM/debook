@@ -163,7 +163,7 @@ export const reserveDevice = (reserveRequest) => async dispatch =>{
     dispatch({ 
       type: devices.RESERVE_SUCCESS,
       payload: {
-        bookedDeviceId: reserveRequest.device,
+        reservedDeviceId: reserveRequest.deviceId,
         userReservation,
       },
     });

@@ -92,7 +92,6 @@ namespace tr3am.Data
         public async Task<int> Create(ReservationRequest request, bool booking)
         {
             var device = _dbContext.Devices
-               .AsNoTracking()
                .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
 
 
@@ -127,6 +126,7 @@ namespace tr3am.Data
             _dbContext.Reservations.Add(newItem);
             if (booking)
             {
+                device.Result.Available = false;
                 device.Result.UserId = request.UserId;
             }
             await _dbContext.SaveChangesAsync();
