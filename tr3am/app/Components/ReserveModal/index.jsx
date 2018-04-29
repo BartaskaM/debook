@@ -244,13 +244,13 @@ class ReserveModal extends React.Component {
             { !showDetails && <ReservationsTable /> }
             { (reserving || cancelingReservation) && <LinearProgress/> }
             { 
-              reservingErrorMessage.length > 0 && 
+              reservingErrorMessage && 
               <Typography className={classes.errorMessage} variant="display1">
                 { reservingErrorMessage }
               </Typography>
             }
             { 
-              cancelingReservationErrorMessage.length > 0 && 
+              cancelingReservationErrorMessage && 
               <Typography className={classes.errorMessage} variant="display1">
                 { cancelingReservationErrorMessage }
               </Typography>

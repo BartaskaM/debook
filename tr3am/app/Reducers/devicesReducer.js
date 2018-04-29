@@ -19,18 +19,18 @@ const defaultState = {
   showReservationDetails: false,
   showReturnModal: false,
   booking: false,
-  bookingErrorMessage: '',
+  bookingErrorMessage: null,
   reserving: false,
-  reservingErrorMessage: '',
+  reservingErrorMessage: null,
   fetchingDeviceReservations: false,
-  fetchingDeviceReservationsErrorMessage: '',
+  fetchingDeviceReservationsErrorMessage: null,
   selectedDeviceReservations: [],
   fetchingDevices: false,
-  fetchingDevicesErrorMessage: '',
+  fetchingDevicesErrorMessage: null,
   returningDevice: false,
-  returningDeviceErrorMessage: '',
+  returningDeviceErrorMessage: null,
   cancelingReservation: false,
-  cancelingReservationErrorMessage: '',
+  cancelingReservationErrorMessage: null,
 };
 
 export default (state = defaultState, action) => {
@@ -95,7 +95,7 @@ export default (state = defaultState, action) => {
         showBookModal: false, 
         currentDateError: ' ', 
         returnDateError: ' ',
-        bookingErrorMessage: '',
+        bookingErrorMessage: null,
       };
     }
     case devices.SET_CURRENT_DATE: {
@@ -140,7 +140,7 @@ export default (state = defaultState, action) => {
         showReserveModal: false,
         currentDateError: ' ',
         returnDateError: ' ',
-        reservingErrorMessage: '',
+        reservingErrorMessage: null,
       };
     }
     case devices.SET_RESERVATIONS: {
@@ -181,7 +181,7 @@ export default (state = defaultState, action) => {
       return { ...state, showReturnModal: false };
     }
     case devices.BOOK_START: {
-      return {...state, booking: true, bookingErrorMessage: ''};
+      return {...state, booking: true, bookingErrorMessage: null};
     }
     case devices.BOOK_SUCCESS: {
       const { bookedDeviceId, user, userBooking } = action.payload;
@@ -209,7 +209,7 @@ export default (state = defaultState, action) => {
       return { ...state, booking: false, bookingErrorMessage: action.payload };
     }
     case devices.RESERVE_START: {
-      return {...state, reserving: true, reservingErrorMessage: ''};
+      return {...state, reserving: true, reservingErrorMessage: null};
     }
     case devices.RESERVE_SUCCESS: {
       const { reservedDeviceId, userReservation } = action.payload;
@@ -240,7 +240,7 @@ export default (state = defaultState, action) => {
         ...state,
         selectedDeviceReservations: [],
         fetchingDeviceReservations: true,
-        fetchingDeviceReservationsErrorMessage: '',
+        fetchingDeviceReservationsErrorMessage: null,
       };
     }
     case devices.FETCH_DEVICE_RESERVATIONS_SUCCESS: {
@@ -261,7 +261,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchingDevices: true,
-        fetchingDevicesErrorMessage: '',
+        fetchingDevicesErrorMessage: null,
       };
     }
     case devices.FETCH_DEVICES_SUCCESS: {
@@ -282,7 +282,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         returningDevice: true,
-        returningDeviceErrorMessage: '',
+        returningDeviceErrorMessage: null
       };
     }
     case devices.RETURN_DEVICE_SUCCESS: {
@@ -320,21 +320,21 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         cancelingReservation: true,
-        cancelingReservationErrorMessage: '',
+        cancelingReservationErrorMessage: null,
       };
     }
     case devices.CANCEL_RESERVATION_SUCCESS: {
       const { deviceId } = action.payload;
       return {
         ...state,
-        devices: state.devices.map(dev => {
-          if(dev.id == deviceId){
+        devices: state.devices.map(device => {
+          if(device.id == deviceId){
             return {
-              ...dev,
+              ...device,
               userReservation: null,
             };
           }
-          return dev;
+          return device;
         }),
         cancelingReservation: false,
         showReserveModal: false,

@@ -146,7 +146,7 @@ class BookModal extends React.Component {
             <ReservationsTable />
             { booking && <LinearProgress/> }
             { 
-              bookingErrorMessage.length > 0 && 
+              bookingErrorMessage && 
               <Typography className={classes.errorMessage} variant="display1">
                 { bookingErrorMessage }
               </Typography>

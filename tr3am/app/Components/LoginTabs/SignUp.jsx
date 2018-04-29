@@ -264,7 +264,7 @@ class SignUp extends React.Component {
                   ))}
                 </Select>
                 {
-                  fetchOfficesErrorMessage.length > 0 && 
+                  fetchOfficesErrorMessage && 
                 <FormHelperText>{fetchOfficesErrorMessage}</FormHelperText>
                 }
                 {

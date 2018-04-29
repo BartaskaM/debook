@@ -92,7 +92,7 @@ class ReturnModal extends React.Component {
             <CircularProgress size={18} className={classes.buttonProgress}/>}
           </span>
           { 
-            returningDeviceErrorMessage.length > 0 && 
+            returningDeviceErrorMessage && 
               <Typography className={classes.errorMessage} variant="display1">
                 { returningDeviceErrorMessage }
               </Typography>

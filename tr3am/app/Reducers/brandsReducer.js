@@ -4,7 +4,7 @@ const defaultState = {
   brands: [],
 
   fetchBrandsLoading: false,
-  fetchBrandsErrorMessage: '',
+  fetchBrandsErrorMessage: null,
 };
 
 export default (state = defaultState, action) => {
@@ -13,7 +13,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchBrandsLoading: true,
-        fetchBrandsErrorMessage: '',
+        fetchBrandsErrorMessage: null,
       };
     }
     case brands.FETCH_BRANDS_SUCCESS: {
