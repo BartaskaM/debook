@@ -170,7 +170,7 @@ class DeviceList extends React.Component {
                 onClick={() => history.push(`/devices/${device.id.toString()}`)}>
                 <div className={classes.itemContainer}>
                   <Device key={device.id} device={device} />
-                  { checkInLoading == device.id && <LinearProgress/> }
+                  { checkInLoading === device.id && <LinearProgress/> }
                 </div>
               </ListItem>
               <div className={classes.buttonsContainer}>

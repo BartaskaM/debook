@@ -142,7 +142,7 @@ class ReserveModal extends React.Component {
       selectedDevice,
       cancelReservation,
     } = this.props;
-    const deviceBooking = devices.find(dev => dev.id == selectedDevice).userReservation;
+    const deviceBooking = devices.find(dev => dev.id === selectedDevice).userReservation;
     const request = {
       id: deviceBooking.id,
       userId: user.id,
