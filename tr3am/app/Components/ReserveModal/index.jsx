@@ -137,16 +137,22 @@ class ReserveModal extends React.Component {
 
   cancelReservation() {
     const {
-      reservations,
       user,
-      setReservations,
+      devices,
       selectedDevice,
-      hideReservationDetails,
+      cancelReservation,
     } = this.props;
-    const newReservations = reservations
-      .filter(res => !(res.user == user.id && res.device == selectedDevice));
-    setReservations(newReservations);
-    hideReservationDetails();
+    const deviceBooking = devices.find(dev => dev.id === selectedDevice).userReservation;
+    const request = {
+      id: deviceBooking.id,
+      userId: user.id,
+      deviceId: selectedDevice,
+      from: deviceBooking.from.toISOString(),
+      to: deviceBooking.to.toISOString(),
+      status: reservationStatus.canceled,
+    };
+    cancelReservation(request);
+
   }
 
   roundTimes() {
@@ -179,6 +185,8 @@ class ReserveModal extends React.Component {
       currentDateError,
       reserving,
       reservingErrorMessage,
+      cancelReservationLoading,
+      cancelReservationErrorMessage,
     } = this.props;
     return (
       <div>
@@ -234,11 +242,17 @@ class ReserveModal extends React.Component {
               <FormHelperText className={classes.helperText}>{returnDateError}</FormHelperText>
             </FormControl>
             { !showDetails && <ReservationsTable /> }
-            { reserving && <LinearProgress/> }
+            { (reserving || cancelReservationLoading) && <LinearProgress/> }
             { 
-              reservingErrorMessage.length > 0 && 
+              reservingErrorMessage && 
               <Typography className={classes.errorMessage} variant="display1">
                 { reservingErrorMessage }
+              </Typography>
+            }
+            { 
+              cancelReservationErrorMessage && 
+              <Typography className={classes.errorMessage} variant="display1">
+                { cancelReservationErrorMessage }
               </Typography>
             }
           </DialogContent>
@@ -346,7 +360,10 @@ ReserveModal.propTypes = {
   currentDateError: PropTypes.string.isRequired,
   reserveDevice: PropTypes.func.isRequired,
   reserving: PropTypes.bool.isRequired,
-  reservingErrorMessage: PropTypes.string.isRequired,
+  reservingErrorMessage: PropTypes.string,
+  cancelReservation: PropTypes.func.isRequired,
+  cancelReservationLoading: PropTypes.bool.isRequired,
+  cancelReservationErrorMessage: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
@@ -362,6 +379,8 @@ const mapStateToProps = (state) => ({
   currentDateError: state.devices.currentDateError,
   reserving: state.devices.reserving,
   reservingErrorMessage: state.devices.reservingErrorMessage,
+  cancelReservationLoading: state.devices.cancelReservationLoading,
+  cancelReservationErrorMessage: state.devices.cancelReservationErrorMessage,
 });
 
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(ReserveModal));

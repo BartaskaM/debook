@@ -11,6 +11,7 @@ using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Enums;
 using tr3am.DataContracts.Requests.Reservations;
 using Microsoft.EntityFrameworkCore;
+using Action = tr3am.DataContracts.Enums.Action;
 
 namespace tr3am.Data
 {
@@ -124,11 +125,23 @@ namespace tr3am.Data
             };
 
             _dbContext.Reservations.Add(newItem);
+            Action eventAction = Action.Reserved;
             if (booking)
             {
+                eventAction = Action.Booked;
                 device.Result.Available = false;
                 device.Result.UserId = request.UserId;
             }
+
+            await _dbContext.Events.AddAsync(new Event
+            {
+                Action = eventAction,
+                OfficeId = device.Result.OfficeId,
+                UserId = request.UserId,
+                CreatedOn = DateTime.UtcNow,
+                DeviceId = request.DeviceId,
+            });
+
             await _dbContext.SaveChangesAsync();
 
             return newItem.Id;
@@ -166,22 +179,46 @@ namespace tr3am.Data
                 throw new InvalidUserException();
             }
 
-            if (office.Result == null)
+            Action eventAction = Action.ReservationCanceled;
+            int officeId = device.Result.OfficeId;
+
+            if (request.Status == Status.CheckedIn)
             {
-                throw new InvalidOfficeException();
+                device.Result.UserId = request.UserId;
+                device.Result.Available = false;
+                eventAction = Action.CheckedIn;
             }
+
+            if (request.Status == Status.Completed)
+            {
+                if (office.Result == null)
+                {
+                    throw new InvalidOfficeException();
+                }
+
+                eventAction = item.Status == Status.OverDue ? Action.ReturnedLate : Action.Returned;
+                officeId = office.Result.Id;
+
+                device.Result.UserId = null;
+                device.Result.Available = true;
+                device.Result.OfficeId = request.OfficeId.Value;
+            }
+
+            await _dbContext.Events.AddAsync(new Event
+            {
+                Action = eventAction,
+                OfficeId = officeId,
+                UserId = request.UserId,
+                CreatedOn = DateTime.UtcNow,
+                DeviceId = request.DeviceId,
+            });
 
             item.Status = request.Status;
             item.DeviceId = device.Result.Id;
             item.UserId = user.Result.Id;
             item.From = request.From;
             item.To = request.To;
-            if (request.Status == Status.Completed)
-            {
-                device.Result.UserId = null;
-                device.Result.Available = true;
-                device.Result.OfficeId = request.OfficeId;
-            }
+
             await _dbContext.SaveChangesAsync();
         }
 
@@ -202,7 +239,9 @@ namespace tr3am.Data
         {
             DateTime now = DateTime.UtcNow;
 
-            await _dbContext.Reservations.ForEachAsync(x =>
+            await _dbContext.Reservations
+                .Include(x => x.Device)
+                .ForEachAsync(async x =>
             {
                 if (x.Status == Status.Pending)
                 {
@@ -210,6 +249,14 @@ namespace tr3am.Data
                     if (now - x.From > FifteenMinutes)
                     {
                         x.Status = Status.Expired;
+                        await _dbContext.Events.AddAsync(new Event
+                        {
+                            Action = Action.ReservationExpired,
+                            OfficeId = x.Device.OfficeId,
+                            UserId = x.UserId,
+                            CreatedOn = DateTime.UtcNow,
+                            DeviceId = x.DeviceId,
+                        });
                     }
                 }
                 else if (x.Status == Status.CheckedIn)

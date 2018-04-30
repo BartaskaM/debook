@@ -36,7 +36,7 @@ class ReturnModal extends React.Component {
 
   returnDevice(){
     const { user, devices, returnDevice, selectedDevice } = this.props;
-    const deviceBooking = devices.find(dev => dev.id == selectedDevice).userBooking;
+    const deviceBooking = devices.find(dev => dev.id === selectedDevice).userBooking;
     const request = {
       id: deviceBooking.id,
       userId: user.id,
@@ -92,7 +92,7 @@ class ReturnModal extends React.Component {
             <CircularProgress size={18} className={classes.buttonProgress}/>}
           </span>
           { 
-            returningDeviceErrorMessage.length > 0 && 
+            returningDeviceErrorMessage && 
               <Typography className={classes.errorMessage} variant="display1">
                 { returningDeviceErrorMessage }
               </Typography>
@@ -180,7 +180,7 @@ ReturnModal.propTypes = {
   fetchOffices: PropTypes.func.isRequired,
   fetchOfficesLoading: PropTypes.bool.isRequired,
   returnDevice: PropTypes.func.isRequired,
-  returningDeviceErrorMessage: PropTypes.string.isRequired,
+  returningDeviceErrorMessage: PropTypes.string,
   returningDevice: PropTypes.bool.isRequired,
 };
 

@@ -4,10 +4,10 @@ const defaultState = {
   offices: [],
 
   fetchOfficesLoading: false,
-  fetchOfficesErrorMessage: '',
+  fetchOfficesErrorMessage: null,
 
   createOfficeLoading: false,
-  createOfficeErrorMessage: '',
+  createOfficeErrorMessage: null,
 
   showAddOfficeModal: false,
 };
@@ -18,7 +18,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchOfficesLoading: true,
-        fetchOfficesErrorMessage: '',
+        fetchOfficesErrorMessage: null,
       };
     }
     case offices.FETCH_OFFICES_SUCCESS: {
@@ -40,7 +40,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         createOfficeLoading: true,
-        createOfficeErrorMessage: '',
+        createOfficeErrorMessage: null,
       };
     }
     case offices.CREATE_OFFICE_SUCCESS: {

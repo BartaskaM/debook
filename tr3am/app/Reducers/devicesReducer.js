@@ -19,16 +19,18 @@ const defaultState = {
   showReservationDetails: false,
   showReturnModal: false,
   booking: false,
-  bookingErrorMessage: '',
+  bookingErrorMessage: null,
   reserving: false,
-  reservingErrorMessage: '',
+  reservingErrorMessage: null,
   fetchingDeviceReservations: false,
-  fetchingDeviceReservationsErrorMessage: '',
+  fetchingDeviceReservationsErrorMessage: null,
   selectedDeviceReservations: [],
   fetchingDevices: false,
-  fetchingDevicesErrorMessage: '',
+  fetchingDevicesErrorMessage: null,
   returningDevice: false,
-  returningDeviceErrorMessage: '',
+  returningDeviceErrorMessage: null,
+  cancelReservationLoading: false,
+  cancelReservationErrorMessage: null,
 };
 
 export default (state = defaultState, action) => {
@@ -93,7 +95,7 @@ export default (state = defaultState, action) => {
         showBookModal: false, 
         currentDateError: ' ', 
         returnDateError: ' ',
-        bookingErrorMessage: '',
+        bookingErrorMessage: null,
       };
     }
     case devices.SET_CURRENT_DATE: {
@@ -138,7 +140,7 @@ export default (state = defaultState, action) => {
         showReserveModal: false,
         currentDateError: ' ',
         returnDateError: ' ',
-        reservingErrorMessage: '',
+        reservingErrorMessage: null,
       };
     }
     case devices.SET_RESERVATIONS: {
@@ -162,16 +164,6 @@ export default (state = defaultState, action) => {
     case devices.HIDE_RESERVATION_DETAILS: {
       return { ...state, showReserveModal: false };
     }
-    case devices.CHECK_IN_DEVICE: {
-      const { deviceId, userId } = action.payload;
-      const updatedDevices = state.devices.map(device => {
-        if (device.id === deviceId) {
-          return { ...device, custody: userId, available: false };
-        }
-        return device;
-      });
-      return { ...state, devices: updatedDevices };
-    }
     case devices.SHOW_RETURN_MODAL: {
       return { ...state, showReturnModal: true, selectedDevice: action.payload };
     }
@@ -179,7 +171,7 @@ export default (state = defaultState, action) => {
       return { ...state, showReturnModal: false };
     }
     case devices.BOOK_START: {
-      return {...state, booking: true, bookingErrorMessage: ''};
+      return {...state, booking: true, bookingErrorMessage: null};
     }
     case devices.BOOK_SUCCESS: {
       const { bookedDeviceId, user, userBooking } = action.payload;
@@ -207,7 +199,7 @@ export default (state = defaultState, action) => {
       return { ...state, booking: false, bookingErrorMessage: action.payload };
     }
     case devices.RESERVE_START: {
-      return {...state, reserving: true, reservingErrorMessage: ''};
+      return {...state, reserving: true, reservingErrorMessage: null};
     }
     case devices.RESERVE_SUCCESS: {
       const { reservedDeviceId, userReservation } = action.payload;
@@ -238,7 +230,7 @@ export default (state = defaultState, action) => {
         ...state,
         selectedDeviceReservations: [],
         fetchingDeviceReservations: true,
-        fetchingDeviceReservationsErrorMessage: '',
+        fetchingDeviceReservationsErrorMessage: null,
       };
     }
     case devices.FETCH_DEVICE_RESERVATIONS_SUCCESS: {
@@ -259,7 +251,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchingDevices: true,
-        fetchingDevicesErrorMessage: '',
+        fetchingDevicesErrorMessage: null,
       };
     }
     case devices.FETCH_DEVICES_SUCCESS: {
@@ -280,7 +272,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         returningDevice: true,
-        returningDeviceErrorMessage: '',
+        returningDeviceErrorMessage: null,
       };
     }
     case devices.RETURN_DEVICE_SUCCESS: {
@@ -289,11 +281,12 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         devices: state.devices.map(dev => {
-          if(dev.id == deviceId){
+          if(dev.id === deviceId){
             return {
               ...dev,
               available: true,
               custody: null,
+              userBooking: null,
               location: {
                 id: office.id,
                 city: office.city,
@@ -302,7 +295,7 @@ export default (state = defaultState, action) => {
           }
           return dev;
         }),
-        fetchingDevices: false,
+        returningDevice: false,
         showReturnModal: false,
       };
     }
@@ -311,6 +304,70 @@ export default (state = defaultState, action) => {
         ...state,
         returningDevice: false,
         returningDeviceErrorMessage: action.payload,
+      };
+    }
+    case devices.CANCEL_RESERVATION_START: {
+      return {
+        ...state,
+        cancelReservationLoading: true,
+        cancelReservationErrorMessage: null,
+      };
+    }
+    case devices.CANCEL_RESERVATION_SUCCESS: {
+      const { deviceId } = action.payload;
+      return {
+        ...state,
+        devices: state.devices.map(device => {
+          if(device.id === deviceId){
+            return {
+              ...device,
+              userReservation: null,
+            };
+          }
+          return device;
+        }),
+        cancelReservationLoading: false,
+        showReserveModal: false,
+      };
+    }
+    case devices.CANCEL_RESERVATION_ERROR: {
+      return { 
+        ...state,
+        cancelReservationLoading: false,
+        cancelReservationErrorMessage: action.payload,
+      };
+    }
+    case devices.CHECK_IN_START: {
+      return {
+        ...state,
+        checkInLoading: action.payload,
+        checkInErrorMessage: null,
+      };
+    }
+    case devices.CHECK_IN_SUCCESS: {
+      const { deviceId, userBooking, user } = action.payload;
+      return {
+        ...state,
+        devices: state.devices.map(device => {
+          if(device.id === deviceId){
+            return {
+              ...device,
+              userReservation: null,
+              userBooking,
+              available: false,
+              custody: user,
+            };
+          }
+          return device;
+        }),
+        checkInLoading: false,
+      };
+    }
+    case devices.CHECK_IN_ERROR: {
+      return { 
+        ...state,
+        checkInLoading: false,
+        checkInErrorMessage: action.payload,
       };
     }
     default: return state;

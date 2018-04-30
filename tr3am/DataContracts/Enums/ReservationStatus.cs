@@ -6,6 +6,7 @@
         CheckedIn,
         Expired,
         Completed,
-        OverDue
+        OverDue,
+        Canceled,
     }
 }

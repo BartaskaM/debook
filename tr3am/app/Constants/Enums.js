@@ -4,4 +4,5 @@ export const reservationStatus = Object.freeze({
   expired: 2,
   completed: 3,
   overDue: 4,
+  canceled: 5,
 });

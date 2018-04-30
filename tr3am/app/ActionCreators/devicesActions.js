@@ -108,9 +108,6 @@ export const hideReturnModal = () => {
 export const showReturnModal = (selectedDevice) => {
   return { type: devices.SHOW_RETURN_MODAL, payload: selectedDevice };
 };
-export const checkInDevice = (deviceId, userId) => {
-  return { type: devices.CHECK_IN_DEVICE, payload: {deviceId, userId}};
-};
 export const bookDevice = (bookRequest, user) => async dispatch =>{
   dispatch({ type: devices.BOOK_START });
   try{
@@ -243,6 +240,48 @@ export const returnDevice = (booking) => async dispatch =>{
   } catch(e) {
     dispatch({ 
       type: devices.RETURN_DEVICE_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};
+
+export const cancelReservation = (reservation) => async dispatch => {
+  dispatch({ type: devices.CANCEL_RESERVATION_START });
+  try{
+    await api.put(`/reservations/${reservation.id}`, reservation);
+    dispatch({ 
+      type: devices.CANCEL_RESERVATION_SUCCESS,
+      payload: {
+        deviceId: reservation.deviceId,
+      },
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.CANCEL_RESERVATION_ERROR,
+      payload: e.response.data.message,
+    });
+  }
+};
+
+export const checkIn = (reservation, user) => async dispatch => {
+  dispatch({ type: devices.CHECK_IN_START, payload: reservation.deviceId });
+  try{
+    await api.put(`/reservations/${reservation.id}`, {
+      ...reservation,
+      from: reservation.from.toISOString(),
+      to: reservation.from.toISOString(),
+    });
+    dispatch({ 
+      type: devices.CHECK_IN_SUCCESS,
+      payload: {
+        deviceId: reservation.deviceId,
+        userBooking: reservation,
+        user,
+      },
+    });
+  } catch(e) {
+    dispatch({ 
+      type: devices.CHECK_IN_ERROR,
       payload: e.response.data.message,
     });
   }

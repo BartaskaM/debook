@@ -4,7 +4,7 @@ const defaultState = {
   events: [],
 
   fetchEventsLoading: false,
-  fetchEventsErrorMessage: '',
+  fetchEventsErrorMessage: null,
 };
 
 export default (state = defaultState, action) => {
@@ -13,7 +13,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchEventsLoading: true,
-        fetchEventsErrorMessage: '',
+        fetchEventsErrorMessage: null,
       };
     }
     case events.FETCH_EVENTS_SUCCESS: {
