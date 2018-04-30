@@ -281,7 +281,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         devices: state.devices.map(dev => {
-          if(dev.id == deviceId){
+          if(dev.id === deviceId){
             return {
               ...dev,
               available: true,
@@ -318,7 +318,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         devices: state.devices.map(device => {
-          if(device.id == deviceId){
+          if(device.id === deviceId){
             return {
               ...device,
               userReservation: null,
@@ -349,7 +349,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         devices: state.devices.map(device => {
-          if(device.id == deviceId){
+          if(device.id === deviceId){
             return {
               ...device,
               userReservation: null,

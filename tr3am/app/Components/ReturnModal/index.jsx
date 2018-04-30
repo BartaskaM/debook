@@ -36,7 +36,7 @@ class ReturnModal extends React.Component {
 
   returnDevice(){
     const { user, devices, returnDevice, selectedDevice } = this.props;
-    const deviceBooking = devices.find(dev => dev.id == selectedDevice).userBooking;
+    const deviceBooking = devices.find(dev => dev.id === selectedDevice).userBooking;
     const request = {
       id: deviceBooking.id,
       userId: user.id,
