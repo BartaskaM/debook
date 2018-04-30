@@ -62,22 +62,28 @@ class NewDevice extends React.Component {
 
     this.inputHandler = this.inputHandler.bind(this);
     this.inputHandlerForModel = this.inputHandlerForModel.bind(this);
+    this.inputHandlerForBrand = this.inputHandlerForBrand.bind(this);
     this.submitNewDeviceForm = this.submitNewDeviceForm.bind(this);
     this.isDeviceUnique = this.isDeviceUnique.bind(this);
     this.addNewModel = this.addNewModel.bind(this);
     this.areAllSelected = this.areAllSelected.bind(this);
+    this.loadModels = this.loadModels.bind(this);
     
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.props.fetchOffices();
     this.props.fetchBrands();
     this.props.setDevices(devices);
+    console.log('componentDidMount()');
   }
 
   submitNewDeviceForm(e) {
     e.preventDefault();
+    //const { addDevice, history  } = this.props;
+    const { addDevice } = this.props;
     console.log('Calling for errors');
+    
     if (this.areAllSelected()) {
       console.log('All fields filled');
       this.setState({ ['errorInForm']: '' });
@@ -85,12 +91,13 @@ class NewDevice extends React.Component {
         if (this.state.newModel) {
           this.setState({['model']: this.addNewModel()});
         }
-        const results = {
+        console.log(devices);
+        const newDevice = {
           active: this.state.deviceActive,
           name: this.state.deviceName,
           brand: this.state.brand,
           model: this.state.model,
-          purchaseDate: this.state.date,
+          purchaseDate: this.state.purchaseDate,
           serial: this.state.serialNumber,
           os: this.state.os,
           group: this.state.group,
@@ -101,7 +108,12 @@ class NewDevice extends React.Component {
           taxRate: this.state.taxRate,
           image: this.state.image,
         };
-        console.log(results);
+        console.log(newDevice);
+        const newDeviceID = addDevice(newDevice)['newDeviceID'];
+        console.log(newDeviceID);
+        // history.push(`/devices/${newDeviceID}`);
+        //history.push('/devices/9');
+        console.log(devices);
       }
       else
         this.setState({ ['errorInForm']: 'Check entered data' });
@@ -112,6 +124,17 @@ class NewDevice extends React.Component {
 
   inputHandler(e) {
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  inputHandlerForBrand(e) {
+    this.setState({ [e.target.name]: e.target.value });
+    this.loadModels(e.target.value);
+  }
+  
+  // TODO: implement loading of models list
+  loadModels(id) {
+    console.log('Loading models with Brand id: ', id);
+    //Load models
   }
 
   inputHandlerForModel(e) {
@@ -173,6 +196,7 @@ class NewDevice extends React.Component {
     }
   }
 
+  //TODO: implement adding of new model;
   addNewModel()
   {
     const newModelID = 1;
@@ -219,11 +243,12 @@ class NewDevice extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Grid container justify='center'>
-          <Paper className={classes.root}>
-            <form method='POST' onSubmit={this.submitNewDeviceForm}>
-              <FormGroup>
-                {/* <Grid item xs={6}> */}
+        {/* <Grid container justify='center'> */}
+        <Paper className={classes.root}>
+          <form method='POST' onSubmit={this.submitNewDeviceForm}>
+            <FormGroup>
+              {/* <Grid item xs={6}> */}
+              <Grid container direction='column'>
                 <Typography variant='headline'>
           Please fill in you details for new device in the form below
                 </Typography>
@@ -271,7 +296,7 @@ class NewDevice extends React.Component {
                         name: 'brand',
                         required: 'required',
                       }}
-                      onChange={this.inputHandler}
+                      onChange={this.inputHandlerForBrand}
                       className={classes.select}
                     >
                       {brands.map((brand, i) => (
@@ -467,14 +492,15 @@ class NewDevice extends React.Component {
                   {this.state.errorInForm}
                 </Typography>
                 {/* </Grid> */}
-
-                <FormControl>
+              </Grid>
+              <FormControl>
+                <div className={classes.buttonsContainer}>
                   {/* <Grid Grid item xs={12} sm={6}> */}
                   <Button
                     type='submit'
                     variant="raised"
                     color="primary"
-                    className={classes.buttonLeft}
+                    className={classes.button}
                   >
                 SAVE DEVICE
                   </Button>
@@ -484,17 +510,18 @@ class NewDevice extends React.Component {
                     <Button
                       variant="raised"
                       color="primary"
-                      className={classes.buttonRight}
+                      className={classes.button}
                     >
                     CANCEL
                     </Button>
                   </Link>
                   {/* </Grid> */}
-                </FormControl>
-              </FormGroup>
-            </form>
-          </Paper>
-        </Grid>
+                </div>
+              </FormControl>
+            </FormGroup>
+          </form>
+        </Paper>
+        {/* </Grid> */}
       </div>
     );
   }
@@ -520,25 +547,24 @@ NewDevice.propTypes = {
     models: PropTypes.array.isRequired,
   })).isRequired,
   devices: PropTypes.arrayOf(PropTypes.shape({
-    brand: PropTypes.string.isRequired,
-    model: PropTypes.string.isRequired,
+    brand: PropTypes.number.isRequired,
+    model: PropTypes.number.isRequired,
     os: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    custody: PropTypes.number,
-    available: PropTypes.bool.isRequired,
     active: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
   })).isRequired,
   setDevices: PropTypes.func.isRequired,
+  addDevice: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = store => ({
+const mapStateToProps = state => ({
   // signUpError: store.auth.signUpError,
   // currentTab: store.auth.currentTab,
   // fetchingSignUp: store.auth.fetchingSignUp,
-  offices: store.offices.offices,
-  brands: store.brands.brands,
-  devices: store.devices.devices,
+  offices: state.offices.offices,
+  brands: state.brands.brands,
+  devices: state.devices.devices,
   // fetchOfficesLoading: store.offices.fetchOfficesLoading,
   // fetchOfficesErrorMessage: store.offices.fetchOfficesErrorMessage,
 });

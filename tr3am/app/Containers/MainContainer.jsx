@@ -81,10 +81,9 @@ class MainContainer extends React.Component {
         <Route exact path='/newdevice' render={() =>
           <Auth component={() => (
             <div>
-
               <NewDevice />
             </div>
-          )} allowedRoles={RouteRoles.Brands} />
+          )} allowedRoles={RouteRoles.Offices} />
         } />
       </div>
     );

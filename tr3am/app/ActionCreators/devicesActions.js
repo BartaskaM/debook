@@ -167,3 +167,12 @@ export const fetchDeviceReservations = (deviceId) => async dispatch =>{
     });
   }
 };
+
+// ----------------------------------
+export const addDevice = (device) => {
+  //Temp solution for setting id
+  const newDeviceID = Math.floor(Math.random() * 10000) + 1;
+  device['id'] = newDeviceID;
+  //---------------------------
+  return { type: devices.ADD_DEVICE, payload: device, newDeviceID};
+};

@@ -17,10 +17,6 @@ const Styles = theme => ({
     fontSize: 14,
     width: 420,
   },
-  button: {
-    height: 50,
-    fontSize: 14,
-  },
   errorMessage: {
     color: 'red',
   },
@@ -28,23 +24,19 @@ const Styles = theme => ({
     margin: theme.spacing.unit,
     position: 'relative',
   },
-  buttonLeft: {
+  button: {
     height: 50,
     fontSize: 14,
-    width: '44%',
     margin: '3%',
-    position: 'left',
-    bottom: 0,
-    left: 0,
-  },
-  buttonRight: {
-    height: 50,
-    fontSize: 14,
-    width: '44%',
-    margin: '3%',
-    position: 'right',
+    fullWidth: 'true',
     bottom: 0,
     right: 0,
+  },
+  buttonsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    position: 'center',
+    marginTop: 25,
   },
 });
   
