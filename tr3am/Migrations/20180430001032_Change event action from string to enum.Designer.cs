@@ -12,9 +12,10 @@ using tr3am.DataContracts.Enums;
 namespace tr3am.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180430001032_Change event action from string to enum")]
+    partial class Changeeventactionfromstringtoenum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

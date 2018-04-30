@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Action = tr3am.DataContracts.Enums.Action;
 
 namespace tr3am.Data.Entities
 {
@@ -7,7 +8,7 @@ namespace tr3am.Data.Entities
     {
         public int Id { get; set; }
         [Required]
-        public string Action { get; set; }
+        public Action Action { get; set; }
         public int DeviceId { get; set; }
         public Device Device { get; set; }
         public int OfficeId { get; set; }

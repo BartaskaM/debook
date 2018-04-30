@@ -25,7 +25,7 @@ class ReservationsTable extends React.Component {
     res.from.getFullYear() === currentDate.getFullYear());
     return fetchingDeviceReservations ?
       this.renderLoadingBar() :
-      reservationsForThisDay.length == 0 ? 
+      reservationsForThisDay.length === 0 ? 
         this.renderNoReservations() :
         reservationsForThisDay
           .sort((a, b) => a.from.getTime() - b.from.getTime())

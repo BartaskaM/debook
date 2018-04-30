@@ -83,7 +83,7 @@ namespace tr3am.Data
                 DeviceId = device.Result.Id,
                 OfficeId = office.Result.Id,
                 UserId = user.Result.Id,
-                CreatedOn = request.Date_time,
+                CreatedOn = request.Date,
             };
 
             _dbContext.Events.Add(newItem);
@@ -132,7 +132,7 @@ namespace tr3am.Data
             item.DeviceId = device.Result.Id;
             item.OfficeId = office.Result.Id;
             item.UserId = user.Result.Id;
-            item.CreatedOn = request.Date_time;
+            item.CreatedOn = request.Date;
 
             await _dbContext.SaveChangesAsync();
         }

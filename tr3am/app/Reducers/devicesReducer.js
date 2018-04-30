@@ -164,16 +164,6 @@ export default (state = defaultState, action) => {
     case devices.HIDE_RESERVATION_DETAILS: {
       return { ...state, showReserveModal: false };
     }
-    case devices.CHECK_IN_DEVICE: {
-      const { deviceId, userId } = action.payload;
-      const updatedDevices = state.devices.map(device => {
-        if (device.id === deviceId) {
-          return { ...device, custody: userId, available: false };
-        }
-        return device;
-      });
-      return { ...state, devices: updatedDevices };
-    }
     case devices.SHOW_RETURN_MODAL: {
       return { ...state, showReturnModal: true, selectedDevice: action.payload };
     }
@@ -291,7 +281,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         devices: state.devices.map(dev => {
-          if(dev.id == deviceId){
+          if(dev.id === deviceId){
             return {
               ...dev,
               available: true,
@@ -305,7 +295,7 @@ export default (state = defaultState, action) => {
           }
           return dev;
         }),
-        fetchingDevices: false,
+        returningDevice: false,
         showReturnModal: false,
       };
     }
@@ -328,7 +318,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         devices: state.devices.map(device => {
-          if(device.id == deviceId){
+          if(device.id === deviceId){
             return {
               ...device,
               userReservation: null,
@@ -345,6 +335,39 @@ export default (state = defaultState, action) => {
         ...state,
         cancelReservationLoading: false,
         cancelReservationErrorMessage: action.payload,
+      };
+    }
+    case devices.CHECK_IN_START: {
+      return {
+        ...state,
+        checkInLoading: action.payload,
+        checkInErrorMessage: null,
+      };
+    }
+    case devices.CHECK_IN_SUCCESS: {
+      const { deviceId, userBooking, user } = action.payload;
+      return {
+        ...state,
+        devices: state.devices.map(device => {
+          if(device.id === deviceId){
+            return {
+              ...device,
+              userReservation: null,
+              userBooking,
+              available: false,
+              custody: user,
+            };
+          }
+          return device;
+        }),
+        checkInLoading: false,
+      };
+    }
+    case devices.CHECK_IN_ERROR: {
+      return { 
+        ...state,
+        checkInLoading: false,
+        checkInErrorMessage: action.payload,
       };
     }
     default: return state;
