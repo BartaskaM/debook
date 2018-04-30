@@ -559,14 +559,10 @@ NewDevice.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  // signUpError: store.auth.signUpError,
-  // currentTab: store.auth.currentTab,
-  // fetchingSignUp: store.auth.fetchingSignUp,
   offices: state.offices.offices,
   brands: state.brands.brands,
   devices: state.devices.devices,
   // fetchOfficesLoading: store.offices.fetchOfficesLoading,
-  // fetchOfficesErrorMessage: store.offices.fetchOfficesErrorMessage,
 });
 
 export default withRouter(connect(mapStateToProps, {

@@ -208,6 +208,12 @@ class DeviceList extends React.Component {
     return (
       <Grid container spacing={8} className={classes.root}>
         {this.renderDevices()}
+
+        { fetchingDevices && <Grid item xs={12}><LinearProgress/></Grid> }
+        { this.renderDevices() }
+        <BookModal />
+        <ReserveModal />
+        <ReturnModal />
         <Grid item xs={12}>
           <Link to={'/newdevice'}>
             <Button
@@ -219,11 +225,6 @@ class DeviceList extends React.Component {
           </Link>
 
         </Grid>
-        { fetchingDevices && <Grid item xs={12}><LinearProgress/></Grid> }
-        { this.renderDevices() }
-        <BookModal />
-        <ReserveModal />
-        <ReturnModal />
       </Grid>
     );
   }
