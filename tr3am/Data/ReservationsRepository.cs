@@ -23,7 +23,7 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<ReservationDTO>> GetAll(bool showAll)
+        public async Task<IEnumerable<ReservationDto>> GetAll(bool showAll)
         {
             await RefreshReservations();
 
@@ -32,39 +32,38 @@ namespace tr3am.Data
                 return await _dbContext.Reservations
                     .AsNoTracking()
                     .Include(x => x.User)
-                    .Include(x => x.Device)
-                    .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
+                    .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
                     .ToListAsync();
             }
             else
             {
                 return await _dbContext.Reservations
                     .AsNoTracking()
+                    .Include(x => x.User)
                     .Where(x =>
                         x.Status == Status.CheckedIn || x.Status == Status.Pending || x.Status == Status.OverDue)
-                    .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
+                    .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
                     .ToListAsync();
             }
         }
 
-        public async Task<ReservationDTO> GetById(int id)
+        public async Task<ReservationDto> GetById(int id)
         {
             await RefreshReservations();
 
             var item = await _dbContext.Reservations
                 .AsNoTracking()
                 .Include(x => x.User)
-                .Include(x => x.Device)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidReservationException();
             }
 
-            return Mapper.Map<Reservation, ReservationDTO>(item);
+            return Mapper.Map<Reservation, ReservationDto>(item);
         }
 
-        public async Task<IEnumerable<ReservationDTO>> GetByDeviceId(int id, bool showAll)
+        public async Task<IEnumerable<ReservationDto>> GetByDeviceId(int id, bool showAll)
         {
             await RefreshReservations();
 
@@ -72,17 +71,19 @@ namespace tr3am.Data
             {
                 return await _dbContext.Reservations
                     .AsNoTracking()
+                    .Include(x => x.User)
                     .Where(x => x.Device.Id == id)
-                    .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
+                    .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
                     .ToListAsync();
             }
             else
             {
                 return await _dbContext.Reservations
                     .AsNoTracking()
+                    .Include(x => x.User)
                     .Where(x => x.Device.Id == id && (x.Status == Status.CheckedIn || x.Status == Status.OverDue ||
                                                x.Status == Status.Pending))
-                    .Select(x => Mapper.Map<Reservation, ReservationDTO>(x))
+                    .Select(x => Mapper.Map<Reservation, ReservationDto>(x))
                     .ToListAsync();
             }
 
@@ -91,7 +92,6 @@ namespace tr3am.Data
         public async Task<int> Create(ReservationRequest request, bool booking)
         {
             var device = _dbContext.Devices
-               .AsNoTracking()
                .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
 
 
@@ -99,7 +99,7 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-            await Task.WhenAll(new Task[] { device, user });
+            await Task.WhenAll(device, user);
             if (device.Result == null)
             {
                 throw new InvalidDeviceException();
@@ -124,12 +124,17 @@ namespace tr3am.Data
             };
 
             _dbContext.Reservations.Add(newItem);
+            if (booking)
+            {
+                device.Result.Available = false;
+                device.Result.UserId = request.UserId;
+            }
             await _dbContext.SaveChangesAsync();
 
             return newItem.Id;
         }
 
-        public async Task Update(int id, ReservationRequest request)
+        public async Task Update(int id, ReservationUpdateRequest request)
         {
             var item = await _dbContext.Reservations
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -138,32 +143,46 @@ namespace tr3am.Data
                 throw new InvalidReservationException();
             }
 
-            var device = _dbContext.Devices
-               .AsNoTracking()
-               .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
+            var office = _dbContext.Offices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
 
+            var device = _dbContext.Devices
+               .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
 
             var user = _dbContext.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-            await Task.WhenAll(new Task[] { device, user });
+            await Task.WhenAll(device, user, office);
+
             if (device.Result == null)
             {
                 throw new InvalidDeviceException();
             }
+
             if (user.Result == null)
             {
                 throw new InvalidUserException();
             }
 
-            await CheckIfDateAvailable(request.From, request.To, device.Result);
+            if (office.Result == null)
+            {
+                throw new InvalidOfficeException();
+            }
 
             item.Status = request.Status;
             item.DeviceId = device.Result.Id;
             item.UserId = user.Result.Id;
             item.From = request.From;
             item.To = request.To;
+            if (request.Status == Status.Completed)
+            {
+                device.Result.UserId = null;
+                device.Result.Available = true;
+                device.Result.OfficeId = request.OfficeId;
+            }
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
@@ -201,6 +220,8 @@ namespace tr3am.Data
                     }
                 }
             });
+
+            await _dbContext.SaveChangesAsync();
         }
 
         private DateTime RoundTime(DateTime date)
@@ -222,19 +243,21 @@ namespace tr3am.Data
                 throw new NegativeDateException();
             }
 
-            await _dbContext.Reservations
+            var reservations = await _dbContext.Reservations
                 .Where(x => x.Device.Id == device.Id &&
-                (x.Status == Status.CheckedIn || x.Status == Status.OverDue
-                || x.Status == Status.Pending))
-                .ForEachAsync(x =>
+                            (x.Status == Status.CheckedIn || x.Status == Status.OverDue
+                                                          || x.Status == Status.Pending))
+                .ToListAsync();
+
+            foreach (var reservation in reservations)
+            {
+                if (CheckIfDateIsWithinReservation(from, reservation)
+                    || CheckIfDateIsWithinReservation(to, reservation)
+                    || CheckIfReservationIsWithinDates(from, to, reservation))
                 {
-                    if (CheckIfDateIsWithinReservation(from, x)
-                        || CheckIfDateIsWithinReservation(to, x)
-                        || CheckIfReservationIsWithinDates(from, to, x))
-                    {
-                        throw new UsedDateException();
-                    }
-                });
+                    throw new UsedDateException();
+                }
+            }
         }
         private bool CheckIfDateIsWithinReservation(DateTime date, Reservation reservation)
         {
@@ -244,5 +267,6 @@ namespace tr3am.Data
         {
             return reservation.To < to && reservation.From > from;
         }
+
     }
 }

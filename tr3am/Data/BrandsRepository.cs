@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,16 +20,16 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<BrandDTO>> GetAll()
+        public async Task<IEnumerable<BrandDto>> GetAll()
         {
             return await _dbContext.Brands
                 .AsNoTracking()
                 .Include(x => x.Models)
-                .Select(x => Mapper.Map<Brand, BrandDTO>(x))
+                .Select(x => Mapper.Map<Brand, BrandDto>(x))
                 .ToListAsync();
         }
 
-        public async Task<BrandDTO> GetById(int id)
+        public async Task<BrandDto> GetById(int id)
         {
             var item = await _dbContext.Brands
                 .AsNoTracking()
@@ -41,14 +40,14 @@ namespace tr3am.Data
                 throw new InvalidBrandException();
             }
 
-            return Mapper.Map<Brand, BrandDTO>(item);
+            return Mapper.Map<Brand, BrandDto>(item);
         }
 
         public async Task<int> Create(BrandItemRequest request)
         {
             var newItem = new Brand
             {
-                BrandName = request.BrandName,
+                Name = request.Name,
                 Image = request.Image,
             };
 
@@ -67,7 +66,7 @@ namespace tr3am.Data
         {
             var result = await _dbContext.Brands
                 .FirstOrDefaultAsync(x =>
-                x.BrandName == brand.BrandName ||
+                x.Name == brand.Name ||
                 x.Image == brand.Image);
 
             if (result != null)
@@ -87,7 +86,7 @@ namespace tr3am.Data
                 throw new InvalidBrandException();
             }
 
-            item.BrandName = request.BrandName;
+            item.Name = request.Name;
             item.Image = request.Image;
 
             await _dbContext.SaveChangesAsync();

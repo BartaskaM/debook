@@ -1,6 +1,7 @@
 const Styles =  ({
   deviceCardImage: {
-    width: 150,
+    height: 200,
+    width: 'auto',
     display: 'block',
     margin: 'auto',
   },

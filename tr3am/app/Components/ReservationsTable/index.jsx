@@ -19,18 +19,16 @@ class ReservationsTable extends React.Component {
       currentDate,
       fetchingDeviceReservations,
     } = this.props;
-    
     const reservationsForThisDay = selectedDeviceReservations.filter(res => 
       res.from.getDate() === currentDate.getDate() && 
     res.from.getMonth() === currentDate.getMonth() &&
     res.from.getFullYear() === currentDate.getFullYear());
-
     return fetchingDeviceReservations ?
       this.renderLoadingBar() :
       reservationsForThisDay.length == 0 ? 
         this.renderNoReservations() :
         reservationsForThisDay
-          .sort(res => res.from)
+          .sort((a, b) => a.from.getTime() - b.from.getTime())
           .map((res, i) => {
             const { from, to, user } = res;
             return <Row key={i} first={`${dateToHours(from)} - ${dateToHours(to)}`} 
@@ -82,14 +80,20 @@ ReservationsTable.propTypes = {
   classes: PropTypes.object.isRequired,
   selectedDeviceReservations: PropTypes.arrayOf(
     PropTypes.shape({
-      device: PropTypes.number.isRequired,
-      user: PropTypes.number.isRequired,
+      id: PropTypes.number.isRequired,
+      deviceId: PropTypes.number.isRequired,
+      user: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        firstName: PropTypes.string.isRequired,
+        lastName: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+      }).isRequired,
       from: PropTypes.object.isRequired,
       to: PropTypes.object.isRequired,
       status: PropTypes.number.isRequired,
     })
   ),
-  currentDate: PropTypes.object.isRequired,
+  currentDate: PropTypes.instanceOf(Date).isRequired,
   fetchingDeviceReservations: PropTypes.bool.isRequired,
 };
 

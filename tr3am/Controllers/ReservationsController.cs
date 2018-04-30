@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +21,7 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ReservationDTO>> GetAll([FromQuery]bool showAll)
+        public async Task<IEnumerable<ReservationDto>> GetAll([FromQuery]bool showAll)
         {
             return await _reservationsRepository.GetAll(showAll);
         }
@@ -79,8 +78,8 @@ namespace tr3am.Controllers
             }
         }
 
-        [HttpPost("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody]ReservationRequest request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody]ReservationUpdateRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -105,18 +104,10 @@ namespace tr3am.Controllers
                 string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
-            catch (UsedDateException)
+            catch (InvalidOfficeException)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This date is already reserved" });
-            }
-            catch (NegativeDateException)
-            {
-                return StatusCode(StatusCodes.Status409Conflict,
-                    new { Message = "To date must be greater than from date" });
-            }
-            catch (PastDateException)
-            {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "Reserve for future dates" });
+                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }
 

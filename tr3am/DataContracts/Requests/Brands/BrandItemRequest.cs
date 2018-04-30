@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace tr3am.DataContracts.Requests.Brands
 {
@@ -12,6 +8,6 @@ namespace tr3am.DataContracts.Requests.Brands
         public string Image { get; set; }
         [Required]
         [MaxLength(256)]
-        public string BrandName { get; set; }
+        public string Name { get; set; }
     }
 }

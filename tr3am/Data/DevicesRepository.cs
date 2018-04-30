@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -21,7 +20,7 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<ShortDeviceDTO>> GetAll()
+        public async Task<IEnumerable<ShortDeviceDto>> GetAll(int userId)
         {
             return await _dbContext.Devices
                 .AsNoTracking()
@@ -29,11 +28,13 @@ namespace tr3am.Data
                 .Include(x => x.User)
                 .Include(x => x.Brand)
                 .Include(x => x.Model)
+                .Include(x => x.Reservations)
                 .Where(x => x.Active)
-                .Select(x => Mapper.Map<Device, ShortDeviceDTO>(x)).ToListAsync();
+                .Select(x => Mapper.Map<Device, ShortDeviceDto>(x, opt => opt.Items.Add("UserId", userId)))
+                .ToListAsync();
         }
 
-        public async Task<FullDeviceDTO> GetById(int id)
+        public async Task<FullDeviceDto> GetById(int id)
         {
             var item = await _dbContext.Devices
                 .AsNoTracking()
@@ -47,7 +48,7 @@ namespace tr3am.Data
                 throw new InvalidDeviceException();
             }
 
-            return Mapper.Map<Device, FullDeviceDTO>(item);
+            return Mapper.Map<Device, FullDeviceDto>(item);
         }
 
         public async Task<int> Create(CreateDeviceRequest request)
@@ -64,7 +65,7 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.ModelId);
 
-            await Task.WhenAll(new Task[] { office, brand, model });
+            await Task.WhenAll(office, brand, model);
             if (office.Result == null)
             {
                 throw new InvalidOfficeException();
@@ -136,7 +137,7 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.ModelId);
 
-            await Task.WhenAll(new Task[] { office, brand, model });
+            await Task.WhenAll(office, brand, model);
             if (office.Result == null)
             {
                 throw new InvalidOfficeException();

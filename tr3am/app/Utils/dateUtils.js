@@ -13,7 +13,7 @@ export const roundTime = (date) => {
   );
 };
 export const checkForReservation = (from, to, reservations, selectedDevice) => {
-  return reservations.filter(res => res.device === selectedDevice && (
+  return reservations.filter(res => res.deviceId === selectedDevice && (
     checkIfDateIsWithinReservation(to, res) ||
     checkIfDateIsWithinReservation(from, res) ||
     checkIfReservationIsWithinDates(from, to, res)
