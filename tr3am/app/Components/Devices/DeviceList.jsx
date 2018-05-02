@@ -50,15 +50,17 @@ class DeviceList extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps) {
-    const { devices } = nextProps;
-    return { bookButtonValues: DeviceList.formBookButtonValuesArray(devices) };
+    const { devices, removeReservationFromDevice } = nextProps;
+    return { 
+      bookButtonValues: DeviceList.formBookButtonValuesArray(devices, removeReservationFromDevice), 
+    };
   }
 
-  static formBookButtonValuesArray(devices) {
+  static formBookButtonValuesArray(devices, removeReservation) {
     const bookButtonValues = [];
     devices.forEach(device => {
       if (device.available) {
-        if (DeviceList.canCheckIn(device.userReservation)) {
+        if (DeviceList.canCheckIn(device.userReservation, () => removeReservation(device.id))) {
           bookButtonValues[device.id] = 'Check-in';
         } else {
           bookButtonValues[device.id] = 'Book device';
@@ -75,9 +77,9 @@ class DeviceList extends React.Component {
   }
 
   getBookButtonValues() {
-    const { devices } = this.props;
+    const { devices, removeReservationFromDevice } = this.props;
     this.setState({
-      bookButtonValues: DeviceList.formBookButtonValuesArray(devices),
+      bookButtonValues: DeviceList.formBookButtonValuesArray(devices, removeReservationFromDevice),
     });
   }
 
@@ -112,22 +114,25 @@ class DeviceList extends React.Component {
     return devicesToRender;
   }
 
-  static canCheckIn(reservation) {
+  static canCheckIn(reservation, removeReservation) {
     if (reservation) {
       const now = new Date();
-      if (reservation.from - now < fifteenMinutes) {
+      if (reservation.from - now < fifteenMinutes && now - reservation.from < fifteenMinutes) {
         return true;
       } else {
+        if(reservation && now - reservation.from >= fifteenMinutes){
+          removeReservation();
+        }
         return false;
       }
     }
   }
 
   handleBookClick(device) {
-    const { showReturnModal, checkIn, user } = this.props;
+    const { showReturnModal, checkIn, user, removeReservationFromDevice } = this.props;
     return device.custody ?
       showReturnModal(device.id) :
-      DeviceList.canCheckIn(device.userReservation) ?
+      DeviceList.canCheckIn(device.userReservation, () => removeReservationFromDevice(device.id)) ?
         checkIn({
           id: device.userReservation.id,
           userId: user.id,
@@ -308,7 +313,8 @@ DeviceList.propTypes = {
   history: PropTypes.object.isRequired,
   fetchingDevices: PropTypes.bool.isRequired,
   checkIn: PropTypes.func.isRequired,
-  checkInLoading: PropTypes.number.isRequired,
+  checkInLoading: PropTypes.number,
+  removeReservationFromDevice: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => {
   return {
