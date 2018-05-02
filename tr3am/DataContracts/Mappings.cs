@@ -33,6 +33,8 @@ namespace tr3am.DataContracts
                         opt.ResolveUsing<FullDeviceUserReservationResolver>())
                     .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Office))
                     .ForMember(dest => dest.Custody, opt => opt.MapFrom(src => src.User))
+                    .ForMember(dest => dest.Purchased,
+                        opt => opt.MapFrom(src => DateTime.SpecifyKind(src.Purchased, DateTimeKind.Utc)))
                     .ForMember(dest => dest.Reservations,
                         opt => opt.MapFrom(src => src.Reservations.Where(res =>
                             res.Status == Status.Pending || res.Status == Status.CheckedIn ||
