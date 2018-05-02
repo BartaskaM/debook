@@ -214,7 +214,7 @@ class ReserveModal extends React.Component {
               disabled={showDetails}
               label="Reservation day"
               showTodayButton
-              disablePast
+              disablePast={!showDetails}
               format="DD/MM/YYYY"
               value={currentDate}
               onChange={this.handleDateChange}

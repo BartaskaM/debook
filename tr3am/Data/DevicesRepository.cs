@@ -14,14 +14,17 @@ namespace tr3am.Data
     public class DevicesRepository : IDevicesRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly IReservationsRepository _reservationsRepository;
 
-        public DevicesRepository(AppDbContext dbContext)
+        public DevicesRepository(AppDbContext dbContext, IReservationsRepository reservationsRepository)
         {
             _dbContext = dbContext;
+            _reservationsRepository = reservationsRepository;
         }
 
         public async Task<IEnumerable<ShortDeviceDto>> GetAll(int userId)
         {
+            await _reservationsRepository.RefreshReservations();
             return await _dbContext.Devices
                 .AsNoTracking()
                 .Include(x => x.Office)

@@ -286,3 +286,10 @@ export const checkIn = (reservation, user) => async dispatch => {
     });
   }
 };
+
+export const removeReservationFromDevice = (deviceId) => {
+  return {
+    type: devices.REMOVE_DEVICE_RESERVATION,
+    payload: deviceId,
+  };
+};
