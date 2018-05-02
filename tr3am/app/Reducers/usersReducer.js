@@ -4,7 +4,7 @@ const defaultState = {
   users: [],
 
   fetchUsersLoading: false,
-  fetchUsersErrorMessage: '',
+  fetchUsersErrorMessage: null,
 };
 
 export default (state = defaultState, action) => {
@@ -13,7 +13,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchUsersLoading: true,
-        fetchUsersErrorMessage: '',
+        fetchUsersErrorMessage: null,
       };
     }
     case users.FETCH_USERS_SUCCESS: {

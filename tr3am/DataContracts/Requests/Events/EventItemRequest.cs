@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Action = tr3am.DataContracts.Enums.Action;
 
 namespace tr3am.DataContracts.Requests.Events
 {
@@ -7,7 +8,7 @@ namespace tr3am.DataContracts.Requests.Events
     {
         [Required]
         [MaxLength(64)]
-        public string Action { get; set; }
+        public Action Action { get; set; }
         [Required]
         public int DeviceId { get; set; }
         [Required]
@@ -15,6 +16,6 @@ namespace tr3am.DataContracts.Requests.Events
         [Required]
         public int UserId { get; set; }
         [Required]
-        public DateTime Date_time { get; set; }
+        public DateTime Date { get; set; }
     }
 }
