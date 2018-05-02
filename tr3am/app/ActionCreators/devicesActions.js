@@ -193,15 +193,30 @@ export const fetchDeviceReservations = (deviceId) => async dispatch =>{
   }
 };
 
-// ----------------------------------
-export const addDevice = (device) => {
-  //Temp solution for setting id
-  const newDeviceID = Math.floor(Math.random() * 10000) + 1;
-  device['id'] = newDeviceID;
-  //---------------------------
-  return { type: devices.ADD_DEVICE, payload: device, newDeviceID};
+export const createDevice = (device, history) => async (dispatch) => {
+  dispatch({ 
+    type: devices.CREATE_DEVICE_START,
+  });
+  
+  try {
+    const response = await api.post('/devices', device);
+    device['id'] = response.data;
+    
+    history.push(`/devices/${response.data}`);
+
+    dispatch({
+      type: devices.CREATE_DEVICE_SUCCESS,
+      payload: device,
+    });
+  } catch (e) {
+    dispatch({ 
+      type: device.CREATE_DEVICE_ERROR, 
+      payload: e.toString(), 
+    });
+  }
 };
 
+//-----------------------
 export const fetchDevices = (userId) => async dispatch =>{
   dispatch({ type: devices.FETCH_DEVICES_START });
   try{

@@ -17,10 +17,10 @@ import {
   FormGroup,
 } from 'material-ui/Form';
 import { withRouter, Link } from 'react-router-dom';
-import TextField from 'material-ui/TextField';
+//import TextField from 'material-ui/TextField';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
-
+import { DatePicker } from 'material-ui-pickers';
 // import { dateToFullYear } from 'Utils/dateUtils';
 
 import Styles from './Styles';
@@ -58,6 +58,7 @@ class NewDevice extends React.Component {
       modelErrorMessage: '',
       dateErrorMessage: '',
       errorInForm: '',
+      modelFieldDisabled: true,
     };
 
     this.inputHandler = this.inputHandler.bind(this);
@@ -68,21 +69,22 @@ class NewDevice extends React.Component {
     this.addNewModel = this.addNewModel.bind(this);
     this.areAllSelected = this.areAllSelected.bind(this);
     this.loadModels = this.loadModels.bind(this);
+    this.createNewDevice = this.createNewDevice.bind(this);
     
   }
 
   componentDidMount() {
     this.props.fetchOffices();
     this.props.fetchBrands();
-    this.props.setDevices(devices);
-    console.log('componentDidMount()');
+    //this.props.setDevices(devices);
+    //console.log('componentDidMount()');
   }
 
   submitNewDeviceForm(e) {
     e.preventDefault();
     //const { addDevice, history  } = this.props;
-    const { addDevice } = this.props;
-    console.log('Calling for errors');
+    //const { addDevice } = this.props;
+    // console.log('Calling for errors');
     
     if (this.areAllSelected()) {
       console.log('All fields filled');
@@ -109,11 +111,12 @@ class NewDevice extends React.Component {
           image: this.state.image,
         };
         console.log(newDevice);
-        const newDeviceID = addDevice(newDevice)['newDeviceID'];
-        console.log(newDeviceID);
+        //const newDeviceID = addDevice(newDevice)['newDeviceID'];
+        //console.log(newDeviceID);
         // history.push(`/devices/${newDeviceID}`);
         //history.push('/devices/9');
-        console.log(devices);
+        this.createNewDevice();
+        //console.log(devices);
       }
       else
         this.setState({ ['errorInForm']: 'Check entered data' });
@@ -122,12 +125,34 @@ class NewDevice extends React.Component {
       this.setState({ ['errorInForm']: 'Check entered data' });
   }
 
+  createNewDevice() {
+    const newDevice = {
+      active: this.state.deviceActive,
+      brandid: this.state.brand,
+      description: this.state.description,
+      identificationnum: 'NoNumber',
+      image: this.state.image,
+      modelid: this.state.model,
+      name: this.state.deviceName,
+      officeid: this.state.location,
+      purchased: this.state.purchaseDate,
+      serialnum: this.state.serialNumber,
+      os: this.state.os,
+      taxrate: this.state.taxRate,
+      vendor: this.state.vendor,
+      available: true,
+    };
+    
+    this.props.createDevice(newDevice, this.props.history);
+  }
+
   inputHandler(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
   inputHandlerForBrand(e) {
     this.setState({ [e.target.name]: e.target.value });
+    this.setState({ ['modelFieldDisabled']: false });
     this.loadModels(e.target.value);
   }
   
@@ -296,6 +321,7 @@ class NewDevice extends React.Component {
                         name: 'brand',
                         required: 'required',
                       }}
+                      errorText={this.state.brandErrorMessage}
                       onChange={this.inputHandlerForBrand}
                       className={classes.select}
                     >
@@ -305,7 +331,7 @@ class NewDevice extends React.Component {
                           value={brand.id}
                           className={classes.menuItemWidth}
                         >
-                          {brand.brandName}
+                          {brand.name}
                         </MenuItem>
                       ))}
                     </Select>
@@ -318,6 +344,8 @@ class NewDevice extends React.Component {
                   <InputLabel className={classes.fontSize}>Model</InputLabel>
                   <div  className={classes.wrapper}>
                     <Select
+                      disabled={this.state.modelFieldDisabled}
+                      hintText="Select Brand before selecting Model"
                       value={modelForm}
                       autoWidth={true}
                       inputProps={{
@@ -446,7 +474,7 @@ class NewDevice extends React.Component {
                   {this.state.locationErrorMessage}
                 </Typography>
                 <FormControl className={classes.newDeviceFormField}>
-                  <TextField
+                  {/* <TextField
                     id="purchaseDate"
                     label="Device purchase date"
                     type="date"
@@ -459,6 +487,15 @@ class NewDevice extends React.Component {
                       required: 'required',
                     }}
                     onChange={this.inputHandler}
+                  /> */}
+                  <DatePicker
+                    label="Device purchase date"
+                    showTodayButton
+                    format="DD/MM/YYYY"
+                    value={date}
+                    onChange={this.inputHandler}
+                    className={classes.inputField}
+                    InputLabelProps={{ classes: { root: classes.fontSize } }}
                   />
                 </FormControl>
                 <Typography variant='headline' className={classes.errorMessage}>
@@ -542,20 +579,54 @@ NewDevice.propTypes = {
   })).isRequired,
   brands: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    brandName: PropTypes.string.isRequired,
+    // image: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     models: PropTypes.array.isRequired,
   })).isRequired,
-  devices: PropTypes.arrayOf(PropTypes.shape({
-    brand: PropTypes.number.isRequired,
-    model: PropTypes.number.isRequired,
-    os: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired,
-    active: PropTypes.bool.isRequired,
+  models: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+  })).isRequired,
+  devices: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    active: PropTypes.bool.isRequired,
+    brand: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    model: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    identificationNum: PropTypes.number.isRequired,
+    os: PropTypes.string.isRequired,
+    serialnum: PropTypes.string.isRequired,
+    location: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      city: PropTypes.string.isRequired,
+    }).isRequired,
+    custody: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+    }),
+    userBooking: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
+      status: PropTypes.number.isRequired,
+    }),
+    userReservation: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
+      status: PropTypes.number.isRequired,
+    }),
   })).isRequired,
   setDevices: PropTypes.func.isRequired,
-  addDevice: PropTypes.func.isRequired,
+  createDevice: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

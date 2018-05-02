@@ -250,7 +250,6 @@ class DeviceList extends React.Component {
               ADD NEW
             </Button>
           </Link>
-
         </Grid>
       </Grid>
     );

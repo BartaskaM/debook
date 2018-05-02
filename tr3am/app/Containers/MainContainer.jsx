@@ -81,7 +81,7 @@ class MainContainer extends React.Component {
         <Route exact path='/newdevice' render={() =>
           <Auth component={() => (
             <div>
-              <MainTabs tabIndex='/newdevice' />
+              <MainTabs tabIndex='/devices' />
               <NewDevice />
             </div>
           )} allowedRoles={RouteRoles.Offices} />
