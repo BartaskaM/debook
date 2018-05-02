@@ -59,14 +59,22 @@ class DeviceDetails extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps) {
-    const { device } = nextProps;
-    return { bookButtonValues: deviceUtils.formBookButtonValuesArray([device]) };
+    const { device, removeReservationFromDevice } = nextProps;
+    return {
+      bookButtonValues: deviceUtils.formBookButtonValuesArray(
+        [device],
+        removeReservationFromDevice
+      ),
+    };
   }
 
   getBookButtonValues() {
-    const { device } = this.props;
+    const { device, removeReservationFromDevice } = this.props;
     this.setState({
-      bookButtonValues: deviceUtils.formBookButtonValuesArray([device]),
+      bookButtonValues: deviceUtils.formBookButtonValuesArray(
+        [device],
+        removeReservationFromDevice
+      ),
     });
   }
 
@@ -92,10 +100,10 @@ class DeviceDetails extends React.Component {
   }
 
   handleBookClick(device) {
-    const { checkIn, user } = this.props;
+    const { checkIn, user, removeReservationFromDevice } = this.props;
     return device.custody ?
       this.openReturnModal(device.id) :
-      deviceUtils.canCheckIn(device.userReservation) ?
+      deviceUtils.canCheckIn(device.userReservation, () => removeReservationFromDevice(device.id)) ?
         checkIn({
           id: device.userReservation.id,
           userId: user.id,
@@ -317,6 +325,7 @@ DeviceDetails.propTypes = {
     }).isRequired,
     slack: PropTypes.string,
   }),
+  removeReservationFromDevice: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
