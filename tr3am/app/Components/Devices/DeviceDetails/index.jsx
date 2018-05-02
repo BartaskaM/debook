@@ -139,7 +139,7 @@ class DeviceDetails extends React.Component {
           </Button>
           <Divider className={classes.divider} />
           <LocationModal />
-          <Grid container spacing={8}>
+          <Grid container>
             <Grid item md>
               <img
                 className={classes.image}
@@ -154,20 +154,18 @@ class DeviceDetails extends React.Component {
                       {device.name}
                     </Typography>
                   </Grid>
-                  <Grid item md={11} xs={11} className={classes.custody}>
-                    <Grid container item>
-                      <Grid item md={2} className={classes.label}>Custody of:</Grid>
-                      <Grid item md={9}>{device.custody ? 
-                        `${device.custody.firstName} ${device.custody.lastName}` : '-'}
-                      {device.custody && <Tooltip
-                        id="tooltip-bottom"
-                        enterDelay={100}
-                        leaveDelay={5000}
-                        title="Request custody update"
-                        placement="bottom">
-                        <Flag style={{ color: 'red' }} />
-                      </Tooltip>}
-                      </Grid>
+                  <Grid container item xs={12} className={classes.custody} alignItems='center'>
+                    <Grid item md={2} className={classes.label}>Custody of:</Grid>
+                    <Grid item md={9}>{device.custody ? 
+                      `${device.custody.firstName} ${device.custody.lastName}` : '-'}
+                    {device.custody && <Tooltip
+                      id="tooltip-bottom"
+                      enterDelay={100}
+                      leaveDelay={5000}
+                      title="Request custody update"
+                      placement="bottom">
+                      <Flag style={{ color: 'red' }} />
+                    </Tooltip>}
                     </Grid>
                     <Row
                       label="Booked from"
