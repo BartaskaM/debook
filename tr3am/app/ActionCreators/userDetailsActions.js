@@ -48,6 +48,6 @@ export const updateUser = (userInfo, finish, self) => async dispatch => {
       type: userDetails.UPDATE_USER_ERROR,
       payload: e.response.data.message,
     });
-    toast.error('❌ Failed to update user details');
+    toast.error(`❌ Failed to update user details: ${e.response.data.message}`);
   }
 };

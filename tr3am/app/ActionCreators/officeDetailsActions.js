@@ -38,8 +38,8 @@ export const updateOfficeWithId = (officeData) => async (dispatch) => {
   } catch (e) {
     dispatch({ 
       type: officeDetails.UPDATE_OFFICE_ERROR,
-      payload: e.toString(),
+      payload: e.response.data.message,
     });
-    toast.error('❌ Failed to update user details');
+    toast.error(`❌ Failed to update user details: ${e.response.data.message}`);
   }
 };

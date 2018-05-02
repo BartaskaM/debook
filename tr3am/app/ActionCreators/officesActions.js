@@ -42,9 +42,9 @@ export const createOffice = (office, history) => async (dispatch) => {
   } catch (e) {
     dispatch({ 
       type: offices.CREATE_OFFICE_ERROR, 
-      payload: e.toString(), 
+      payload: e.response.data.message, 
     });
-    toast.error('❌ Failed to create office');
+    toast.error(`❌ Failed to create office: ${e.response.data.message}`);
   }
 };
 export const showAddOfficeModal = (bool) => {

@@ -43,6 +43,6 @@ export const signUp = (signUpData) => async(dispatch) => {
       type: auth.SIGN_UP_ERROR,
       payload: e.response.data.message,
     });
-    toast.error('❌ Failed to sign up');
+    toast.error(`❌ Failed to sign up: ${e.response.data.message}`);
   }
 };

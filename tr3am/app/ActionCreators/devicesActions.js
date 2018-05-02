@@ -142,7 +142,7 @@ export const bookDevice = (bookRequest, user) => async dispatch =>{
       type: devices.BOOK_ERROR,
       payload: e.response.data.message,
     });
-    toast.error('❌ Failed to book device');
+    toast.error(`❌ Failed to book device: ${e.response.data.message}`);
   }
 };
 
@@ -173,7 +173,7 @@ export const reserveDevice = (reserveRequest) => async dispatch =>{
       type: devices.RESERVE_ERROR,
       payload: e.response.data.message,
     });
-    toast.error('❌ Failed to reserve device');
+    toast.error(`❌ Failed to reserve device: ${e.response.data.message}`);
   }
 };
 
@@ -250,7 +250,7 @@ export const returnDevice = (booking) => async dispatch =>{
       type: devices.RETURN_DEVICE_ERROR,
       payload: e.response.data.message,
     });
-    toast.error('❌ Failed to return device');
+    toast.error(`❌ Failed to return device: ${e.response.data.message}`);
   }
 };
 
@@ -270,7 +270,7 @@ export const cancelReservation = (reservation) => async dispatch => {
       type: devices.CANCEL_RESERVATION_ERROR,
       payload: e.response.data.message,
     });
-    toast.error('❌ Failed to cancel device reservation');
+    toast.error(`❌ Failed to cancel device reservation: ${e.response.data.message}`);
   }
 };
 
@@ -296,7 +296,7 @@ export const checkIn = (reservation, user) => async dispatch => {
       type: devices.CHECK_IN_ERROR,
       payload: e.response.data.message,
     });
-    toast.error('❌ Failed to check in');
+    toast.error(`❌ Failed to check in: ${e.response.data.message}`);
   }
 };
 
