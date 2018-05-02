@@ -16,6 +16,7 @@ import Remove from 'material-ui-icons/Remove';
 import Done from 'material-ui-icons/Done';
 import Clock from 'material-ui-icons/Schedule';
 import Description from 'material-ui-icons/Description';
+import { LinearProgress } from 'material-ui/Progress';
 
 import ReservationsTable from 'Components/ReservationsTable';
 import ReservationsCalendar from 'Components/ReservationsCalendar';
@@ -122,10 +123,15 @@ class DeviceDetails extends React.Component {
   }
 
   render() {
-    const { classes, history, device } = this.props;
+    const {
+      classes,
+      history,
+      device,
+      fetchDeviceLoading,
+    } = this.props;
     const { bookButtonValues } = this.state;
     return (
-      device ?
+      (device && !fetchDeviceLoading) ?
         <div className={classes.root}>
           <Button variant="flat" onClick={history.goBack}>
             <NavigateBefore />
@@ -275,7 +281,7 @@ class DeviceDetails extends React.Component {
           <ReserveModal/>
           <ReturnModal/>
         </div>
-        : this.renderError()
+        : <LinearProgress/>
     );
   }
   openLocationDialog() {
@@ -367,6 +373,7 @@ DeviceDetails.propTypes = {
   }),
   removeReservationFromDevice: PropTypes.func.isRequired,
   fetchDevice: PropTypes.func.isRequired,
+  fetchDeviceLoading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -374,6 +381,7 @@ const mapStateToProps = state => {
     device: state.deviceDetails.device,
     showLocationModal: state.deviceDetails.showLocationModal,
     user: state.auth.user,
+    fetchDeviceLoading: state.deviceDetails.fetchDeviceLoading,
   };
 };
 

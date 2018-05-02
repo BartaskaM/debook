@@ -1,6 +1,4 @@
-import { devices } from 'Constants/ActionTypes';
-import store from 'Store';
-import { deviceDetails } from '../Constants/ActionTypes';
+import { devices, deviceDetails } from 'Constants/ActionTypes';
 
 const defaultState = {
   devices: [],
@@ -208,7 +206,6 @@ export default (state = defaultState, action) => {
       const { reservedDeviceId, userReservation } = action.payload;
       const updatedDevices = state.devices.map(device => {
         if (device.id === reservedDeviceId) {
-          //Make additional changes in future implementation
           return {
             ...device,
             userReservation,
@@ -279,8 +276,7 @@ export default (state = defaultState, action) => {
       };
     }
     case devices.RETURN_DEVICE_SUCCESS: {
-      const { officeId, deviceId } = action.payload;
-      const office = store.getState().offices.offices.find(x => x.id === officeId);
+      const { office, deviceId } = action.payload;
       return {
         ...state,
         devices: state.devices.map(dev => {
@@ -290,10 +286,7 @@ export default (state = defaultState, action) => {
               available: true,
               custody: null,
               userBooking: null,
-              location: {
-                id: office.id,
-                city: office.city,
-              },
+              location: office,
             };
           }
           return dev;

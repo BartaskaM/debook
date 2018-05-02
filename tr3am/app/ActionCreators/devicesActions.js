@@ -226,7 +226,7 @@ export const fetchDevices = (userId) => async dispatch =>{
   }
 };
 
-export const returnDevice = (booking) => async dispatch =>{
+export const returnDevice = (booking, office) => async dispatch =>{
   dispatch({ type: devices.RETURN_DEVICE_START });
   try{
     await api.put(`/reservations/${booking.id}`, booking);
@@ -234,7 +234,10 @@ export const returnDevice = (booking) => async dispatch =>{
       type: devices.RETURN_DEVICE_SUCCESS,
       payload: {
         deviceId: booking.deviceId,
-        officeId: booking.officeId,
+        office: {
+          id: office.id,
+          city: office.city,
+        },
       },
     });
   } catch(e) {
