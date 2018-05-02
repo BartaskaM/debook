@@ -1,4 +1,5 @@
 import { events } from 'Constants/ActionTypes';
+import { toast } from 'react-toastify';
 import api from 'api';
 
 export const fetchEvents = () => async dispatch => {
@@ -18,5 +19,6 @@ export const fetchEvents = () => async dispatch => {
       type: events.FETCH_EVENTS_ERROR,
       payload: e.toString(),
     });
+    toast.error('❌ Failed to fetch events');
   }
 };

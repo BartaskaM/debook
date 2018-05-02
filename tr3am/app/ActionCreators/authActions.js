@@ -1,4 +1,5 @@
 import { auth } from 'Constants/ActionTypes';
+import { toast } from 'react-toastify';
 import api from 'api';
 
 export const logIn = (logInInfo, history) => async dispatch => {
@@ -9,6 +10,7 @@ export const logIn = (logInInfo, history) => async dispatch => {
       type: auth.LOG_IN_SUCCESS,
       payload: response.data,
     });
+    toast.info(`👋 Welcome ${response.data.firstName}`);
     history.push('/devices');
   } catch(e) { 
     dispatch({
@@ -34,11 +36,13 @@ export const signUp = (signUpData) => async(dispatch) => {
     dispatch({
       type: auth.SIGN_UP_SUCCESS,
     });
+    toast.success('✅ Signed up successfully');
   }
   catch(e){
     dispatch({
       type: auth.SIGN_UP_ERROR,
       payload: e.response.data.message,
     });
+    toast.error(`❌ Failed to sign up: ${e.response.data.message}`);
   }
 };

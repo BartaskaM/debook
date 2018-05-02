@@ -1,4 +1,5 @@
 import { users } from 'Constants/ActionTypes';
+import { toast } from 'react-toastify';
 import api from 'api';
 
 export const fetchUsers = () => async dispatch => {
@@ -18,5 +19,6 @@ export const fetchUsers = () => async dispatch => {
       type: users.FETCH_USERS_ERROR,
       payload: e.toString(),
     });
+    toast.error('❌ Failed to fetch users');
   }
 };

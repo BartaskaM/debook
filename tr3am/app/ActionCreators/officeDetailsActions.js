@@ -1,4 +1,5 @@
 import { officeDetails } from 'Constants/ActionTypes';
+import { toast } from 'react-toastify';
 import api from 'api';
 
 export const fetchOfficeWithId = (officeId) => async (dispatch) => {
@@ -17,6 +18,7 @@ export const fetchOfficeWithId = (officeId) => async (dispatch) => {
       type: officeDetails.FETCH_OFFICE_ERROR,
       payload: e.toString(),
     });
+    toast.error('❌ Failed to fetch office details');
   }
 };
 
@@ -32,10 +34,12 @@ export const updateOfficeWithId = (officeData) => async (dispatch) => {
       type: officeDetails.UPDATE_OFFICE_SUCCESS,
       payload: { id: officeData.id, office: officeData },
     });
+    toast.success('✏️ Office updated successfully');
   } catch (e) {
     dispatch({ 
       type: officeDetails.UPDATE_OFFICE_ERROR,
-      payload: e.toString(),
+      payload: e.response.data.message,
     });
+    toast.error(`❌ Failed to update user details: ${e.response.data.message}`);
   }
 };
