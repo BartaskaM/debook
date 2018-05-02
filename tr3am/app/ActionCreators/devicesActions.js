@@ -299,3 +299,10 @@ export const checkIn = (reservation, user) => async dispatch => {
     toast.error('❌ Failed to check in');
   }
 };
+
+export const removeReservationFromDevice = (deviceId) => {
+  return {
+    type: devices.REMOVE_DEVICE_RESERVATION,
+    payload: deviceId,
+  };
+};

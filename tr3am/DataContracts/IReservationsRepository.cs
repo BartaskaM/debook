@@ -13,5 +13,6 @@ namespace tr3am.DataContracts
         Task<int> Create(ReservationRequest request, bool booking);
         Task Update(int id, ReservationUpdateRequest request);
         Task Delete(int id);
+        Task RefreshReservations();
     }
 }
