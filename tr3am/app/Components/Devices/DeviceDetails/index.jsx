@@ -223,7 +223,7 @@ class DeviceDetails extends React.Component {
                 variant='raised'
                 size='large'
                 disabled={
-                  device.available ? false : true
+                  device.available ? false : device.userBooking ? false : true
                 }
                 className={classes.button}
                 color={device.available ? 'primary' : 'secondary'}

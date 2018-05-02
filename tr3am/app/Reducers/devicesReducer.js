@@ -1,5 +1,6 @@
 import { devices } from 'Constants/ActionTypes';
 import store from 'Store';
+import { deviceDetails } from '../Constants/ActionTypes';
 
 const defaultState = {
   devices: [],
@@ -382,6 +383,9 @@ export default (state = defaultState, action) => {
           return device;
         }),
       };
+    }
+    case deviceDetails.FETCH_DEVICE_SUCCESS: {
+      return {...state, selectedDeviceReservations: action.payload.reservations};
     }
     default: return state;
   }
