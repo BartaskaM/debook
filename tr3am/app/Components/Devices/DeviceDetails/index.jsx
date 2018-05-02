@@ -47,9 +47,10 @@ class DeviceDetails extends React.Component {
   }
 
   componentDidMount() {
-    const id = parseInt(this.props.match.params.id);
+    const { match, fetchDevice, user } = this.props;
+    const id = parseInt(match.params.id);
     if (id) {
-      this.props.getDeviceWithId(id);
+      fetchDevice(id, user.id);
       this.interval = setInterval(this.getBookButtonValues, 10000);
     }
   }
@@ -150,15 +151,16 @@ class DeviceDetails extends React.Component {
                   <Grid item md={11} xs={11} className={classes.custody}>
                     <Grid container item>
                       <Grid item md={2} className={classes.label}>Custody of:</Grid>
-                      <Grid item md={9}>{device.custody}
-                        <Tooltip
-                          id="tooltip-bottom"
-                          enterDelay={100}
-                          leaveDelay={5000}
-                          title="Request custody update"
-                          placement="bottom">
-                          <Flag style={{ color: 'red' }} />
-                        </Tooltip>
+                      <Grid item md={9}>{device.custody ? 
+                        `${device.custody.firstName} ${device.custody.lastName}` : '-'}
+                      {device.custody && <Tooltip
+                        id="tooltip-bottom"
+                        enterDelay={100}
+                        leaveDelay={5000}
+                        title="Request custody update"
+                        placement="bottom">
+                        <Flag style={{ color: 'red' }} />
+                      </Tooltip>}
                       </Grid>
                     </Grid>
                     <Row
@@ -174,7 +176,7 @@ class DeviceDetails extends React.Component {
                   </Grid>
                   <Row
                     label="ID#"
-                    value={device.identificationNum} />
+                    value={device.identificationNum.toString()} />
                   <Row
                     label="Serial number"
                     value={device.serialNum} />
@@ -182,11 +184,11 @@ class DeviceDetails extends React.Component {
                     label="OS"
                     value={device.os} />
                   <Row
-                    label="Group"
-                    value={device.group} />
+                    label="Brand"
+                    value={device.brand.name} />
                   <Row
-                    label="Subgroup"
-                    value={device.subgroup} />
+                    label="Model"
+                    value={device.model.name} />
                   <Row
                     label="Description"
                     value={device.description} />
@@ -195,16 +197,20 @@ class DeviceDetails extends React.Component {
                     value={device.checkInDue} />
                   <Row
                     label="Location"
-                    value={device.location} />
+                    value={device.location.city} />
                   <Row
                     label="Purchased on:"
-                    value={device.purchased} />
+                    value={
+                      `${device.purchased.toLocaleDateString()}, 
+                      ${device.purchased.toLocaleTimeString([],
+        {hour: '2-digit', minute: '2-digit'})}`
+                    } />
                   <Row
                     label="Vendor"
                     value={device.vendor} />
                   <Row
                     label="Tax rate"
-                    value={device.taxRate} />
+                    value={`${device.taxRate} %`} />
                 </Grid>
               </Paper>
             </Grid>
@@ -282,25 +288,59 @@ DeviceDetails.propTypes = {
   getDeviceWithId: PropTypes.func.isRequired,
   showLocationModal: PropTypes.func.isRequired,
   device: PropTypes.shape({
-    location: PropTypes.string,
-    custody: PropTypes.string,
-    available: PropTypes.bool,
-    active: PropTypes.bool,
-    id: PropTypes.number,
-    image: PropTypes.string,
+    id: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    available: PropTypes.bool.isRequired,
+    brand: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    model: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    identificationNum: PropTypes.number.isRequired,
+    os: PropTypes.string.isRequired,
+    location: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      city: PropTypes.string.isRequired,
+    }).isRequired,
+    custody: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+    }),
     name: PropTypes.string,
-    custodyOf: PropTypes.string,
-    bookedFrom: PropTypes.string,
-    identificationNum: PropTypes.string,
-    serialNum: PropTypes.string,
-    os: PropTypes.string,
-    group: PropTypes.string,
-    subgroup: PropTypes.string,
+    serialNum: PropTypes.string.isRequired,
     description: PropTypes.string,
-    checkInDue: PropTypes.string,
-    purchased: PropTypes.string,
-    vendor: PropTypes.string,
-    taxRate: PropTypes.string,
+    vendor: PropTypes.string.isRequired,
+    taxRate: PropTypes.number.isRequired,
+    purchased: PropTypes.instanceOf(Date).isRequired,
+    userBooking: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
+      status: PropTypes.number.isRequired,
+    }),
+    userReservation: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
+      status: PropTypes.number.isRequired,
+    }),
+    reservations: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      user: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        firstName: PropTypes.string.isRequired,
+        lastName: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+      }),
+      from: PropTypes.instanceOf(Date).isRequired,
+      to: PropTypes.instanceOf(Date).isRequired,
+      status: PropTypes.number.isRequired,
+    })),
   }),
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
@@ -326,6 +366,7 @@ DeviceDetails.propTypes = {
     slack: PropTypes.string,
   }),
   removeReservationFromDevice: PropTypes.func.isRequired,
+  fetchDevice: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {

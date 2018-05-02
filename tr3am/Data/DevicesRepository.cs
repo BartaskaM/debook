@@ -37,21 +37,24 @@ namespace tr3am.Data
                 .ToListAsync();
         }
 
-        public async Task<FullDeviceDto> GetById(int id)
+        public async Task<FullDeviceDto> GetById(int id, int userId)
         {
+            await _reservationsRepository.RefreshReservations();
             var item = await _dbContext.Devices
                 .AsNoTracking()
                 .Include(x => x.Office)
                 .Include(x => x.User)
                 .Include(x => x.Brand)
                 .Include(x => x.Model)
+                .Include(x => x.Reservations)
+                .ThenInclude(x => x.User)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
                 throw new InvalidDeviceException();
             }
 
-            return Mapper.Map<Device, FullDeviceDto>(item);
+            return Mapper.Map<Device, FullDeviceDto>(item, opt => opt.Items.Add("UserId", userId));
         }
 
         public async Task<int> Create(CreateDeviceRequest request)

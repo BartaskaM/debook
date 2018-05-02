@@ -29,11 +29,11 @@ namespace tr3am.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(int id, [FromQuery]int userId)
         {
             try
             {
-                return Ok(await _devicesRepository.GetById(id));
+                return Ok(await _devicesRepository.GetById(id, userId));
             }
             catch(InvalidDeviceException)
             {
