@@ -235,7 +235,7 @@ namespace tr3am.Data
             await _dbContext.SaveChangesAsync();
         }
 
-        private async Task RefreshReservations()
+        public async Task RefreshReservations()
         {
             DateTime now = DateTime.UtcNow;
 

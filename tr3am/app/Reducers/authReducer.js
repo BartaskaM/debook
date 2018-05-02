@@ -20,9 +20,6 @@ export default (state = defaultState, action) => {
     case auth.LOG_IN_ERROR: {
       return { ...state, fetchingLogIn: false, logInError: true };
     }
-    case auth.LOG_OUT_USER: {
-      return { ...state, user: null };
-    }
     case auth.SET_CURRENT_TAB: {
       return { ...state, currentTab: action.payload };
     }

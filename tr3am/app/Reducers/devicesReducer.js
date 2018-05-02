@@ -31,6 +31,8 @@ const defaultState = {
   returningDeviceErrorMessage: null,
   cancelReservationLoading: false,
   cancelReservationErrorMessage: null,
+  checkInLoading: null,
+  checkInErrorMessage: null,
 };
 
 export default (state = defaultState, action) => {
@@ -360,14 +362,25 @@ export default (state = defaultState, action) => {
           }
           return device;
         }),
-        checkInLoading: false,
+        checkInLoading: null,
       };
     }
     case devices.CHECK_IN_ERROR: {
       return { 
         ...state,
-        checkInLoading: false,
+        checkInLoading: null,
         checkInErrorMessage: action.payload,
+      };
+    }
+    case devices.REMOVE_DEVICE_RESERVATION: {
+      return {
+        ...state,
+        devices: devices.map(device => {
+          if(device.id === action.payload){
+            return {...device, userReservation: null};
+          }
+          return device;
+        }),
       };
     }
     default: return state;
