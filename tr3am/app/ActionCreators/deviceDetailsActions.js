@@ -1,5 +1,6 @@
 import { deviceDetails } from 'Constants/ActionTypes';
 import deviceDetailsList from 'Constants/DeviceDetails';
+//import { toast } from 'react-toastify'; TODO
 import store from 'Store';
 
 export const getDeviceWithId = (deviceId) => {

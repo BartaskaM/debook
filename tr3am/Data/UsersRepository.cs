@@ -100,7 +100,7 @@ namespace tr3am.Data
                 throw new InvalidUserException();
             }
 
-            var office = _dbContext.Offices
+            var office = await _dbContext.Offices
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
             if (office == null)

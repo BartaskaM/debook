@@ -7,6 +7,8 @@ import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 import store from './Store';
 import { MuiThemeProvider } from 'material-ui/styles';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import MainContainer from 'Containers/MainContainer';
 import theme from 'Theme/theme';
@@ -18,6 +20,17 @@ const App = () => (
       <Provider store={store}>
         <Router history={history}>
           <CssBaseline>
+            <ToastContainer
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnVisibilityChange
+              draggable
+              pauseOnHover
+            />
             <Route path='/' component={MainContainer} />
           </CssBaseline>
         </Router>

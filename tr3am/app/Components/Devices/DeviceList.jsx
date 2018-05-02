@@ -156,7 +156,7 @@ class DeviceList extends React.Component {
     return filteredDevices.length === 0 ?
       fetchingDevices ? null : 
         <div className={classes.noItems}>
-          <Typography align="center" variant="display3">No items found</Typography>
+          <Typography align="center" variant="display3">No devices found</Typography>
         </div> :
       filteredDevices.map(device => {
         return (
