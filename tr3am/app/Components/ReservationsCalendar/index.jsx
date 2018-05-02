@@ -29,11 +29,9 @@ ReservationsCalendar.propTypes = {
   setCurrentDate: PropTypes.func.isRequired,
   reservations: PropTypes.array.isRequired,
   classes: PropTypes.object.isRequired,
-  selectedDevice: PropTypes.number.isRequired,
 };
 const mapStateToProps = state => ({
   currentDate: state.devices.currentDate,
   reservations: state.devices.reservations,
-  selectedDevice: state.devices.selectedDevice,
 });
 export default connect(mapStateToProps, devicesActions)(withStyles(styles)(ReservationsCalendar));
