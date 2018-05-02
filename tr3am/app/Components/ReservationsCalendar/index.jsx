@@ -12,7 +12,9 @@ class ReservationsCalendar extends React.Component {
   }
   
   render(){
-    return <Calendar value={this.props.currentDate} 
+    const { classes } = this.props;
+    return <Calendar value={this.props.currentDate}
+      className={classes.calendar}
       onChange={ newValue => this.props.setCurrentDate(newValue)}
       tileClassName={({ date }) => 
         this.props.reservations
@@ -20,7 +22,7 @@ class ReservationsCalendar extends React.Component {
             res.from.getDate() === date.getDate() &&
             res.from.getMonth() === date.getMonth() &&
             res.from.getFullYear() === date.getFullYear()).length > 0 ? 
-          this.props.classes.coloredTile : ''}/>;
+          classes.coloredTile : ''}/>;
   }
 }
 

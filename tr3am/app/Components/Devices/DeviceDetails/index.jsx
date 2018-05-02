@@ -248,7 +248,11 @@ class DeviceDetails extends React.Component {
                 CHANGE LOCATION
               </Button>
               <Paper className={classes.reservationsRoot}>
-                <ReservationsCalendar/>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <ReservationsCalendar styles={classes.calendar}/>
+                  </Grid>
+                </Grid>
                 <ReservationsTable/>
               </Paper>
             </Grid>

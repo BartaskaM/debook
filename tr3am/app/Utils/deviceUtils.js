@@ -3,17 +3,19 @@ import { fifteenMinutes } from 'Constants/Values';
 export const formBookButtonValuesArray = (devices) => {
   const bookButtonValues = [];
   devices.forEach(device => {
-    if (device.available) {
-      if (canCheckIn(device.userReservation)) {
-        bookButtonValues[device.id] = 'Check-in';
+    if(device){
+      if (device.available) {
+        if (canCheckIn(device.userReservation)) {
+          bookButtonValues[device.id] = 'Check-in';
+        } else {
+          bookButtonValues[device.id] = 'Book device';
+        }
       } else {
-        bookButtonValues[device.id] = 'Book device';
-      }
-    } else {
-      if (device.userBooking) {
-        bookButtonValues[device.id] = 'Return device';
-      } else {
-        bookButtonValues[device.id] = 'Device is booked';
+        if (device.userBooking) {
+          bookButtonValues[device.id] = 'Return device';
+        } else {
+          bookButtonValues[device.id] = 'Device is booked';
+        }
       }
     }
   });

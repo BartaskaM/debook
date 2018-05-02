@@ -3,6 +3,9 @@ const styles = theme => {
     coloredTile: {
       backgroundColor: theme.palette.secondary.main,
     },
+    calendar: {
+      width: '100%',
+    },
   };};
 
 export default styles;
