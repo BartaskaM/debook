@@ -50,8 +50,8 @@ namespace tr3am.Controllers
             }
             try
             {
-                await _devicesRepository.Create(request);
-                return NoContent();
+                var itemId = await _devicesRepository.Create(request);
+                return CreatedAtAction(nameof(GetById), new { id = itemId }, itemId);
             }
             catch(InvalidOfficeException)
             {

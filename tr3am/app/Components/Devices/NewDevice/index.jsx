@@ -21,15 +21,12 @@ import { withRouter, Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import { DatePicker } from 'material-ui-pickers';
-// import { dateToFullYear } from 'Utils/dateUtils';
 
 import Styles from './Styles';
-//import Brands from 'Constants/Brands';
 import * as authActions from 'ActionCreators/authActions';
 import * as officesActions from 'ActionCreators/officesActions';
 import * as brandsActions from 'ActionCreators/brandsActions';
 import * as devicesActions from 'ActionCreators/devicesActions';
-import devices from 'Constants/Devices';
 
 class NewDevice extends React.Component {
   constructor(props) {
@@ -37,7 +34,6 @@ class NewDevice extends React.Component {
 
     this.state = {
       deviceActive: true,
-      deviceName: '',
       brand: '',
       model: '',
       modelForm: '',
@@ -45,12 +41,11 @@ class NewDevice extends React.Component {
       purchaseDate: '',
       serialNumber: '',
       os: '',
-      group: '',
-      subgroup: '',
+      identificationNum: '',
       description: '',
       location: '',
       vendor: '',
-      taxRate: '',
+      taxRate: 0.00,
       image: '',
       serialErrorMessage: '',
       locationErrorMessage: '',
@@ -59,6 +54,7 @@ class NewDevice extends React.Component {
       dateErrorMessage: '',
       errorInForm: '',
       modelFieldDisabled: true,
+      models: [], 
     };
 
     this.inputHandler = this.inputHandler.bind(this);
@@ -70,6 +66,7 @@ class NewDevice extends React.Component {
     this.areAllSelected = this.areAllSelected.bind(this);
     this.loadModels = this.loadModels.bind(this);
     this.createNewDevice = this.createNewDevice.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
     
   }
 
@@ -78,13 +75,16 @@ class NewDevice extends React.Component {
     this.props.fetchBrands();
     //this.props.setDevices(devices);
     //console.log('componentDidMount()');
+    
   }
 
+  handleDateChange(date) {
+    this.setState({['purchaseDate']: date});
+  }
   submitNewDeviceForm(e) {
     e.preventDefault();
-    //const { addDevice, history  } = this.props;
-    //const { addDevice } = this.props;
-    // console.log('Calling for errors');
+    console.log(this.props.brands);
+    console.log(this.props.brands[0].models);
     
     if (this.areAllSelected()) {
       console.log('All fields filled');
@@ -93,30 +93,7 @@ class NewDevice extends React.Component {
         if (this.state.newModel) {
           this.setState({['model']: this.addNewModel()});
         }
-        console.log(devices);
-        const newDevice = {
-          active: this.state.deviceActive,
-          name: this.state.deviceName,
-          brand: this.state.brand,
-          model: this.state.model,
-          purchaseDate: this.state.purchaseDate,
-          serial: this.state.serialNumber,
-          os: this.state.os,
-          group: this.state.group,
-          subgroup: this.state.subgroup,
-          description: this.state.description,
-          location: this.state.location,
-          vendor: this.state.vendor,
-          taxRate: this.state.taxRate,
-          image: this.state.image,
-        };
-        console.log(newDevice);
-        //const newDeviceID = addDevice(newDevice)['newDeviceID'];
-        //console.log(newDeviceID);
-        // history.push(`/devices/${newDeviceID}`);
-        //history.push('/devices/9');
         this.createNewDevice();
-        //console.log(devices);
       }
       else
         this.setState({ ['errorInForm']: 'Check entered data' });
@@ -130,10 +107,9 @@ class NewDevice extends React.Component {
       active: this.state.deviceActive,
       brandid: this.state.brand,
       description: this.state.description,
-      identificationnum: 'NoNumber',
+      identificationnum: this.state.identificationNum,
       image: this.state.image,
       modelid: this.state.model,
-      name: this.state.deviceName,
       officeid: this.state.location,
       purchased: this.state.purchaseDate,
       serialnum: this.state.serialNumber,
@@ -158,8 +134,16 @@ class NewDevice extends React.Component {
   
   // TODO: implement loading of models list
   loadModels(id) {
-    console.log('Loading models with Brand id: ', id);
-    //Load models
+    let key;
+    for (let i = 0; i < this.props.brands.length; i++) {
+      if (this.props.brands[i].id === id)
+        key = i;
+    }
+    console.log(key);
+    console.log(this.props.brands[key].models);
+    if(!isNaN(key))
+      this.setState({['models']: this.props.brands[key].models}); 
+    console.log(this.state.models);
   }
 
   inputHandlerForModel(e) {
@@ -236,20 +220,19 @@ class NewDevice extends React.Component {
     } = this.props;
     const {
       deviceActive,
-      deviceName,
       brand,
       model,
       date,
       serialNumber,
       os,
-      group,
-      subgroup,
+      identificationNum,
       description,
       location,
       vendor,
       taxRate,
       image,
       modelForm,
+      models,
     } = this.state;
 
     const newModelForm = this.state.newModel 
@@ -300,18 +283,6 @@ class NewDevice extends React.Component {
                   </div>
                 </FormControl>
                 <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Device name</InputLabel>
-                  <Input
-                    value={deviceName}
-                    onChange={this.inputHandler}
-                    inputProps={{
-                      name: 'deviceName',
-                      maxLength: '255',
-                    }}
-                    className={classes.fontSize}
-                  />
-                </FormControl>
-                <FormControl className={classes.newDeviceFormField}>
                   <InputLabel className={classes.fontSize}>Brand</InputLabel>
                   <div className={classes.wrapper}>
                     <Select
@@ -321,8 +292,8 @@ class NewDevice extends React.Component {
                         name: 'brand',
                         required: 'required',
                       }}
-                      errorText={this.state.brandErrorMessage}
-                      onChange={this.inputHandlerForBrand}
+                      errortext={this.state.brandErrorMessage}
+                      onChange={this.inputHandlerForBrand }
                       className={classes.select}
                     >
                       {brands.map((brand, i) => (
@@ -345,7 +316,7 @@ class NewDevice extends React.Component {
                   <div  className={classes.wrapper}>
                     <Select
                       disabled={this.state.modelFieldDisabled}
-                      hintText="Select Brand before selecting Model"
+                      hinttext="Select Brand before selecting Model"
                       value={modelForm}
                       autoWidth={true}
                       inputProps={{
@@ -357,7 +328,18 @@ class NewDevice extends React.Component {
                     >
                       <MenuItem
                         value={true}
-                        className={classes.menuItemWidth}>Other model</MenuItem>
+                        className={classes.menuItemWidth}>
+                        Other model
+                      </MenuItem>
+                      {models.map((model, i) => (
+                        <MenuItem
+                          key={i}
+                          value={model.id}
+                          className={classes.menuItemWidth}
+                        >
+                          {model.name}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </div>
                 </FormControl>
@@ -397,7 +379,20 @@ class NewDevice extends React.Component {
                   {this.state.serialErrorMessage}
                 </Typography>
                 <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>OS</InputLabel>
+                  <InputLabel className={classes.fontSize}>Identification number</InputLabel>
+                  <Input
+                    value={identificationNum}
+                    onChange={this.inputHandler}
+                    inputProps={{
+                      type: 'number',
+                      name: 'identificationNum',
+                      maxLength: '4',
+                    }}
+                    className={classes.fontSize}
+                  />
+                </FormControl>
+                <FormControl className={classes.newDeviceFormField}>
+                  <InputLabel className={classes.fontSize}>Operating system</InputLabel>
                   <Input
                     value={os}
                     onChange={this.inputHandler}
@@ -405,30 +400,6 @@ class NewDevice extends React.Component {
                       name: 'os',
                       maxLength: '255',
                       required: 'required',
-                    }}
-                    className={classes.fontSize}
-                  />
-                </FormControl>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Group</InputLabel>
-                  <Input
-                    value={group}
-                    onChange={this.inputHandler}
-                    inputProps={{
-                      name: 'group',
-                      maxLength: '255',
-                    }}
-                    className={classes.fontSize}
-                  />
-                </FormControl>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Subgroup</InputLabel>
-                  <Input
-                    value={subgroup}
-                    onChange={this.inputHandler}
-                    inputProps={{
-                      name: 'subgroup',
-                      maxLength: '255',
                     }}
                     className={classes.fontSize}
                   />
@@ -474,26 +445,12 @@ class NewDevice extends React.Component {
                   {this.state.locationErrorMessage}
                 </Typography>
                 <FormControl className={classes.newDeviceFormField}>
-                  {/* <TextField
-                    id="purchaseDate"
-                    label="Device purchase date"
-                    type="date"
-                    defaultValue={date}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{
-                      name: 'purchaseDate',
-                      required: 'required',
-                    }}
-                    onChange={this.inputHandler}
-                  /> */}
                   <DatePicker
                     label="Device purchase date"
                     showTodayButton
                     format="DD/MM/YYYY"
                     value={date}
-                    onChange={this.inputHandler}
+                    onChange={this.handleDateChange}
                     className={classes.inputField}
                     InputLabelProps={{ classes: { root: classes.fontSize } }}
                   />
@@ -518,8 +475,10 @@ class NewDevice extends React.Component {
                   <Input
                     value={taxRate}
                     onChange={this.inputHandler}
+                    type="number"
                     inputProps={{
                       name: 'taxRate',
+                      type: 'number',
                       required: 'required',
                     }}
                     className={classes.fontSize}

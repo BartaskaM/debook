@@ -201,13 +201,11 @@ export const createDevice = (device, history) => async (dispatch) => {
   try {
     const response = await api.post('/devices', device);
     device['id'] = response.data;
-    
-    history.push(`/devices/${response.data}`);
-
     dispatch({
       type: devices.CREATE_DEVICE_SUCCESS,
       payload: device,
     });
+    history.push(`/devices/${response.data}`);
   } catch (e) {
     dispatch({ 
       type: device.CREATE_DEVICE_ERROR, 
@@ -216,7 +214,6 @@ export const createDevice = (device, history) => async (dispatch) => {
   }
 };
 
-//-----------------------
 export const fetchDevices = (userId) => async dispatch =>{
   dispatch({ type: devices.FETCH_DEVICES_START });
   try{
