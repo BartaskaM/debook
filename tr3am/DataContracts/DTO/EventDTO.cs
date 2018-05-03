@@ -6,9 +6,9 @@ namespace tr3am.DataContracts.DTO
     {
         public int Id { get; set; }
         public string Action { get; set; }
-        public FullDeviceDto Device { get; set; }
-        public OfficeDto Office { get; set; }
-        public UserDTO User { get; set; }
+        public EventDeviceDto Device { get; set; }
+        public ShortOfficeDto Office { get; set; }
+        public ShortUserDto User { get; set; }
         public DateTime CreatedOn { get; set; }
     }
 }

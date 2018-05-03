@@ -21,7 +21,7 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<EventDto>> GetAll()
+        public async Task<IEnumerable<EventDto>> GetAll(int page, int pageSize)
         {
             return await _dbContext.Events
                 .AsNoTracking()
@@ -29,6 +29,8 @@ namespace tr3am.Data
                 .Include(x => x.User)
                 .Include(x => x.Device)
                 .Select(x => Mapper.Map<Event, EventDto>(x))
+                .Skip(page*pageSize)
+                .Take(pageSize)
                 .ToListAsync();
         }
 

@@ -21,9 +21,9 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<EventDto>> GetAll()
+        public async Task<IEnumerable<EventDto>> GetAll([FromQuery]int page, [FromQuery]int pageSize = 20)
         {
-            return await _eventsRepository.GetAll();
+            return await _eventsRepository.GetAll(page, pageSize);
         }
 
         [HttpGet("{id}")]

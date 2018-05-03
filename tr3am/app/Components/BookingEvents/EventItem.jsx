@@ -19,7 +19,7 @@ const EventItem = ({ event, classes }) => {
             <Grid container>
               <Grid item xs>{event.action}</Grid>
               <Grid item xs>
-                <Link to={`/devices/${event.device.id}`}>
+                <Link to={`/devices/${event.device.identificationNum}`}>
                   {event.device.identificationNum}
                 </Link>
               </Grid>
@@ -52,29 +52,21 @@ EventItem.propTypes = {
   event: PropTypes.shape({
     id: PropTypes.number.isRequired,
     action: PropTypes.string.isRequired,
-    device: PropTypes.object.isRequired,
+    device: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      identificationNum: PropTypes.object.isRequired,
+    }).isRequired,
     office: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      country: PropTypes.string.isRequired,
       city: PropTypes.string.isRequired,
-      address: PropTypes.string.isRequired,
-      lat: PropTypes.number.isRequired,
-      lng: PropTypes.number.isRequired,
     }).isRequired,
     user: PropTypes.shape({
       id: PropTypes.number.isRequired,
       firstName: PropTypes.string.isRequired,
       lastName: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
-      office: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        country: PropTypes.string.isRequired,
-        city: PropTypes.string.isRequired,
-        address: PropTypes.string.isRequired,
-        lat: PropTypes.number.isRequired,
-        lng: PropTypes.number.isRequired,
-      }).isRequired,
     }).isRequired,
+    createdOn: PropTypes.instanceOf(Date).isRequired,
   }).isRequired,
   createdOn: PropTypes.string,
 };
