@@ -5,9 +5,9 @@ import { withStyles } from 'material-ui/styles';
 
 import { styles } from './Styles';
 
-const Row = ({ classes, value, label }) => {
+const Row = ({ classes, value, label, onClick }) => {
   function renderSecondField() {
-    return <Grid item sm={9}>{value}</Grid>;
+    return <Grid item sm={9} onClick={onClick}>{value}</Grid>;
   }
   return (<Grid container item>
     <Grid item sm={2} className={classes.label}>{label}:</Grid>
@@ -17,8 +17,9 @@ const Row = ({ classes, value, label }) => {
 
 Row.propTypes = {
   label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   classes: PropTypes.object.isRequired,
+  onClick: PropTypes.func,
 };
 
 export default withStyles(styles)(Row);

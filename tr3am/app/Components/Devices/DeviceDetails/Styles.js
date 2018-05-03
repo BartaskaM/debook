@@ -33,8 +33,8 @@ export const styles = {
     color: '#000000',
   },
   custody: {
+    width: '90%',
     backgroundColor: '#f6f6f6',
-    marginLeft: 1,
   },
   reservationsRoot: {
     width: '100%',
