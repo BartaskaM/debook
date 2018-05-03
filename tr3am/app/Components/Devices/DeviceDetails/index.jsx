@@ -41,6 +41,8 @@ class DeviceDetails extends React.Component {
     this.openReturnModal = this.openReturnModal.bind(this);
     this.handleBookClick = this.handleBookClick.bind(this);
     this.getBookButtonValues = this.getBookButtonValues.bind(this);
+    this.openOfficeInfo = this.openUserInfo.bind(this);
+    this.openUserInfo = this.openUserInfo.bind(this);
 
     this.state = {
       bookButtonValues: [],
@@ -122,6 +124,16 @@ class DeviceDetails extends React.Component {
         this.openBookDialog(device.id);
   }
 
+  openOfficeInfo(officeId){return () =>{
+    this.props.history.push(`/offices/${officeId}`);
+  };
+  }
+
+  openUserInfo(userId){return () =>{
+    this.props.history.push(`/users/${userId}`);
+  };
+  }
+
   render() {
     const {
       classes,
@@ -156,16 +168,18 @@ class DeviceDetails extends React.Component {
                   </Grid>
                   <Grid container item xs={12} className={classes.custody} alignItems='center'>
                     <Grid item md={2} className={classes.label}>Custody of:</Grid>
-                    <Grid item md={9}>{device.custody ? 
-                      `${device.custody.firstName} ${device.custody.lastName}` : '-'}
-                    {device.custody && <Tooltip
-                      id="tooltip-bottom"
-                      enterDelay={100}
-                      leaveDelay={5000}
-                      title="Request custody update"
-                      placement="bottom">
-                      <Flag style={{ color: 'red' }} />
-                    </Tooltip>}
+                    <Grid item md={9} 
+                      onClick={device.custody ? this.openUserInfo(device.custody.id) : undefined}>
+                      {device.custody ? 
+                        `${device.custody.firstName} ${device.custody.lastName}` : '-'}
+                      {device.custody && <Tooltip
+                        id="tooltip-bottom"
+                        enterDelay={100}
+                        leaveDelay={5000}
+                        title="Request custody update"
+                        placement="bottom">
+                        <Flag style={{ color: 'red' }} />
+                      </Tooltip>}
                     </Grid>
                   </Grid>
                   <Grid item md={11} xs={11}>
@@ -192,7 +206,8 @@ class DeviceDetails extends React.Component {
                     value={device.model.name} />
                   <Row
                     label="Location"
-                    value={device.location.city} />
+                    value={device.location.city} 
+                    onClick={this.openOfficeInfo(device.location.id)}/>
                   <Row
                     label="Purchased on:"
                     value={
