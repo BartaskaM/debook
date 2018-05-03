@@ -54,7 +54,7 @@ EventItem.propTypes = {
     action: PropTypes.string.isRequired,
     device: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      identificationNum: PropTypes.object.isRequired,
+      identificationNum: PropTypes.number.isRequired,
     }).isRequired,
     office: PropTypes.shape({
       id: PropTypes.number.isRequired,

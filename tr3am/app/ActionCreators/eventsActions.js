@@ -12,7 +12,7 @@ export const fetchEvents = () => async dispatch => {
 
     dispatch({
       type: events.FETCH_EVENTS_SUCCESS,
-      payload: response.data,
+      payload: response.data.map(event => ({...event, createdOn: new Date(event.createdOn)})),
     });
   } catch (e) {
     dispatch({

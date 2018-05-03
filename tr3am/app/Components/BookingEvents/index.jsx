@@ -7,7 +7,9 @@ import List from 'material-ui/List';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import { LinearProgress } from 'material-ui/Progress';
+import Table, { TablePagination, TableRow, TableFooter } from 'material-ui/Table';
 
+import PaginationActions from './PaginationActions';
 import Styles from './Styles';
 import StylesUtils from 'Utils/StylesUtils';
 import EventItem from './EventItem';
@@ -48,11 +50,26 @@ class BookingEvents extends React.Component {
             <Grid item xs={12}>
               <LinearProgress />
             </Grid>
-            : <List className={classes.list}>
-              {events.map(event => (
-                <EventItem key={event.id} event={event} />
-              ))}
-            </List>}
+            : <Grid container item xs={12}>
+              <List className={classes.list}>
+                {events.map(event => (
+                  <EventItem key={event.id} event={event} />
+                ))}
+              </List>
+              <Grid item xs={12}>
+
+                <Table>
+                  <TableFooter>
+                    <TableRow>
+                      <TablePagination count={50} Actions={PaginationActions}
+                        onChangePage={() => console.log('change')} page={1} rowsPerPage={20}/>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+                
+              </Grid>
+            </Grid>
+          }
         </Grid>
       </div>
     );
@@ -66,7 +83,7 @@ BookingEvents.propTypes = {
     action: PropTypes.string.isRequired,
     device: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      identificationNum: PropTypes.object.isRequired,
+      identificationNum: PropTypes.number.isRequired,
     }).isRequired,
     office: PropTypes.shape({
       id: PropTypes.number.isRequired,
