@@ -2,7 +2,7 @@ import { deviceDetails } from 'Constants/ActionTypes';
 import deviceDetailsList from 'Constants/DeviceDetails';
 import { reservationStatus } from 'Constants/Enums';
 import api from 'api';
-//import { toast } from 'react-toastify'; TODO
+import { toast } from 'react-toastify';
 import store from 'Store';
 
 export const getDeviceWithId = (deviceId) => {
@@ -72,5 +72,6 @@ export const fetchDevice = (deviceId, userId) => async dispatch => {
       type: deviceDetails.FETCH_DEVICE_ERROR,
       payload: e.response.data.message,
     });
+    toast.error('❌ Failed to fetch device');
   }
 };
