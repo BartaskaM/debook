@@ -1,4 +1,5 @@
 import { offices } from 'Constants/ActionTypes';
+import { toast } from 'react-toastify';
 import api from 'api';
 
 export const fetchOffices = () => async dispatch => {
@@ -18,6 +19,7 @@ export const fetchOffices = () => async dispatch => {
       type: offices.FETCH_OFFICES_ERROR,
       payload: e.toString(),
     });
+    toast.error('❌ Failed to fetch offices');
   }
 };
 
@@ -36,11 +38,13 @@ export const createOffice = (office, history) => async (dispatch) => {
       type: offices.CREATE_OFFICE_SUCCESS,
       payload: office,
     });
+    toast.success('✅ Office created successfully');
   } catch (e) {
     dispatch({ 
       type: offices.CREATE_OFFICE_ERROR, 
-      payload: e.toString(), 
+      payload: e.response.data.message, 
     });
+    toast.error(`❌ Failed to create office: ${e.response.data.message}`);
   }
 };
 export const showAddOfficeModal = (bool) => {

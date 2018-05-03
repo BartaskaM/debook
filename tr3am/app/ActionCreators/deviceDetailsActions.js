@@ -2,6 +2,7 @@ import { deviceDetails } from 'Constants/ActionTypes';
 import deviceDetailsList from 'Constants/DeviceDetails';
 import { reservationStatus } from 'Constants/Enums';
 import api from 'api';
+//import { toast } from 'react-toastify'; TODO
 import store from 'Store';
 
 export const getDeviceWithId = (deviceId) => {

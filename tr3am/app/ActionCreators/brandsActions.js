@@ -1,4 +1,5 @@
 import { brands } from 'Constants/ActionTypes';
+import { toast } from 'react-toastify';
 import api from 'api';
 
 export const fetchBrands = () => async dispatch => {
@@ -18,5 +19,6 @@ export const fetchBrands = () => async dispatch => {
       type: brands.FETCH_BRANDS_ERROR,
       payload: e.toString(),
     });
+    toast.error('❌ Failed to fetch brands');
   }
 };
