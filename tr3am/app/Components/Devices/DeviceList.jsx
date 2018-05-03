@@ -36,7 +36,7 @@ class DeviceList extends React.Component {
     this.openReturnModal = this.openReturnModal.bind(this);
     this.handleBookClick = this.handleBookClick.bind(this);
     this.getBookButtonValues = this.getBookButtonValues.bind(this);
-    
+    this.openOfficeInfo = this.openOfficeInfo.bind(this);
     this.state = {
       bookButtonValues: [],
     };
@@ -120,6 +120,18 @@ class DeviceList extends React.Component {
         this.openBookDialog(device.id);
   }
 
+  openOfficeInfo(officeId){return (e) =>{
+    e.stopPropagation();
+    this.props.history.push(`/offices/${officeId}`);
+  };
+  }
+
+  openUserInfo(userId){return (e) =>{
+    e.stopPropagation();
+    this.props.history.push(`/users/${userId}`);
+  };
+  }
+
   renderDevices() {
     const {
       classes,
@@ -145,7 +157,12 @@ class DeviceList extends React.Component {
                 dense
                 onClick={() => history.push(`/devices/${device.id.toString()}`)}>
                 <div className={classes.itemContainer}>
-                  <Device key={device.id} device={device} />
+                  <Device
+                    key={device.id}
+                    device={device}
+                    openOfficeInfo={this.openOfficeInfo(device.location.id)}
+                    openUserInfo={device.custody ? 
+                      this.openUserInfo(device.custody.id) : undefined}/>
                   { checkInLoading === device.id && <LinearProgress/> }
                 </div>
               </ListItem>
