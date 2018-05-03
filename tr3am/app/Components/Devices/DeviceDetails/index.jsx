@@ -40,12 +40,12 @@ class DeviceDetails extends React.Component {
     this.openReservationDetails = this.openReservationDetails.bind(this);
     this.openReturnModal = this.openReturnModal.bind(this);
     this.handleBookClick = this.handleBookClick.bind(this);
-    this.getBookButtonValues = this.getBookButtonValues.bind(this);
+    this.getBookButtonValue = this.getBookButtonValue.bind(this);
     this.openOfficeInfo = this.openUserInfo.bind(this);
     this.openUserInfo = this.openUserInfo.bind(this);
 
     this.state = {
-      bookButtonValues: [],
+      bookButtonValue: null,
     };
   }
 
@@ -54,7 +54,7 @@ class DeviceDetails extends React.Component {
     const id = parseInt(match.params.id);
     if (id) {
       fetchDevice(id, user.id);
-      this.interval = setInterval(this.getBookButtonValues, 10000);
+      this.interval = setInterval(this.getBookButtonValue, 10000);
     }
   }
 
@@ -65,20 +65,20 @@ class DeviceDetails extends React.Component {
   static getDerivedStateFromProps(nextProps) {
     const { device, removeReservationFromDevice } = nextProps;
     return {
-      bookButtonValues: deviceUtils.formBookButtonValuesArray(
-        [device],
+      bookButtonValue: device ? deviceUtils.getBookButtonValue(
+        device,
         removeReservationFromDevice
-      ),
+      ) : null,
     };
   }
 
-  getBookButtonValues() {
+  getBookButtonValue() {
     const { device, removeReservationFromDevice } = this.props;
     this.setState({
-      bookButtonValues: deviceUtils.formBookButtonValuesArray(
-        [device],
+      bookButtonValue: device ? deviceUtils.getBookButtonValue(
+        device,
         removeReservationFromDevice
-      ),
+      ) : null,
     });
   }
 
@@ -141,7 +141,7 @@ class DeviceDetails extends React.Component {
       device,
       fetchDeviceLoading,
     } = this.props;
-    const { bookButtonValues } = this.state;
+    const { bookButtonValue } = this.state;
     return (
       (device && !fetchDeviceLoading) ?
         <div className={classes.root}>
@@ -239,13 +239,13 @@ class DeviceDetails extends React.Component {
                 color={device.available ? 'primary' : 'secondary'}
                 onClick={() => this.handleBookClick(device)}>
                 {
-                  bookButtonValues[device.id] === 'Return device' ?
+                  bookButtonValue === 'Return device' ?
                     <Remove className={classes.leftIcon} /> :
-                    bookButtonValues[device.id] === 'Check-in' ?
+                    bookButtonValue === 'Check-in' ?
                       <Done className={classes.leftIcon} /> :
                       <Add className={classes.leftIcon} />
                 }
-                {bookButtonValues[device.id]}
+                {bookButtonValue}
               </Button>
               <Button 
                 variant="raised" 

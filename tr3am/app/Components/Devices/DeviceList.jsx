@@ -51,10 +51,18 @@ class DeviceList extends React.Component {
     clearInterval(this.interval);
   }
 
+  static formBookButtonValuesArray = (devices, removeReservation) => {
+    const bookButtonValues = [];
+    devices.forEach(device => {
+      bookButtonValues[device.id] = deviceUtils.getBookButtonValue(device, removeReservation);
+    });
+    return bookButtonValues;
+  };
+
   static getDerivedStateFromProps(nextProps) {
     const { devices, removeReservationFromDevice } = nextProps;
     return { 
-      bookButtonValues: deviceUtils.formBookButtonValuesArray(
+      bookButtonValues: DeviceList.formBookButtonValuesArray(
         devices,
         removeReservationFromDevice
       ), 
@@ -64,7 +72,7 @@ class DeviceList extends React.Component {
   getBookButtonValues() {
     const { devices, removeReservationFromDevice } = this.props;
     this.setState({
-      bookButtonValues: deviceUtils.formBookButtonValuesArray(devices, removeReservationFromDevice),
+      bookButtonValues: DeviceList.formBookButtonValuesArray(devices, removeReservationFromDevice),
     });
   }
 

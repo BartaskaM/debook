@@ -37,7 +37,7 @@ namespace tr3am.Data
                 .ToListAsync();
         }
 
-        public async Task<FullDeviceDto> GetById(int id, int userId)
+        public async Task<FullDeviceDto> GetById(int id)
         {
             await _reservationsRepository.RefreshReservations();
             var item = await _dbContext.Devices
@@ -54,7 +54,7 @@ namespace tr3am.Data
                 throw new InvalidDeviceException();
             }
 
-            return Mapper.Map<Device, FullDeviceDto>(item, opt => opt.Items.Add("UserId", userId));
+            return Mapper.Map<Device, FullDeviceDto>(item);
         }
 
         public async Task<int> Create(CreateDeviceRequest request)

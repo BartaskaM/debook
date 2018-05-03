@@ -18,8 +18,6 @@ namespace tr3am.DataContracts.DTO
         public DateTime Purchased { get; set; }
         public string Vendor { get; set; }
         public float TaxRate { get; set; }
-        public UserDeviceReservationDto UserBooking { get; set; }
-        public UserDeviceReservationDto UserReservation { get; set; }
         public IEnumerable<ReservationDto> Reservations { get; set; }
     }
 }

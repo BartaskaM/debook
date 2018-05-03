@@ -1,5 +1,6 @@
 import { deviceDetails } from 'Constants/ActionTypes';
 import deviceDetailsList from 'Constants/DeviceDetails';
+import { reservationStatus } from 'Constants/Enums';
 import api from 'api';
 import store from 'Store';
 
@@ -34,22 +35,29 @@ export const changeDevice = (device) => {
 export const fetchDevice = (deviceId, userId) => async dispatch => {
   dispatch({type: deviceDetails.FETCH_DEVICE_START});
   try{
-    const response = await api.get(`/devices/${deviceId}?userId=${userId}`);
+    const response = await api.get(`/devices/${deviceId}`);
     const device = response.data;
+    const userBooking = device.reservations.find(reservation => 
+      reservation.user.id === userId && 
+      (reservation.status === reservationStatus.checkedIn || 
+        reservation.status === reservationStatus.overDue));
+    const userReservation = device.reservations.find(reservation => 
+      reservation.user.id === userId && 
+          reservation.status === reservationStatus.pending);
     dispatch({
       type: deviceDetails.FETCH_DEVICE_SUCCESS,
       payload: {
         ...device,
         purchased: new Date(device.purchased),
-        userBooking: device.userBooking ? {
-          ...(device.userBooking),
-          from: new Date(device.userBooking.from),
-          to: new Date(device.userBooking.to),
+        userBooking: userBooking ? {
+          ...userBooking,
+          from: new Date(userBooking.from),
+          to: new Date(userBooking.to),
         } : null,
-        userReservation: device.userReservation ? {
-          ...(device.userReservation),
-          from: new Date(device.userReservation.from),
-          to: new Date(device.userReservation.to),
+        userReservation: userReservation ? {
+          ...userReservation,
+          from: new Date(userReservation.from),
+          to: new Date(userReservation.to),
         } : null,
         reservations: device.reservations.map(res => ({
           ...res,
