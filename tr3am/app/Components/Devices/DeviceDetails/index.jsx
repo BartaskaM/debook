@@ -151,7 +151,7 @@ class DeviceDetails extends React.Component {
                 <Grid container className={classes.table}>
                   <Grid item md={11}>
                     <Typography className={classes.title} variant="display3" align="left">
-                      {device.name}
+                      {`${device.brand.name} ${device.model.name}`}
                     </Typography>
                   </Grid>
                   <Grid container item xs={12} className={classes.custody} alignItems='center'>
@@ -167,9 +167,6 @@ class DeviceDetails extends React.Component {
                       <Flag style={{ color: 'red' }} />
                     </Tooltip>}
                     </Grid>
-                    <Row
-                      label="Booked from"
-                      value={device.bookedFrom} />
                   </Grid>
                   <Grid item md={11} xs={11}>
                     <Divider className={classes.divider} />
@@ -193,12 +190,6 @@ class DeviceDetails extends React.Component {
                   <Row
                     label="Model"
                     value={device.model.name} />
-                  <Row
-                    label="Description"
-                    value={device.description} />
-                  <Row
-                    label="Check-in due"
-                    value={device.checkInDue} />
                   <Row
                     label="Location"
                     value={device.location.city} />

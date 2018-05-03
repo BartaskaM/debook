@@ -14,9 +14,7 @@ namespace tr3am.DataContracts.DTO
         public string OS { get; set; }
         public ShortOfficeDto Location { get; set; }
         public ShortUserDto Custody { get; set; }
-        public string Name { get; set; }
         public string SerialNum { get; set; }
-        public string Description { get; set; }
         public DateTime Purchased { get; set; }
         public string Vendor { get; set; }
         public float TaxRate { get; set; }
