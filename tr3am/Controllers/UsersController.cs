@@ -39,29 +39,6 @@ namespace tr3am.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody]CreateUserRequest request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                int id = await _usersRepository.Create(request);
-                return CreatedAtAction(nameof(GetById), new { Id = id }, id);
-            }
-            catch (InvalidOfficeException)
-            {
-                string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
-            }
-            catch (DuplicateEmailException)
-            {
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = "This e-mail is already in use." });
-            }
-        }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateUserRequest request)
         {

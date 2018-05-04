@@ -12,27 +12,13 @@ using tr3am.DataContracts.Requests.Users;
 
 namespace tr3am.Data
 {
-    public class UsersRepository : IUsersRepository, IAuth
+    public class UsersRepository : IUsersRepository
     {
         private readonly AppDbContext _dbContext;
 
         public UsersRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
-        }
-
-        public async Task<LogInDto> LogIn(LogInRequest request)
-        {
-            var item = await _dbContext.Users
-                .AsNoTracking()
-                .Include(x => x.Office)
-                .FirstOrDefaultAsync(x => x.Email == request.Email);
-            if(item == null || item.Password != request.Password)
-            {
-                throw new InvalidUserException();
-            }
-
-            return Mapper.Map<User, LogInDto>(item);
         }
 
         public async Task<IEnumerable<UserDTO>> GetAll()
@@ -56,39 +42,6 @@ namespace tr3am.Data
             }
 
             return Mapper.Map<User, UserDTO>(item);
-        }
-
-        public async Task<int> Create(CreateUserRequest request)
-        {
-            var office = await _dbContext.Offices
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
-            if (office == null)
-            {
-                throw new InvalidOfficeException();
-            }
-            if (await _dbContext.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Email == request.Email) != null)
-            {
-                throw new DuplicateEmailException();
-            }
-
-            var newItem = new User
-            {
-                Email = request.Email,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                OfficeId = office.Id,
-                Password = request.Password,
-                Slack = request.Slack,
-                Role = "user",
-            };
-
-            _dbContext.Users.Add(newItem);
-            await _dbContext.SaveChangesAsync();
-
-            return newItem.Id;
         }
 
         public async Task Update(int id, UpdateUserRequest request)
@@ -120,10 +73,10 @@ namespace tr3am.Data
             item.LastName = request.LastName;
             item.OfficeId = office.Id;
 
-            if (!String.IsNullOrEmpty(request.Password))
-            {
-                item.Password = request.Password;
-            }
+            //if (!String.IsNullOrEmpty(request.Password))
+            //{
+            //    item.Password = request.Password;
+            //}
             item.Slack = request.Slack;
 
             await _dbContext.SaveChangesAsync();

@@ -4,7 +4,7 @@ using tr3am.DataContracts.Requests.Users;
 
 namespace tr3am.DataContracts
 {
-    public interface IAuth
+    public interface IAccount
     {
         Task<LogInDto> LogIn(LogInRequest request);
     }
