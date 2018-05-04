@@ -231,7 +231,6 @@ BookModal.propTypes = {
   hideBookModal: PropTypes.func.isRequired,
   selectedDeviceReservations: PropTypes.arrayOf(
     PropTypes.shape({
-      deviceId: PropTypes.number.isRequired,
       user: PropTypes.shape({
         id: PropTypes.number.isRequired,
         firstName: PropTypes.string.isRequired,

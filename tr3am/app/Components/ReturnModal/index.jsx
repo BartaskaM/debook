@@ -35,8 +35,16 @@ class ReturnModal extends React.Component {
   }
 
   returnDevice(){
-    const { user, devices, returnDevice, selectedDevice } = this.props;
+    const {
+      user,
+      devices,
+      returnDevice,
+      selectedDevice,
+      offices,
+    } = this.props;
+    const { selectedOffice } = this.state;
     const deviceBooking = devices.find(dev => dev.id === selectedDevice).userBooking;
+    const office = offices.find(x => x.id === selectedOffice);
     const request = {
       id: deviceBooking.id,
       userId: user.id,
@@ -44,9 +52,9 @@ class ReturnModal extends React.Component {
       from: deviceBooking.from.toISOString(),
       to: deviceBooking.to.toISOString(),
       status: reservationStatus.completed,
-      officeId: this.state.selectedOffice,
+      officeId: selectedOffice,
     };
-    returnDevice(request);
+    returnDevice(request, office);
   }
   
   handleChange(e){

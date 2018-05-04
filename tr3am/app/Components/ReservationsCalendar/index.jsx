@@ -12,28 +12,45 @@ class ReservationsCalendar extends React.Component {
   }
   
   render(){
-    return <Calendar value={this.props.currentDate} 
+    const { classes, selectedDeviceReservations, fetchDeviceLoading } = this.props;
+    const reservations = (selectedDeviceReservations && !fetchDeviceLoading) ? 
+      selectedDeviceReservations : [];
+    return <Calendar value={this.props.currentDate}
+      className={classes.calendar}
       onChange={ newValue => this.props.setCurrentDate(newValue)}
       tileClassName={({ date }) => 
-        this.props.reservations
+        reservations
           .filter(res => 
             res.from.getDate() === date.getDate() &&
             res.from.getMonth() === date.getMonth() &&
             res.from.getFullYear() === date.getFullYear()).length > 0 ? 
-          this.props.classes.coloredTile : ''}/>;
+          classes.coloredTile : ''}/>;
   }
 }
 
 ReservationsCalendar.propTypes = {
   currentDate: PropTypes.instanceOf(Date).isRequired,
   setCurrentDate: PropTypes.func.isRequired,
-  reservations: PropTypes.array.isRequired,
   classes: PropTypes.object.isRequired,
-  selectedDevice: PropTypes.number.isRequired,
+  selectedDeviceReservations: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      user: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        firstName: PropTypes.string.isRequired,
+        lastName: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+      }).isRequired,
+      from: PropTypes.object.isRequired,
+      to: PropTypes.object.isRequired,
+      status: PropTypes.number.isRequired,
+    })
+  ),
+  fetchDeviceLoading: PropTypes.bool.isRequired,
 };
 const mapStateToProps = state => ({
   currentDate: state.devices.currentDate,
-  reservations: state.devices.reservations,
-  selectedDevice: state.devices.selectedDevice,
+  selectedDeviceReservations: state.devices.selectedDeviceReservations,
+  fetchDeviceLoading: state.deviceDetails.fetchDeviceLoading,
 });
 export default connect(mapStateToProps, devicesActions)(withStyles(styles)(ReservationsCalendar));

@@ -81,7 +81,6 @@ ReservationsTable.propTypes = {
   selectedDeviceReservations: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
-      deviceId: PropTypes.number.isRequired,
       user: PropTypes.shape({
         id: PropTypes.number.isRequired,
         firstName: PropTypes.string.isRequired,
