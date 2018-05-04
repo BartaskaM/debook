@@ -19,7 +19,7 @@ const EventItem = ({ event, classes }) => {
             <Grid container>
               <Grid item xs>{event.action}</Grid>
               <Grid item xs>
-                <Link to={`/devices/${event.device.identificationNum}`}>
+                <Link to={`/devices/${event.device.id}`}>
                   {event.device.identificationNum}
                 </Link>
               </Grid>

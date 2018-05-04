@@ -31,6 +31,18 @@ class BookingEvents extends React.Component {
     this.props.fetchEvents(page, rowsPerPage);
   }
 
+  handlePageChange(e, page){
+    this.props.fetchEvents(page, this.state.rowsPerPage, () => this.setState({page}));
+  }
+
+  handleRowsPerPageChange(e){
+    const rowsPerPage = e.target.value;
+    this.props.fetchEvents(
+      this.state.page,
+      rowsPerPage,
+      () => this.setState({rowsPerPage: e.target.value}));
+  }
+
   renderListHeader() {
     const { classes } = this.props;
     return (
@@ -70,18 +82,6 @@ class BookingEvents extends React.Component {
         </Table>
       </Grid>
     );
-  }
-
-  handlePageChange(e, page){
-    this.props.fetchEvents(page, this.state.rowsPerPage, () => this.setState({page}));
-  }
-
-  handleRowsPerPageChange(e){
-    const rowsPerPage = e.target.value;
-    this.props.fetchEvents(
-      this.state.page,
-      rowsPerPage,
-      () => this.setState({rowsPerPage: e.target.value}));
   }
 
   render() {
