@@ -87,6 +87,29 @@ export default (state = defaultState, action) => {
         },
       };
     }
+    case deviceDetails.UPDATE_DEVICE_LOCATION_START: {
+      return {
+        ...state,
+        updateDeviceLocationLoading: true,
+        updateDeviceLocationErrorMessage: null,
+      };
+    }
+    case deviceDetails.UPDATE_DEVICE_LOCATION_SUCCESS: {
+      return {
+        ...state,
+        device: {
+          ...(state.device),
+          location: action.payload.location,
+        },
+      };
+    }
+    case deviceDetails.UPDATE_DEVICE_LOCATION_ERROR: {
+      return {
+        ...state,
+        updateDeviceLocationLoading: false,
+        updateDeviceLocationErrorMessage: action.payload,
+      };
+    }
     default: return state;
   }
 };

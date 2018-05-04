@@ -3,7 +3,6 @@ import deviceDetailsList from 'Constants/DeviceDetails';
 import { reservationStatus } from 'Constants/Enums';
 import api from 'api';
 import { toast } from 'react-toastify';
-import store from 'Store';
 
 export const getDeviceWithId = (deviceId) => {
   const device = deviceDetailsList.find(device => device.id === deviceId);
@@ -21,12 +20,6 @@ export const showLocationModal = () => {
   return { 
     type: deviceDetails.SHOW_LOCATION_MODAL, 
   };
-};
-
-export const changeDeviceLocation = (location) => {
-  const device = store.getState().deviceDetails.device;
-  device.location = location;
-  return { type: deviceDetails.SET_DEVICE_DETAILS, payload: device };
 };
 
 export const changeDevice = (device) => {
@@ -73,5 +66,31 @@ export const fetchDevice = (deviceId, userId) => async dispatch => {
       payload: e.response.data.message,
     });
     toast.error('❌ Failed to fetch device');
+  }
+};
+
+export const updateDeviceLocation = (device) => async dispatch => {
+  const { id, ...request } = device;
+  dispatch({ type: deviceDetails.UPDATE_DEVICE_LOCATION_START });
+  try{
+    await api.put(`/devices/${id}`, {
+      ...request,
+      officeId: request.location.id,
+    });
+    dispatch({ 
+      type: deviceDetails.UPDATE_DEVICE_LOCATION_SUCCESS,
+      payload: {
+        deviceId: id,
+        location: request.location,
+      },
+    });
+    toast.success('✅ Updated device location successfully');
+  } catch(e) {
+    console.log(e);
+    dispatch({ 
+      type: deviceDetails.UPDATE_DEVICE_LOCATION_ERROR,
+      payload: e.response.data.message,
+    });
+    toast.error(`❌ Failed to change device location in: ${e.response.data.message}`);
   }
 };
