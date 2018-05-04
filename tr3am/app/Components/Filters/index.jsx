@@ -18,7 +18,6 @@ import { withStyles } from 'material-ui/styles';
 import Styles from './Styles';
 import Divider from 'material-ui/Divider';
 import Brands from 'Constants/Brands';
-import Offices from 'Constants/Offices';
 
 class Filters extends React.Component{
   constructor(props){
@@ -30,7 +29,7 @@ class Filters extends React.Component{
   componentDidMount(){
     const { setShowAvailable, addOfficeFilter, user } = this.props;
     setShowAvailable(true);
-    addOfficeFilter(user.office.city);
+    addOfficeFilter(user.office.id);
   }
 
   componentWillUnmount(){
@@ -87,16 +86,16 @@ class Filters extends React.Component{
   }
 
   renderOfficeFilter(){
-    const { classes, officeFilter } = this.props;
-    const offices = Offices
-      .map((office, i) => 
-        <ListItem button dense key={i}
+    const { classes, officeFilter, offices } = this.props;
+    const officeItems = offices
+      .map((office) => 
+        <ListItem button dense key={office.id}
           classes={{gutters: classes.itemPadding}}
-          onClick={() => this.handleOfficeChange(office.city)}>
+          onClick={() => this.handleOfficeChange(office.id)}>
           <FormControlLabel
             control={
               <Checkbox
-                checked={officeFilter.includes(office.city) ? true : false}
+                checked={officeFilter.includes(office.id) ? true : false}
               />
             }
           />
@@ -107,7 +106,7 @@ class Filters extends React.Component{
       <div>
         <FormLabel className={classes.groupName}>Offices</FormLabel>
         <FormGroup>
-          {offices}
+          {officeItems}
         </FormGroup>
       </div>
     );
@@ -179,43 +178,6 @@ class Filters extends React.Component{
 }
 
 Filters.propTypes = {
-  devices: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    available: PropTypes.bool.isRequired,
-    brand: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-    }).isRequired,
-    model: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-    }).isRequired,
-    identificationNum: PropTypes.number.isRequired,
-    os: PropTypes.string.isRequired,
-    location: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      city: PropTypes.string.isRequired,
-    }).isRequired,
-    custody: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      firstName: PropTypes.string.isRequired,
-      lastName: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    }),
-    userBooking: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      from: PropTypes.instanceOf(Date).isRequired,
-      to: PropTypes.instanceOf(Date).isRequired,
-      status: PropTypes.number.isRequired,
-    }),
-    userReservation: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      from: PropTypes.instanceOf(Date).isRequired,
-      to: PropTypes.instanceOf(Date).isRequired,
-      status: PropTypes.number.isRequired,
-    }),
-  })).isRequired,
   brandFilter: PropTypes.array.isRequired,
   addBrandFilter: PropTypes.func.isRequired,
   removeBrandFilter: PropTypes.func.isRequired,
@@ -243,14 +205,22 @@ Filters.propTypes = {
     }).isRequired,
     slack: PropTypes.string,
   }),
+  offices: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
+  })).isRequired,
 };
 const mapStateToProps = state => {
   return {
-    devices: state.devices.devices,
     brandFilter: state.devices.brandFilter,
     officeFilter: state.devices.officeFilter,
     showAvailable: state.devices.showAvailable,
     showUnavailable: state.devices.showUnavailable,
+    offices: state.offices.offices,
     user: state.auth.user,
   };
 };

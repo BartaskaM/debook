@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import DeviceList from './DeviceList';
 import * as devicesActions from 'ActionCreators/devicesActions';
+import * as officesActions from 'ActionCreators/officesActions';
 import Filters from 'Components/Filters';
 
 class Devices extends React.Component {
   componentDidMount() {
-    const { fetchDevices, user } = this.props;
+    const { fetchDevices, user, fetchOffices } = this.props;
     fetchDevices(user.id);
+    fetchOffices();
   }
 
   render() {
@@ -38,9 +40,10 @@ Devices.propTypes = {
     }).isRequired,
     slack: PropTypes.string,
   }),
+  fetchOffices: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
 });
-export default connect(mapStateToProps, devicesActions)(Devices);
+export default connect(mapStateToProps, { ...devicesActions, ...officesActions })(Devices);
