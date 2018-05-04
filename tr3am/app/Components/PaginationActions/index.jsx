@@ -7,7 +7,7 @@ import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
 import LastPageIcon from 'material-ui-icons/LastPage';
 
-import actionsStyles from './ActionsStyles';
+import actionsStyles from './Styles';
 
 class PaginationActions extends React.Component {
   handleFirstPageButtonClick = event => {

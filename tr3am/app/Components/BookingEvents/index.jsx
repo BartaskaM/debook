@@ -9,7 +9,7 @@ import Typography from 'material-ui/Typography';
 import { LinearProgress } from 'material-ui/Progress';
 import Table, { TablePagination, TableRow, TableFooter } from 'material-ui/Table';
 
-import PaginationActions from './PaginationActions';
+import PaginationActions from 'Components/PaginationActions';
 import Styles from './Styles';
 import StylesUtils from 'Utils/StylesUtils';
 import EventItem from './EventItem';
