@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
@@ -30,18 +32,23 @@ namespace tr3am.Data
                 .ToListAsync();
         }
 
-        public async Task<UserDTO> GetById(int id)
+        public async Task<UserDTO> GetById(int id, List<string> roles)
         {
             var item = await _dbContext.Users
                 .AsNoTracking()
                 .Include(x => x.Office)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
             if (item == null)
             {
                 throw new InvalidUserException();
-            }
+            }       
 
-            return Mapper.Map<User, UserDTO>(item);
+            // TODO: Find better mapper implamentation
+            var userDto = Mapper.Map<User, UserDTO>(item);
+            userDto.Roles = roles;
+
+            return userDto;
         }
 
         public async Task Update(int id, UpdateUserRequest request)

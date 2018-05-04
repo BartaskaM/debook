@@ -20,7 +20,6 @@ namespace tr3am.DataContracts
                 cfg.CreateMap<Office, OfficeDto>();
                 cfg.CreateMap<Office, ShortOfficeDto>();
                 cfg.CreateMap<OfficeDto, Office>();
-                cfg.CreateMap<User, LogInDto>();
                 cfg.CreateMap<User, UserDTO>();
                 cfg.CreateMap<User, ShortUserDto>();
                 cfg.CreateMap<UserDTO, User>();

@@ -31,7 +31,7 @@ namespace tr3am.Controllers
         {
             try
             {
-                return Ok(await _usersRepository.GetById(id));
+                return Ok(await _usersRepository.GetById(id, null));
             }
             catch (InvalidUserException)
             {

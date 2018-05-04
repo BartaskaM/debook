@@ -5,7 +5,8 @@ import api from 'api';
 export const logIn = (logInInfo, history) => async dispatch => {
   dispatch({type: auth.LOG_IN_START});
   try{
-    const response = await api.post('/account/login', logInInfo);
+    await api.post('/account/login', logInInfo);
+    const response = await api.get('/account/me');
     dispatch({
       type: auth.LOG_IN_SUCCESS,
       payload: response.data,

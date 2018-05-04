@@ -13,19 +13,23 @@ using Microsoft.AspNetCore.Http;
 using tr3am.DataContracts.Responses;
 using AutoMapper;
 using tr3am.DataContracts.DTO;
+using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace tr3am.Controllers
 {
     [Route("api/account")]
     public class AccountController : Controller
     {
+        private readonly IUsersRepository _usersRepository;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
         public int LoginDto { get; private set; }
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(IUsersRepository usersRepository, UserManager<User> userManager, SignInManager<User> signInManager)
         {
+            _usersRepository = usersRepository;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -79,7 +83,6 @@ namespace tr3am.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             var result = await _signInManager.PasswordSignInAsync(request.Email, request.Password, request.RememberMe, false);
 
             if (!result.Succeeded)
@@ -90,8 +93,26 @@ namespace tr3am.Controllers
                 });
             }
 
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            return Ok(Mapper.Map<User, LogInDto>(user));
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUserInfo()
+        {
+            try
+            {
+                var userIdClaim = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier);
+                var userId = int.Parse(userIdClaim.Value);
+
+                var roles = (List<string>) await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(userId.ToString()));
+
+                return Ok(await _usersRepository.GetById(userId, roles));
+            }
+            catch (InvalidUserException)
+            {
+                return NotFound();
+            }
         }
 
         [Authorize]

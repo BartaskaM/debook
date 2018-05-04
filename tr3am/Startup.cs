@@ -29,6 +29,7 @@ namespace tr3am
         {
             Mappings.SetupMappings();
             services.AddMvc();
+
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("Tr3amConnection")));
 
@@ -64,6 +65,8 @@ namespace tr3am
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseAuthentication();
 
             if (env.IsDevelopment())
             {
