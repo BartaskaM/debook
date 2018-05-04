@@ -86,7 +86,6 @@ export const updateDeviceLocation = (device) => async dispatch => {
     });
     toast.success('✅ Updated device location successfully');
   } catch(e) {
-    console.log(e);
     dispatch({ 
       type: deviceDetails.UPDATE_DEVICE_LOCATION_ERROR,
       payload: e.response.data.message,
