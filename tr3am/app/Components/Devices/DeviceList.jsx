@@ -23,8 +23,8 @@ import * as devicesActions from 'ActionCreators/devicesActions';
 import * as usersActions from 'ActionCreators/usersActions';
 import Device from './Device';
 import ReturnModal from 'Components/ReturnModal';
-import { fifteenMinutes } from 'Constants/Values';
 import { reservationStatus } from 'Constants/Enums';
+import * as deviceUtils from 'Utils/deviceUtils';
 
 class DeviceList extends React.Component {
   constructor(props) {
@@ -33,8 +33,10 @@ class DeviceList extends React.Component {
     this.openBookDialog = this.openBookDialog.bind(this);
     this.openReserveDialog = this.openReserveDialog.bind(this);
     this.openReservationDetails = this.openReservationDetails.bind(this);
+    this.openReturnModal = this.openReturnModal.bind(this);
     this.handleBookClick = this.handleBookClick.bind(this);
     this.getBookButtonValues = this.getBookButtonValues.bind(this);
+    this.openOfficeInfo = this.openOfficeInfo.bind(this);
     this.state = {
       bookButtonValues: [],
     };
@@ -49,31 +51,22 @@ class DeviceList extends React.Component {
     clearInterval(this.interval);
   }
 
+  static formBookButtonValuesArray = (devices, removeReservation) => {
+    const bookButtonValues = [];
+    devices.forEach(device => {
+      bookButtonValues[device.id] = deviceUtils.getBookButtonValue(device, removeReservation);
+    });
+    return bookButtonValues;
+  };
+
   static getDerivedStateFromProps(nextProps) {
     const { devices, removeReservationFromDevice } = nextProps;
     return { 
-      bookButtonValues: DeviceList.formBookButtonValuesArray(devices, removeReservationFromDevice), 
+      bookButtonValues: DeviceList.formBookButtonValuesArray(
+        devices,
+        removeReservationFromDevice
+      ), 
     };
-  }
-
-  static formBookButtonValuesArray(devices, removeReservation) {
-    const bookButtonValues = [];
-    devices.forEach(device => {
-      if (device.available) {
-        if (DeviceList.canCheckIn(device.userReservation, () => removeReservation(device.id))) {
-          bookButtonValues[device.id] = 'Check-in';
-        } else {
-          bookButtonValues[device.id] = 'Book device';
-        }
-      } else {
-        if (device.userBooking) {
-          bookButtonValues[device.id] = 'Return device';
-        } else {
-          bookButtonValues[device.id] = 'Device is booked';
-        }
-      }
-    });
-    return bookButtonValues;
   }
 
   getBookButtonValues() {
@@ -114,25 +107,11 @@ class DeviceList extends React.Component {
     return devicesToRender;
   }
 
-  static canCheckIn(reservation, removeReservation) {
-    if (reservation) {
-      const now = new Date();
-      if (reservation.from - now < fifteenMinutes && now - reservation.from < fifteenMinutes) {
-        return true;
-      } else {
-        if(reservation && now - reservation.from >= fifteenMinutes){
-          removeReservation();
-        }
-        return false;
-      }
-    }
-  }
-
   handleBookClick(device) {
     const { showReturnModal, checkIn, user, removeReservationFromDevice } = this.props;
     return device.custody ?
       showReturnModal(device.id) :
-      DeviceList.canCheckIn(device.userReservation, () => removeReservationFromDevice(device.id)) ?
+      deviceUtils.canCheckIn(device.userReservation, () => removeReservationFromDevice(device.id)) ?
         checkIn({
           id: device.userReservation.id,
           userId: user.id,
@@ -149,6 +128,18 @@ class DeviceList extends React.Component {
         this.openBookDialog(device.id);
   }
 
+  openOfficeInfo(officeId){return (e) =>{
+    e.stopPropagation();
+    this.props.history.push(`/offices/${officeId}`);
+  };
+  }
+
+  openUserInfo(userId){return (e) =>{
+    e.stopPropagation();
+    this.props.history.push(`/users/${userId}`);
+  };
+  }
+
   renderDevices() {
     const {
       classes,
@@ -161,7 +152,7 @@ class DeviceList extends React.Component {
     return filteredDevices.length === 0 ?
       fetchingDevices ? null : 
         <div className={classes.noItems}>
-          <Typography align="center" variant="display3">No items found</Typography>
+          <Typography align="center" variant="display3">No devices found</Typography>
         </div> :
       filteredDevices.map(device => {
         return (
@@ -174,7 +165,12 @@ class DeviceList extends React.Component {
                 dense
                 onClick={() => history.push(`/devices/${device.id.toString()}`)}>
                 <div className={classes.itemContainer}>
-                  <Device key={device.id} device={device} />
+                  <Device
+                    key={device.id}
+                    device={device}
+                    openOfficeInfo={this.openOfficeInfo(device.location.id)}
+                    openUserInfo={device.custody ? 
+                      this.openUserInfo(device.custody.id) : undefined}/>
                   { checkInLoading === device.id && <LinearProgress/> }
                 </div>
               </ListItem>
@@ -228,6 +224,10 @@ class DeviceList extends React.Component {
   openReservationDetails(reservation, deviceId) {
     const { from, to } = reservation;
     this.props.showReservationDetails(from, to, deviceId);
+  }
+
+  openReturnModal(deviceId){
+    this.props.showReturnModal(deviceId);
   }
 
   render() {
@@ -318,7 +318,6 @@ DeviceList.propTypes = {
   setCurrentDate: PropTypes.func.isRequired,
   setReturnDate: PropTypes.func.isRequired,
   showBookModal: PropTypes.func.isRequired,
-  setSelectedDevice: PropTypes.func.isRequired,
   showReserveModal: PropTypes.func.isRequired,
   showReservationDetails: PropTypes.func.isRequired,
   showReturnModal: PropTypes.func.isRequired,

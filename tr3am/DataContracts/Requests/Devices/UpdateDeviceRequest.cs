@@ -11,7 +11,6 @@ namespace tr3am.DataContracts.Requests.Devices
         public int ModelId { get; set; }
         public string Image { get; set; }
         [MaxLength(255)]
-        public string Name { get; set; }
         public int IdentificationNum { get; set; }
         [Required]
         [MaxLength(255)]
@@ -19,8 +18,6 @@ namespace tr3am.DataContracts.Requests.Devices
         [Required]
         [MaxLength(255)]
         public string OS { get; set; }
-        [MaxLength(1024)]
-        public string Description { get; set; }
         public DateTime Purchased { get; set; }
         [MaxLength(255)]
         public string Vendor { get; set; }

@@ -1,5 +1,6 @@
 import { devices } from 'Constants/ActionTypes';
 import { roundTime } from 'Utils/dateUtils';
+import { toast } from 'react-toastify';
 import api from 'api';
 
 export const setDevices = (deviceArray) => {
@@ -135,11 +136,13 @@ export const bookDevice = (bookRequest, user) => async dispatch =>{
         userBooking,
       },
     });
+    toast.success('✅ Device booked successfully');
   } catch(e) {
     dispatch({ 
       type: devices.BOOK_ERROR,
       payload: e.response.data.message,
     });
+    toast.error(`❌ Failed to book device: ${e.response.data.message}`);
   }
 };
 
@@ -164,11 +167,13 @@ export const reserveDevice = (reserveRequest) => async dispatch =>{
         userReservation,
       },
     });
+    toast.success('✅ Device reserved successfully');
   } catch(e) {
     dispatch({ 
       type: devices.RESERVE_ERROR,
       payload: e.response.data.message,
     });
+    toast.error(`❌ Failed to reserve device: ${e.response.data.message}`);
   }
 };
 
@@ -190,6 +195,7 @@ export const fetchDeviceReservations = (deviceId) => async dispatch =>{
       type: devices.FETCH_DEVICE_RESERVATIONS_ERROR,
       payload: e.response.data.message,
     });
+    toast.error('❌ Failed to fetch device reservations');
   }
 };
 
@@ -244,10 +250,11 @@ export const fetchDevices = (userId) => async dispatch =>{
       type: devices.FETCH_DEVICES_ERROR,
       payload: e.response.data.message,
     });
+    toast.error('❌ Failed to fetch devices');
   }
 };
 
-export const returnDevice = (booking) => async dispatch =>{
+export const returnDevice = (booking, office) => async dispatch =>{
   dispatch({ type: devices.RETURN_DEVICE_START });
   try{
     await api.put(`/reservations/${booking.id}`, booking);
@@ -255,14 +262,19 @@ export const returnDevice = (booking) => async dispatch =>{
       type: devices.RETURN_DEVICE_SUCCESS,
       payload: {
         deviceId: booking.deviceId,
-        officeId: booking.officeId,
+        office: {
+          id: office.id,
+          city: office.city,
+        },
       },
     });
+    toast.success('✅ Device returned successfully');
   } catch(e) {
     dispatch({ 
       type: devices.RETURN_DEVICE_ERROR,
       payload: e.response.data.message,
     });
+    toast.error(`❌ Failed to return device: ${e.response.data.message}`);
   }
 };
 
@@ -276,11 +288,13 @@ export const cancelReservation = (reservation) => async dispatch => {
         deviceId: reservation.deviceId,
       },
     });
+    toast.success('✅ Device reservation canceled successfully');
   } catch(e) {
     dispatch({ 
       type: devices.CANCEL_RESERVATION_ERROR,
       payload: e.response.data.message,
     });
+    toast.error(`❌ Failed to cancel device reservation: ${e.response.data.message}`);
   }
 };
 
@@ -300,11 +314,13 @@ export const checkIn = (reservation, user) => async dispatch => {
         user,
       },
     });
+    toast.success('✅ Checked in successfully');
   } catch(e) {
     dispatch({ 
       type: devices.CHECK_IN_ERROR,
       payload: e.response.data.message,
     });
+    toast.error(`❌ Failed to check in: ${e.response.data.message}`);
   }
 };
 

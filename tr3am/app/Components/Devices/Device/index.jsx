@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import List, { ListItem } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
 import Styles from './Styles';
 
-const device = ({ classes, device }) => {
+const device = (props) => {
+  const { openOfficeInfo, device, classes, openUserInfo } = props;
   const user = device.available ? null : device.custody;
   return (
     <List className={classes.deviceItem}>
@@ -29,14 +29,14 @@ const device = ({ classes, device }) => {
       <Typography noWrap className={classes.deviceCardMainContent}>
         OS: <span className={classes.mainTextColor}> {device.os}</span>
       </Typography>
-      <Typography className={classes.deviceCardMainContent}>
+      <Typography className={classes.deviceCardMainContent} onClick={openOfficeInfo}>
         Location:
         <span className={classes.mainTextColor}> {device.location.city} </span>
       </Typography>
       {device.available ? 
         <Typography className={classes.deviceCardMainContent}></Typography>
         :
-        <Typography className={classes.deviceCardMainContent}>
+        <Typography className={classes.deviceCardMainContent} onClick={openUserInfo}>
           Custody of:
           <span className={classes.mainTextColor}> {`${user.firstName} ${user.lastName}`} </span>
         </Typography>
@@ -84,11 +84,8 @@ device.propTypes = {
       status: PropTypes.number.isRequired,
     }),
   }).isRequired,
-  users: PropTypes.array.isRequired,
+  openOfficeInfo: PropTypes.func.isRequired,
+  openUserInfo: PropTypes.func, 
 };
 
-const mapStateToProps = state => ({
-  users: state.users.users,
-});
-
-export default connect(mapStateToProps, null)(withStyles(Styles)(device));
+export default withStyles(Styles)(device);

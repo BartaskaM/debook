@@ -39,12 +39,15 @@ namespace tr3am.Data
 
         public async Task<FullDeviceDto> GetById(int id)
         {
+            await _reservationsRepository.RefreshReservations();
             var item = await _dbContext.Devices
                 .AsNoTracking()
                 .Include(x => x.Office)
                 .Include(x => x.User)
                 .Include(x => x.Brand)
                 .Include(x => x.Model)
+                .Include(x => x.Reservations)
+                .ThenInclude(x => x.User)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
@@ -89,12 +92,10 @@ namespace tr3am.Data
                 Available = true,
                 Active = true,
                 Image = request.Image,
-                Name = request.Name,
                 UserId = null,
                 IdentificationNum = request.IdentificationNum.Value,
                 SerialNum = request.SerialNum,
                 OS = request.OS,
-                Description = request.Description,
                 Purchased = request.Purchased,
                 Vendor = request.Vendor,
                 TaxRate = request.TaxRate,
@@ -159,12 +160,10 @@ namespace tr3am.Data
             item.Available = request.Available;
             item.Active = request.Active;
             item.Image = request.Image;
-            item.Name = request.Name;
             item.UserId = user?.Id; // user != null ? user.Id : null (Auto VS offer/fix)
             item.IdentificationNum = request.IdentificationNum;
             item.SerialNum = request.SerialNum;
             item.OS = request.OS;
-            item.Description = request.Description;
             item.Purchased = request.Purchased;
             item.Vendor = request.Vendor;
             item.TaxRate = request.TaxRate;

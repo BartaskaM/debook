@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using tr3am.Data.Entities;
 using tr3am.DataContracts.AutoMapper;
 using tr3am.DataContracts.DTO;
+using tr3am.DataContracts.Enums;
 
 namespace tr3am.DataContracts
 {
@@ -24,7 +26,15 @@ namespace tr3am.DataContracts
                 cfg.CreateMap<User, UserDTO>();
                 cfg.CreateMap<User, ShortUserDto>();
                 cfg.CreateMap<UserDTO, User>();
-                cfg.CreateMap<Device, FullDeviceDto>();
+                cfg.CreateMap<Device, FullDeviceDto>()
+                    .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Office))
+                    .ForMember(dest => dest.Custody, opt => opt.MapFrom(src => src.User))
+                    .ForMember(dest => dest.Purchased,
+                        opt => opt.MapFrom(src => DateTime.SpecifyKind(src.Purchased, DateTimeKind.Utc)))
+                    .ForMember(dest => dest.Reservations,
+                        opt => opt.MapFrom(src => src.Reservations.Where(res =>
+                            res.Status == Status.Pending || res.Status == Status.CheckedIn ||
+                            res.Status == Status.OverDue)));
                 cfg.CreateMap<Device, ShortDeviceDto>()
                     .ForMember(dest => dest.UserBooking, opt =>
                         opt.ResolveUsing<UserBookingResolver>())

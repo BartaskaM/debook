@@ -25,13 +25,7 @@ namespace tr3am.Data.Entities
         public User User { get; set; }
         [Required]
         [MaxLength(256)]
-        public string Name { get; set; }
-        [Required]
-        [MaxLength(256)]
         public string SerialNum { get; set; }
-        [Required]
-        [MaxLength(1024)]
-        public string Description { get; set; }
         [Required]
         public DateTime Purchased { get; set; }
         [Required]
