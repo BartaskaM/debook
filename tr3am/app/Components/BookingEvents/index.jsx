@@ -93,9 +93,14 @@ class BookingEvents extends React.Component {
           
           <Grid container item xs={12}>
             <List className={classes.list}>
-              {events.map(event => (
-                <EventItem key={event.id} event={event} />
-              ))}
+              {events.length === 0 && !fetchEventsLoading ? 
+                <div className={classes.noItems}>
+                  <Typography align="center" variant="display3">No events found</Typography>
+                </div> :
+                events.map(event => (
+                  <EventItem key={event.id} event={event} />
+                ))
+              }
             </List>
             {fetchEventsLoading &&
             <Grid item xs={12}>
