@@ -6,7 +6,7 @@ const defaultState = {
   logInError: false,
   currentTab: 0,
   fetchingSignUp: false,
-  signUpError: ' ',
+  signUpError: null,
 };
 
 export default (state = defaultState, action) => {
