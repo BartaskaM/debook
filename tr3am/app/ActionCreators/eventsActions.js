@@ -16,6 +16,10 @@ export const fetchEvents = (page, pageSize) => async dispatch => {
       payload: {
         events: response.data.events.map(event => ({
           ...event,
+          action: event.action
+            .split(/(?=[A-Z])/)
+            .map((word, i) => i != 0 ? word.toLowerCase() : word)
+            .join(' '),
           createdOn: new Date(event.createdOn),
         })),
         count: response.data.count,
