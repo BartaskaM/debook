@@ -2,6 +2,7 @@ import { events } from 'Constants/ActionTypes';
 
 const defaultState = {
   events: [],
+  count: 0,
 
   fetchEventsLoading: false,
   fetchEventsErrorMessage: null,
@@ -17,10 +18,12 @@ export default (state = defaultState, action) => {
       };
     }
     case events.FETCH_EVENTS_SUCCESS: {
+      const { events, count } = action.payload;
       return {
         ...state,
         fetchEventsLoading: false,
-        events: action.payload,
+        events,
+        count,
       };
     }
     case events.FETCH_EVENTS_ERROR: {

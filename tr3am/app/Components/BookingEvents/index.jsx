@@ -16,9 +16,19 @@ import EventItem from './EventItem';
 import * as eventsActions from 'ActionCreators/eventsActions';
 
 class BookingEvents extends React.Component {
+  constructor(props){
+    super(props);
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleRowsPerPageChange = this.handleRowsPerPageChange.bind(this);
+    this.state = {
+      page: 0,
+      rowsPerPage: 20,
+    };
+  }
 
   componentDidMount() {
-    this.props.fetchEvents();
+    const { page, rowsPerPage } = this.state;
+    this.props.fetchEvents(page, rowsPerPage);
   }
 
   renderListHeader() {
@@ -40,36 +50,61 @@ class BookingEvents extends React.Component {
     );
   }
 
+  renderPagination(){
+    const { page, rowsPerPage } = this.state;
+    const rowsPerPageOptions = [10, 20, 30, 40, 50];
+    return (
+      <Grid item xs={12}>
+        <Table>
+          <TableFooter>
+            <TableRow>
+              <TablePagination count={this.props.count}
+                onChangePage={this.handlePageChange}
+                page={page}
+                rowsPerPageOptions={rowsPerPageOptions}
+                rowsPerPage={rowsPerPage}
+                onChangeRowsPerPage={this.handleRowsPerPageChange}
+                Actions={PaginationActions}/>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </Grid>
+    );
+  }
+
+  handlePageChange(e, page){
+    this.props.fetchEvents(page, this.state.rowsPerPage, () => this.setState({page}));
+  }
+
+  handleRowsPerPageChange(e){
+    const rowsPerPage = e.target.value;
+    this.props.fetchEvents(
+      this.state.page,
+      rowsPerPage,
+      () => this.setState({rowsPerPage: e.target.value}));
+  }
+
   render() {
     const { classes, events, fetchEventsLoading } = this.props;
     return (
       <div className={classes.root}>
         <Grid container>
           {this.renderListHeader()}
-          {fetchEventsLoading ?
+          
+          <Grid container item xs={12}>
+            <List className={classes.list}>
+              {events.map(event => (
+                <EventItem key={event.id} event={event} />
+              ))}
+            </List>
+            {fetchEventsLoading &&
             <Grid item xs={12}>
               <LinearProgress />
-            </Grid>
-            : <Grid container item xs={12}>
-              <List className={classes.list}>
-                {events.map(event => (
-                  <EventItem key={event.id} event={event} />
-                ))}
-              </List>
-              <Grid item xs={12}>
-
-                <Table>
-                  <TableFooter>
-                    <TableRow>
-                      <TablePagination count={50} Actions={PaginationActions}
-                        onChangePage={() => console.log('change')} page={1} rowsPerPage={20}/>
-                    </TableRow>
-                  </TableFooter>
-                </Table>
-                
-              </Grid>
-            </Grid>
-          }
+            </Grid>}
+            {events.length > 0 && 
+            this.renderPagination()
+            }
+          </Grid>
         </Grid>
       </div>
     );
@@ -99,6 +134,7 @@ BookingEvents.propTypes = {
   })).isRequired,
   fetchEvents: PropTypes.func.isRequired,
   fetchEventsLoading: PropTypes.bool.isRequired,
+  count: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -106,6 +142,7 @@ const mapStateToProps = state => {
     events: state.events.events,
     fetchEventsLoading: state.events.fetchEventsLoading,
     fetchEventsErrorMessage: state.events.fetchEventsErrorMessage,
+    count: state.events.count,
   };
 };
 
