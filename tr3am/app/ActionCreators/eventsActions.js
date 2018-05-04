@@ -1,8 +1,9 @@
 import { events } from 'Constants/ActionTypes';
 import { toast } from 'react-toastify';
+import { animateScroll } from 'react-scroll';
 import api from 'api';
 
-export const fetchEvents = (page, pageSize, callback) => async dispatch => {
+export const fetchEvents = (page, pageSize) => async dispatch => {
   dispatch({
     type: events.FETCH_EVENTS_START,
   });
@@ -18,9 +19,11 @@ export const fetchEvents = (page, pageSize, callback) => async dispatch => {
           createdOn: new Date(event.createdOn),
         })),
         count: response.data.count,
+        page,
+        pageSize,
       },
     });
-    callback && callback();
+    animateScroll.scrollToTop({smooth: 'easeInOutQuint'});
   } catch (e) {
     dispatch({
       type: events.FETCH_EVENTS_ERROR,
@@ -28,4 +31,8 @@ export const fetchEvents = (page, pageSize, callback) => async dispatch => {
     });
     toast.error('❌ Failed to fetch events');
   }
+};
+
+export const resetPaginationInfo = () => {
+  return {type: events.RESET_PAGINATION_INFO};
 };

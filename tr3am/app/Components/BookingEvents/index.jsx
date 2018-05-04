@@ -20,27 +20,23 @@ class BookingEvents extends React.Component {
     super(props);
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handleRowsPerPageChange = this.handleRowsPerPageChange.bind(this);
-    this.state = {
-      page: 0,
-      rowsPerPage: 20,
-    };
   }
 
   componentDidMount() {
-    const { page, rowsPerPage } = this.state;
+    const { page, rowsPerPage } = this.props;
     this.props.fetchEvents(page, rowsPerPage);
   }
 
-  handlePageChange(e, page){
-    this.props.fetchEvents(page, this.state.rowsPerPage, () => this.setState({page}));
+  componentWillUnmount() {
+    this.props.resetPaginationInfo();
   }
 
-  handleRowsPerPageChange(e){
-    const rowsPerPage = e.target.value;
-    this.props.fetchEvents(
-      this.state.page,
-      rowsPerPage,
-      () => this.setState({rowsPerPage: e.target.value}));
+  handlePageChange(e, page) {
+    this.props.fetchEvents(page, this.props.rowsPerPage);
+  }
+
+  handleRowsPerPageChange(e) {
+    this.props.fetchEvents(this.props.page, e.target.value);
   }
 
   renderListHeader() {
@@ -62,8 +58,8 @@ class BookingEvents extends React.Component {
     );
   }
 
-  renderPagination(){
-    const { page, rowsPerPage } = this.state;
+  renderPagination() {
+    const { page, rowsPerPage } = this.props;
     const rowsPerPageOptions = [10, 20, 30, 40, 50];
     return (
       <Grid item xs={12}>
@@ -89,8 +85,14 @@ class BookingEvents extends React.Component {
     return (
       <div className={classes.root}>
         <Grid container>
+          {events.length > 0 && 
+            this.renderPagination()
+          }
+          {fetchEventsLoading &&
+            <Grid item xs={12}>
+              <LinearProgress />
+            </Grid>}
           {this.renderListHeader()}
-          
           <Grid container item xs={12}>
             <List className={classes.list}>
               {events.length === 0 && !fetchEventsLoading ? 
@@ -102,17 +104,17 @@ class BookingEvents extends React.Component {
                 ))
               }
             </List>
-            {fetchEventsLoading &&
+            {fetchEventsLoading && events.length > 5 &&
             <Grid item xs={12}>
               <LinearProgress />
             </Grid>}
-            {events.length > 0 && 
+            {events.length > 5 && 
             this.renderPagination()
             }
           </Grid>
         </Grid>
       </div>
-    );
+    ); 
   }
 }
 
@@ -140,6 +142,9 @@ BookingEvents.propTypes = {
   fetchEvents: PropTypes.func.isRequired,
   fetchEventsLoading: PropTypes.bool.isRequired,
   count: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+  resetPaginationInfo: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -148,6 +153,8 @@ const mapStateToProps = state => {
     fetchEventsLoading: state.events.fetchEventsLoading,
     fetchEventsErrorMessage: state.events.fetchEventsErrorMessage,
     count: state.events.count,
+    page: state.events.page,
+    rowsPerPage: state.events.rowsPerPage,
   };
 };
 

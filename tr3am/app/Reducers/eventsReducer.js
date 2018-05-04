@@ -3,6 +3,8 @@ import { events } from 'Constants/ActionTypes';
 const defaultState = {
   events: [],
   count: 0,
+  page: 0,
+  rowsPerPage: 20,
 
   fetchEventsLoading: false,
   fetchEventsErrorMessage: null,
@@ -18,12 +20,14 @@ export default (state = defaultState, action) => {
       };
     }
     case events.FETCH_EVENTS_SUCCESS: {
-      const { events, count } = action.payload;
+      const { events, count, page, pageSize } = action.payload;
       return {
         ...state,
         fetchEventsLoading: false,
         events,
         count,
+        page,
+        rowsPerPage: pageSize,
       };
     }
     case events.FETCH_EVENTS_ERROR: {
@@ -31,6 +35,15 @@ export default (state = defaultState, action) => {
         ...state,
         fetchEventsLoading: false,
         fetchEventsErrorMessage: action.payload,
+      };
+    }
+    case events.RESET_PAGINATION_INFO: {
+      return {
+        ...state,
+        page: 0,
+        rowsPerPage: 20,
+        count: null,
+        events: [],
       };
     }
     default: return state;
