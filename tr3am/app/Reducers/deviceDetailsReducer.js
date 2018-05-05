@@ -4,7 +4,6 @@ const defaultState = {
   device: null,
   showLocationModal: false,
   fetchDeviceLoading: false,
-  fetchDeviceErrorMessage: null,
 };
 
 export default (state = defaultState, action) => {
@@ -22,13 +21,10 @@ export default (state = defaultState, action) => {
       };
     }
     case deviceDetails.FETCH_DEVICE_START: {
-      return {...state, fetchDeviceLoading: true, fetchDeviceErrorMessage: null};
+      return {...state, fetchDeviceLoading: true};
     }
     case deviceDetails.FETCH_DEVICE_SUCCESS: {
       return {...state, fetchDeviceLoading: false, device: action.payload};
-    }
-    case deviceDetails.FETCH_DEVICE_ERROR: {
-      return {...state, fetchDeviceLoading: false, fetchDeviceErrorMessage: action.payload};
     }
     case devices.BOOK_SUCCESS: {
       const { user, userBooking } = action.payload;

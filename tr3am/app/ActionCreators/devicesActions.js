@@ -191,10 +191,6 @@ export const fetchDeviceReservations = (deviceId) => async dispatch =>{
       payload: fetchedReservations,
     });
   } catch(e) {
-    dispatch({ 
-      type: devices.FETCH_DEVICE_RESERVATIONS_ERROR,
-      payload: e.response.data.message,
-    });
     toast.error('❌ Failed to fetch device reservations');
   }
 };
