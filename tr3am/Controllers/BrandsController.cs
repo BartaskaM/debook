@@ -25,6 +25,12 @@ namespace tr3am.Controllers
             return await _brandsRepository.GetAll();
         }
 
+        [HttpGet("short")]
+        public async Task<IEnumerable<ShortBrandDto>> GetAllShort()
+        {
+            return await _brandsRepository.GetAllShort();
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {

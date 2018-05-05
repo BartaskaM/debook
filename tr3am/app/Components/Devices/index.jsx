@@ -4,13 +4,20 @@ import PropTypes from 'prop-types';
 import DeviceList from './DeviceList';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as officesActions from 'ActionCreators/officesActions';
+import * as brandsActions from 'ActionCreators/brandsActions';
 import Filters from 'Components/Filters';
 
 class Devices extends React.Component {
   componentDidMount() {
-    const { fetchDevices, user, fetchOffices } = this.props;
+    const {
+      fetchDevices,
+      user,
+      fetchOffices,
+      fetchBrands,
+    } = this.props;
     fetchDevices(user.id);
     fetchOffices();
+    fetchBrands(true);
   }
 
   render() {
@@ -41,9 +48,14 @@ Devices.propTypes = {
     slack: PropTypes.string,
   }),
   fetchOffices: PropTypes.func.isRequired,
+  fetchBrands: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
 });
-export default connect(mapStateToProps, { ...devicesActions, ...officesActions })(Devices);
+export default connect(mapStateToProps, {
+  ...devicesActions,
+  ...officesActions,
+  ...brandsActions,
+})(Devices);

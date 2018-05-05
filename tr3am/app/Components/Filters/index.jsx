@@ -17,7 +17,6 @@ import { ListItem } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
 import Styles from './Styles';
 import Divider from 'material-ui/Divider';
-import Brands from 'Constants/Brands';
 
 class Filters extends React.Component{
   constructor(props){
@@ -59,27 +58,27 @@ class Filters extends React.Component{
   }
 
   renderBrandFilter(){
-    const { classes, brandFilter } = this.props;
-    const brands = Brands
+    const { classes, brandFilter, brands } = this.props;
+    const brandItems = brands
       .map((brand, i) => 
         <ListItem button dense key={i}
           classes={{gutters: classes.itemPadding}}
-          onClick={() => this.handleBrandChange(brand)}>
+          onClick={() => this.handleBrandChange(brand.id)}>
           <FormControlLabel
             control={
               <Checkbox
-                checked={brandFilter.includes(brand) ? true : false}
-                value={brand}
+                checked={brandFilter.includes(brand.id) ? true : false}
+                value={brand.id.toString()}
               />
             }
           />
-          <Typography className={classes.itemText}>{brand}</Typography>
+          <Typography className={classes.itemText}>{brand.name}</Typography>
         </ListItem>);
     return (
       <div>
         <FormLabel className={classes.groupName}>Brands</FormLabel>
         <FormGroup >
-          {brands}
+          {brandItems}
         </FormGroup>
       </div>
     );
@@ -213,6 +212,10 @@ Filters.propTypes = {
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired,
   })).isRequired,
+  brands: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+  })).isRequired,
 };
 const mapStateToProps = state => {
   return {
@@ -222,6 +225,7 @@ const mapStateToProps = state => {
     showUnavailable: state.devices.showUnavailable,
     offices: state.offices.offices,
     user: state.auth.user,
+    brands: state.brands.brands,
   };
 };
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Filters));
