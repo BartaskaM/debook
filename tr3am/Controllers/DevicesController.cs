@@ -68,6 +68,11 @@ namespace tr3am.Controllers
                 string errorText = String.Format("Model with ID: {0} doesn't exist", request.ModelId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
+            catch (DuplicateDeviceException)
+            {
+                string errorText = String.Format("Model with Serial number: {0} already exist", request.SerialNum);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
         }
 
         [HttpPut("{id}")]

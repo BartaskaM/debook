@@ -233,25 +233,25 @@ class DeviceList extends React.Component {
   render() {
     const { classes, fetchingDevices } = this.props;
     return (
-      <Grid container spacing={8} className={classes.root}>
-        {this.renderDevices()}
+      <div>
+        <Grid container spacing={8} className={classes.root}>
+          {this.renderDevices()}
 
-        { fetchingDevices && <Grid item xs={12}><LinearProgress/></Grid> }
-        { this.renderDevices() }
-        <BookModal />
-        <ReserveModal />
-        <ReturnModal />
-        <Grid item xs={12}>
-          <Link to={'/newdevice'}>
-            <Button
-              variant="raised"
-              color="primary"
-              className={classes.addNewButton}>
-              ADD NEW
-            </Button>
-          </Link>
+          { fetchingDevices && <Grid item xs={12}><LinearProgress/></Grid> }
+          { this.renderDevices() }
+          <BookModal />
+          <ReserveModal />
+          <ReturnModal />
         </Grid>
-      </Grid>
+        <Link to={'/newdevice'}>
+          <Button
+            variant="raised"
+            color="primary"
+            className={classes.addNewButton}>
+                  ADD NEW
+          </Button>
+        </Link>
+      </div>
     );
   }
 }

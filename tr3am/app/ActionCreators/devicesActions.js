@@ -211,12 +211,14 @@ export const createDevice = (device, history) => async (dispatch) => {
       type: devices.CREATE_DEVICE_SUCCESS,
       payload: device,
     });
+    toast.success('✅ Device created successfully');
     history.push(`/devices/${response.data}`);
   } catch (e) {
     dispatch({ 
       type: device.CREATE_DEVICE_ERROR, 
       payload: e.toString(), 
     });
+    toast.error(`❌ Failed to create device: ${e.response.data.message}`);
   }
 };
 

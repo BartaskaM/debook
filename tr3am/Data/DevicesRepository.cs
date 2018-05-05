@@ -101,7 +101,10 @@ namespace tr3am.Data
                 TaxRate = request.TaxRate,
                 OfficeId = office.Result.Id,
             };
-
+            if (await DeviceExists(newItem))
+            {
+                throw new DuplicateDeviceException();
+            }
             _dbContext.Add(newItem);
             await _dbContext.SaveChangesAsync();
 
@@ -182,6 +185,21 @@ namespace tr3am.Data
             }
 
             item.Active = false;
+        }
+
+        public async Task<bool> DeviceExists(Device device)
+        {
+            var item = await _dbContext.Devices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x =>
+                x.SerialNum == device.SerialNum);
+
+            if (item != null)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

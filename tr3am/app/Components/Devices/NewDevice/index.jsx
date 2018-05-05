@@ -27,6 +27,7 @@ import * as authActions from 'ActionCreators/authActions';
 import * as officesActions from 'ActionCreators/officesActions';
 import * as brandsActions from 'ActionCreators/brandsActions';
 import * as devicesActions from 'ActionCreators/devicesActions';
+import * as modelsActions from 'ActionCreators/modelsActions';
 
 class NewDevice extends React.Component {
   constructor(props) {
@@ -42,7 +43,6 @@ class NewDevice extends React.Component {
       serialNumber: '',
       os: '',
       identificationNum: '',
-      description: '',
       location: '',
       vendor: '',
       taxRate: 0.00,
@@ -62,7 +62,7 @@ class NewDevice extends React.Component {
     this.inputHandlerForBrand = this.inputHandlerForBrand.bind(this);
     this.submitNewDeviceForm = this.submitNewDeviceForm.bind(this);
     this.isDeviceUnique = this.isDeviceUnique.bind(this);
-    this.addNewModel = this.addNewModel.bind(this);
+    this.createNewModel = this.createNewModel.bind(this);
     this.areAllSelected = this.areAllSelected.bind(this);
     this.loadModels = this.loadModels.bind(this);
     this.createNewDevice = this.createNewDevice.bind(this);
@@ -72,27 +72,19 @@ class NewDevice extends React.Component {
 
   componentDidMount() {
     this.props.fetchOffices();
-    this.props.fetchBrands();
-    //this.props.setDevices(devices);
-    //console.log('componentDidMount()');
-    
+    this.props.fetchBrands();    
   }
 
   handleDateChange(date) {
     this.setState({['purchaseDate']: date});
   }
+
   submitNewDeviceForm(e) {
     e.preventDefault();
-    console.log(this.props.brands);
-    console.log(this.props.brands[0].models);
-    
     if (this.areAllSelected()) {
-      console.log('All fields filled');
       this.setState({ ['errorInForm']: '' });
       if (this.isDeviceUnique()) {
-        if (this.state.newModel) {
-          this.setState({['model']: this.addNewModel()});
-        }
+
         this.createNewDevice();
       }
       else
@@ -103,13 +95,18 @@ class NewDevice extends React.Component {
   }
 
   createNewDevice() {
+    let modelId = this.state.model;
+    if (this.state.newModel) {
+      modelId = this.createNewModel();
+    }
+    console.log(modelId);
     const newDevice = {
       active: this.state.deviceActive,
       brandid: this.state.brand,
       description: this.state.description,
       identificationnum: this.state.identificationNum,
       image: this.state.image,
-      modelid: this.state.model,
+      modelid: modelId,
       officeid: this.state.location,
       purchased: this.state.purchaseDate,
       serialnum: this.state.serialNumber,
@@ -118,8 +115,18 @@ class NewDevice extends React.Component {
       vendor: this.state.vendor,
       available: true,
     };
-    
     this.props.createDevice(newDevice, this.props.history);
+  }
+
+  //TODO: implement adding of new model;
+  createNewModel()
+  {
+    const newModel = {
+      name: this.state.model,
+      brandId: this.state.brand,
+    };
+    const id = this.props.createModel(newModel);
+    return id;
   }
 
   inputHandler(e) {
@@ -139,11 +146,8 @@ class NewDevice extends React.Component {
       if (this.props.brands[i].id === id)
         key = i;
     }
-    console.log(key);
-    console.log(this.props.brands[key].models);
     if(!isNaN(key))
       this.setState({['models']: this.props.brands[key].models}); 
-    console.log(this.state.models);
   }
 
   inputHandlerForModel(e) {
@@ -160,7 +164,6 @@ class NewDevice extends React.Component {
 
   areAllSelected()
   {
-    console.log('Checking errors');
     if (this.state.brand === ''){
       console.log('Error 1');
       this.setState({ ['brandErrorMessage']: 'Select brand model' });
@@ -205,13 +208,6 @@ class NewDevice extends React.Component {
     }
   }
 
-  //TODO: implement adding of new model;
-  addNewModel()
-  {
-    const newModelID = 1;
-    return newModelID;
-  }
-
   render() {
     const { 
       classes, 
@@ -226,7 +222,6 @@ class NewDevice extends React.Component {
       serialNumber,
       os,
       identificationNum,
-      description,
       location,
       vendor,
       taxRate,
@@ -405,18 +400,6 @@ class NewDevice extends React.Component {
                   />
                 </FormControl>
                 <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Description</InputLabel>
-                  <Input
-                    value={description}
-                    onChange={this.inputHandler}
-                    inputProps={{
-                      name: 'description',
-                      maxLength: '2000',
-                    }}
-                    className={classes.fontSize}
-                  />
-                </FormControl>
-                <FormControl className={classes.newDeviceFormField}>
                   <InputLabel className={classes.fontSize}>Location</InputLabel>
                   <div className={classes.wrapper}>
                     <Select
@@ -586,6 +569,7 @@ NewDevice.propTypes = {
   })).isRequired,
   setDevices: PropTypes.func.isRequired,
   createDevice: PropTypes.func.isRequired,
+  createModel: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -600,4 +584,5 @@ export default withRouter(connect(mapStateToProps, {
   ...officesActions,
   ...brandsActions,
   ...devicesActions,
+  ...modelsActions,
 })(withStyles(Styles)(NewDevice)));

@@ -1,9 +1,8 @@
 ﻿namespace tr3am.DataContracts.DTO
 {
-    public class ModelDto
+    public class ShortModelDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ShortBrandDto Brand { get; set; }
     }
 }

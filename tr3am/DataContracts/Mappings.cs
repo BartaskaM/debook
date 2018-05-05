@@ -15,6 +15,7 @@ namespace tr3am.DataContracts
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<Model, ModelDto>();
+                cfg.CreateMap<Model, ShortModelDto>();
                 cfg.CreateMap<ModelDto, Model>();
                 cfg.CreateMap<Brand, BrandDto>();
                 cfg.CreateMap<Brand, ShortBrandDto>();
