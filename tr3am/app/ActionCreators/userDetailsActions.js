@@ -11,10 +11,6 @@ export const fetchUser = (userId) => async dispatch => {
       payload: response.data,
     });
   } catch (e) {
-    dispatch({
-      type: userDetails.FETCH_USER_ERROR,
-      payload: e.response.data.message,
-    });
     toast.error('❌ Failed to fetch user details');
   }
 };
