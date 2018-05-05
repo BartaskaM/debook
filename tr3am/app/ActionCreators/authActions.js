@@ -5,7 +5,27 @@ import api from 'api';
 export const logIn = (logInInfo, history) => async dispatch => {
   dispatch({type: auth.LOG_IN_START});
   try{
-    await api.post('/account/login', logInInfo);
+    const response = await api.post('/account/login', logInInfo);
+
+    dispatch({
+      type: auth.LOG_IN_SUCCESS,
+    });
+
+    dispatch(fetchUserInfo(history));
+
+    toast.info(`👋 Welcome ${response.data}`);
+    history.push('/devices');
+  } catch(e) { 
+    dispatch({
+      type: auth.LOG_IN_ERROR,
+    });
+  }
+};
+
+export const fetchUserInfo = () => async dispatch => {
+  dispatch({type: auth.FETCH_USER_DETAILS_START});
+
+  try{
     const response = await api.get('/account/me');
 
     // Empty roles array means default user
@@ -15,22 +35,31 @@ export const logIn = (logInInfo, history) => async dispatch => {
     }
 
     dispatch({
-      type: auth.LOG_IN_SUCCESS,
+      type: auth.FETCH_USER_DETAILS_SUCCESS,
       payload: response.data,
     });
-    toast.info(`👋 Welcome ${response.data.firstName}`);
-    history.push('/devices');
   } catch(e) { 
     dispatch({
-      type: auth.LOG_IN_ERROR,
+      type: auth.FETCH_USER_DETAILS_ERROR,
     });
   }
 };
 
-export const logOutUser = () => {
-  return { type: auth.LOG_OUT_USER };
-};
+export const logOutUser = () => async dispatch => {
+  dispatch({type: auth.LOG_OUT_USER_START});
 
+  try{
+    await api.post('/account/logout');
+
+    dispatch({
+      type: auth.LOG_OUT_USER_SUCCESS,
+    });
+  } catch(e) { 
+    dispatch({
+      type: auth.LOG_OUT_USER_ERROR,
+    });
+  }
+};
 export const setCurrentTab = (tabNumber) => {
   return { type: auth.SET_CURRENT_TAB, payload: tabNumber };
 };

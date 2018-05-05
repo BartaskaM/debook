@@ -49,7 +49,7 @@ class Login extends React.Component {
   }
 
   render() {
-    const { classes, logInError, fetchingLogIn } = this.props;
+    const { classes, logInError, logInLoading } = this.props;
     return (
       <div>
         <Typography variant='display3'>
@@ -102,7 +102,7 @@ class Login extends React.Component {
               {logInError ? 'Incorrect credentials' : ' '}
             </Typography>
             <FormControl className={classes.signUpFormField}>
-              {fetchingLogIn && <LinearProgress className={classes.progressBar} />}
+              {logInLoading && <LinearProgress className={classes.progressBar} />}
               <Button
                 type='submit'
                 variant='raised'
@@ -124,12 +124,12 @@ Login.propTypes = {
   history: PropTypes.object.isRequired,
   user: PropTypes.object,
   logInError: PropTypes.bool.isRequired,
-  fetchingLogIn: PropTypes.bool.isRequired,
+  logInLoading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
   logInError: state.auth.logInError,
-  fetchingLogIn: state.auth.fetchingLogIn,
+  logInLoading: state.auth.logInLoading,
 });
 export default withRouter(connect(mapStateToProps, auth)(withStyles(Styles)(Login)));

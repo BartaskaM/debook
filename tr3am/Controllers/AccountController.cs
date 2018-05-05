@@ -93,7 +93,7 @@ namespace tr3am.Controllers
                 });
             }
 
-            return NoContent();
+            return Ok((await _userManager.FindByEmailAsync(request.Email)).FirstName);
         }
 
         [Authorize]
