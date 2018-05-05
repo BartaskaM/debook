@@ -11,6 +11,7 @@ using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Enums;
 using tr3am.DataContracts.Requests.Reservations;
 using Microsoft.EntityFrameworkCore;
+using tr3am.Services;
 using Action = tr3am.DataContracts.Enums.Action;
 
 namespace tr3am.Data
@@ -240,6 +241,7 @@ namespace tr3am.Data
             DateTime now = DateTime.UtcNow;
 
             await _dbContext.Reservations
+                .Include(x => x.User)
                 .Include(x => x.Device)
                 .ForEachAsync(async x =>
             {
@@ -264,6 +266,11 @@ namespace tr3am.Data
                     if (x.To <= now)
                     {
                         x.Status = Status.OverDue;
+                        string text =
+                            String.Format("Hello {0} {1},\r\n\r\nIt appears that you have used device {2} for longer period of time than intended. Please return this device as your colleagues may be waiting for it.\r\n\r\nKind regards, Debook.", x.User.FirstName, x.User.LastName, x.Device.IdentificationNum);
+                        string htmlText =
+                            String.Format("Hello {0} {1},<br /><br />It appears that you have used device {2} for longer period of time than intended. Please return this device as your colleagues may be waiting for it.<br /><br />Kind regards, Debook.", x.User.FirstName, x.User.LastName, x.Device.IdentificationNum);
+                        EmailService.SendReminder(text, htmlText, x.User.Email);
                     }
                 }
             });
