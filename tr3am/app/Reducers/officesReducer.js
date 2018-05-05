@@ -28,14 +28,6 @@ export default (state = defaultState, action) => {
         offices: action.payload,
       };
     }
-    case offices.FETCH_OFFICES_ERROR: {
-      return {
-        ...state,
-        fetchOfficesLoading: false,
-        fetchOfficesErrorMessage: action.payload,
-      };
-    }
-
     case offices.CREATE_OFFICE_START: {
       return {
         ...state,
