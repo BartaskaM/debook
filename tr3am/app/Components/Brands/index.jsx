@@ -46,23 +46,27 @@ class BrandList extends React.Component {
           {fetchBrandsLoading ?
             <Grid item xs={12}>
               <LinearProgress />
-            </Grid>
-            : <Grid container>
-              <List className={classes.brandList}>
-                {brands.map(brand => (
-                  <BrandsItem key={brand.id} brand={brand} />
-                ))}
-              </List>
-              <Grid item xs={12}>
-                <Button
-                  variant="raised"
-                  color="primary"
-                  className={classes.addNewButton}
-                >
+            </Grid> :
+            brands.length === 0 ?
+              <div className={classes.noItems}>
+                <Typography align="center" variant="display3">No devices found</Typography>
+              </div>
+              : <Grid container>
+                <List className={classes.brandList}>
+                  {brands.map(brand => (
+                    <BrandsItem key={brand.id} brand={brand} />
+                  ))}
+                </List>
+                <Grid item xs={12}>
+                  <Button
+                    variant="raised"
+                    color="primary"
+                    className={classes.addNewButton}
+                  >
                   ADD NEW
-                </Button>
-              </Grid>
-            </Grid>}
+                  </Button>
+                </Grid>
+              </Grid>}
         </Grid>
       </div>
     );
