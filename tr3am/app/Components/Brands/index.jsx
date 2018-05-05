@@ -68,14 +68,15 @@ class BrandList extends React.Component {
     );
   }
 }
+
 BrandList.propTypes = {
   classes: PropTypes.object.isRequired,
   fetchBrands: PropTypes.func.isRequired,
   brands: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
+    image: PropTypes.string,
     name: PropTypes.string.isRequired,
-    models: PropTypes.array.isRequired,
+    models: PropTypes.array,
   })).isRequired,
   fetchBrandsLoading: PropTypes.bool.isRequired,
 };

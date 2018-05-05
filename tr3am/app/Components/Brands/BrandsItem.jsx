@@ -10,7 +10,7 @@ import { ListItem } from 'material-ui/List';
 import Styles from './Styles';
 
 const BrandsItem = ({ classes, brand }) => {
-  return (
+  return (brand.models ?
     <Grid item xs={12}>
       <ListItem button>
         <Paper className={classes.brandPaper}>
@@ -23,7 +23,7 @@ const BrandsItem = ({ classes, brand }) => {
           </Typography>
         </Paper>
       </ListItem>
-    </Grid>
+    </Grid> : null
   );
 };
 
@@ -31,9 +31,9 @@ BrandsItem.propTypes = {
   classes: PropTypes.object.isRequired,
   brand: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
+    image: PropTypes.string,
     name: PropTypes.string.isRequired,
-    models: PropTypes.array.isRequired,
+    models: PropTypes.array,
   }).isRequired,
 };
 
