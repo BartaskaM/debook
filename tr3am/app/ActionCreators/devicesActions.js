@@ -309,3 +309,20 @@ export const removeReservationFromDevice = (deviceId) => {
     payload: deviceId,
   };
 };
+
+export const fetchBrands = () => async dispatch => {
+  dispatch({
+    type: devices.FETCH_SHORT_BRANDS_START,
+  });
+
+  try {
+    const response = await api.get('/brands/short');
+
+    dispatch({
+      type: devices.FETCH_SHORT_BRANDS_SUCCESS,
+      payload: response.data,
+    });
+  } catch (e) {
+    toast.error('❌ Failed to fetch brands');
+  }
+};

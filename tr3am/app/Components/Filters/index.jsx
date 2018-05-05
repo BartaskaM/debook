@@ -229,9 +229,9 @@ const mapStateToProps = state => {
     showUnavailable: state.devices.showUnavailable,
     offices: state.offices.offices,
     user: state.auth.user,
-    brands: state.brands.brands,
+    brands: state.devices.brands,
     fetchingDevices: state.devices.fetchingDevices,
-    fetchBrandsLoading: state.brands.fetchBrandsLoading,
+    fetchBrandsLoading: state.devices.fetchBrandsLoading,
   };
 };
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Filters));

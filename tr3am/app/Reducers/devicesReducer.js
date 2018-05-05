@@ -32,6 +32,8 @@ const defaultState = {
   cancelReservationErrorMessage: null,
   checkInLoading: null,
   checkInErrorMessage: null,
+  brands: [],
+  fetchBrandsLoading: false,
 };
 
 export default (state = defaultState, action) => {
@@ -379,6 +381,19 @@ export default (state = defaultState, action) => {
     }
     case deviceDetails.FETCH_DEVICE_SUCCESS: {
       return {...state, selectedDeviceReservations: action.payload.reservations};
+    }
+    case devices.FETCH_SHORT_BRANDS_START: {
+      return {
+        ...state,
+        fetchBrandsLoading: true,
+      };
+    }
+    case devices.FETCH_SHORT_BRANDS_SUCCESS: {
+      return {
+        ...state,
+        fetchBrandsLoading: false,
+        brands: action.payload,
+      };
     }
     default: return state;
   }
