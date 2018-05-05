@@ -73,7 +73,7 @@ EventItem.propTypes = {
         address: PropTypes.string.isRequired,
         lat: PropTypes.number.isRequired,
         lng: PropTypes.number.isRequired,
-      }).isRequired,
+      }),
     }).isRequired,
   }).isRequired,
   createdOn: PropTypes.string,

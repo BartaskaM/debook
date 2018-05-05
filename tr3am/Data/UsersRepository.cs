@@ -25,14 +25,40 @@ namespace tr3am.Data
 
         public async Task<IEnumerable<UserDTO>> GetAll()
         {
-            return await _dbContext.Users
+            var userDtos = await _dbContext.Users
                 .AsNoTracking()
                 .Include(x => x.Office)
                 .Select(x => Mapper.Map<User, UserDTO>(x))
                 .ToListAsync();
+
+            foreach(var user in userDtos)
+            {
+                user.Roles = await GetUserRoles(user);
+            }
+
+            return userDtos;
         }
 
-        public async Task<UserDTO> GetById(int id, List<string> roles)
+        public async Task<List<string>> GetUserRoles(UserDTO user)
+        {
+            List<string> userRoles = new List<string>();
+
+            await _dbContext.UserRoles
+                .AsNoTracking()
+                .Where(x => x.UserId == user.Id)
+                .ForEachAsync(async x =>
+                {
+                    userRoles.Add(await _dbContext.Roles
+                        .AsNoTracking()
+                        .Where(y => y.Id == x.RoleId)
+                        .Select(y => y.Name)
+                        .FirstOrDefaultAsync());
+                });
+
+            return userRoles;
+        }
+
+        public async Task<UserDTO> GetById(int id)
         {
             var item = await _dbContext.Users
                 .AsNoTracking()
@@ -42,11 +68,25 @@ namespace tr3am.Data
             if (item == null)
             {
                 throw new InvalidUserException();
-            }       
+            }
+
+            List<string> userRoles = new List<string>();
+
+            await _dbContext.UserRoles
+                .AsNoTracking()
+                .Where(x => x.UserId == item.Id)
+                .ForEachAsync(async x =>
+                {
+                    userRoles.Add(await _dbContext.Roles
+                        .AsNoTracking()
+                        .Where(y => y.Id == x.RoleId)
+                        .Select(y => y.Name)
+                        .FirstOrDefaultAsync());
+                });
 
             // TODO: Find better mapper implamentation
             var userDto = Mapper.Map<User, UserDTO>(item);
-            userDto.Roles = roles;
+            userDto.Roles = userRoles;
 
             return userDto;
         }

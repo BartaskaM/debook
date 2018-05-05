@@ -8,7 +8,7 @@ namespace tr3am.DataContracts
     public interface IUsersRepository
     {
         Task<IEnumerable<UserDTO>> GetAll();
-        Task<UserDTO> GetById(int id, List<string> roles);
+        Task<UserDTO> GetById(int id);
         Task Update(int id, UpdateUserRequest request);
         Task Delete(int id);
     }

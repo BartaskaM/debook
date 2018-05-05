@@ -13,6 +13,7 @@ import Divider from 'material-ui/Divider';
 import { LinearProgress } from 'material-ui/Progress';
 
 import Styles from './Styles';
+import { IsAllowedRole } from 'Utils/routingUtils';
 import * as RouteRoles from 'Constants/RouteRoles';
 import * as officeDetailsActions from 'ActionCreators/officeDetailsActions';
 import Map from './Map';
@@ -64,7 +65,7 @@ class OfficeDetails extends React.Component {
   }
 
   renderInformation() {
-    const { classes, userRole, office } = this.props;
+    const { classes, userRoles, office } = this.props;
 
     return (
       <Paper className={classes.officeLocationInfo}>
@@ -77,14 +78,14 @@ class OfficeDetails extends React.Component {
         <Typography
           variant='display2'><b>Address:</b> {office.address}</Typography>
         <br />
-        {RouteRoles.Offices.includes(userRole) &&
+        {IsAllowedRole(RouteRoles.Offices, userRoles) &&
           <div>
             <Typography
               variant='display2'><b>LAT:</b> {office.lat}</Typography>
             <br />
           </div>
         }
-        {RouteRoles.Offices.includes(userRole) &&
+        {IsAllowedRole(RouteRoles.Offices, userRoles) &&
           <div>
             <Typography
               variant='display2'><b>LNG:</b> {office.lng}</Typography>
@@ -204,9 +205,9 @@ class OfficeDetails extends React.Component {
   }
 
   renderButtons() {
-    const { classes, userRole } = this.props;
+    const { classes, userRoles } = this.props;
 
-    return RouteRoles.Offices.includes(userRole) ? this.state.isEditMode ? (
+    return RouteRoles.Offices.includes(userRoles) ? this.state.isEditMode ? (
       <span>
         <Button variant="raised"
           color="secondary"
@@ -287,7 +288,7 @@ OfficeDetails.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  userRole: PropTypes.string.isRequired,
+  userRoles: PropTypes.arrayOf(PropTypes.string),
   fetchOfficeWithId: PropTypes.func.isRequired,
   updateOfficeWithId: PropTypes.func.isRequired,
   office: PropTypes.shape({
@@ -304,7 +305,7 @@ OfficeDetails.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    userRole: state.auth.user.role,
+    userRoles: state.auth.user.roles,
     office: state.officeDetails.office,
     fetchOfficeLoading: state.officeDetails.fetchOfficeLoading,
     updateOfficeLoading: state.officeDetails.updateOfficeLoading,

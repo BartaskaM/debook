@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { IsAllowedRole } from 'Utils/routingUtils';
+
 const Authorization = ({ component: Component, allowedRoles, user, location }) => (
   <div>
     {!user ?
@@ -12,7 +14,7 @@ const Authorization = ({ component: Component, allowedRoles, user, location }) =
           pathname: '/',
           state: { from: location },
         }}
-      /> : allowedRoles.includes(user.role) ?
+      /> : IsAllowedRole(allowedRoles, user.roles) ?
         <Component /> :
         <Redirect
           to={{

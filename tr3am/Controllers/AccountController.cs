@@ -105,9 +105,7 @@ namespace tr3am.Controllers
                 var userIdClaim = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier);
                 var userId = int.Parse(userIdClaim.Value);
 
-                var roles = (List<string>) await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(userId.ToString()));
-
-                return Ok(await _usersRepository.GetById(userId, roles));
+                return Ok(await _usersRepository.GetById(userId));
             }
             catch (InvalidUserException)
             {

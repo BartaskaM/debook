@@ -7,6 +7,13 @@ export const logIn = (logInInfo, history) => async dispatch => {
   try{
     await api.post('/account/login', logInInfo);
     const response = await api.get('/account/me');
+
+    // Empty roles array means default user
+    if(response.data.roles.length === 0)
+    {
+      response.data.roles = ['user'];
+    }
+
     dispatch({
       type: auth.LOG_IN_SUCCESS,
       payload: response.data,

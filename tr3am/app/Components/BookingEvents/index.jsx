@@ -72,7 +72,7 @@ BookingEvents.propTypes = {
       address: PropTypes.string.isRequired,
       lat: PropTypes.number.isRequired,
       lng: PropTypes.number.isRequired,
-    }).isRequired,
+    }),
     user: PropTypes.shape({
       id: PropTypes.number.isRequired,
       firstName: PropTypes.string.isRequired,
@@ -85,7 +85,7 @@ BookingEvents.propTypes = {
         address: PropTypes.string.isRequired,
         lat: PropTypes.number.isRequired,
         lng: PropTypes.number.isRequired,
-      }).isRequired,
+      }),
     }).isRequired,
     createdOn: PropTypes.string.isRequired,
   })).isRequired,
