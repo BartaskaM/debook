@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
-import * as devicesActions from 'ActionCreators/devicesActions';
 import {
   FormLabel,
   FormControl,
@@ -15,8 +13,11 @@ import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import { ListItem } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
-import Styles from './Styles';
 import Divider from 'material-ui/Divider';
+import { LinearProgress } from 'material-ui/Progress';
+
+import Styles from './Styles';
+import * as devicesActions from 'ActionCreators/devicesActions';
 
 class Filters extends React.Component{
   constructor(props){
@@ -153,10 +154,11 @@ class Filters extends React.Component{
   }
 
   render() {
-    const { classes, resetFilters } = this.props;
+    const { classes, resetFilters, fetchingDevices, fetchBrandsLoading } = this.props;
     return (
       <Drawer variant="permanent" className={classes.root} classes={{paper: classes.drawerPaper}}>
         <div className={classes.toolbar} />
+        { (fetchingDevices || fetchBrandsLoading) && <LinearProgress/> }
         <FormControl className={classes.toolbar}>
           <Button
             classes={{label: classes.textSize}}
@@ -216,6 +218,8 @@ Filters.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
   })).isRequired,
+  fetchBrandsLoading: PropTypes.bool.isRequired,
+  fetchingDevices: PropTypes.bool.isRequired,
 };
 const mapStateToProps = state => {
   return {
@@ -226,6 +230,8 @@ const mapStateToProps = state => {
     offices: state.offices.offices,
     user: state.auth.user,
     brands: state.brands.brands,
+    fetchingDevices: state.devices.fetchingDevices,
+    fetchBrandsLoading: state.brands.fetchBrandsLoading,
   };
 };
 export default connect(mapStateToProps, devicesActions)(withStyles(Styles)(Filters));
