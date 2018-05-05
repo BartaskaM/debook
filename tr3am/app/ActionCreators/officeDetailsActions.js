@@ -14,10 +14,6 @@ export const fetchOfficeWithId = (officeId) => async (dispatch) => {
       payload: response.data,
     });
   } catch (e) {
-    dispatch({
-      type: officeDetails.FETCH_OFFICE_ERROR,
-      payload: e.toString(),
-    });
     toast.error('❌ Failed to fetch office details');
   }
 };
