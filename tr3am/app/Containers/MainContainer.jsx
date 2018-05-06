@@ -92,7 +92,11 @@ class MainContainer extends React.Component {
           )} allowedRoles={RouteRoles.Brands} />
         } />
       </div>
-    ) : <CircularProgress className={classes.loadingCircle} />;
+    ) :
+      <CircularProgress
+        className={classes.loadingCircle}
+        size={150}
+      />;
   }
 }
 
