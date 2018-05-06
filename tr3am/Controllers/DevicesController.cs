@@ -15,11 +15,13 @@ namespace tr3am.Controllers
     {
         private readonly IDevicesRepository _devicesRepository;
         private readonly IReservationsRepository _reservationsRepository;
+        private readonly IModelsRepository _modelsRepository;
 
-        public DevicesController(IDevicesRepository devicesRepository, IReservationsRepository reservationsRepository)
+        public DevicesController(IDevicesRepository devicesRepository, IReservationsRepository reservationsRepository, IModelsRepository modelsRepository)
         {
             _devicesRepository = devicesRepository;
             _reservationsRepository = reservationsRepository;
+            _modelsRepository = modelsRepository;
         }
 
         [HttpGet]
@@ -71,6 +73,11 @@ namespace tr3am.Controllers
             catch (DuplicateDeviceException)
             {
                 string errorText = String.Format("Model with Serial number: {0} already exist", request.SerialNum);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
+            catch (DuplicateModelException)
+            {
+                string errorText = String.Format("Model wiht name: {0} already exist", request.ModelName);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }

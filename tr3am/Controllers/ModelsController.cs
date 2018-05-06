@@ -56,7 +56,7 @@ namespace tr3am.Controllers
                 string errorText = String.Format("Brand with ID: {0} doesn't exist", request.BrandId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
-            catch (DuplicateDeviceException)
+            catch (DuplicateModelException)
             {
                 string errorText = String.Format("This model already exist", request.BrandId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });

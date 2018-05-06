@@ -25,5 +25,7 @@ namespace tr3am.DataContracts.Requests.Devices
         public float TaxRate { get; set; }
         [Required]
         public int OfficeId { get; set; }
+        public bool NewModel { get; set; }
+        public string ModelName { get; set; }
     }
 }

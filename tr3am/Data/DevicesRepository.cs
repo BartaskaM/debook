@@ -8,6 +8,7 @@ using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Devices;
+using tr3am.DataContracts.Requests.Models;
 
 namespace tr3am.Data
 {
@@ -15,11 +16,13 @@ namespace tr3am.Data
     {
         private readonly AppDbContext _dbContext;
         private readonly IReservationsRepository _reservationsRepository;
+        private readonly IModelsRepository _modelsRepository;
 
-        public DevicesRepository(AppDbContext dbContext, IReservationsRepository reservationsRepository)
+        public DevicesRepository(AppDbContext dbContext, IReservationsRepository reservationsRepository, IModelsRepository modelsRepository)
         {
             _dbContext = dbContext;
             _reservationsRepository = reservationsRepository;
+            _modelsRepository = modelsRepository;
         }
 
         public async Task<IEnumerable<ShortDeviceDto>> GetAll(int userId)
@@ -66,10 +69,27 @@ namespace tr3am.Data
             var brand = _dbContext.Brands
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.BrandId);
+            //try
+            //{
+                if (request.NewModel == true)
+                {
+                    ModelItemRequest modelItem = new ModelItemRequest()
+                    {
+                        Name = request.ModelName,
+                        BrandId = request.BrandId,
+                    };
+                    request.ModelId = await _modelsRepository.Create(modelItem);
+                }
+            //}
+            //catch (DuplicateModelException)
+            //{
 
+            //}
             var model = _dbContext.Models
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.ModelId);
+
+
 
             await Task.WhenAll(office, brand, model);
             if (office.Result == null)

@@ -203,7 +203,6 @@ export const createDevice = (device, history) => async (dispatch) => {
   dispatch({ 
     type: devices.CREATE_DEVICE_START,
   });
-  
   try {
     const response = await api.post('/devices', device);
     device['id'] = response.data;
@@ -215,8 +214,8 @@ export const createDevice = (device, history) => async (dispatch) => {
     history.push(`/devices/${response.data}`);
   } catch (e) {
     dispatch({ 
-      type: device.CREATE_DEVICE_ERROR, 
-      payload: e.toString(), 
+      type: devices.CREATE_DEVICE_ERROR, 
+      payload: e.response.data.message, 
     });
     toast.error(`❌ Failed to create device: ${e.response.data.message}`);
   }

@@ -62,7 +62,7 @@ namespace tr3am.Data
             };
             if (await ModelExists(newItem))
             {
-                throw new DuplicateDeviceException();
+                throw new DuplicateModelException();
             }
             _dbContext.Add(newItem);
             await _dbContext.SaveChangesAsync();

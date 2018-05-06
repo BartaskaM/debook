@@ -32,18 +32,19 @@ import * as modelsActions from 'ActionCreators/modelsActions';
 class NewDevice extends React.Component {
   constructor(props) {
     super(props);
-
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
     this.state = {
       deviceActive: true,
       brand: '',
       model: '',
       modelForm: '',
       newModel: false,
-      purchaseDate: '',
+      purchaseDate: todayDate,
       serialNumber: '',
       os: '',
       identificationNum: '',
-      location: '',
+      office: '',
       vendor: '',
       taxRate: 0.00,
       image: '',
@@ -55,6 +56,7 @@ class NewDevice extends React.Component {
       errorInForm: '',
       modelFieldDisabled: true,
       models: [], 
+      //date: '2018-05-01',
     };
 
     this.inputHandler = this.inputHandler.bind(this);
@@ -62,7 +64,7 @@ class NewDevice extends React.Component {
     this.inputHandlerForBrand = this.inputHandlerForBrand.bind(this);
     this.submitNewDeviceForm = this.submitNewDeviceForm.bind(this);
     this.isDeviceUnique = this.isDeviceUnique.bind(this);
-    this.createNewModel = this.createNewModel.bind(this);
+    // this.createNewModel = this.createNewModel.bind(this);
     this.areAllSelected = this.areAllSelected.bind(this);
     this.loadModels = this.loadModels.bind(this);
     this.createNewDevice = this.createNewDevice.bind(this);
@@ -71,11 +73,14 @@ class NewDevice extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchOffices();
-    this.props.fetchBrands();    
+
+    if (this.props.offices.length === 0)
+      this.props.fetchOffices();
+    if (this.props.brands.length === 0)
+      this.props.fetchBrands();    
   }
 
-  handleDateChange(date) {
+  handleDateChange(event, date) {
     this.setState({['purchaseDate']: date});
   }
 
@@ -97,9 +102,8 @@ class NewDevice extends React.Component {
   createNewDevice() {
     let modelId = this.state.model;
     if (this.state.newModel) {
-      modelId = this.createNewModel();
+      modelId = -1;
     }
-    console.log(modelId);
     const newDevice = {
       active: this.state.deviceActive,
       brandid: this.state.brand,
@@ -107,27 +111,29 @@ class NewDevice extends React.Component {
       identificationnum: this.state.identificationNum,
       image: this.state.image,
       modelid: modelId,
-      officeid: this.state.location,
+      officeid: this.state.office,
       purchased: this.state.purchaseDate,
       serialnum: this.state.serialNumber,
       os: this.state.os,
       taxrate: this.state.taxRate,
       vendor: this.state.vendor,
       available: true,
+      newmodel: this.state.newModel,
+      modelname: this.state.model,
     };
     this.props.createDevice(newDevice, this.props.history);
   }
 
   //TODO: implement adding of new model;
-  createNewModel()
-  {
-    const newModel = {
-      name: this.state.model,
-      brandId: this.state.brand,
-    };
-    const id = this.props.createModel(newModel);
-    return id;
-  }
+  // createNewModel()
+  // {
+  //   const newModel = {
+  //     name: this.state.model,
+  //     brandId: this.state.brand,
+  //   };
+  //   const id = this.props.createModel(newModel);
+  //   return id;
+  // }
 
   inputHandler(e) {
     this.setState({ [e.target.name]: e.target.value });
@@ -139,7 +145,6 @@ class NewDevice extends React.Component {
     this.loadModels(e.target.value);
   }
   
-  // TODO: implement loading of models list
   loadModels(id) {
     let key;
     for (let i = 0; i < this.props.brands.length; i++) {
@@ -178,7 +183,7 @@ class NewDevice extends React.Component {
     }
     else
       this.setState({ ['modelErrorMessage']: '' });
-    if (this.state.location === ''){
+    if (this.state.office === ''){
       console.log('Error 3');
       this.setState({ ['locationErrorMessage']: 'Select location' });
       return false;
@@ -218,16 +223,16 @@ class NewDevice extends React.Component {
       deviceActive,
       brand,
       model,
-      date,
       serialNumber,
       os,
       identificationNum,
-      location,
+      office,
       vendor,
       taxRate,
       image,
       modelForm,
       models,
+      //purchaseDate,
     } = this.state;
 
     const newModelForm = this.state.newModel 
@@ -403,10 +408,10 @@ class NewDevice extends React.Component {
                   <InputLabel className={classes.fontSize}>Location</InputLabel>
                   <div className={classes.wrapper}>
                     <Select
-                      value={location}
+                      value={office}
                       autoWidth={true}
                       inputProps={{
-                        name: 'location',
+                        name: 'office',
                         required: 'required',
                       }}
                       onChange={this.inputHandler}
@@ -429,13 +434,13 @@ class NewDevice extends React.Component {
                 </Typography>
                 <FormControl className={classes.newDeviceFormField}>
                   <DatePicker
-                    label="Device purchase date"
-                    showTodayButton
-                    format="DD/MM/YYYY"
-                    value={date}
-                    onChange={this.handleDateChange}
-                    className={classes.inputField}
-                    InputLabelProps={{ classes: { root: classes.fontSize } }}
+                    // label="Device purchase date"
+                    //showTodayButton
+                    // format="DD/MM/YYYY"
+                    //value={purchaseDate}
+                    // onChange={this.handleDateChange}
+                    // className={classes.inputField}
+                    //InputLabelProps={{ classes: { root: classes.fontSize } }}
                   />
                 </FormControl>
                 <Typography variant='headline' className={classes.errorMessage}>
@@ -512,27 +517,26 @@ NewDevice.propTypes = {
   fetchOffices: PropTypes.func.isRequired,
   fetchBrands: PropTypes.func.isRequired,
   offices: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    country: PropTypes.string.isRequired,
-    city: PropTypes.string.isRequired,
-    address: PropTypes.string.isRequired,
-    lat: PropTypes.number.isRequired,
-    lng: PropTypes.number.isRequired,
+    // id: PropTypes.number.isRequired,
+    // country: PropTypes.string.isRequired,
+    // city: PropTypes.string.isRequired,
+    // address: PropTypes.string.isRequired,
+    // lat: PropTypes.number.isRequired,
+    // lng: PropTypes.number.isRequired,
   })).isRequired,
   brands: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
-    // image: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     models: PropTypes.array.isRequired,
   })).isRequired,
-  models: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-  })).isRequired,
+  // models: PropTypes.arrayOf(PropTypes.shape({
+  //   id: PropTypes.number.isRequired,
+  //   name: PropTypes.string.isRequired,
+  // })).isRequired,
   devices: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     image: PropTypes.string.isRequired,
-    active: PropTypes.bool.isRequired,
+    // active: PropTypes.bool.isRequired,
     brand: PropTypes.shape({
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
@@ -543,7 +547,7 @@ NewDevice.propTypes = {
     }).isRequired,
     identificationNum: PropTypes.number.isRequired,
     os: PropTypes.string.isRequired,
-    serialnum: PropTypes.string.isRequired,
+    // serialnum: PropTypes.string.isRequired,
     location: PropTypes.shape({
       id: PropTypes.number.isRequired,
       city: PropTypes.string.isRequired,

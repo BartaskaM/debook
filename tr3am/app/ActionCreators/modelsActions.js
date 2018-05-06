@@ -31,18 +31,18 @@ export const createModel = (model) => async (dispatch) => {
   try {
     const response = await api.post('/models', model);
     model['id'] = response.data;
-  
+
     dispatch({
       type: models.CREATE_MODEL_SUCCESS,
       payload: model,
     });
     toast.success('✅ Model created successfully');
-    return response.id;
   } catch (e) {
     dispatch({ 
       type: models.CREATE_MODEL_ERROR, 
       payload: e.response.data.message, 
     });
+    
     toast.error(`❌ Failed to create model: ${e.response.data.message}`);
   }
 };
