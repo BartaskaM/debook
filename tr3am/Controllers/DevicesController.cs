@@ -96,11 +96,6 @@ namespace tr3am.Controllers
                 string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
-            catch (InvalidUserException)
-            {
-                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
-            }
             catch (InvalidBrandException)
             {
                 string errorText = String.Format("Brand with ID: {0} doesn't exist", request.BrandId);
