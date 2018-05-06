@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using tr3am.Data;
 using tr3am.DataContracts;
+using tr3am.Services;
 
 namespace tr3am
 {
@@ -27,6 +28,8 @@ namespace tr3am
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("Tr3amConnection")));
 
+            services.AddSingleton(Configuration.GetSection("SendGridOptions").Get<SendGridOptions>());
+            services.AddSingleton<EmailService>();
             services.AddScoped<IOfficesRepository, OfficesRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IAuth, UsersRepository>();

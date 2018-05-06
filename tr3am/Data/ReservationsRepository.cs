@@ -19,10 +19,12 @@ namespace tr3am.Data
     public class ReservationsRepository : IReservationsRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly EmailService _emailService;
 
-        public ReservationsRepository(AppDbContext dbContext)
+        public ReservationsRepository(AppDbContext dbContext, EmailService emailService)
         {
             _dbContext = dbContext;
+            _emailService = emailService;
         }
 
         public async Task<IEnumerable<ReservationDto>> GetAll(bool showAll)
@@ -270,7 +272,7 @@ namespace tr3am.Data
                             String.Format("Hello {0} {1},\r\n\r\nIt appears that you have used device {2} for longer period of time than intended. Please return this device as your colleagues may be waiting for it.\r\n\r\nKind regards, Debook.", x.User.FirstName, x.User.LastName, x.Device.IdentificationNum);
                         string htmlText =
                             String.Format("Hello {0} {1},<br /><br />It appears that you have used device {2} for longer period of time than intended. Please return this device as your colleagues may be waiting for it.<br /><br />Kind regards, Debook.", x.User.FirstName, x.User.LastName, x.Device.IdentificationNum);
-                        EmailService.SendReminder(text, htmlText, x.User.Email);
+                        _emailService.SendReminder(text, htmlText, x.User.Email);
                     }
                 }
             });
