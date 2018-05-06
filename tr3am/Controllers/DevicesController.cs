@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -25,8 +26,11 @@ namespace tr3am.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IEnumerable<ShortDeviceDto>> GetAll([FromQuery]int userId)
+        public async Task<IEnumerable<ShortDeviceDto>> GetAll()
         {
+            var userIdClaim = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userIdClaim.Value);
+
             return await _devicesRepository.GetAll(userId);
         }
 

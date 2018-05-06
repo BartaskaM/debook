@@ -11,7 +11,7 @@ export const logIn = (logInInfo, history) => async dispatch => {
       type: auth.LOG_IN_SUCCESS,
     });
 
-    dispatch(fetchUserInfo(history));
+    dispatch(fetchUserInfo());
 
     toast.info(`👋 Welcome ${response.data}`);
     history.push('/devices');
@@ -60,6 +60,7 @@ export const logOutUser = () => async dispatch => {
     });
   }
 };
+
 export const setCurrentTab = (tabNumber) => {
   return { type: auth.SET_CURRENT_TAB, payload: tabNumber };
 };
