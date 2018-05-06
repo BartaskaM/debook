@@ -9,6 +9,9 @@ const theme = createMuiTheme({
       main: '#404CFA',
     },
   },
+  typography: {
+    fontSize: 16,
+  },
 });
 
 export default theme;

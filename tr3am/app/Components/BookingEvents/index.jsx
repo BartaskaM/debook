@@ -7,16 +7,36 @@ import List from 'material-ui/List';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import { LinearProgress } from 'material-ui/Progress';
+import Table, { TablePagination, TableRow, TableFooter } from 'material-ui/Table';
 
+import PaginationActions from 'Components/PaginationActions';
 import Styles from './Styles';
 import StylesUtils from 'Utils/StylesUtils';
 import EventItem from './EventItem';
 import * as eventsActions from 'ActionCreators/eventsActions';
 
 class BookingEvents extends React.Component {
+  constructor(props){
+    super(props);
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleRowsPerPageChange = this.handleRowsPerPageChange.bind(this);
+  }
 
   componentDidMount() {
-    this.props.fetchEvents();
+    const { page, rowsPerPage } = this.props;
+    this.props.fetchEvents(page, rowsPerPage);
+  }
+
+  componentWillUnmount() {
+    this.props.resetPaginationInfo();
+  }
+
+  handlePageChange(e, page) {
+    this.props.fetchEvents(page, this.props.rowsPerPage);
+  }
+
+  handleRowsPerPageChange(e) {
+    this.props.fetchEvents(this.props.page, e.target.value);
   }
 
   renderListHeader() {
@@ -38,24 +58,63 @@ class BookingEvents extends React.Component {
     );
   }
 
+  renderPagination() {
+    const { page, rowsPerPage } = this.props;
+    const rowsPerPageOptions = [10, 20, 30, 40, 50];
+    return (
+      <Grid item xs={12}>
+        <Table>
+          <TableFooter>
+            <TableRow>
+              <TablePagination count={this.props.count}
+                onChangePage={this.handlePageChange}
+                page={page}
+                rowsPerPageOptions={rowsPerPageOptions}
+                rowsPerPage={rowsPerPage}
+                onChangeRowsPerPage={this.handleRowsPerPageChange}
+                Actions={PaginationActions}/>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </Grid>
+    );
+  }
+
   render() {
     const { classes, events, fetchEventsLoading } = this.props;
     return (
       <div className={classes.root}>
         <Grid container>
-          {this.renderListHeader()}
-          {fetchEventsLoading ?
+          {events.length > 0 && 
+            this.renderPagination()
+          }
+          {fetchEventsLoading &&
             <Grid item xs={12}>
               <LinearProgress />
-            </Grid>
-            : <List className={classes.list}>
-              {events.map(event => (
-                <EventItem key={event.id} event={event} />
-              ))}
-            </List>}
+            </Grid>}
+          {this.renderListHeader()}
+          <Grid container item xs={12}>
+            <List className={classes.list}>
+              {events.length === 0 && !fetchEventsLoading ? 
+                <div className={classes.noItems}>
+                  <Typography align="center" variant="display3">No events found</Typography>
+                </div> :
+                events.map(event => (
+                  <EventItem key={event.id} event={event} />
+                ))
+              }
+            </List>
+            {fetchEventsLoading && events.length > 5 &&
+            <Grid item xs={12}>
+              <LinearProgress />
+            </Grid>}
+            {events.length > 5 && 
+            this.renderPagination()
+            }
+          </Grid>
         </Grid>
       </div>
-    );
+    ); 
   }
 }
 
@@ -64,33 +123,28 @@ BookingEvents.propTypes = {
   events: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     action: PropTypes.string.isRequired,
-    device: PropTypes.object.isRequired,
+    device: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      identificationNum: PropTypes.number.isRequired,
+    }).isRequired,
     office: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      country: PropTypes.string.isRequired,
       city: PropTypes.string.isRequired,
-      address: PropTypes.string.isRequired,
-      lat: PropTypes.number.isRequired,
-      lng: PropTypes.number.isRequired,
     }).isRequired,
     user: PropTypes.shape({
       id: PropTypes.number.isRequired,
       firstName: PropTypes.string.isRequired,
       lastName: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
-      office: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        country: PropTypes.string.isRequired,
-        city: PropTypes.string.isRequired,
-        address: PropTypes.string.isRequired,
-        lat: PropTypes.number.isRequired,
-        lng: PropTypes.number.isRequired,
-      }).isRequired,
     }).isRequired,
-    createdOn: PropTypes.string.isRequired,
+    createdOn: PropTypes.instanceOf(Date).isRequired,
   })).isRequired,
   fetchEvents: PropTypes.func.isRequired,
   fetchEventsLoading: PropTypes.bool.isRequired,
+  count: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+  resetPaginationInfo: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -98,6 +152,9 @@ const mapStateToProps = state => {
     events: state.events.events,
     fetchEventsLoading: state.events.fetchEventsLoading,
     fetchEventsErrorMessage: state.events.fetchEventsErrorMessage,
+    count: state.events.count,
+    page: state.events.page,
+    rowsPerPage: state.events.rowsPerPage,
   };
 };
 
