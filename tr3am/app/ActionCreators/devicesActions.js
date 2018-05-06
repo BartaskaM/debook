@@ -191,10 +191,6 @@ export const fetchDeviceReservations = (deviceId) => async dispatch =>{
       payload: fetchedReservations,
     });
   } catch(e) {
-    dispatch({ 
-      type: devices.FETCH_DEVICE_RESERVATIONS_ERROR,
-      payload: e.response.data.message,
-    });
     toast.error('❌ Failed to fetch device reservations');
   }
 };
@@ -308,4 +304,21 @@ export const removeReservationFromDevice = (deviceId) => {
     type: devices.REMOVE_DEVICE_RESERVATION,
     payload: deviceId,
   };
+};
+
+export const fetchBrands = () => async dispatch => {
+  dispatch({
+    type: devices.FETCH_SHORT_BRANDS_START,
+  });
+
+  try {
+    const response = await api.get('/brands/short');
+
+    dispatch({
+      type: devices.FETCH_SHORT_BRANDS_SUCCESS,
+      payload: response.data,
+    });
+  } catch (e) {
+    toast.error('❌ Failed to fetch brands');
+  }
 };

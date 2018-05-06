@@ -346,7 +346,7 @@ class UserDetails extends React.Component {
       office, 
       id, 
     } = user;
-    return (          
+    return (
       <Grid item xs={12}>
         <FormGroup>
           <Grid container>
@@ -457,7 +457,7 @@ class UserDetails extends React.Component {
               <FormControl className={classes.signUpFormField}>
                 <Input
                   className={classes.fontSize}
-                  value={slack}
+                  value={slack || ''}
                   onChange={this.handleFormChange}
                   inputProps={{
                     type: 'text',

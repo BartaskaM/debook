@@ -15,10 +15,6 @@ export const fetchUsers = () => async dispatch => {
       payload: response.data,
     });
   } catch (e) {
-    dispatch({
-      type: users.FETCH_USERS_ERROR,
-      payload: e.toString(),
-    });
     toast.error('❌ Failed to fetch users');
   }
 };

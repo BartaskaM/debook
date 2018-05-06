@@ -15,10 +15,6 @@ export const fetchEvents = () => async dispatch => {
       payload: response.data,
     });
   } catch (e) {
-    dispatch({
-      type: events.FETCH_EVENTS_ERROR,
-      payload: e.toString(),
-    });
     toast.error('❌ Failed to fetch events');
   }
 };

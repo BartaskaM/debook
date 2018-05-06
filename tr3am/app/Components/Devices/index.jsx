@@ -2,13 +2,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import DeviceList from './DeviceList';
-import * as devicesActions from 'ActionCreators/devicesActions';
+import { fetchDevices, fetchBrands } from 'ActionCreators/devicesActions';
+import { fetchOffices } from 'ActionCreators/officesActions';
 import Filters from 'Components/Filters';
 
 class Devices extends React.Component {
   componentDidMount() {
-    const { fetchDevices, user } = this.props;
+    const {
+      fetchDevices,
+      user,
+      fetchOffices,
+      fetchBrands,
+    } = this.props;
     fetchDevices(user.id);
+    fetchOffices();
+    fetchBrands();
   }
 
   render() {
@@ -38,9 +46,15 @@ Devices.propTypes = {
     }).isRequired,
     slack: PropTypes.string,
   }),
+  fetchOffices: PropTypes.func.isRequired,
+  fetchBrands: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
 });
-export default connect(mapStateToProps, devicesActions)(Devices);
+export default connect(mapStateToProps, {
+  fetchDevices,
+  fetchOffices,
+  fetchBrands,
+})(Devices);

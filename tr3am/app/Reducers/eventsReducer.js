@@ -4,7 +4,6 @@ const defaultState = {
   events: [],
 
   fetchEventsLoading: false,
-  fetchEventsErrorMessage: null,
 };
 
 export default (state = defaultState, action) => {
@@ -13,7 +12,6 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchEventsLoading: true,
-        fetchEventsErrorMessage: null,
       };
     }
     case events.FETCH_EVENTS_SUCCESS: {
@@ -21,13 +19,6 @@ export default (state = defaultState, action) => {
         ...state,
         fetchEventsLoading: false,
         events: action.payload,
-      };
-    }
-    case events.FETCH_EVENTS_ERROR: {
-      return {
-        ...state,
-        fetchEventsLoading: false,
-        fetchEventsErrorMessage: action.payload,
       };
     }
     default: return state;

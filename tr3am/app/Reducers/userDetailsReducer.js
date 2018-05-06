@@ -3,7 +3,6 @@ import { userDetails } from 'Constants/ActionTypes';
 const defaultState = {
   userDetails: null,
   fetchingUser: false,
-  fetchUserError: '',
   updatingUser: false,
   updateUserError: '',
 };
@@ -18,9 +17,6 @@ export default (state = defaultState, action) => {
     }
     case userDetails.FETCH_USER_SUCCESS: {
       return { ...state, fetchingUser: false, userDetails: action.payload };
-    }
-    case userDetails.FETCH_USER_ERROR: {
-      return { ...state, fetchingUser: false, fetchUserError: action.payload };
     }
     case userDetails.UPDATE_USER_START: {
       return { ...state, updatingUser: true, updateError: '' };
