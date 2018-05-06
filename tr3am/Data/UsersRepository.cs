@@ -120,6 +120,7 @@ namespace tr3am.Data
             item.LastName = request.LastName;
             item.OfficeId = office.Id;
 
+            // TODO: Fix user password update to work with identity framework
             //if (!String.IsNullOrEmpty(request.Password))
             //{
             //    item.Password = request.Password;
