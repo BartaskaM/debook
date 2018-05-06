@@ -353,7 +353,7 @@ export default (state = defaultState, action) => {
     case devices.REMOVE_DEVICE_RESERVATION: {
       return {
         ...state,
-        devices: devices.map(device => {
+        devices: state.devices.map(device => {
           if(device.id === action.payload){
             return {...device, userReservation: null};
           }
@@ -375,6 +375,18 @@ export default (state = defaultState, action) => {
         ...state,
         fetchBrandsLoading: false,
         brands: action.payload,
+      };
+    }
+    case deviceDetails.UPDATE_DEVICE_LOCATION_SUCCESS: {
+      const { deviceId, location } = action.payload;
+      return {
+        ...state,
+        devices: state.devices.map(device => {
+          if(device.id === deviceId){
+            return {...device, location};
+          }
+          return device;
+        }),
       };
     }
     default: return state;

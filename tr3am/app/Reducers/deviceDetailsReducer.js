@@ -21,7 +21,7 @@ export default (state = defaultState, action) => {
       };
     }
     case deviceDetails.FETCH_DEVICE_START: {
-      return {...state, fetchDeviceLoading: true};
+      return {...state, fetchDeviceLoading: true };
     }
     case deviceDetails.FETCH_DEVICE_SUCCESS: {
       return {...state, fetchDeviceLoading: false, device: action.payload};
@@ -80,6 +80,21 @@ export default (state = defaultState, action) => {
           userBooking,
           available: false,
           custody: user,
+        },
+      };
+    }
+    case deviceDetails.UPDATE_DEVICE_LOCATION_START: {
+      return {
+        ...state,
+        updateDeviceLocationLoading: true,
+      };
+    }
+    case deviceDetails.UPDATE_DEVICE_LOCATION_SUCCESS: {
+      return {
+        ...state,
+        device: {
+          ...(state.device),
+          location: action.payload.location,
         },
       };
     }

@@ -10,7 +10,6 @@ namespace tr3am.DataContracts.Requests.Devices
         [Required]
         public int ModelId { get; set; }
         public string Image { get; set; }
-        [MaxLength(255)]
         public int IdentificationNum { get; set; }
         [Required]
         [MaxLength(255)]
@@ -28,7 +27,6 @@ namespace tr3am.DataContracts.Requests.Devices
         public bool Available { get; set; }
         [Required]
         public bool Active { get; set; }
-        [Required]
         public int? UserId { get; set; }
     }
 }
