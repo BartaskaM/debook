@@ -12,6 +12,7 @@ using tr3am.DataContracts.Requests.Events;
 
 namespace tr3am.Controllers
 {
+    [Authorize]
     [Route("api/events")]
     public class EventsController : Controller
     {
@@ -22,14 +23,12 @@ namespace tr3am.Controllers
             _eventsRepository = eventsRepository;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<EventDto>> GetAll()
         {
             return await _eventsRepository.GetAll();
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -47,7 +46,6 @@ namespace tr3am.Controllers
             }
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]EventItemRequest request)
         {
@@ -75,7 +73,6 @@ namespace tr3am.Controllers
             }
         }
 
-        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody]EventItemRequest request)
         {

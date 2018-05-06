@@ -12,6 +12,7 @@ using tr3am.DataContracts.Requests.Devices;
 
 namespace tr3am.Controllers
 {
+    [Authorize]
     [Route("api/devices")]
     public class DevicesController : Controller
     {
@@ -24,7 +25,6 @@ namespace tr3am.Controllers
             _reservationsRepository = reservationsRepository;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<ShortDeviceDto>> GetAll()
         {
@@ -34,7 +34,6 @@ namespace tr3am.Controllers
             return await _devicesRepository.GetAll(userId);
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -128,7 +127,6 @@ namespace tr3am.Controllers
             }
         }
 
-        [Authorize]
         [HttpGet("{id}/reservations")]
         public async Task<IEnumerable<ReservationDto>> GetDeviceReservations(int id, [FromQuery]bool showAll)
         {

@@ -12,6 +12,7 @@ using tr3am.DataContracts.Requests.Reservations;
 
 namespace tr3am.Controllers
 {
+    [Authorize]
     [Route("api/reservations")]
     public class ReservationsController : Controller
     {
@@ -22,14 +23,12 @@ namespace tr3am.Controllers
             _reservationsRepository = reservationsRepository;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<ReservationDto>> GetAll([FromQuery]bool showAll)
         {
             return await _reservationsRepository.GetAll(showAll);
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -43,7 +42,6 @@ namespace tr3am.Controllers
             }
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]ReservationRequest request, [FromQuery]bool booking)
         {
@@ -81,7 +79,6 @@ namespace tr3am.Controllers
             }
         }
 
-        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody]ReservationUpdateRequest request)
         {

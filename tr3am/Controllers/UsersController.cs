@@ -12,6 +12,7 @@ using tr3am.DataContracts.Requests.Users;
 
 namespace tr3am.Controllers
 {
+    [Authorize]
     [Route("api/users")]
     public class UsersController : Controller
     {
@@ -22,14 +23,12 @@ namespace tr3am.Controllers
             _usersRepository = usersRepository;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<UserDTO>> GetAll()
         {
             return await _usersRepository.GetAll();
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -43,7 +42,6 @@ namespace tr3am.Controllers
             }
         }
 
-        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateUserRequest request)
         {
