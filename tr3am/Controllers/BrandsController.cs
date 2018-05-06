@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Exceptions;
@@ -19,12 +20,14 @@ namespace tr3am.Controllers
             _brandsRepository = brandsRepository;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IEnumerable<BrandDto>> GetAll()
         {
             return await _brandsRepository.GetAll();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -38,6 +41,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]BrandItemRequest request)
         {
@@ -56,6 +60,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] BrandItemRequest request)
         {
@@ -74,6 +79,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

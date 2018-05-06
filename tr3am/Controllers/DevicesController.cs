@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Exceptions;
@@ -22,12 +23,14 @@ namespace tr3am.Controllers
             _reservationsRepository = reservationsRepository;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<ShortDeviceDto>> GetAll([FromQuery]int userId)
         {
             return await _devicesRepository.GetAll(userId);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -41,6 +44,7 @@ namespace tr3am.Controllers
             } 
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]CreateDeviceRequest request)
         {
@@ -70,6 +74,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateDeviceRequest request)
         {
@@ -109,6 +114,7 @@ namespace tr3am.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -123,6 +129,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("{id}/reservations")]
         public async Task<IEnumerable<ReservationDto>> GetDeviceReservations(int id, [FromQuery]bool showAll)
         {

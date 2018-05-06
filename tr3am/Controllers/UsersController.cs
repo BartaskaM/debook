@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Exceptions;
@@ -20,12 +21,14 @@ namespace tr3am.Controllers
             _usersRepository = usersRepository;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<UserDTO>> GetAll()
         {
             return await _usersRepository.GetAll();
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -39,6 +42,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateUserRequest request)
         {
@@ -66,6 +70,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

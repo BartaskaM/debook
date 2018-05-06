@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Exceptions;
@@ -20,12 +21,14 @@ namespace tr3am.Controllers
             _eventsRepository = eventsRepository;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<EventDto>> GetAll()
         {
             return await _eventsRepository.GetAll();
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -43,6 +46,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]EventItemRequest request)
         {
@@ -72,6 +76,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody]EventItemRequest request)
         {
@@ -105,6 +110,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

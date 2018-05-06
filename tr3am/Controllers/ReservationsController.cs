@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Exceptions;
@@ -20,12 +21,14 @@ namespace tr3am.Controllers
             _reservationsRepository = reservationsRepository;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<ReservationDto>> GetAll([FromQuery]bool showAll)
         {
             return await _reservationsRepository.GetAll(showAll);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -39,6 +42,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]ReservationRequest request, [FromQuery]bool booking)
         {
@@ -78,6 +82,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody]ReservationUpdateRequest request)
         {
@@ -111,6 +116,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
