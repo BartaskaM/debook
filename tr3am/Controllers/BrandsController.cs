@@ -27,7 +27,7 @@ namespace tr3am.Controllers
             return await _brandsRepository.GetAll();
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize]
         [HttpGet("short")]
         public async Task<IEnumerable<ShortBrandDto>> GetAllShort()
         {

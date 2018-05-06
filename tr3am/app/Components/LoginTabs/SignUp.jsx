@@ -87,7 +87,7 @@ class SignUp extends React.Component {
         firstName,
         lastName,
         email,
-        office,
+        officeId: office,
         slack: slackName,
         password,
         confirmPassword,

@@ -43,7 +43,10 @@ namespace tr3am.Controllers
             {
                 if (await _userManager.FindByEmailAsync(request.Email) != null)
                 {
-                    throw new DuplicateEmailException();
+                    return StatusCode((int) HttpStatusCode.Conflict, new ErrorResponse
+                    {
+                        Message = "This email is already in use."
+                    });
                 }
                 var user = new User
                 {
