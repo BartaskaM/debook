@@ -195,7 +195,6 @@ export const fetchDeviceReservations = (deviceId) => async dispatch =>{
   }
 };
 
-<<<<<<< HEAD
 export const createDevice = (device, history) => async (dispatch) => {
   dispatch({ 
     type: devices.CREATE_DEVICE_START,
@@ -218,10 +217,7 @@ export const createDevice = (device, history) => async (dispatch) => {
   }
 };
 
-export const fetchDevices = (userId) => async dispatch =>{
-=======
 export const fetchDevices = () => async dispatch =>{
->>>>>>> develop
   dispatch({ type: devices.FETCH_DEVICES_START });
   try{
     //Use identity later on

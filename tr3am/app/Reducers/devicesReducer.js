@@ -30,13 +30,10 @@ const defaultState = {
   cancelReservationErrorMessage: null,
   checkInLoading: null,
   checkInErrorMessage: null,
-<<<<<<< HEAD
   createDeviceLoading: false,
   createDeviceErrorMessage: null,
-=======
   brands: [],
   fetchBrandsLoading: false,
->>>>>>> develop
 };
 
 export default (state = defaultState, action) => {

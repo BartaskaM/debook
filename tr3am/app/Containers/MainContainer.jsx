@@ -19,12 +19,9 @@ import OfficeDetails from 'Components/Offices/OfficeDetails';
 import BookingEvents from 'Components/BookingEvents';
 import ErrorComponent from 'Components/Errors/Basic';
 import BrandList from 'Components/Brands';
-<<<<<<< HEAD
 import NewDevice from 'Components/Devices/NewDevice';
-=======
 import * as auth from 'ActionCreators/authActions';
 import Styles from './Styles';
->>>>>>> develop
 
 class MainContainer extends React.Component {
   componentDidMount() {
@@ -95,7 +92,6 @@ class MainContainer extends React.Component {
             </div>
           )} allowedRoles={RouteRoles.Brands} />
         } />
-<<<<<<< HEAD
         <Route exact path='/newdevice' render={() =>
           <Auth component={() => (
             <div>
@@ -104,8 +100,6 @@ class MainContainer extends React.Component {
             </div>
           )} allowedRoles={RouteRoles.Offices} />
         } />
-=======
->>>>>>> develop
       </div>
     ) :
       <CircularProgress
