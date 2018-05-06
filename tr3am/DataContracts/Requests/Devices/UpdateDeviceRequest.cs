@@ -27,6 +27,5 @@ namespace tr3am.DataContracts.Requests.Devices
         public bool Available { get; set; }
         [Required]
         public bool Active { get; set; }
-        public int? UserId { get; set; }
     }
 }

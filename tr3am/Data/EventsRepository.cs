@@ -56,7 +56,7 @@ namespace tr3am.Data
             return Mapper.Map<Event, EventDto>(item);
         }
 
-        public async Task<int> Create(EventItemRequest request)
+        public async Task<int> Create(EventItemRequest request, int userId)
         {
             var office = _dbContext.Offices
                 .AsNoTracking()
@@ -65,13 +65,8 @@ namespace tr3am.Data
             var device = _dbContext.Devices
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
-            
 
-            var user = _dbContext.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.UserId);
-
-            await Task.WhenAll(office, device, user);
+            await Task.WhenAll(office, device);
             if (office.Result == null)
             {
                 throw new InvalidOfficeException();
@@ -80,17 +75,13 @@ namespace tr3am.Data
             {
                 throw new InvalidDeviceException();
             }
-            if (user.Result == null)
-            {
-                throw new InvalidUserException();
-            }
 
             var newItem = new Event
             {
                 Action = request.Action,
                 DeviceId = device.Result.Id,
                 OfficeId = office.Result.Id,
-                UserId = user.Result.Id,
+                UserId = userId,
                 CreatedOn = request.Date,
             };
 
@@ -100,7 +91,7 @@ namespace tr3am.Data
             return newItem.Id;
         }
 
-        public async Task Update(int id, EventItemRequest request)
+        public async Task Update(int id, EventItemRequest request, int userId)
         {
             var item = await _dbContext.Events
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -117,12 +108,7 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
 
-
-            var user = _dbContext.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.UserId);
-
-            await Task.WhenAll(office, device, user);
+            await Task.WhenAll(office, device);
             if (office.Result == null)
             {
                 throw new InvalidOfficeException();
@@ -131,15 +117,11 @@ namespace tr3am.Data
             {
                 throw new InvalidDeviceException();
             }
-            if (user.Result == null)
-            {
-                throw new InvalidUserException();
-            }
 
             item.Action = request.Action;
             item.DeviceId = device.Result.Id;
             item.OfficeId = office.Result.Id;
-            item.UserId = user.Result.Id;
+            item.UserId = userId;
             item.CreatedOn = request.Date;
 
             await _dbContext.SaveChangesAsync();

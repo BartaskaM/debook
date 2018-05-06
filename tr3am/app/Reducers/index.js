@@ -25,7 +25,7 @@ const appReducers = combineReducers({
 });
 
 export default (state, action) => {
-  if (action.type === authConst.LOG_OUT_USER) {
+  if (action.type === authConst.LOG_OUT_USER_SUCCESS) {
     state = undefined;
   }
 

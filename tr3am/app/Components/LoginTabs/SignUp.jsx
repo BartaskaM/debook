@@ -29,7 +29,7 @@ class SignUp extends React.Component {
     this.state = {
       email: '',
       password: '',
-      repeatPassword: '',
+      confirmPassword: '',
       passwordErrorMessage: '',
       emailErrorMessage: '',
       office: props.offices[0] ? props.offices[0].id : null,
@@ -55,7 +55,7 @@ class SignUp extends React.Component {
         lastName: '',
         email: '',
         password: '',
-        repeatPassword: '',
+        confirmPassword: '',
         slackName: '',
         office: 1,
         passwordErrorMessage: '',
@@ -76,6 +76,7 @@ class SignUp extends React.Component {
     const { 
       email,
       password,
+      confirmPassword,
       firstName,
       lastName,
       slackName,
@@ -89,6 +90,7 @@ class SignUp extends React.Component {
         office,
         slack: slackName,
         password,
+        confirmPassword,
       };
       this.props.signUp(result);
     }
@@ -113,14 +115,14 @@ class SignUp extends React.Component {
 
   validatePassword() {
     //call api to check if email is used
-    const { password, repeatPassword } = this.state;
-    if (password === repeatPassword) {
+    const { password, confirmPassword } = this.state;
+    if (password === confirmPassword) {
       this.setState({
         passwordErrorMessage: '',
       });
       return true;
     }
-    else if (repeatPassword != '') {
+    else if (confirmPassword != '') {
       this.setState({
         passwordErrorMessage: 'Passwords do not match.',
       });
@@ -141,7 +143,7 @@ class SignUp extends React.Component {
     const { 
       email,
       password,
-      repeatPassword,
+      confirmPassword,
       firstName,
       lastName,
       slackName,
@@ -195,13 +197,13 @@ class SignUp extends React.Component {
               <InputLabel className={classes.fontSize}>Repeat Password</InputLabel>
               <Input
                 className={classes.fontSize}
-                value={repeatPassword}
+                value={confirmPassword}
                 error={passwordErrorMessage.length > 0}
                 onChange={this.handleFormChange}
                 onBlur={this.validatePassword}
                 inputProps={{
                   type: 'password',
-                  name: 'repeatPassword',
+                  name: 'confirmPassword',
                   required: 'required',
                 }}
               />
@@ -310,7 +312,7 @@ class SignUp extends React.Component {
 SignUp.propTypes = {
   classes: PropTypes.object.isRequired,
   signUp: PropTypes.func.isRequired,
-  signUpError: PropTypes.string.isRequired,
+  signUpError: PropTypes.string,
   currentTab: PropTypes.number.isRequired,
   fetchingSignUp: PropTypes.bool.isRequired,
   offices: PropTypes.arrayOf(PropTypes.shape({

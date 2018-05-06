@@ -12,9 +12,10 @@ using tr3am.DataContracts.Enums;
 namespace tr3am.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180504140413_ImplementAuthentication")]
+    partial class ImplementAuthentication
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,6 +132,10 @@ namespace tr3am.Migrations
 
                     b.Property<int>("BrandId");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1024);
+
                     b.Property<int>("IdentificationNum");
 
                     b.Property<string>("Image")
@@ -138,6 +143,10 @@ namespace tr3am.Migrations
                         .HasMaxLength(256);
 
                     b.Property<int>("ModelId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256);
 
                     b.Property<string>("OS")
                         .IsRequired()

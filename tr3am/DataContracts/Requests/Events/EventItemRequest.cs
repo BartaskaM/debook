@@ -14,8 +14,6 @@ namespace tr3am.DataContracts.Requests.Events
         [Required]
         public int OfficeId { get; set; }
         [Required]
-        public int UserId { get; set; }
-        [Required]
         public DateTime Date { get; set; }
     }
 }

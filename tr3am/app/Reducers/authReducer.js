@@ -1,24 +1,42 @@
-import { auth }from 'Constants/ActionTypes';
+import { auth } from 'Constants/ActionTypes';
 
 const defaultState = {
   user: null,
-  fetchingLogIn: false,
+  logInLoading: false,
   logInError: false,
   currentTab: 0,
   fetchingSignUp: false,
-  signUpError: ' ',
+  signUpError: null,
+  fetchUserDetailsLoading: false,
+  fetchUserDetailsError: false,
+  logOutUserLoading: false,
+  logOutUserError: false,
 };
 
 export default (state = defaultState, action) => {
-  switch (action.type){
+  switch (action.type) {
     case auth.LOG_IN_SUCCESS: {
-      return { ...state, fetchingLogIn: false, user: action.payload };
+      return { ...state, logInLoading: false, logInError: false };
     }
     case auth.LOG_IN_START: {
-      return { ...state, fetchingLogIn: true, logInError: false };
+      return { ...state, logInLoading: true, logInError: false };
     }
     case auth.LOG_IN_ERROR: {
-      return { ...state, fetchingLogIn: false, logInError: true };
+      return { ...state, logInLoading: false, logInError: true };
+    }
+    case auth.FETCH_USER_DETAILS_START: {
+      return { ...state, fetchUserDetailsLoading: true, fetchUserDetailsError: false };
+    }
+    case auth.FETCH_USER_DETAILS_SUCCESS: {
+      return {
+        ...state,
+        user: action.payload,
+        fetchUserDetailsLoading: false,
+        fetchUserDetailsError: false,
+      };
+    }
+    case auth.FETCH_USER_DETAILS_ERROR: {
+      return { ...state, fetchUserDetailsLoading: false, fetchUserDetailsError: true };
     }
     case auth.SET_CURRENT_TAB: {
       return { ...state, currentTab: action.payload };
@@ -33,7 +51,16 @@ export default (state = defaultState, action) => {
       return { ...state, fetchingSignUp: false, signUpError: action.payload };
     }
     case auth.UPDATE_LOGGED_IN_USER: {
-      return{ ...state, user: action.payload };
+      return { ...state, user: action.payload };
+    }
+    case auth.LOG_OUT_USER_START: {
+      return { ...state, logOutUserLoading: true, logOutUserError: false };
+    }
+    case auth.LOG_OUT_USER_SUCCESS: {
+      return { ...state, logOutUserLoading: false, logOutUserError: false };
+    }
+    case auth.LOG_OUT_USER_ERROR: {
+      return { ...state, logOutUserLoading: false, logOutUserError: true };
     }
     default: return state;
   }

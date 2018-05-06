@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
@@ -12,7 +14,7 @@ using tr3am.DataContracts.Requests.Users;
 
 namespace tr3am.Data
 {
-    public class UsersRepository : IUsersRepository, IAuth
+    public class UsersRepository : IUsersRepository
     {
         private readonly AppDbContext _dbContext;
 
@@ -21,27 +23,39 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<LogInDto> LogIn(LogInRequest request)
-        {
-            var item = await _dbContext.Users
-                .AsNoTracking()
-                .Include(x => x.Office)
-                .FirstOrDefaultAsync(x => x.Email == request.Email);
-            if(item == null || item.Password != request.Password)
-            {
-                throw new InvalidUserException();
-            }
-
-            return Mapper.Map<User, LogInDto>(item);
-        }
-
         public async Task<IEnumerable<UserDTO>> GetAll()
         {
-            return await _dbContext.Users
+            var userDtos = await _dbContext.Users
                 .AsNoTracking()
                 .Include(x => x.Office)
                 .Select(x => Mapper.Map<User, UserDTO>(x))
                 .ToListAsync();
+
+            foreach(var user in userDtos)
+            {
+                user.Roles = await GetUserRoles(user);
+            }
+
+            return userDtos;
+        }
+
+        public async Task<List<string>> GetUserRoles(UserDTO user)
+        {
+            List<string> userRoles = new List<string>();
+
+            await _dbContext.UserRoles
+                .AsNoTracking()
+                .Where(x => x.UserId == user.Id)
+                .ForEachAsync(async x =>
+                {
+                    userRoles.Add(await _dbContext.Roles
+                        .AsNoTracking()
+                        .Where(y => y.Id == x.RoleId)
+                        .Select(y => y.Name)
+                        .FirstOrDefaultAsync());
+                });
+
+            return userRoles;
         }
 
         public async Task<UserDTO> GetById(int id)
@@ -50,45 +64,31 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .Include(x => x.Office)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
             if (item == null)
             {
                 throw new InvalidUserException();
             }
 
-            return Mapper.Map<User, UserDTO>(item);
-        }
+            List<string> userRoles = new List<string>();
 
-        public async Task<int> Create(CreateUserRequest request)
-        {
-            var office = await _dbContext.Offices
+            await _dbContext.UserRoles
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
-            if (office == null)
-            {
-                throw new InvalidOfficeException();
-            }
-            if (await _dbContext.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Email == request.Email) != null)
-            {
-                throw new DuplicateEmailException();
-            }
+                .Where(x => x.UserId == item.Id)
+                .ForEachAsync(async x =>
+                {
+                    userRoles.Add(await _dbContext.Roles
+                        .AsNoTracking()
+                        .Where(y => y.Id == x.RoleId)
+                        .Select(y => y.Name)
+                        .FirstOrDefaultAsync());
+                });
 
-            var newItem = new User
-            {
-                Email = request.Email,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                OfficeId = office.Id,
-                Password = request.Password,
-                Slack = request.Slack,
-                Role = "user",
-            };
+            // TODO: Find better mapper implamentation
+            var userDto = Mapper.Map<User, UserDTO>(item);
+            userDto.Roles = userRoles;
 
-            _dbContext.Users.Add(newItem);
-            await _dbContext.SaveChangesAsync();
-
-            return newItem.Id;
+            return userDto;
         }
 
         public async Task Update(int id, UpdateUserRequest request)
@@ -120,10 +120,11 @@ namespace tr3am.Data
             item.LastName = request.LastName;
             item.OfficeId = office.Id;
 
-            if (!String.IsNullOrEmpty(request.Password))
-            {
-                item.Password = request.Password;
-            }
+            // TODO: Fix user password update to work with identity framework
+            //if (!String.IsNullOrEmpty(request.Password))
+            //{
+            //    item.Password = request.Password;
+            //}
             item.Slack = request.Slack;
 
             await _dbContext.SaveChangesAsync();

@@ -10,7 +10,9 @@ import { LinearProgress } from 'material-ui/Progress';
 import {
   FormControl,
   FormGroup,
+  FormControlLabel,
 } from 'material-ui/Form';
+import Checkbox from 'material-ui/Checkbox';
 import { withStyles } from 'material-ui/styles';
 
 import Styles from './Styles';
@@ -22,12 +24,13 @@ class Login extends React.Component {
     this.state = {
       email: '',
       password: '',
+      rememberMe: false,
     };
     this.submitLogInForm = this.submitLogInForm.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { user, history } = this.props;
     if (user) {
       history.push('/devices');
@@ -46,7 +49,7 @@ class Login extends React.Component {
   }
 
   render() {
-    const { classes, logInError, fetchingLogIn } = this.props;
+    const { classes, logInError, logInLoading } = this.props;
     return (
       <div>
         <Typography variant='display3'>
@@ -81,11 +84,25 @@ class Login extends React.Component {
                 className={classes.fontSize}
                 onChange={this.inputHandler} />
             </FormControl>
+            <FormControl className={classes.signUpFormField}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.rememberMe}
+                    onChange={() => this.setState({ rememberMe: !this.state.rememberMe })}
+                    value="rememberMe"
+                    color="primary"
+                  />
+                }
+                label="Remember me"
+                classes={{label: classes.fontSize}}
+              />
+            </FormControl>
             <Typography variant='headline' className={classes.errorMessage}>
               {logInError ? 'Incorrect credentials' : ' '}
             </Typography>
             <FormControl className={classes.signUpFormField}>
-              {fetchingLogIn && <LinearProgress className={classes.progressBar}/>}
+              {logInLoading && <LinearProgress className={classes.progressBar} />}
               <Button
                 type='submit'
                 variant='raised'
@@ -107,12 +124,12 @@ Login.propTypes = {
   history: PropTypes.object.isRequired,
   user: PropTypes.object,
   logInError: PropTypes.bool.isRequired,
-  fetchingLogIn: PropTypes.bool.isRequired,
+  logInLoading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
   logInError: state.auth.logInError,
-  fetchingLogIn: state.auth.fetchingLogIn,
+  logInLoading: state.auth.logInLoading,
 });
 export default withRouter(connect(mapStateToProps, auth)(withStyles(Styles)(Login)));

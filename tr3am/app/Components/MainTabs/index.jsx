@@ -6,6 +6,7 @@ import { withStyles } from 'material-ui';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 
+import { IsAllowedRole } from 'Utils/routingUtils';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as RouteRoles from 'Constants/RouteRoles';
 import Styles from './Styles';
@@ -34,13 +35,13 @@ class MainTabs extends React.Component {
           >
             <Tab value='/devices' label='DEVICE LIST' classes={{ label: classes.fontSize }} />
             <Tab value='/events' label='EVENT LIST' classes={{ label: classes.fontSize }} />
-            {RouteRoles.Users.includes(this.props.user.role) &&
+            {IsAllowedRole(RouteRoles.Users, this.props.user.roles) &&
               <Tab value='/users' label='USER LIST' classes={{ label: classes.fontSize }} />
             }
-            {RouteRoles.Offices.includes(this.props.user.role) &&
+            {IsAllowedRole(RouteRoles.Offices, this.props.user.roles) &&
               <Tab value='/offices' label='OFFICE LIST' classes={{ label: classes.fontSize }} />
             }
-            {RouteRoles.Brands.includes(this.props.user.role) &&
+            {IsAllowedRole(RouteRoles.Brands, this.props.user.roles) &&
             <Tab value='/brands' label='BRAND LIST'classes={{ label: classes.fontSize }} />
             }
           </Tabs>
@@ -67,7 +68,7 @@ MainTabs.propTypes = {
       address: PropTypes.string.isRequired,
     }).isRequired,
     slack: PropTypes.string,
-    role: PropTypes.string.isRequired,
+    roles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
 };
 

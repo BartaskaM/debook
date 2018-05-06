@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
@@ -11,6 +13,7 @@ using tr3am.DataContracts.Requests.Events;
 
 namespace tr3am.Controllers
 {
+    [Authorize]
     [Route("api/events")]
     public class EventsController : Controller
     {
@@ -53,7 +56,10 @@ namespace tr3am.Controllers
             }
             try
             {
-                await _eventsRepository.Create(request);
+                var userIdClaim = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier);
+                var userId = int.Parse(userIdClaim.Value);
+
+                await _eventsRepository.Create(request, userId);
                 return NoContent();
             }
             catch (InvalidOfficeException)
@@ -64,11 +70,6 @@ namespace tr3am.Controllers
             catch (InvalidDeviceException)
             {
                 string errorText = String.Format("Device with ID: {0} doesn't exist", request.DeviceId);
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
-            }
-            catch (InvalidUserException)
-            {
-                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }
@@ -82,7 +83,10 @@ namespace tr3am.Controllers
             }
             try
             {
-                await _eventsRepository.Update(id, request);
+                var userIdClaim = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier);
+                var userId = int.Parse(userIdClaim.Value);
+
+                await _eventsRepository.Update(id, request, userId);
                 return NoContent();
             }
             catch (InvalidEventException)
@@ -94,11 +98,6 @@ namespace tr3am.Controllers
                 string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
-            catch (InvalidUserException)
-            {
-                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
-            }
             catch (InvalidDeviceException)
             {
                 string errorText = String.Format("Device with ID: {0} doesn't exist", request.DeviceId);
@@ -106,6 +105,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

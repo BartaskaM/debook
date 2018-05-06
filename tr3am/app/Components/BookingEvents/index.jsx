@@ -16,7 +16,7 @@ import EventItem from './EventItem';
 import * as eventsActions from 'ActionCreators/eventsActions';
 
 class BookingEvents extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handleRowsPerPageChange = this.handleRowsPerPageChange.bind(this);
@@ -59,20 +59,20 @@ class BookingEvents extends React.Component {
   }
 
   renderPagination() {
-    const { page, rowsPerPage } = this.props;
+    const { page, rowsPerPage, count } = this.props;
     const rowsPerPageOptions = [10, 20, 30, 40, 50];
     return (
       <Grid item xs={12}>
         <Table>
           <TableFooter>
             <TableRow>
-              <TablePagination count={this.props.count}
+              <TablePagination count={count}
                 onChangePage={this.handlePageChange}
                 page={page}
                 rowsPerPageOptions={rowsPerPageOptions}
                 rowsPerPage={rowsPerPage}
                 onChangeRowsPerPage={this.handleRowsPerPageChange}
-                Actions={PaginationActions}/>
+                Actions={PaginationActions} />
             </TableRow>
           </TableFooter>
         </Table>
@@ -81,11 +81,11 @@ class BookingEvents extends React.Component {
   }
 
   render() {
-    const { classes, events, fetchEventsLoading } = this.props;
+    const { classes, events, fetchEventsLoading, count } = this.props;
     return (
       <div className={classes.root}>
         <Grid container>
-          {events.length > 0 && 
+          {events.length > 0 && count &&
             this.renderPagination()
           }
           {fetchEventsLoading &&
@@ -95,7 +95,7 @@ class BookingEvents extends React.Component {
           {this.renderListHeader()}
           <Grid container item xs={12}>
             <List className={classes.list}>
-              {events.length === 0 && !fetchEventsLoading ? 
+              {events.length === 0 && !fetchEventsLoading ?
                 <div className={classes.noItems}>
                   <Typography align="center" variant="display3">No events found</Typography>
                 </div> :
@@ -105,16 +105,16 @@ class BookingEvents extends React.Component {
               }
             </List>
             {fetchEventsLoading && events.length > 5 &&
-            <Grid item xs={12}>
-              <LinearProgress />
-            </Grid>}
-            {events.length > 5 && 
-            this.renderPagination()
+              <Grid item xs={12}>
+                <LinearProgress />
+              </Grid>}
+            {events.length > 5 &&
+              this.renderPagination()
             }
           </Grid>
         </Grid>
       </div>
-    ); 
+    );
   }
 }
 
@@ -141,7 +141,7 @@ BookingEvents.propTypes = {
   })).isRequired,
   fetchEvents: PropTypes.func.isRequired,
   fetchEventsLoading: PropTypes.bool.isRequired,
-  count: PropTypes.number.isRequired,
+  count: PropTypes.number,
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
   resetPaginationInfo: PropTypes.func.isRequired,

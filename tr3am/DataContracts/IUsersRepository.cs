@@ -9,7 +9,6 @@ namespace tr3am.DataContracts
     {
         Task<IEnumerable<UserDTO>> GetAll();
         Task<UserDTO> GetById(int id);
-        Task<int> Create(CreateUserRequest request);
         Task Update(int id, UpdateUserRequest request);
         Task Delete(int id);
     }
