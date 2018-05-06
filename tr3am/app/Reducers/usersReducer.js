@@ -4,7 +4,6 @@ const defaultState = {
   users: [],
 
   fetchUsersLoading: false,
-  fetchUsersErrorMessage: null,
 };
 
 export default (state = defaultState, action) => {
@@ -13,7 +12,6 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchUsersLoading: true,
-        fetchUsersErrorMessage: null,
       };
     }
     case users.FETCH_USERS_SUCCESS: {
@@ -21,13 +19,6 @@ export default (state = defaultState, action) => {
         ...state,
         fetchUsersLoading: false,
         users: action.payload,
-      };
-    }
-    case users.FETCH_USERS_ERROR: {
-      return {
-        ...state,
-        fetchUsersLoading: false,
-        fetchUsersErrorMessage: action.payload,
       };
     }
     default: return state;

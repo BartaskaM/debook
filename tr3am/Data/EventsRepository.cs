@@ -21,15 +21,23 @@ namespace tr3am.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<EventDto>> GetAll()
+        public async Task<EventsDto> GetAll(int page, int pageSize)
         {
-            return await _dbContext.Events
+            int count = await _dbContext.Events.CountAsync();
+            List<EventDto> events = await _dbContext.Events
                 .AsNoTracking()
                 .Include(x => x.Office)
                 .Include(x => x.User)
                 .Include(x => x.Device)
                 .Select(x => Mapper.Map<Event, EventDto>(x))
+                .Skip(page*pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+            return new EventsDto
+            {
+                Events = events,
+                Count = count
+            };
         }
 
         public async Task<EventDto> GetById(int id)

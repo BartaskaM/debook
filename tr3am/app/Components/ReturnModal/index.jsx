@@ -30,10 +30,6 @@ class ReturnModal extends React.Component {
     this.close = this.close.bind(this);
   }
 
-  componentDidMount(){
-    this.props.fetchOffices();
-  }
-
   returnDevice(){
     const {
       user,

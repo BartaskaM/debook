@@ -8,6 +8,7 @@ namespace tr3am.DataContracts
     public interface IBrandsRepository
     {
         Task<IEnumerable<BrandDto>> GetAll();
+        Task<IEnumerable<ShortBrandDto>> GetAllShort();
         Task<BrandDto> GetById(int id);
         Task<int> Create(BrandItemRequest request);
         Task Update(int id, BrandItemRequest request);

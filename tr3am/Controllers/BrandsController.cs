@@ -28,6 +28,13 @@ namespace tr3am.Controllers
         }
 
         [Authorize(Roles = "admin")]
+        [HttpGet("short")]
+        public async Task<IEnumerable<ShortBrandDto>> GetAllShort()
+        {
+            return await _brandsRepository.GetAllShort();
+        }
+
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {

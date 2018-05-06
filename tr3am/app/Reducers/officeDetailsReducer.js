@@ -26,14 +26,6 @@ export default (state = defaultState, action) => {
         office: action.payload,
       };
     }
-    case officeDetails.FETCH_OFFICE_ERROR: {
-      return {
-        ...state,
-        fetchOfficeLoading: false,
-        fetchOfficeErrorMessage: action.payload,
-      };
-    }
-
     case officeDetails.UPDATE_OFFICE_START: {
       return {
         ...state,

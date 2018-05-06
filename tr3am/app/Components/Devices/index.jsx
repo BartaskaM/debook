@@ -2,12 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import DeviceList from './DeviceList';
-import * as devicesActions from 'ActionCreators/devicesActions';
+import { fetchDevices, fetchBrands } from 'ActionCreators/devicesActions';
+import { fetchOffices } from 'ActionCreators/officesActions';
 import Filters from 'Components/Filters';
 
 class Devices extends React.Component {
   componentDidMount() {
-    this.props.fetchDevices();
+    const {
+      fetchDevices,
+      fetchOffices,
+      fetchBrands,
+    } = this.props;
+    fetchDevices();
+    fetchOffices();
+    fetchBrands();
   }
 
   render() {
@@ -22,6 +30,12 @@ class Devices extends React.Component {
 
 Devices.propTypes = {
   fetchDevices: PropTypes.func.isRequired,
+  fetchOffices: PropTypes.func.isRequired,
+  fetchBrands: PropTypes.func.isRequired,
 };
 
-export default connect(null, devicesActions)(Devices);
+export default connect(null, {
+  fetchDevices,
+  fetchOffices,
+  fetchBrands,
+})(Devices);

@@ -4,7 +4,6 @@ const defaultState = {
   brands: [],
 
   fetchBrandsLoading: false,
-  fetchBrandsErrorMessage: null,
 };
 
 export default (state = defaultState, action) => {
@@ -13,7 +12,6 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchBrandsLoading: true,
-        fetchBrandsErrorMessage: null,
       };
     }
     case brands.FETCH_BRANDS_SUCCESS: {
@@ -21,13 +19,6 @@ export default (state = defaultState, action) => {
         ...state,
         fetchBrandsLoading: false,
         brands: action.payload,
-      };
-    }
-    case brands.FETCH_BRANDS_ERROR: {
-      return {
-        ...state,
-        fetchBrandsLoading: false,
-        fetchBrandsErrorMessage: action.payload,
       };
     }
     default: return state;

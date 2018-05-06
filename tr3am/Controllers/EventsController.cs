@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
@@ -24,9 +25,9 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<EventDto>> GetAll()
+        public async Task<EventsDto> GetAll([FromQuery]int page, [FromQuery]int pageSize = 20)
         {
-            return await _eventsRepository.GetAll();
+            return await _eventsRepository.GetAll(page, pageSize);
         }
 
         [HttpGet("{id}")]
