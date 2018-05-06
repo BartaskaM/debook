@@ -25,8 +25,6 @@ namespace tr3am.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public int LoginDto { get; private set; }
-
         public AccountController(IUsersRepository usersRepository, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _usersRepository = usersRepository;
