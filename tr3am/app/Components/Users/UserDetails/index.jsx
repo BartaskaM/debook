@@ -125,22 +125,6 @@ class UserDetails extends React.Component {
     return oldPassword.length !== 0 || newPassword.length !== 0 || repeatPassword.length !== 0;
   }
 
-  validateOldPassword(){
-    const { oldPassword } = this.state;
-    if (this.shouldChangePassword() )
-    {
-      if (oldPassword !== this.props.currentUser.password) {
-        this.setState({validOldPassword: false});
-      } else {
-        this.setState({validOldPassword: true});
-      }
-    } else {
-      this.setState({
-        validOldPassword: true,
-      });
-    }
-  }
-
   validateNewPassword(){
     const { newPassword } = this.state;
     if(this.shouldChangePassword())
@@ -182,7 +166,6 @@ class UserDetails extends React.Component {
   }
 
   validateAllPasswords(){
-    this.validateOldPassword();
     this.validateNewPassword();
     this.validateRepeatPassword();
   }
@@ -609,7 +592,6 @@ UserDetails.propTypes = {
   currentUser: PropTypes.shape({
     id: PropTypes.number.isRequired,
     roles: PropTypes.arrayOf(PropTypes.string),
-    password: PropTypes.string.isRequired,
   }).isRequired,
   setUserDetails: PropTypes.func.isRequired,
   fetchUser: PropTypes.func.isRequired,
