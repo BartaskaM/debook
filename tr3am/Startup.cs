@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using tr3am.Data;
 using tr3am.Data.Entities;
 using tr3am.DataContracts;
+using tr3am.Services;
 
 namespace tr3am
 {
@@ -52,6 +53,8 @@ namespace tr3am
                 };
             });
 
+            services.AddSingleton(Configuration.GetSection("SendGridOptions").Get<SendGridOptions>());
+            services.AddSingleton<EmailService>();
             services.AddScoped<IOfficesRepository, OfficesRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IBrandsRepository, BrandsRepository>();
