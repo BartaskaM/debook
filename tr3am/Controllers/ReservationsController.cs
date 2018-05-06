@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -52,17 +53,15 @@ namespace tr3am.Controllers
             }
             try
             {
-                int id = await _reservationsRepository.Create(request, booking);
+                var userIdClaim = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier);
+                var userId = int.Parse(userIdClaim.Value);
+
+                int id = await _reservationsRepository.Create(request, booking, userId);
                 return CreatedAtAction(nameof(GetById), new { Id = id }, id);
             }
             catch (InvalidDeviceException)
             {
                 string errorText = String.Format("Device with ID: {0} doesn't exist", request.DeviceId);
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
-            }
-            catch (InvalidUserException)
-            {
-                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (UsedDateException)
@@ -92,7 +91,10 @@ namespace tr3am.Controllers
             }
             try
             {
-                await _reservationsRepository.Update(id, request);
+                var userIdClaim = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier);
+                var userId = int.Parse(userIdClaim.Value);
+
+                await _reservationsRepository.Update(id, request, userId);
                 return NoContent();
             }
             catch (InvalidReservationException)
@@ -102,11 +104,6 @@ namespace tr3am.Controllers
             catch (InvalidDeviceException)
             {
                 string errorText = String.Format("Device with ID: {0} doesn't exist", request.DeviceId);
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
-            }
-            catch (InvalidUserException)
-            {
-                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (InvalidOfficeException)
