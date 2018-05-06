@@ -15,10 +15,6 @@ export const fetchBrands = () => async dispatch => {
       payload: response.data,
     });
   } catch (e) {
-    dispatch({
-      type: brands.FETCH_BRANDS_ERROR,
-      payload: e.toString(),
-    });
     toast.error('❌ Failed to fetch brands');
   }
 };

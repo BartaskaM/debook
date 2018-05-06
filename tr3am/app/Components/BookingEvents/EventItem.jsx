@@ -52,14 +52,13 @@ EventItem.propTypes = {
   event: PropTypes.shape({
     id: PropTypes.number.isRequired,
     action: PropTypes.string.isRequired,
-    device: PropTypes.object.isRequired,
+    device: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      identificationNum: PropTypes.number.isRequired,
+    }).isRequired,
     office: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      country: PropTypes.string.isRequired,
       city: PropTypes.string.isRequired,
-      address: PropTypes.string.isRequired,
-      lat: PropTypes.number.isRequired,
-      lng: PropTypes.number.isRequired,
     }).isRequired,
     user: PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -73,8 +72,9 @@ EventItem.propTypes = {
         address: PropTypes.string.isRequired,
         lat: PropTypes.number.isRequired,
         lng: PropTypes.number.isRequired,
-      }).isRequired,
+      }),
     }).isRequired,
+    createdOn: PropTypes.instanceOf(Date).isRequired,
   }).isRequired,
   createdOn: PropTypes.string,
 };

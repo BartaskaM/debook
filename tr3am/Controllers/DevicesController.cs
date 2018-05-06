@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Exceptions;
@@ -10,6 +12,7 @@ using tr3am.DataContracts.Requests.Devices;
 
 namespace tr3am.Controllers
 {
+    [Authorize]
     [Route("api/devices")]
     public class DevicesController : Controller
     {
@@ -25,8 +28,11 @@ namespace tr3am.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ShortDeviceDto>> GetAll([FromQuery]int userId)
+        public async Task<IEnumerable<ShortDeviceDto>> GetAll()
         {
+            var userIdClaim = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userIdClaim.Value);
+
             return await _devicesRepository.GetAll(userId);
         }
 
@@ -43,6 +49,7 @@ namespace tr3am.Controllers
             } 
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]CreateDeviceRequest request)
         {
@@ -82,6 +89,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateDeviceRequest request)
         {
@@ -103,11 +111,6 @@ namespace tr3am.Controllers
                 string errorText = String.Format("Office with ID: {0} doesn't exist", request.OfficeId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
-            catch (InvalidUserException)
-            {
-                string errorText = String.Format("User with ID: {0} doesn't exist", request.UserId);
-                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
-            }
             catch (InvalidBrandException)
             {
                 string errorText = String.Format("Brand with ID: {0} doesn't exist", request.BrandId);
@@ -121,6 +124,7 @@ namespace tr3am.Controllers
 
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

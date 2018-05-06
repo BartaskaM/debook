@@ -24,7 +24,7 @@ const UserItem = ({ classes, user, history }) => {
               <Grid item xs={2}>{user.office.city}</Grid>
               <Grid item xs={2}>{user.slack || '-'}</Grid>
               <Grid item xs={1}>
-                {user.role === 'admin' && <VerifiedUser/>}
+                {user.roles.includes('admin') && <VerifiedUser/>}
               </Grid>
             </Grid>
           </Typography>
@@ -51,7 +51,7 @@ UserItem.propTypes = {
       lng: PropTypes.number.isRequired,
     }).isRequired,
     slack: PropTypes.string,
-    role: PropTypes.string.isRequired,
+    roles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
 };
 

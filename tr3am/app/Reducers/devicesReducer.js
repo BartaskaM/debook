@@ -22,18 +22,21 @@ const defaultState = {
   reserving: false,
   reservingErrorMessage: null,
   fetchingDeviceReservations: false,
-  fetchingDeviceReservationsErrorMessage: null,
   selectedDeviceReservations: [],
   fetchingDevices: false,
-  fetchingDevicesErrorMessage: null,
   returningDevice: false,
   returningDeviceErrorMessage: null,
   cancelReservationLoading: false,
   cancelReservationErrorMessage: null,
   checkInLoading: null,
   checkInErrorMessage: null,
+<<<<<<< HEAD
   createDeviceLoading: false,
   createDeviceErrorMessage: null,
+=======
+  brands: [],
+  fetchBrandsLoading: false,
+>>>>>>> develop
 };
 
 export default (state = defaultState, action) => {
@@ -232,7 +235,6 @@ export default (state = defaultState, action) => {
         ...state,
         selectedDeviceReservations: [],
         fetchingDeviceReservations: true,
-        fetchingDeviceReservationsErrorMessage: null,
       };
     }
     case devices.FETCH_DEVICE_RESERVATIONS_SUCCESS: {
@@ -242,18 +244,10 @@ export default (state = defaultState, action) => {
         fetchingDeviceReservations: false,
       };
     }
-    case devices.FETCH_DEVICE_RESERVATIONS_ERROR: {
-      return { 
-        ...state,
-        fetchingDeviceReservations: false,
-        fetchingDeviceReservationsErrorMessage: action.payload,
-      };
-    }
     case devices.FETCH_DEVICES_START: {
       return {
         ...state,
         fetchingDevices: true,
-        fetchingDevicesErrorMessage: null,
       };
     }
     case devices.FETCH_DEVICES_SUCCESS: {
@@ -261,13 +255,6 @@ export default (state = defaultState, action) => {
         ...state,
         devices: action.payload,
         fetchingDevices: false,
-      };
-    }
-    case devices.FETCH_DEVICES_ERROR: {
-      return { 
-        ...state,
-        fetchingDevices: false,
-        fetchingDevicesErrorMessage: action.payload,
       };
     }
     case devices.RETURN_DEVICE_START: {
@@ -371,7 +358,7 @@ export default (state = defaultState, action) => {
     case devices.REMOVE_DEVICE_RESERVATION: {
       return {
         ...state,
-        devices: devices.map(device => {
+        devices: state.devices.map(device => {
           if(device.id === action.payload){
             return {...device, userReservation: null};
           }
@@ -404,6 +391,31 @@ export default (state = defaultState, action) => {
 
     case deviceDetails.FETCH_DEVICE_SUCCESS: {
       return {...state, selectedDeviceReservations: action.payload.reservations};
+    }
+    case devices.FETCH_SHORT_BRANDS_START: {
+      return {
+        ...state,
+        fetchBrandsLoading: true,
+      };
+    }
+    case devices.FETCH_SHORT_BRANDS_SUCCESS: {
+      return {
+        ...state,
+        fetchBrandsLoading: false,
+        brands: action.payload,
+      };
+    }
+    case deviceDetails.UPDATE_DEVICE_LOCATION_SUCCESS: {
+      const { deviceId, location } = action.payload;
+      return {
+        ...state,
+        devices: state.devices.map(device => {
+          if(device.id === deviceId){
+            return {...device, location};
+          }
+          return device;
+        }),
+      };
     }
     default: return state;
   }

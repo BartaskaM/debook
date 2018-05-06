@@ -1,4 +1,7 @@
-﻿namespace tr3am.DataContracts.DTO
+﻿using System.Collections.Generic;
+using tr3am.Data.Entities;
+
+namespace tr3am.DataContracts.DTO
 {
     public class UserDTO
     {
@@ -8,6 +11,6 @@
         public string Email { get; set; }
         public OfficeDto Office { get; set; }
         public string Slack { get; set; }
-        public string Role { get; set; }
+        public List<string> Roles { get; set; }
     }
 }

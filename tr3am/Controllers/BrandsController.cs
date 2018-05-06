@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Exceptions;
@@ -19,12 +20,21 @@ namespace tr3am.Controllers
             _brandsRepository = brandsRepository;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IEnumerable<BrandDto>> GetAll()
         {
             return await _brandsRepository.GetAll();
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpGet("short")]
+        public async Task<IEnumerable<ShortBrandDto>> GetAllShort()
+        {
+            return await _brandsRepository.GetAllShort();
+        }
+
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -38,6 +48,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]BrandItemRequest request)
         {
@@ -56,6 +67,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] BrandItemRequest request)
         {
@@ -74,6 +86,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

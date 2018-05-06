@@ -29,6 +29,14 @@ namespace tr3am.Data
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<ShortBrandDto>> GetAllShort()
+        {
+            return await _dbContext.Brands
+                .AsNoTracking()
+                .Select(x => Mapper.Map<Brand, ShortBrandDto>(x))
+                .ToListAsync();
+        }
+
         public async Task<BrandDto> GetById(int id)
         {
             var item = await _dbContext.Brands

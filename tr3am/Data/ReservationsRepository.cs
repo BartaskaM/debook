@@ -11,6 +11,7 @@ using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Enums;
 using tr3am.DataContracts.Requests.Reservations;
 using Microsoft.EntityFrameworkCore;
+using tr3am.Services;
 using Action = tr3am.DataContracts.Enums.Action;
 
 namespace tr3am.Data
@@ -18,10 +19,12 @@ namespace tr3am.Data
     public class ReservationsRepository : IReservationsRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly EmailService _emailService;
 
-        public ReservationsRepository(AppDbContext dbContext)
+        public ReservationsRepository(AppDbContext dbContext, EmailService emailService)
         {
             _dbContext = dbContext;
+            _emailService = emailService;
         }
 
         public async Task<IEnumerable<ReservationDto>> GetAll(bool showAll)
@@ -90,36 +93,26 @@ namespace tr3am.Data
 
         }
 
-        public async Task<int> Create(ReservationRequest request, bool booking)
+        public async Task<int> Create(ReservationRequest request, bool booking, int userId)
         {
-            var device = _dbContext.Devices
+            var device = await _dbContext.Devices
                .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
 
-
-            var user = _dbContext.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.UserId);
-
-            await Task.WhenAll(device, user);
-            if (device.Result == null)
+            if (device == null)
             {
                 throw new InvalidDeviceException();
-            }
-            if (user.Result == null)
-            {
-                throw new InvalidUserException();
             }
 
             DateTime roundFrom = booking ? request.From : RoundTime(request.From);
             DateTime roundTo = RoundTime(request.To);
 
-            await CheckIfDateAvailable(request.From, request.To, device.Result);
+            await CheckIfDateAvailable(request.From, request.To, device);
 
             var newItem = new Reservation
             {
-                UserId = user.Result.Id,
+                UserId = userId,
                 Status = request.Status,
-                DeviceId = device.Result.Id,
+                DeviceId = device.Id,
                 From = roundFrom,
                 To = roundTo,
             };
@@ -129,15 +122,15 @@ namespace tr3am.Data
             if (booking)
             {
                 eventAction = Action.Booked;
-                device.Result.Available = false;
-                device.Result.UserId = request.UserId;
+                device.Available = false;
+                device.UserId = userId;
             }
 
             await _dbContext.Events.AddAsync(new Event
             {
                 Action = eventAction,
-                OfficeId = device.Result.OfficeId,
-                UserId = request.UserId,
+                OfficeId = device.OfficeId,
+                UserId = userId,
                 CreatedOn = DateTime.UtcNow,
                 DeviceId = request.DeviceId,
             });
@@ -147,7 +140,7 @@ namespace tr3am.Data
             return newItem.Id;
         }
 
-        public async Task Update(int id, ReservationUpdateRequest request)
+        public async Task Update(int id, ReservationUpdateRequest request, int userId)
         {
             var item = await _dbContext.Reservations
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -163,28 +156,25 @@ namespace tr3am.Data
             var device = _dbContext.Devices
                .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
 
-            var user = _dbContext.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.UserId);
-
-            await Task.WhenAll(device, user, office);
+            await Task.WhenAll(device, office);
 
             if (device.Result == null)
             {
                 throw new InvalidDeviceException();
             }
 
-            if (user.Result == null)
+            if (office.Result == null)
             {
-                throw new InvalidUserException();
+                throw new InvalidOfficeException();
             }
+
 
             Action eventAction = Action.ReservationCanceled;
             int officeId = device.Result.OfficeId;
 
             if (request.Status == Status.CheckedIn)
             {
-                device.Result.UserId = request.UserId;
+                device.Result.UserId = userId;
                 device.Result.Available = false;
                 eventAction = Action.CheckedIn;
             }
@@ -208,14 +198,14 @@ namespace tr3am.Data
             {
                 Action = eventAction,
                 OfficeId = officeId,
-                UserId = request.UserId,
+                UserId = userId,
                 CreatedOn = DateTime.UtcNow,
                 DeviceId = request.DeviceId,
             });
 
             item.Status = request.Status;
             item.DeviceId = device.Result.Id;
-            item.UserId = user.Result.Id;
+            item.UserId = userId;
             item.From = request.From;
             item.To = request.To;
 
@@ -240,6 +230,7 @@ namespace tr3am.Data
             DateTime now = DateTime.UtcNow;
 
             await _dbContext.Reservations
+                .Include(x => x.User)
                 .Include(x => x.Device)
                 .ForEachAsync(async x =>
             {
@@ -264,6 +255,11 @@ namespace tr3am.Data
                     if (x.To <= now)
                     {
                         x.Status = Status.OverDue;
+                        string text =
+                            String.Format("Hello {0} {1},\r\n\r\nIt appears that you have used device {2} for longer period of time than intended. Please return this device as your colleagues may be waiting for it.\r\n\r\nKind regards, Debook.", x.User.FirstName, x.User.LastName, x.Device.IdentificationNum);
+                        string htmlText =
+                            String.Format("Hello {0} {1},<br /><br />It appears that you have used device {2} for longer period of time than intended. Please return this device as your colleagues may be waiting for it.<br /><br />Kind regards, Debook.", x.User.FirstName, x.User.LastName, x.Device.IdentificationNum);
+                        _emailService.SendReminder(text, htmlText, x.User.Email);
                     }
                 }
             });

@@ -19,7 +19,5 @@ namespace tr3am.DataContracts.Requests.Users
         public int OfficeId { get; set; }
         [MaxLength(64)]
         public string Slack { get; set; }
-        [Required]
-        public string Role { get; set; }
     }
 }

@@ -21,27 +21,63 @@ class LocationModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      location: '',
+      location: 0,
     };
     this.changeLocation = this.changeLocation.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
+
+  static getDerivedStateFromProps(nextProps, previousState){
+    if(nextProps.showLocationDialog && previousState.location === 0){
+      return { location: nextProps.device.location.id };
+    }
+    return null;
+  }
+
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
+
   changeLocation() {
     const {
-      changeDeviceLocation,
+      updateDeviceLocation,
       hideLocationModal,
+      device,
+      offices,
     } = this.props;
-
-    changeDeviceLocation(this.state.location);
+    const office = offices.find(office => office.id === this.state.location);
+    const request = {
+      id: device.id,
+      brandId: device.brand.id,
+      modelId: device.model.id,
+      image: device.image,
+      identificationNum: device.identificationNum,
+      serialNum: device.serialNum,
+      os: device.os,
+      purchased: device.purchased.toISOString(),
+      vendor: device.vendor,
+      taxRate: device.taxRate,
+      location: {
+        id: office.id,
+        city: office.city,
+      },
+      available: device.available,
+      active: true,
+      userId: device.custody ? device.custody.id : null,
+    };
+    updateDeviceLocation(request);
     hideLocationModal();
   }
+
+  handleClose(){
+    this.props.hideLocationModal();
+    this.setState({ location: 0 });
+  }
+
   render() {
     const {
       classes,
-      hideLocationModal,
       showLocationDialog,
       offices,
     } = this.props;
@@ -49,7 +85,7 @@ class LocationModal extends React.Component {
       <div>
         <Dialog
           open={showLocationDialog}
-          onClose={hideLocationModal}
+          onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle className={classes.title} disableTypography>
@@ -69,7 +105,7 @@ class LocationModal extends React.Component {
                 {offices.map((office) => (
                   <MenuItem
                     key={office.id}
-                    value={office.city}
+                    value={office.id}
                     className={classes.menuItemWidth}
                   >
                     {office.city}
@@ -79,7 +115,7 @@ class LocationModal extends React.Component {
             </FormControl>
           </DialogContent>
           <DialogActions>
-            <Button onClick={hideLocationModal} color="primary">
+            <Button onClick={this.handleClose} color="primary">
               Close
             </Button>
             <Button onClick={this.changeLocation} color="primary">
@@ -96,7 +132,7 @@ LocationModal.propTypes = {
   showLocationDialog: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   hideLocationModal: PropTypes.func.isRequired,
-  changeDeviceLocation: PropTypes.func.isRequired,
+  updateDeviceLocation: PropTypes.func.isRequired,
   active: PropTypes.func,
   location: PropTypes.string,
   offices: PropTypes.arrayOf(PropTypes.shape({
@@ -107,6 +143,31 @@ LocationModal.propTypes = {
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired,
   })).isRequired,
+  device: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    available: PropTypes.bool.isRequired,
+    brand: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    model: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    identificationNum: PropTypes.number.isRequired,
+    os: PropTypes.string.isRequired,
+    location: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      city: PropTypes.string.isRequired,
+    }).isRequired,
+    custody: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+    }),
+  }),
 };
 
 const mapStateToProps = (state) => ({

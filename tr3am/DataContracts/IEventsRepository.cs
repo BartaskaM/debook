@@ -7,10 +7,10 @@ namespace tr3am.DataContracts
 {
     public interface IEventsRepository
     {
-        Task<IEnumerable<EventDto>> GetAll();
+        Task<EventsDto> GetAll(int page, int pageSize);
         Task<EventDto> GetById(int id);
-        Task<int> Create(EventItemRequest request);
-        Task Update(int id, EventItemRequest request);
+        Task<int> Create(EventItemRequest request, int userId);
+        Task Update(int id, EventItemRequest request, int userId);
         Task Delete(int id);
     }
 }

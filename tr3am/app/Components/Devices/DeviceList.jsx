@@ -90,11 +90,11 @@ class DeviceList extends React.Component {
         device.model.name.toLowerCase().includes(modelFilter.toLowerCase()));
     if (brandFilter.length > 0) {
       devicesToRender = devicesToRender.filter(device =>
-        brandFilter.includes(device.brand.name));
+        brandFilter.includes(device.brand.id));
     }
     if (officeFilter.length > 0) {
       devicesToRender = devicesToRender.filter(device =>
-        officeFilter.includes(device.location.city) || device.userBooking);
+        officeFilter.includes(device.location.id) || device.userBooking);
     }
     if (showAvailable != showUnavailable) {
       if (showAvailable) {
@@ -156,7 +156,6 @@ class DeviceList extends React.Component {
         </div> :
       filteredDevices.map(device => {
         return (
-        //Replace list with device component
           <Grid item xs={4} key={device.id}>
             <Paper className={classes.devicePaper}>
               <ListItem

@@ -140,18 +140,6 @@ namespace tr3am.Data
                 throw new InvalidDeviceException();
             }
 
-            User user = null;
-            if (request.UserId != null)
-            {
-                user = await _dbContext.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.UserId);
-                if (user == null)
-                {
-                    throw new InvalidUserException();
-                }
-            }
-
             var office = _dbContext.Offices
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
@@ -183,7 +171,6 @@ namespace tr3am.Data
             item.Available = request.Available;
             item.Active = request.Active;
             item.Image = request.Image;
-            item.UserId = user?.Id; // user != null ? user.Id : null (Auto VS offer/fix)
             item.IdentificationNum = request.IdentificationNum;
             item.SerialNum = request.SerialNum;
             item.OS = request.OS;

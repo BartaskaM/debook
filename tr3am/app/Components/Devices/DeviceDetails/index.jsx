@@ -250,7 +250,6 @@ class DeviceDetails extends React.Component {
               <Button 
                 variant="raised" 
                 size="large" 
-                color="primary" 
                 className={classes.button}
                 onClick={
                   device.userReservation ?
@@ -264,9 +263,9 @@ class DeviceDetails extends React.Component {
                 {device.userReservation ? 'Reservation details' : 'Reserve'}
               </Button>
               <Button
+                disabled={!device.available}
                 variant="raised"
                 size="large"
-                color="secondary"
                 className={classes.button}
                 onClick={this.openLocationDialog}>
                 CHANGE LOCATION
@@ -295,7 +294,6 @@ class DeviceDetails extends React.Component {
 
 DeviceDetails.propTypes = {
   classes: PropTypes.object.isRequired,
-  getDeviceWithId: PropTypes.func.isRequired,
   showLocationModal: PropTypes.func.isRequired,
   device: PropTypes.shape({
     id: PropTypes.number.isRequired,

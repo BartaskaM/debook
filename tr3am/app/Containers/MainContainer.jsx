@@ -1,5 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import { CircularProgress } from 'material-ui/Progress';
 
 import * as RouteRoles from 'Constants/RouteRoles';
 import Auth from 'Components/Authorization';
@@ -15,11 +19,24 @@ import OfficeDetails from 'Components/Offices/OfficeDetails';
 import BookingEvents from 'Components/BookingEvents';
 import ErrorComponent from 'Components/Errors/Basic';
 import BrandList from 'Components/Brands';
+<<<<<<< HEAD
 import NewDevice from 'Components/Devices/NewDevice';
+=======
+import * as auth from 'ActionCreators/authActions';
+import Styles from './Styles';
+>>>>>>> develop
 
 class MainContainer extends React.Component {
+  componentDidMount() {
+    if (!this.props.user) {
+      this.props.fetchUserInfo();
+    }
+  }
+
   render() {
-    return (
+    const { fetchUserDetailsLoading, classes } = this.props;
+
+    return !fetchUserDetailsLoading ? (
       <div>
         <Header />
         <Route exact path='/' component={LoginTabs} />
@@ -78,6 +95,7 @@ class MainContainer extends React.Component {
             </div>
           )} allowedRoles={RouteRoles.Brands} />
         } />
+<<<<<<< HEAD
         <Route exact path='/newdevice' render={() =>
           <Auth component={() => (
             <div>
@@ -86,9 +104,31 @@ class MainContainer extends React.Component {
             </div>
           )} allowedRoles={RouteRoles.Offices} />
         } />
+=======
+>>>>>>> develop
       </div>
-    );
+    ) :
+      <CircularProgress
+        className={classes.loadingCircle}
+        size={150}
+      />;
   }
 }
 
-export default MainContainer;
+MainContainer.propTypes = {
+  user: PropTypes.object,
+  fetchUserDetailsLoading: PropTypes.bool,
+  fetchUserInfo: PropTypes.func,
+  classes: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = state => {
+  return {
+    user: state.auth.user,
+    fetchUserDetailsLoading: state.auth.fetchUserDetailsLoading,
+  };
+};
+
+export default connect(mapStateToProps, auth)(
+  withStyles(Styles)(MainContainer)
+);
