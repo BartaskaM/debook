@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -52,7 +53,18 @@ namespace tr3am.Controllers
             }
             try
             {
-                await _usersRepository.Update(id, request);
+                var userIdClaim = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier);
+                var userId = int.Parse(userIdClaim.Value);
+
+                if (userId == id || User.IsInRole("admin"))
+                {
+                    await _usersRepository.Update(id, request);
+                }
+                else
+                {
+                    return Forbid();
+                }
+
                 return NoContent();
             }
             catch(InvalidUserException)
