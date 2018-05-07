@@ -36,7 +36,7 @@ export default (state = defaultState, action) => {
     case officeDetails.UPDATE_OFFICE_SUCCESS: {
       return {
         ...state,
-        fetchOfficeLoading: false,
+        updateOfficeLoading: false,
         office: action.payload.office,
       };
     }

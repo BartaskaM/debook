@@ -207,7 +207,7 @@ class OfficeDetails extends React.Component {
   renderButtons() {
     const { classes, userRoles } = this.props;
 
-    return RouteRoles.Offices.includes(userRoles) ? this.state.isEditMode ? (
+    return userRoles.includes('admin') ? this.state.isEditMode ? (
       <span>
         <Button variant="raised"
           color="secondary"
