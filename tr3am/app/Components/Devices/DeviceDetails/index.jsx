@@ -60,6 +60,7 @@ class DeviceDetails extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.interval);
+    this.props.resetDevice();
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -370,6 +371,7 @@ DeviceDetails.propTypes = {
   removeReservationFromDevice: PropTypes.func.isRequired,
   fetchDevice: PropTypes.func.isRequired,
   fetchDeviceLoading: PropTypes.bool.isRequired,
+  resetDevice: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
