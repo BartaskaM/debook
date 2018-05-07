@@ -149,49 +149,40 @@ namespace tr3am.Data
                 throw new InvalidReservationException();
             }
 
-            var office = _dbContext.Offices
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
-
-            var device = _dbContext.Devices
+            var device = await _dbContext.Devices
                .FirstOrDefaultAsync(x => x.Id == request.DeviceId);
 
-            await Task.WhenAll(device, office);
-
-            if (device.Result == null)
+            if (device == null)
             {
                 throw new InvalidDeviceException();
             }
 
-            if (office.Result == null)
-            {
-                throw new InvalidOfficeException();
-            }
-
-
             Action eventAction = Action.ReservationCanceled;
-            int officeId = device.Result.OfficeId;
+            int officeId = device.OfficeId;
 
             if (request.Status == Status.CheckedIn)
             {
-                device.Result.UserId = userId;
-                device.Result.Available = false;
+                device.UserId = userId;
+                device.Available = false;
                 eventAction = Action.CheckedIn;
             }
 
             if (request.Status == Status.Completed)
             {
-                if (office.Result == null)
+                var office = await _dbContext.Offices
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == request.OfficeId);
+                if (office == null)
                 {
                     throw new InvalidOfficeException();
                 }
 
                 eventAction = item.Status == Status.OverDue ? Action.ReturnedLate : Action.Returned;
-                officeId = office.Result.Id;
+                officeId = office.Id;
 
-                device.Result.UserId = null;
-                device.Result.Available = true;
-                device.Result.OfficeId = request.OfficeId.Value;
+                device.UserId = null;
+                device.Available = true;
+                device.OfficeId = request.OfficeId.Value;
             }
 
             await _dbContext.Events.AddAsync(new Event
@@ -204,7 +195,7 @@ namespace tr3am.Data
             });
 
             item.Status = request.Status;
-            item.DeviceId = device.Result.Id;
+            item.DeviceId = device.Id;
             item.UserId = userId;
             item.From = request.From;
             item.To = request.To;
