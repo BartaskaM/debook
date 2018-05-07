@@ -135,6 +135,7 @@ class NewDevice extends React.Component {
 
   inputHandlerForModel(e) {
     if (e.target.value === -1) {
+      this.setState({ ['model']: '' });
       this.setState({ [e.target.name]: e.target.value });
       this.setState({ ['newModel']: true });
     }
@@ -198,8 +199,9 @@ class NewDevice extends React.Component {
           onChange={this.inputHandler}
           inputProps={{
             name: 'model',
+            required: 'required',
           }}
-          className={classes.fontSize}
+          className={classes.customField}
         />
       </div>
       : null;
@@ -337,11 +339,14 @@ class NewDevice extends React.Component {
                   <Input
                     value={identificationNum}
                     onChange={this.inputHandler}
+                    type='number'
                     inputProps={{
                       type: 'number',
                       name: 'identificationNum',
                       maxLength: '4',
                       required: 'required',
+                      step: '1',
+                      placeholder: '1234',
                     }}
                     className={classes.fontSize}
                   />
@@ -423,6 +428,8 @@ class NewDevice extends React.Component {
                       name: 'taxRate',
                       type: 'number',
                       required: 'required',
+                      step: '0.01',
+                      placeholder: '12.34',
                     }}
                     className={classes.fontSize}
                   />
@@ -434,7 +441,6 @@ class NewDevice extends React.Component {
               </Grid>
               <FormControl>
                 <div className={classes.buttonsContainer}>
-                  {/* <Grid Grid item xs={12} sm={6}> */}
                   <Button
                     type='submit'
                     variant="raised"
@@ -443,8 +449,6 @@ class NewDevice extends React.Component {
                   >
                 SAVE DEVICE
                   </Button>
-                  {/* </Grid> */}
-                  {/* <Grid Grid item xs={12} sm={6}> */}
                   <Link to={'/devices'}>
                     <Button
                       variant="raised"
@@ -454,7 +458,6 @@ class NewDevice extends React.Component {
                     CANCEL
                     </Button>
                   </Link>
-                  {/* </Grid> */}
                 </div>
               </FormControl>
             </FormGroup>

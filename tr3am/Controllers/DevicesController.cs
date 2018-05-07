@@ -77,14 +77,19 @@ namespace tr3am.Controllers
                 string errorText = String.Format("Model with ID: {0} doesn't exist", request.ModelId);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
-            catch (DuplicateDeviceException)
+            catch (DuplicateDeviceSerialNumberException)
             {
-                string errorText = String.Format("Model with Serial number: {0} already exist", request.SerialNum);
+                string errorText = String.Format("Device with Serial number: {0} already exist", request.SerialNum);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
             catch (DuplicateModelException)
             {
-                string errorText = String.Format("Model wiht name: {0} already exist", request.ModelName);
+                string errorText = String.Format("Model with name: {0} already exist", request.ModelName);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
+            catch (DuplicateDeviceIdentificationNumberException)
+            {
+                string errorText = String.Format("Device with identification number: {0} already exist", request.IdentificationNum);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using tr3am.Controllers;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
@@ -121,9 +122,13 @@ namespace tr3am.Data
                 TaxRate = request.TaxRate,
                 OfficeId = office.Result.Id,
             };
-            if (await DeviceExists(newItem))
+            if (await DeviceWithSerialNumberExists(newItem))
             {
-                throw new DuplicateDeviceException();
+                throw new DuplicateDeviceSerialNumberException();
+            }
+            if (await DeviceWithIdentificationNumberExists(newItem))
+            {
+                throw new DuplicateDeviceIdentificationNumberException();
             }
             _dbContext.Add(newItem);
             await _dbContext.SaveChangesAsync();
@@ -194,12 +199,27 @@ namespace tr3am.Data
             item.Active = false;
         }
 
-        public async Task<bool> DeviceExists(Device device)
+        public async Task<bool> DeviceWithSerialNumberExists(Device device)
         {
             var item = await _dbContext.Devices
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
                 x.SerialNum == device.SerialNum);
+
+            if (item != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeviceWithIdentificationNumberExists(Device device)
+        {
+            var item = await _dbContext.Devices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x =>
+                x.IdentificationNum == device.IdentificationNum);
 
             if (item != null)
             {

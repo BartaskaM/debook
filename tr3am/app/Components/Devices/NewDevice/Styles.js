@@ -28,15 +28,17 @@ const Styles = theme => ({
     height: 50,
     fontSize: 14,
     margin: '3%',
-    fullWidth: 'true',
-    bottom: 0,
-    right: 0,
+    width: '20%',
   },
   buttonsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    position: 'center',
-    marginTop: 25,
+    marginBottom: 25,
+    width: '100%',
+    textAlign: 'center',
+    display: 'inline-block',
+  },
+  customField: {
+    fontSize: theme.typography.pxToRem(20),
+    width: '100%',
   },
 });
   

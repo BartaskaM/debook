@@ -234,8 +234,6 @@ class DeviceList extends React.Component {
     return (
       <div>
         <Grid container spacing={8} className={classes.root}>
-          {this.renderDevices()}
-
           { fetchingDevices && <Grid item xs={12}><LinearProgress/></Grid> }
           { this.renderDevices() }
           <BookModal />

@@ -2,7 +2,7 @@
 
 namespace tr3am.Data.Exceptions
 {
-    public class DuplicateDeviceException : Exception
+    public class DuplicateDeviceSerialNumberException : Exception
     {
     }
 }
