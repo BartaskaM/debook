@@ -20,6 +20,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import { DatePicker } from 'material-ui-pickers';
+import ImageRegEx from 'Constants/ImageRegEx';
 
 import Styles from './Styles';
 import * as authActions from 'ActionCreators/authActions';
@@ -46,10 +47,6 @@ class NewDevice extends React.Component {
       vendor: '',
       taxRate: 0.00,
       image: '',
-      serialErrorMessage: '',
-      locationErrorMessage: '',
-      brandErrorMessage: '',
-      modelErrorMessage: '',
       errorInForm: '',
       modelFieldDisabled: true,
       models: [], 
@@ -63,7 +60,8 @@ class NewDevice extends React.Component {
     this.loadModels = this.loadModels.bind(this);
     this.createNewDevice = this.createNewDevice.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
-    
+    this.validateImage = this.validateImage.bind(this);
+    this.validateIdentificationNumber = this.validateIdentificationNumber.bind(this);
   }
 
   componentDidMount() {
@@ -80,12 +78,10 @@ class NewDevice extends React.Component {
 
   submitNewDeviceForm(e) {
     e.preventDefault();
-    if (this.areAllSelected()) {
+    if (this.areAllSelected() && this.validateImage() && this.validateIdentificationNumber()) {
       this.setState({ ['errorInForm']: '' });
       this.createNewDevice();
     }
-    else
-      this.setState({ ['errorInForm']: 'Check entered data' });
   }
 
   createNewDevice() {
@@ -149,24 +145,37 @@ class NewDevice extends React.Component {
   areAllSelected()
   {
     if (this.state.brand === ''){
-      this.setState({ ['brandErrorMessage']: 'Select brand model' });
+      this.setState({ ['errorInForm']: 'Select device brand' });
       return false;
     }
-    else
-      this.setState({ ['brandErrorMessage']: '' });
     if (this.state.model === ''){
-      this.setState({ ['modelErrorMessage']: 'Select device model' });
+      this.setState({ ['errorInForm']: 'Select device model' });
       return false;
     }
-    else
-      this.setState({ ['modelErrorMessage']: '' });
     if (this.state.office === ''){
-      this.setState({ ['locationErrorMessage']: 'Select location' });
+      this.setState({ ['errorInForm']: 'Select location' });
       return false;
     }
-    else
-      this.setState({ ['locationErrorMessage']: '' });
     return true;
+  }
+
+  validateImage() {
+    const regImage = new RegExp(ImageRegEx.r_image);
+    if (regImage.exec(this.state.image)) {
+      return true;
+    } else {
+      this.setState({ errorInForm: 'Wrong image URL. Make sure you entered correct URL.' });
+      return false;
+    }
+  }
+
+  validateIdentificationNumber() {
+    if (this.state.identificationNum > 0 ) {
+      return true;
+    } else {
+      this.setState({ errorInForm: 'Identification number must be greater than 0' });
+      return false;
+    }
   }
 
   render() {
@@ -208,11 +217,9 @@ class NewDevice extends React.Component {
 
     return (
       <div className={classes.root}>
-        {/* <Grid container justify='center'> */}
         <Paper className={classes.root}>
           <form method='POST' onSubmit={this.submitNewDeviceForm}>
             <FormGroup>
-              {/* <Grid item xs={6}> */}
               <Grid container direction='column'>
                 <Typography variant='headline'>
           Please fill in you details for new device in the form below
@@ -318,6 +325,9 @@ class NewDevice extends React.Component {
                     className={classes.fontSize}
                   />
                 </FormControl>
+                <Typography variant='headline' className={classes.errorMessage}>
+                  {this.state.imageErrorMessage}
+                </Typography>
                 <FormControl className={classes.newDeviceFormField}>
                   <InputLabel className={classes.fontSize}>Serial Number</InputLabel>
                   <Input
@@ -392,7 +402,6 @@ class NewDevice extends React.Component {
                 <Typography variant='headline' className={classes.errorMessage}>
                   {this.state.locationErrorMessage}
                 </Typography>
-                {/* <FormControl className={classes.newDeviceFormField}> */}
                 <DatePicker
                   label="Device purchase date"
                   showTodayButton
@@ -437,7 +446,6 @@ class NewDevice extends React.Component {
                 <Typography variant='headline' className={classes.errorMessage}>
                   {this.state.errorInForm}
                 </Typography>
-                {/* </Grid> */}
               </Grid>
               <FormControl>
                 <div className={classes.buttonsContainer}>
@@ -463,7 +471,6 @@ class NewDevice extends React.Component {
             </FormGroup>
           </form>
         </Paper>
-        {/* </Grid> */}
       </div>
     );
   }
