@@ -17,7 +17,6 @@ import {
   FormGroup,
 } from 'material-ui/Form';
 import { withRouter, Link } from 'react-router-dom';
-//import TextField from 'material-ui/TextField';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import { DatePicker } from 'material-ui-pickers';
@@ -25,9 +24,8 @@ import { DatePicker } from 'material-ui-pickers';
 import Styles from './Styles';
 import * as authActions from 'ActionCreators/authActions';
 import * as officesActions from 'ActionCreators/officesActions';
-import * as brandsActions from 'ActionCreators/brandsActions';
 import * as devicesActions from 'ActionCreators/devicesActions';
-import * as modelsActions from 'ActionCreators/modelsActions';
+import * as brandsActions from 'ActionCreators/brandsActions';
 
 class NewDevice extends React.Component {
   constructor(props) {
@@ -35,7 +33,7 @@ class NewDevice extends React.Component {
     const todayDate = new Date();
     todayDate.setHours(0, 0, 0, 0);
     this.state = {
-      deviceActive: true,
+      deviceActive: 1,
       brand: '',
       model: '',
       modelForm: '',
@@ -69,11 +67,11 @@ class NewDevice extends React.Component {
   }
 
   componentDidMount() {
-
     if (this.props.offices.length === 0)
       this.props.fetchOffices();
-    if (this.props.brands.length === 0)
-      this.props.fetchBrands();    
+    if (this.props.brands.length === 0) {
+      this.props.fetchBrands(); 
+    }
   }
 
   handleDateChange(date) {
@@ -136,7 +134,7 @@ class NewDevice extends React.Component {
   }
 
   inputHandlerForModel(e) {
-    if (e.target.value === true) {
+    if (e.target.value === -1) {
       this.setState({ [e.target.name]: e.target.value });
       this.setState({ ['newModel']: true });
     }
@@ -231,10 +229,10 @@ class NewDevice extends React.Component {
                       className={classes.select}
                     >
                       <MenuItem
-                        value={true}
+                        value={1}
                         className={classes.menuItemWidth}>Active</MenuItem>
                       <MenuItem
-                        value={false}
+                        value={0}
                         className={classes.menuItemWidth}>Non Active</MenuItem>
                     </Select>
                   </div>
@@ -273,7 +271,6 @@ class NewDevice extends React.Component {
                   <div  className={classes.wrapper}>
                     <Select
                       disabled={this.state.modelFieldDisabled}
-                      hinttext="Select Brand before selecting Model"
                       value={modelForm}
                       autoWidth={true}
                       inputProps={{
@@ -284,7 +281,7 @@ class NewDevice extends React.Component {
                       className={classes.select}
                     >
                       <MenuItem
-                        value={true}
+                        value={-1}
                         className={classes.menuItemWidth}>
                         Other model
                       </MenuItem>
@@ -473,7 +470,7 @@ NewDevice.propTypes = {
   history: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   fetchOffices: PropTypes.func.isRequired,
-  fetchBrands: PropTypes.func.isRequired,
+
   offices: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     city: PropTypes.string.isRequired,
@@ -481,7 +478,7 @@ NewDevice.propTypes = {
   brands: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    models: PropTypes.array.isRequired,
+    models: PropTypes.array,
   })).isRequired,
   devices: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
@@ -506,35 +503,21 @@ NewDevice.propTypes = {
       lastName: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
     }),
-    userBooking: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      from: PropTypes.instanceOf(Date).isRequired,
-      to: PropTypes.instanceOf(Date).isRequired,
-      status: PropTypes.number.isRequired,
-    }),
-    userReservation: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      from: PropTypes.instanceOf(Date).isRequired,
-      to: PropTypes.instanceOf(Date).isRequired,
-      status: PropTypes.number.isRequired,
-    }),
   })).isRequired,
-  setDevices: PropTypes.func.isRequired,
   createDevice: PropTypes.func.isRequired,
-  createModel: PropTypes.func.isRequired,
+  fetchBrands: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   offices: state.offices.offices,
-  brands: state.brands.brands,
   devices: state.devices.devices,
+  brands: state.brands.brands,
   // fetchOfficesLoading: store.offices.fetchOfficesLoading,
 });
 
 export default withRouter(connect(mapStateToProps, {
   ...authActions, 
   ...officesActions,
-  ...brandsActions,
   ...devicesActions,
-  ...modelsActions,
+  ...brandsActions,
 })(withStyles(Styles)(NewDevice)));
