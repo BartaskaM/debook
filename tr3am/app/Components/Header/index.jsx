@@ -62,7 +62,7 @@ class Header extends React.Component {
       <span className={classes.homeButton} onClick={() => this.props.history.push('/devices')}>
         <img
           className={classes.leftMargin}
-          src={'http://www.testcon.lt/wp-content/uploads/2015/08/logo-square_400x400.png'}
+          src={'https://i.imgur.com/GPSkF0s.png'}
           height="40px"
           width='40px'
         />
