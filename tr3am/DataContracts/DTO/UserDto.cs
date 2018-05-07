@@ -9,7 +9,7 @@ namespace tr3am.DataContracts.DTO
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public OfficeDto Office { get; set; }
+        public ShortOfficeDto Office { get; set; }
         public string Slack { get; set; }
         public List<string> Roles { get; set; }
     }

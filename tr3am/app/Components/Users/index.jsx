@@ -69,11 +69,7 @@ Users.propTypes = {
     email: PropTypes.string.isRequired,
     office: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      country: PropTypes.string.isRequired,
       city: PropTypes.string.isRequired,
-      address: PropTypes.string.isRequired,
-      lat: PropTypes.number.isRequired,
-      lng: PropTypes.number.isRequired,
     }).isRequired,
     slack: PropTypes.string,
   })).isRequired,

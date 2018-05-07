@@ -579,11 +579,7 @@ UserDetails.propTypes = {
     email: PropTypes.string.isRequired,
     office: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      country: PropTypes.string.isRequired,
       city: PropTypes.string.isRequired,
-      lat: PropTypes.number.isRequired,
-      lng: PropTypes.number.isRequired,
-      address: PropTypes.string.isRequired,
     }).isRequired,
     slack: PropTypes.string,
     roles: PropTypes.arrayOf(PropTypes.string),
@@ -598,11 +594,7 @@ UserDetails.propTypes = {
   fetchingUser: PropTypes.bool.isRequired,
   offices: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
-    country: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
-    address: PropTypes.string.isRequired,
-    lat: PropTypes.number.isRequired,
-    lng: PropTypes.number.isRequired,
   })).isRequired,
   fetchOffices: PropTypes.func.isRequired,
   fetchOfficesLoading: PropTypes.bool,
