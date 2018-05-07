@@ -70,22 +70,17 @@ namespace tr3am.Data
             var brand = _dbContext.Brands
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.BrandId);
-            //try
-            //{
-                if (request.NewModel == true)
-                {
-                    ModelItemRequest modelItem = new ModelItemRequest()
-                    {
-                        Name = request.ModelName,
-                        BrandId = request.BrandId,
-                    };
-                    request.ModelId = await _modelsRepository.Create(modelItem);
-                }
-            //}
-            //catch (DuplicateModelException)
-            //{
 
-            //}
+            if (request.NewModel == true)
+            {
+                ModelItemRequest modelItem = new ModelItemRequest()
+                {
+                    Name = request.ModelName,
+                    BrandId = request.BrandId,
+                };
+                request.ModelId = await _modelsRepository.Create(modelItem);
+            }
+
             var model = _dbContext.Models
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.ModelId);
@@ -199,7 +194,7 @@ namespace tr3am.Data
             item.Active = false;
         }
 
-        public async Task<bool> DeviceWithSerialNumberExists(Device device)
+        private async Task<bool> DeviceWithSerialNumberExists(Device device)
         {
             var item = await _dbContext.Devices
                 .AsNoTracking()
@@ -214,7 +209,7 @@ namespace tr3am.Data
             return false;
         }
 
-        public async Task<bool> DeviceWithIdentificationNumberExists(Device device)
+        private async Task<bool> DeviceWithIdentificationNumberExists(Device device)
         {
             var item = await _dbContext.Devices
                 .AsNoTracking()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tr3am.Data.Exceptions;
@@ -39,6 +40,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]ModelItemRequest request)
         {
@@ -63,6 +65,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] ModelItemRequest request)
         {
@@ -86,6 +89,7 @@ namespace tr3am.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

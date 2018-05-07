@@ -19,7 +19,7 @@ import OfficeDetails from 'Components/Offices/OfficeDetails';
 import BookingEvents from 'Components/BookingEvents';
 import ErrorComponent from 'Components/Errors/Basic';
 import BrandList from 'Components/Brands';
-import NewDevice from 'Components/Devices/NewDevice';
+import CreateDevice from 'Components/Devices/CreateDevice';
 import * as auth from 'ActionCreators/authActions';
 import Styles from './Styles';
 
@@ -92,11 +92,11 @@ class MainContainer extends React.Component {
             </div>
           )} allowedRoles={RouteRoles.Brands} />
         } />
-        <Route exact path='/newdevice' render={() =>
+        <Route exact path='/createdevice' render={() =>
           <Auth component={() => (
             <div>
               <MainTabs tabIndex='/devices' />
-              <NewDevice />
+              <CreateDevice />
             </div>
           )} allowedRoles={RouteRoles.Offices} />
         } />

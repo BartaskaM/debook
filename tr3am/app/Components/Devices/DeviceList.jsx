@@ -240,7 +240,7 @@ class DeviceList extends React.Component {
           <ReserveModal />
           <ReturnModal />
         </Grid>
-        <Link to={'/newdevice'}>
+        <Link to={'/createdevice'}>
           <Button
             variant="raised"
             color="primary"

@@ -1,5 +1,3 @@
-// Date field has errors on setting
-
 import React from 'react';
 import {
   Input,
@@ -28,30 +26,27 @@ import * as officesActions from 'ActionCreators/officesActions';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as brandsActions from 'ActionCreators/brandsActions';
 
-class NewDevice extends React.Component {
+class CreateDevice extends React.Component {
   constructor(props) {
     super(props);
-    const todayDate = new Date();
-    todayDate.setHours(0, 0, 0, 0);
     this.state = {
       deviceActive: 1,
-      brand: '',
+      brandId: '',
       model: '',
       modelForm: '',
       newModel: false,
-      purchaseDate: todayDate,
+      purchaseDate: new Date(),
       serialNumber: '',
       os: '',
       identificationNum: '',
-      office: '',
+      officeId: '',
       vendor: '',
       taxRate: 0.00,
-      image: '',
+      imageURL: '',
       errorInForm: '',
       modelFieldDisabled: true,
       models: [], 
     };
-
     this.inputHandler = this.inputHandler.bind(this);
     this.inputHandlerForModel = this.inputHandlerForModel.bind(this);
     this.inputHandlerForBrand = this.inputHandlerForBrand.bind(this);
@@ -91,20 +86,19 @@ class NewDevice extends React.Component {
     }
     const newDevice = {
       active: this.state.deviceActive,
-      brandid: this.state.brand,
-      description: this.state.description,
-      identificationnum: this.state.identificationNum,
-      image: this.state.image,
-      modelid: modelId,
-      officeid: this.state.office,
+      brandId: this.state.brandId,
+      identificationNum: this.state.identificationNum,
+      image: this.state.imageURL,
+      modelId: modelId,
+      officeId: this.state.officeId,
       purchased: this.state.purchaseDate,
-      serialnum: this.state.serialNumber,
+      serialNum: this.state.serialNumber,
       os: this.state.os,
       taxrate: this.state.taxRate,
       vendor: this.state.vendor,
       available: true,
-      newmodel: this.state.newModel,
-      modelname: this.state.model,
+      newModel: this.state.newModel,
+      modelName: this.state.model,
     };
     this.props.createDevice(newDevice, this.props.history);
   }
@@ -144,7 +138,7 @@ class NewDevice extends React.Component {
 
   areAllSelected()
   {
-    if (this.state.brand === ''){
+    if (this.state.brandId === ''){
       this.setState({ ['errorInForm']: 'Select device brand' });
       return false;
     }
@@ -152,7 +146,7 @@ class NewDevice extends React.Component {
       this.setState({ ['errorInForm']: 'Select device model' });
       return false;
     }
-    if (this.state.office === ''){
+    if (this.state.officeId === ''){
       this.setState({ ['errorInForm']: 'Select location' });
       return false;
     }
@@ -161,7 +155,7 @@ class NewDevice extends React.Component {
 
   validateImage() {
     const regImage = new RegExp(ImageRegEx.r_image);
-    if (regImage.exec(this.state.image)) {
+    if (regImage.exec(this.state.imageURL)) {
       return true;
     } else {
       this.setState({ errorInForm: 'Wrong image URL. Make sure you entered correct URL.' });
@@ -186,15 +180,15 @@ class NewDevice extends React.Component {
     } = this.props;
     const {
       deviceActive,
-      brand,
+      brandId,
       model,
       serialNumber,
       os,
       identificationNum,
-      office,
+      officeId,
       vendor,
       taxRate,
-      image,
+      imageURL,
       modelForm,
       models,
       purchaseDate,
@@ -250,10 +244,10 @@ class NewDevice extends React.Component {
                   <InputLabel className={classes.fontSize}>Brand</InputLabel>
                   <div className={classes.wrapper}>
                     <Select
-                      value={brand}
+                      value={brandId}
                       autoWidth={true}
                       inputProps={{
-                        name: 'brand',
+                        name: 'brandId',
                         required: 'required',
                       }}
                       errortext={this.state.brandErrorMessage}
@@ -315,10 +309,10 @@ class NewDevice extends React.Component {
                 <FormControl className={classes.newDeviceFormField}>
                   <InputLabel className={classes.fontSize}>Image URL</InputLabel>
                   <Input
-                    value={image}
+                    value={imageURL}
                     onChange={this.inputHandler}
                     inputProps={{
-                      name: 'image',
+                      name: 'imageURL',
                       maxLength: '255',
                       required: 'required',
                     }}
@@ -378,10 +372,10 @@ class NewDevice extends React.Component {
                   <InputLabel className={classes.fontSize}>Location</InputLabel>
                   <div className={classes.wrapper}>
                     <Select
-                      value={office}
+                      value={officeId}
                       autoWidth={true}
                       inputProps={{
-                        name: 'office',
+                        name: 'officeId',
                         required: 'required',
                       }}
                       onChange={this.inputHandler}
@@ -476,7 +470,7 @@ class NewDevice extends React.Component {
   }
 }
 
-NewDevice.propTypes = {
+CreateDevice.propTypes = {
   history: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   fetchOffices: PropTypes.func.isRequired,
@@ -522,7 +516,6 @@ const mapStateToProps = state => ({
   offices: state.offices.offices,
   devices: state.devices.devices,
   brands: state.brands.brands,
-  // fetchOfficesLoading: store.offices.fetchOfficesLoading,
 });
 
 export default withRouter(connect(mapStateToProps, {
@@ -530,4 +523,4 @@ export default withRouter(connect(mapStateToProps, {
   ...officesActions,
   ...devicesActions,
   ...brandsActions,
-})(withStyles(Styles)(NewDevice)));
+})(withStyles(Styles)(CreateDevice)));
