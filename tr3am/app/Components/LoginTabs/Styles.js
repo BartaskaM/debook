@@ -25,7 +25,7 @@ const Styles = theme => ({
     color: 'red',
   },
   wrapper: {
-    margin: theme.spacing.unit,
+    marginTop: theme.spacing.unit,
     position: 'relative',
   },
   buttonProgress: {
