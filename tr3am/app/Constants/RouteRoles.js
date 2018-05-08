@@ -12,9 +12,8 @@ export const Devices = [
   'user',
 ];
 
-export const DeviceDetails = [
+export const CreateDevice = [
   'admin',
-  'user',
 ];
 
 export const Offices = [
@@ -33,8 +32,4 @@ export const Brands = [
 export const Events = [
   'admin',
   'user',
-];
-
-export const NewDevice = [
-  'admin',
 ];

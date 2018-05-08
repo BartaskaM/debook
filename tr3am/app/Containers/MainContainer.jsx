@@ -64,6 +64,9 @@ class MainContainer extends React.Component {
         <Route path='/devices/:id' render={() =>
           <Auth component={DeviceDetails} allowedRoles={RouteRoles.DeviceDetails} />
         } />
+        <Route exact path='/createDevice' render={() =>
+          <Auth component={CreateDevice} allowedRoles={RouteRoles.CreateDevice} />
+        } />
 
         <Route exact path='/offices' render={() =>
           <Auth component={() => (
@@ -91,14 +94,6 @@ class MainContainer extends React.Component {
               <BrandList />
             </div>
           )} allowedRoles={RouteRoles.Brands} />
-        } />
-        <Route exact path='/createdevice' render={() =>
-          <Auth component={() => (
-            <div>
-              <MainTabs tabIndex='/devices' />
-              <CreateDevice />
-            </div>
-          )} allowedRoles={RouteRoles.Offices} />
         } />
       </div>
     ) :

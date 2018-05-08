@@ -1,12 +1,13 @@
 import React from 'react';
+// TODO: Seporate material-ui imports
 import {
   Input,
   Typography,
   Button,
   Select,
   Paper,
-  Grid,
 } from 'material-ui';
+import Grid from 'material-ui/grid';
 import { connect } from 'react-redux';
 import { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
@@ -46,7 +47,7 @@ class CreateDevice extends React.Component {
       imageURL: '',
       errorInForm: '',
       modelFieldDisabled: true,
-      models: [], 
+      models: [],
     };
     this.inputHandler = this.inputHandler.bind(this);
     this.inputHandlerForModel = this.inputHandlerForModel.bind(this);
@@ -64,12 +65,12 @@ class CreateDevice extends React.Component {
     if (this.props.offices.length === 0)
       this.props.fetchOffices();
     if (this.props.brands.length === 0) {
-      this.props.fetchBrands(); 
+      this.props.fetchBrands();
     }
   }
 
   handleDateChange(date) {
-    this.setState({['purchaseDate']: date});
+    this.setState({ ['purchaseDate']: date });
   }
 
   submitNewDeviceForm(e) {
@@ -109,43 +110,41 @@ class CreateDevice extends React.Component {
   }
 
   inputHandlerForBrand(e) {
-    this.setState({ [e.target.name]: e.target.value });
-    this.setState({ ['modelFieldDisabled']: false });
+    this.setState({
+      [e.target.name]: e.target.value,
+      // TODO: FIX ALL of the [''] where it is string
+      ['modelFieldDisabled']: false,
+    });
     this.loadModels(e.target.value);
   }
-  
+
   loadModels(id) {
     let key;
     for (let i = 0; i < this.props.brands.length; i++) {
       if (this.props.brands[i].id === id)
         key = i;
     }
-    if(!isNaN(key))
-      this.setState({['models']: this.props.brands[key].models}); 
+    if (!isNaN(key))
+      this.setState({ ['models']: this.props.brands[key].models });
   }
 
   inputHandlerForModel(e) {
-    if (e.target.value === -1) {
-      this.setState({ [e.target.name]: e.target.value });
-      this.setState({ ['newModel']: true });
-    }
-    else {
-      this.setState({ [e.target.name]: e.target.value });
-      this.setState({ ['newModel']: false });
-    }
+    this.setState({
+      [e.target.name]: e.target.value,
+      ['newModel']: e.target.value === -1 ? true : false,
+    });
   }
 
-  areAllSelected()
-  {
-    if (this.state.brandId === ''){
+  areAllSelected() {
+    if (this.state.brandId === '') {
       this.setState({ ['errorInForm']: 'Select device brand' });
       return false;
     }
-    if (this.state.modelId === ''){
+    if (this.state.modelId === '') {
       this.setState({ ['errorInForm']: 'Select device model' });
       return false;
     }
-    if (this.state.officeId === ''){
+    if (this.state.officeId === '') {
       this.setState({ ['errorInForm']: 'Select location' });
       return false;
     }
@@ -163,7 +162,7 @@ class CreateDevice extends React.Component {
   }
 
   validateIdentificationNumber() {
-    if (this.state.identificationNum > 0 ) {
+    if (this.state.identificationNum > 0) {
       return true;
     } else {
       this.setState({ errorInForm: 'Identification number must be greater than 0' });
@@ -172,10 +171,10 @@ class CreateDevice extends React.Component {
   }
 
   render() {
-    const { 
-      classes, 
+    const {
+      classes,
       offices,
-      brands, 
+      brands,
     } = this.props;
     const {
       deviceActive,
@@ -193,8 +192,8 @@ class CreateDevice extends React.Component {
       purchaseDate,
     } = this.state;
 
-    const newModelForm = this.state.newModel 
-      ? <div>
+    const newModelForm = this.state.newModel ?
+      <div>
         <InputLabel className={classes.fontSize}>Other model</InputLabel>
         <Input
           value={modelName}
@@ -210,260 +209,263 @@ class CreateDevice extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Paper className={classes.root}>
-          <form method='POST' onSubmit={this.submitNewDeviceForm}>
-            <FormGroup>
-              <Grid container direction='column'>
-                <Typography variant='headline'>
-          Please fill in you details for new device in the form below
-                </Typography>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Device status</InputLabel>
-                  <div  className={classes.wrapper}>
-                    <Select
-                      value={deviceActive}
-                      autoWidth={true}
-                      inputProps={{
-                        name: 'deviceActive',
-                        required: 'required',
-                      }}
+        <Grid container spacing={16} justify='center'>
+          <Grid item xs={6}>
+            <Paper className={classes.createDevicePaper}>
+              <form method='POST' onSubmit={this.submitNewDeviceForm}>
+                <FormGroup>
+                  <Typography variant='headline'>
+                    Please fill in you details for new device in the form below
+                  </Typography>
+                  <FormControl className={classes.newDeviceFormField}>
+                    <InputLabel className={classes.fontSize}>Device status</InputLabel>
+                    <div className={classes.wrapper}>
+                      <Select
+                        value={deviceActive}
+                        autoWidth={true}
+                        inputProps={{
+                          name: 'deviceActive',
+                          required: 'required',
+                        }}
+                        onChange={this.inputHandler}
+                        className={classes.select}
+                      >
+                        <MenuItem
+                          value={1}
+                          className={classes.menuItemWidth}>Active</MenuItem>
+                        <MenuItem
+                          value={0}
+                          className={classes.menuItemWidth}>Non Active</MenuItem>
+                      </Select>
+                    </div>
+                  </FormControl>
+                  <FormControl className={classes.newDeviceFormField}>
+                    <InputLabel className={classes.fontSize}>Brand</InputLabel>
+                    <div className={classes.wrapper}>
+                      <Select
+                        value={brandId}
+                        autoWidth={true}
+                        inputProps={{
+                          name: 'brandId',
+                          required: 'required',
+                        }}
+                        errortext={this.state.brandErrorMessage}
+                        onChange={this.inputHandlerForBrand}
+                        className={classes.select}
+                      >
+                        {brands.map((brand, i) => (
+                          <MenuItem
+                            key={i}
+                            value={brand.id}
+                            className={classes.menuItemWidth}
+                          >
+                            {brand.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                  </FormControl>
+                  {/* TODO: use <FormHelperText> for error texts */}
+                  <Typography variant='headline' className={classes.errorMessage}>
+                    {this.state.brandErrorMessage}
+                  </Typography>
+                  <FormControl className={classes.newDeviceFormField}>
+                    <InputLabel className={classes.fontSize}>Model</InputLabel>
+                    <div className={classes.wrapper}>
+                      <Select
+                        disabled={this.state.modelFieldDisabled}
+                        value={modelId}
+                        autoWidth={true}
+                        inputProps={{
+                          name: 'modelId',
+                          required: 'required',
+                        }}
+                        onChange={this.inputHandlerForModel}
+                        className={classes.select}
+                      >
+                        <MenuItem
+                          value={-1}
+                          className={classes.menuItemWidth}>
+                          Other model
+                        </MenuItem>
+                        {models.map((model, i) => (
+                          <MenuItem
+                            key={i}
+                            value={model.id}
+                            className={classes.menuItemWidth}
+                          >
+                            {model.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                  </FormControl>
+                  <FormControl>
+                    {newModelForm}
+                  </FormControl>
+                  <Typography variant='headline' className={classes.errorMessage}>
+                    {this.state.modelErrorMessage}
+                  </Typography>
+                  <FormControl className={classes.newDeviceFormField}>
+                    <InputLabel className={classes.fontSize}>Image URL</InputLabel>
+                    <Input
+                      value={imageURL}
                       onChange={this.inputHandler}
-                      className={classes.select}
-                    >
-                      <MenuItem
-                        value={1}
-                        className={classes.menuItemWidth}>Active</MenuItem>
-                      <MenuItem
-                        value={0}
-                        className={classes.menuItemWidth}>Non Active</MenuItem>
-                    </Select>
-                  </div>
-                </FormControl>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Brand</InputLabel>
-                  <div className={classes.wrapper}>
-                    <Select
-                      value={brandId}
-                      autoWidth={true}
                       inputProps={{
-                        name: 'brandId',
+                        name: 'imageURL',
+                        maxLength: '255',
                         required: 'required',
                       }}
-                      errortext={this.state.brandErrorMessage}
-                      onChange={this.inputHandlerForBrand }
-                      className={classes.select}
-                    >
-                      {brands.map((brand, i) => (
-                        <MenuItem
-                          key={i}
-                          value={brand.id}
-                          className={classes.menuItemWidth}
-                        >
-                          {brand.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </div>
-                </FormControl>
-                <Typography variant='headline' className={classes.errorMessage}>
-                  {this.state.brandErrorMessage}
-                </Typography>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Model</InputLabel>
-                  <div  className={classes.wrapper}>
-                    <Select
-                      disabled={this.state.modelFieldDisabled}
-                      value={modelId}
-                      autoWidth={true}
-                      inputProps={{
-                        name: 'modelId',
-                        required: 'required',
-                      }}
-                      onChange={this.inputHandlerForModel}
-                      className={classes.select}
-                    >
-                      <MenuItem
-                        value={-1}
-                        className={classes.menuItemWidth}>
-                        Other model
-                      </MenuItem>
-                      {models.map((model, i) => (
-                        <MenuItem
-                          key={i}
-                          value={model.id}
-                          className={classes.menuItemWidth}
-                        >
-                          {model.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </div>
-                </FormControl>
-                <FormControl>
-                  {newModelForm}
-                </FormControl>
-                <Typography variant='headline' className={classes.errorMessage}>
-                  {this.state.modelErrorMessage}
-                </Typography>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Image URL</InputLabel>
-                  <Input
-                    value={imageURL}
-                    onChange={this.inputHandler}
-                    inputProps={{
-                      name: 'imageURL',
-                      maxLength: '255',
-                      required: 'required',
-                    }}
-                    className={classes.fontSize}
-                  />
-                </FormControl>
-                <Typography variant='headline' className={classes.errorMessage}>
-                  {this.state.imageErrorMessage}
-                </Typography>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Serial Number</InputLabel>
-                  <Input
-                    value={serialNumber}
-                    onChange={this.inputHandler}
-                    inputProps={{
-                      name: 'serialNumber',
-                      maxLength: '255',
-                      required: 'required',
-                    }}
-                    className={classes.fontSize}
-                  />
-                </FormControl>
-                <Typography variant='headline' className={classes.errorMessage}>
-                  {this.state.serialErrorMessage}
-                </Typography>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Identification number</InputLabel>
-                  <Input
-                    value={identificationNum}
-                    onChange={this.inputHandler}
-                    type='number'
-                    inputProps={{
-                      type: 'number',
-                      name: 'identificationNum',
-                      maxLength: '4',
-                      required: 'required',
-                      step: '1',
-                      placeholder: '1234',
-                    }}
-                    className={classes.fontSize}
-                  />
-                </FormControl>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Operating system</InputLabel>
-                  <Input
-                    value={os}
-                    onChange={this.inputHandler}
-                    inputProps={{
-                      name: 'os',
-                      maxLength: '255',
-                      required: 'required',
-                    }}
-                    className={classes.fontSize}
-                  />
-                </FormControl>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Location</InputLabel>
-                  <div className={classes.wrapper}>
-                    <Select
-                      value={officeId}
-                      autoWidth={true}
-                      inputProps={{
-                        name: 'officeId',
-                        required: 'required',
-                      }}
+                      className={classes.fontSize}
+                    />
+                  </FormControl>
+                  <Typography variant='headline' className={classes.errorMessage}>
+                    {this.state.imageErrorMessage}
+                  </Typography>
+                  <FormControl className={classes.newDeviceFormField}>
+                    <InputLabel className={classes.fontSize}>Serial Number</InputLabel>
+                    <Input
+                      value={serialNumber}
                       onChange={this.inputHandler}
-                      className={classes.select}
-                    >
-                      {offices.map((office, i) => (
-                        <MenuItem
-                          key={i}
-                          value={office.id}
-                          className={classes.menuItemWidth}
+                      inputProps={{
+                        name: 'serialNumber',
+                        maxLength: '255',
+                        required: 'required',
+                      }}
+                      className={classes.fontSize}
+                    />
+                  </FormControl>
+                  <Typography variant='headline' className={classes.errorMessage}>
+                    {this.state.serialErrorMessage}
+                  </Typography>
+                  <FormControl className={classes.newDeviceFormField}>
+                    <InputLabel className={classes.fontSize}>Identification number</InputLabel>
+                    <Input
+                      value={identificationNum}
+                      onChange={this.inputHandler}
+                      type='number'
+                      inputProps={{
+                        type: 'number',
+                        name: 'identificationNum',
+                        maxLength: '4',
+                        required: 'required',
+                        step: '1',
+                        placeholder: '1234',
+                      }}
+                      className={classes.fontSize}
+                    />
+                  </FormControl>
+                  <FormControl className={classes.newDeviceFormField}>
+                    <InputLabel className={classes.fontSize}>Operating system</InputLabel>
+                    <Input
+                      value={os}
+                      onChange={this.inputHandler}
+                      inputProps={{
+                        name: 'os',
+                        maxLength: '255',
+                        required: 'required',
+                      }}
+                      className={classes.fontSize}
+                    />
+                  </FormControl>
+                  <FormControl className={classes.newDeviceFormField}>
+                    <InputLabel className={classes.fontSize}>Location</InputLabel>
+                    <div className={classes.wrapper}>
+                      <Select
+                        value={officeId}
+                        autoWidth={true}
+                        inputProps={{
+                          name: 'officeId',
+                          required: 'required',
+                        }}
+                        onChange={this.inputHandler}
+                        className={classes.select}
+                      >
+                        {offices.map((office, i) => (
+                          <MenuItem
+                            key={i}
+                            value={office.id}
+                            className={classes.menuItemWidth}
+                          >
+                            {office.city}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                  </FormControl>
+                  <Typography variant='headline' className={classes.errorMessage}>
+                    {this.state.locationErrorMessage}
+                  </Typography>
+                  <DatePicker
+                    label="Device purchase date"
+                    showTodayButton
+                    disableFuture
+                    format="DD/MM/YYYY"
+                    value={purchaseDate}
+                    onChange={this.handleDateChange}
+                    className={classes.inputField}
+                    InputLabelProps={{ classes: { root: classes.fontSize } }}
+                  />
+                  <Typography variant='headline' className={classes.errorMessage}>
+                    {this.state.dateErrorMessage}
+                  </Typography>
+                  <FormControl className={classes.newDeviceFormField}>
+                    <InputLabel className={classes.fontSize}>Vendor</InputLabel>
+                    <Input
+                      value={vendor}
+                      onChange={this.inputHandler}
+                      inputProps={{
+                        name: 'vendor',
+                        required: 'required',
+                      }}
+                      className={classes.fontSize}
+                    />
+                  </FormControl>
+                  <FormControl className={classes.newDeviceFormField}>
+                    <InputLabel className={classes.fontSize}>Tax rate</InputLabel>
+                    <Input
+                      value={taxRate}
+                      onChange={this.inputHandler}
+                      type="number"
+                      inputProps={{
+                        name: 'taxRate',
+                        type: 'number',
+                        required: 'required',
+                        step: '0.01',
+                        placeholder: '12.34',
+                      }}
+                      className={classes.fontSize}
+                    />
+                  </FormControl>
+                  <Typography variant='headline' className={classes.errorMessage}>
+                    {this.state.errorInForm}
+                  </Typography>
+                  <FormControl>
+                    <div className={classes.buttonsContainer}>
+                      <Button
+                        type='submit'
+                        variant="raised"
+                        color="primary"
+                        className={classes.button}
+                      >
+                        SAVE DEVICE
+                      </Button>
+                      <Link to={'/devices'}>
+                        <Button
+                          variant="raised"
+                          color="primary"
+                          className={classes.button}
                         >
-                          {office.city}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </div>
-                </FormControl>
-                <Typography variant='headline' className={classes.errorMessage}>
-                  {this.state.locationErrorMessage}
-                </Typography>
-                <DatePicker
-                  label="Device purchase date"
-                  showTodayButton
-                  disableFuture
-                  format="DD/MM/YYYY"
-                  value={purchaseDate}
-                  onChange={this.handleDateChange}
-                  className={classes.inputField}
-                  InputLabelProps={{ classes: { root: classes.fontSize } }}
-                />
-                <Typography variant='headline' className={classes.errorMessage}>
-                  {this.state.dateErrorMessage}
-                </Typography>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Vendor</InputLabel>
-                  <Input
-                    value={vendor}
-                    onChange={this.inputHandler}
-                    inputProps={{
-                      name: 'vendor',
-                      required: 'required',
-                    }}
-                    className={classes.fontSize}
-                  />
-                </FormControl>
-                <FormControl className={classes.newDeviceFormField}>
-                  <InputLabel className={classes.fontSize}>Tax rate</InputLabel>
-                  <Input
-                    value={taxRate}
-                    onChange={this.inputHandler}
-                    type="number"
-                    inputProps={{
-                      name: 'taxRate',
-                      type: 'number',
-                      required: 'required',
-                      step: '0.01',
-                      placeholder: '12.34',
-                    }}
-                    className={classes.fontSize}
-                  />
-                </FormControl>
-                <Typography variant='headline' className={classes.errorMessage}>
-                  {this.state.errorInForm}
-                </Typography>
-              </Grid>
-              <FormControl>
-                <div className={classes.buttonsContainer}>
-                  <Button
-                    type='submit'
-                    variant="raised"
-                    color="primary"
-                    className={classes.button}
-                  >
-                SAVE DEVICE
-                  </Button>
-                  <Link to={'/devices'}>
-                    <Button
-                      variant="raised"
-                      color="primary"
-                      className={classes.button}
-                    >
-                    CANCEL
-                    </Button>
-                  </Link>
-                </div>
-              </FormControl>
-            </FormGroup>
-          </form>
-        </Paper>
+                          CANCEL
+                        </Button>
+                      </Link>
+                    </div>
+                  </FormControl>
+                </FormGroup>
+              </form>
+            </Paper>
+          </Grid>
+        </Grid>
       </div>
     );
   }
@@ -518,7 +520,7 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  ...authActions, 
+  ...authActions,
   ...officesActions,
   ...devicesActions,
   ...brandsActions,

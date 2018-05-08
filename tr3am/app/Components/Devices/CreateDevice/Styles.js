@@ -3,6 +3,9 @@ const Styles = theme => ({
     padding: 20,
     margin: 20,
   },
+  createDevicePaper: {
+    padding: 20,
+  },
   newDeviceFormField: {
     marginTop: 25,
   },
@@ -21,7 +24,7 @@ const Styles = theme => ({
     color: 'red',
   },
   wrapper: {
-    margin: theme.spacing.unit,
+    marginTop: theme.spacing.unit,
     position: 'relative',
   },
   button: {

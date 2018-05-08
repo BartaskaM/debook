@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import Grid from 'material-ui/Grid';
 import Styles from './Styles';
@@ -234,7 +234,7 @@ class DeviceList extends React.Component {
   }
 
   render() {
-    const { classes, fetchingDevices } = this.props;
+    const { classes, fetchingDevices, history } = this.props;
     return (
       <div>
         <Grid container spacing={8} className={classes.root}>
@@ -244,15 +244,14 @@ class DeviceList extends React.Component {
           <ReserveModal />
           <ReturnModal />
         </Grid>
-        <Link to={'/createdevice'}>
-          <Button
-            variant="raised"
-            color="primary"
-            className={classes.addNewButton}
-          >
-            ADD NEW
-          </Button>
-        </Link>
+        <Button
+          variant="raised"
+          color="primary"
+          className={classes.addNewButton}
+          onClick={() => history.push('/createDevice')}
+        >
+          ADD NEW
+        </Button>
       </div>
     );
   }
@@ -342,7 +341,9 @@ const mapStateToProps = state => {
     checkInLoading: state.devices.checkInLoading,
   };
 };
-export default withRouter(connect(mapStateToProps, {
-  ...devicesActions,
-  ...usersActions,
-})(withStyles(Styles)(DeviceList)));
+export default withRouter(
+  connect(mapStateToProps, {
+    ...devicesActions,
+    ...usersActions,
+  })(withStyles(Styles)(DeviceList))
+);
