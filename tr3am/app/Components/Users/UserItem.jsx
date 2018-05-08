@@ -4,7 +4,7 @@ import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import VerifiedUser from 'material-ui-icons/VerifiedUser';
 
 import { ListItem } from 'material-ui/List';
@@ -21,7 +21,13 @@ const UserItem = ({ classes, user, history }) => {
               <Grid item xs={2}>{user.firstName}</Grid>
               <Grid item xs={2}>{user.lastName}</Grid>
               <Grid item xs={3}>{user.email}</Grid>
-              <Grid item xs={2}>{user.office.city}</Grid>
+              <Grid item xs={2}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  history.push(`/offices/${user.office.id}`);
+                }}>
+                <Link to='#'>{user.office.city}</Link>
+              </Grid>
               <Grid item xs={2}>{user.slack || '-'}</Grid>
               <Grid item xs={1}>
                 {user.roles.includes('admin') && <VerifiedUser/>}

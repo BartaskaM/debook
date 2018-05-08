@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import List, { ListItem } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
@@ -21,8 +22,8 @@ const device = (props) => {
         {device.brand.name}, {device.model.name}
       </Typography>
       <Typography className={classes.deviceCardMainContent}>
-        Identification number: 
-        <span className={classes.mainTextColor}> 
+        Identification number:
+        <span className={classes.mainTextColor}>
           {device.identificationNum}
         </span>
       </Typography>
@@ -31,14 +32,16 @@ const device = (props) => {
       </Typography>
       <Typography className={classes.deviceCardMainContent} onClick={openOfficeInfo}>
         Location:
-        <span className={classes.mainTextColor}> {device.location.city} </span>
+        <span className={classes.mainTextColor}> <Link to='#'> {device.location.city}</Link> </span>
       </Typography>
-      {device.available ? 
+      {device.available ?
         <Typography className={classes.deviceCardMainContent}></Typography>
         :
         <Typography className={classes.deviceCardMainContent} onClick={openUserInfo}>
           Custody of:
-          <span className={classes.mainTextColor}> {`${user.firstName} ${user.lastName}`} </span>
+          <span className={classes.mainTextColor}>
+            <Link to='#'> {`${user.firstName} ${user.lastName}`}</Link>
+          </span>
         </Typography>
       }
     </List>
@@ -85,7 +88,7 @@ device.propTypes = {
     }),
   }).isRequired,
   openOfficeInfo: PropTypes.func.isRequired,
-  openUserInfo: PropTypes.func, 
+  openUserInfo: PropTypes.func,
 };
 
 export default withStyles(Styles)(device);
