@@ -12,6 +12,11 @@ export const Devices = [
   'user',
 ];
 
+export const DeviceDetails = [
+  'admin',
+  'user',
+];
+
 export const CreateDevice = [
   'admin',
 ];
