@@ -32,8 +32,9 @@ class CreateDevice extends React.Component {
     this.state = {
       deviceActive: 1,
       brandId: '',
-      model: '',
-      modelForm: '',
+      modelId: '',
+      //modelForm: '',
+      modelName: '',
       newModel: false,
       purchaseDate: new Date(),
       serialNumber: '',
@@ -80,16 +81,16 @@ class CreateDevice extends React.Component {
   }
 
   createNewDevice() {
-    let modelId = this.state.model;
-    if (this.state.newModel) {
-      modelId = -1;
-    }
+    // let modelId = this.state.modelId;
+    // if (this.state.newModel) {
+    //   modelId = -1;
+    // }
     const newDevice = {
       active: this.state.deviceActive,
       brandId: this.state.brandId,
       identificationNum: this.state.identificationNum,
       image: this.state.imageURL,
-      modelId: modelId,
+      modelId: this.state.modelId,
       officeId: this.state.officeId,
       purchased: this.state.purchaseDate,
       serialNum: this.state.serialNumber,
@@ -98,7 +99,7 @@ class CreateDevice extends React.Component {
       vendor: this.state.vendor,
       available: true,
       newModel: this.state.newModel,
-      modelName: this.state.model,
+      modelName: this.state.modelName,
     };
     this.props.createDevice(newDevice, this.props.history);
   }
@@ -125,14 +126,12 @@ class CreateDevice extends React.Component {
 
   inputHandlerForModel(e) {
     if (e.target.value === -1) {
-      this.setState({ ['model']: '' });
       this.setState({ [e.target.name]: e.target.value });
       this.setState({ ['newModel']: true });
     }
     else {
       this.setState({ [e.target.name]: e.target.value });
       this.setState({ ['newModel']: false });
-      this.setState({ ['model']: e.target.value });
     }
   }
 
@@ -142,7 +141,7 @@ class CreateDevice extends React.Component {
       this.setState({ ['errorInForm']: 'Select device brand' });
       return false;
     }
-    if (this.state.model === ''){
+    if (this.state.modelId === ''){
       this.setState({ ['errorInForm']: 'Select device model' });
       return false;
     }
@@ -181,7 +180,7 @@ class CreateDevice extends React.Component {
     const {
       deviceActive,
       brandId,
-      model,
+      modelId,
       serialNumber,
       os,
       identificationNum,
@@ -189,7 +188,7 @@ class CreateDevice extends React.Component {
       vendor,
       taxRate,
       imageURL,
-      modelForm,
+      modelName,
       models,
       purchaseDate,
     } = this.state;
@@ -198,10 +197,10 @@ class CreateDevice extends React.Component {
       ? <div>
         <InputLabel className={classes.fontSize}>Other model</InputLabel>
         <Input
-          value={model}
+          value={modelName}
           onChange={this.inputHandler}
           inputProps={{
-            name: 'model',
+            name: 'modelName',
             required: 'required',
           }}
           className={classes.customField}
@@ -274,10 +273,10 @@ class CreateDevice extends React.Component {
                   <div  className={classes.wrapper}>
                     <Select
                       disabled={this.state.modelFieldDisabled}
-                      value={modelForm}
+                      value={modelId}
                       autoWidth={true}
                       inputProps={{
-                        name: 'modelForm',
+                        name: 'modelId',
                         required: 'required',
                       }}
                       onChange={this.inputHandlerForModel}
