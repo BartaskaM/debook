@@ -24,6 +24,7 @@ namespace tr3am.Data
         public async Task<EventsDto> GetAll(int page, int pageSize)
         {
             int count = await _dbContext.Events.CountAsync();
+
             List<EventDto> events = await _dbContext.Events
                 .AsNoTracking()
                 .Include(x => x.Office)

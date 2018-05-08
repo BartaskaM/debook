@@ -36,7 +36,13 @@ class BookingEvents extends React.Component {
   }
 
   handleRowsPerPageChange(e) {
-    this.props.fetchEvents(this.props.page, e.target.value);
+    const { page, count, fetchEvents } = this.props;
+    const rowsPerPage = e.target.value;
+    if(page * rowsPerPage >= count && rowsPerPage > 0){
+      fetchEvents(page - 1, rowsPerPage);
+    } else {
+      fetchEvents(page, rowsPerPage);
+    }
   }
 
   renderListHeader() {
