@@ -60,6 +60,7 @@ class DeviceDetails extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.interval);
+    this.props.resetDevice();
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -363,17 +364,14 @@ DeviceDetails.propTypes = {
     email: PropTypes.string.isRequired,
     office: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      country: PropTypes.string.isRequired,
       city: PropTypes.string.isRequired,
-      lat: PropTypes.number.isRequired,
-      lng: PropTypes.number.isRequired,
-      address: PropTypes.string.isRequired,
     }).isRequired,
     slack: PropTypes.string,
   }),
   removeReservationFromDevice: PropTypes.func.isRequired,
   fetchDevice: PropTypes.func.isRequired,
   fetchDeviceLoading: PropTypes.bool.isRequired,
+  resetDevice: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {

@@ -29,6 +29,7 @@ namespace tr3am.Data
                 .Include(x => x.Office)
                 .Include(x => x.User)
                 .Include(x => x.Device)
+                .OrderByDescending(x => x.CreatedOn)
                 .Select(x => Mapper.Map<Event, EventDto>(x))
                 .Skip(page*pageSize)
                 .Take(pageSize)

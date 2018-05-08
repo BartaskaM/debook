@@ -53,7 +53,8 @@ namespace tr3am.DataContracts
                         opt => opt.MapFrom(src => DateTime.SpecifyKind(src.From, DateTimeKind.Utc)))
                     .ForMember(dest => dest.To,
                         opt => opt.MapFrom(src => DateTime.SpecifyKind(src.To, DateTimeKind.Utc)));
-                cfg.CreateMap<Event, EventDto>();
+                cfg.CreateMap<Event, EventDto>().ForMember(dest => dest.CreatedOn,
+                    opt => opt.MapFrom(src => DateTime.SpecifyKind(src.CreatedOn, DateTimeKind.Utc)));
             });
         }
     }

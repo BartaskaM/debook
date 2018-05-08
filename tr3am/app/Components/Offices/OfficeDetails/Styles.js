@@ -50,7 +50,7 @@ const Styles = {
     display: 'inline-block',
     marginTop: 10,
     marginLeft: 20,
-    width: 250,
+    width: 205,
   },
   inlineBlock: {
     marginTop: 10,

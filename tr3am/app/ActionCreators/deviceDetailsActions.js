@@ -76,3 +76,7 @@ export const updateDeviceLocation = (device) => async dispatch => {
     toast.error(`❌ Failed to change device location: ${e.response.data.message}`);
   }
 };
+
+export const resetDevice = () => ({
+  type: deviceDetails.RESET_DEVICE,
+});

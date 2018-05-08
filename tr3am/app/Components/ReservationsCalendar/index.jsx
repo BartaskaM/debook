@@ -18,6 +18,7 @@ class ReservationsCalendar extends React.Component {
     return <Calendar value={this.props.currentDate}
       className={classes.calendar}
       onChange={ newValue => this.props.setCurrentDate(newValue)}
+      locale="en"
       tileClassName={({ date }) => 
         reservations
           .filter(res => 

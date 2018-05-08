@@ -28,7 +28,7 @@ export default (state = defaultState, action) => {
     }
     case devices.BOOK_SUCCESS: {
       const { user, userBooking } = action.payload;
-      return {
+      return state.device ? {
         ...state,
         device: { 
           ...(state.device),
@@ -36,21 +36,21 @@ export default (state = defaultState, action) => {
           userBooking,
           available: false,
         },
-      };
+      } : state;
     }
     case devices.RESERVE_SUCCESS: {
       const { userReservation } = action.payload;
-      return {
+      return state.device ? {
         ...state,
         device: {
           ...(state.device),
           userReservation,
         },
-      };
+      } : state;
     }
     case devices.RETURN_DEVICE_SUCCESS: {
       const { office } = action.payload;
-      return {
+      return state.device ? {
         ...state,
         device: {
           ...(state.device),
@@ -59,20 +59,20 @@ export default (state = defaultState, action) => {
           userBooking: null,
           location: office,
         },
-      };
+      } : state;
     }
     case devices.CANCEL_RESERVATION_SUCCESS: {
-      return {
+      return state.device ? {
         ...state,
         device: {
           ...(state.device),
           userReservation: null,
         },
-      };
+      } : state;
     }
     case devices.CHECK_IN_SUCCESS: {
       const { userBooking, user } = action.payload;
-      return {
+      return state.device ? {
         ...state,
         device: {
           ...(state.device),
@@ -81,7 +81,7 @@ export default (state = defaultState, action) => {
           available: false,
           custody: user,
         },
-      };
+      } : state;
     }
     case deviceDetails.UPDATE_DEVICE_LOCATION_START: {
       return {
@@ -96,6 +96,12 @@ export default (state = defaultState, action) => {
           ...(state.device),
           location: action.payload.location,
         },
+      };
+    }
+    case deviceDetails.RESET_DEVICE: {
+      return {
+        ...state,
+        device: null,
       };
     }
     default: return state;
