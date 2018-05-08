@@ -68,6 +68,7 @@ class Filters extends React.Component{
           <FormControlLabel
             control={
               <Checkbox
+                color="primary"
                 checked={brandFilter.includes(brand.id) ? true : false}
                 value={brand.id.toString()}
               />
@@ -95,6 +96,7 @@ class Filters extends React.Component{
           <FormControlLabel
             control={
               <Checkbox
+                color="primary"
                 checked={officeFilter.includes(office.id) ? true : false}
               />
             }
@@ -130,6 +132,7 @@ class Filters extends React.Component{
             <FormControlLabel 
               control={
                 <Checkbox
+                  color="primary"
                   checked={showAvailable}
                 />
               }
@@ -142,6 +145,7 @@ class Filters extends React.Component{
             <FormControlLabel 
               control={
                 <Checkbox
+                  color="primary"
                   checked={showUnavailable}
                 />
               }
