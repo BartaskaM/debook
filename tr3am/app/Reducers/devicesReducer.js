@@ -375,7 +375,6 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         createDeviceLoading: false,
-        devices: [...state.devices, action.payload],
       };
     }
     case devices.CREATE_DEVICE_ERROR: {

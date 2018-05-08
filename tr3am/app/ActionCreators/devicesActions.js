@@ -204,8 +204,8 @@ export const createDevice = (device, history) => async (dispatch) => {
     device['id'] = response.data;
     dispatch({
       type: devices.CREATE_DEVICE_SUCCESS,
-      payload: device,
     });
+    dispatch(fetchDevices());
     toast.success('✅ Device created successfully');
     history.push(`/devices/${response.data}`);
   } catch (e) {

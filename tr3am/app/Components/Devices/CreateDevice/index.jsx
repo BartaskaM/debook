@@ -22,7 +22,7 @@ import { DatePicker } from 'material-ui-pickers';
 import ImageRegEx from 'Constants/ImageRegEx';
 
 import Styles from './Styles';
-import * as authActions from 'ActionCreators/authActions';
+// import * as authActions from 'ActionCreators/authActions';
 import * as officesActions from 'ActionCreators/officesActions';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as brandsActions from 'ActionCreators/brandsActions';
@@ -485,42 +485,42 @@ CreateDevice.propTypes = {
     name: PropTypes.string.isRequired,
     models: PropTypes.array,
   })).isRequired,
-  devices: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    brand: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-    }).isRequired,
-    model: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-    }).isRequired,
-    identificationNum: PropTypes.number.isRequired,
-    os: PropTypes.string.isRequired,
-    location: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      city: PropTypes.string.isRequired,
-    }).isRequired,
-    custody: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      firstName: PropTypes.string.isRequired,
-      lastName: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    }),
-  })).isRequired,
+  // devices: PropTypes.arrayOf(PropTypes.shape({
+  //   id: PropTypes.number.isRequired,
+  //   image: PropTypes.string.isRequired,
+  //   brand: PropTypes.shape({
+  //     id: PropTypes.number.isRequired,
+  //     name: PropTypes.string.isRequired,
+  //   }).isRequired,
+  //   model: PropTypes.shape({
+  //     id: PropTypes.number.isRequired,
+  //     name: PropTypes.string.isRequired,
+  //   }).isRequired,
+  //   identificationNum: PropTypes.number.isRequired,
+  //   os: PropTypes.string.isRequired,
+  //   location: PropTypes.shape({
+  //     id: PropTypes.number.isRequired,
+  //     city: PropTypes.string.isRequired,
+  //   }).isRequired,
+  //   custody: PropTypes.shape({
+  //     id: PropTypes.number.isRequired,
+  //     firstName: PropTypes.string.isRequired,
+  //     lastName: PropTypes.string.isRequired,
+  //     email: PropTypes.string.isRequired,
+  //   }),
+  // })).isRequired,
   createDevice: PropTypes.func.isRequired,
   fetchBrands: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   offices: state.offices.offices,
-  devices: state.devices.devices,
+  //devices: state.devices.devices,
   brands: state.brands.brands,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  ...authActions,
+  // ...authActions,
   ...officesActions,
   ...devicesActions,
   ...brandsActions,
