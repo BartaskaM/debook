@@ -2,7 +2,9 @@ import { brands } from 'Constants/ActionTypes';
 
 const defaultState = {
   brands: [],
-
+  createBrandLoading: false,
+  createBrandErrorMessage: null,
+  showCreateBrandModal: false,
   fetchBrandsLoading: false,
 };
 
@@ -20,6 +22,33 @@ export default (state = defaultState, action) => {
         fetchBrandsLoading: false,
         brands: action.payload,
       };
+    }
+    case brands.CREATE_BRAND_START: {
+      return {
+        ...state,
+        createBrandLoading: true,
+        createBrandErrorMessage: null,
+      };
+    }
+    case brands.CREATE_BRAND_SUCCESS: {
+      return {
+        ...state,
+        createBrandsLoading: false,
+        brands: [...state.brands, action.payload],
+      };
+    }
+    case brands.CREATE_BRAND_ERROR: {
+      return {
+        ...state,
+        createBrandLoading: false,
+        createBrandErrorMessage: action.payload,
+      };
+    }
+    case brands.SHOW_CREATE_BRAND_MODAL: {
+      return { ...state, showCreateBrandModal: true };
+    }
+    case brands.HIDE_CREATE_BRAND_MODAL: {
+      return { ...state, showCreateBrandModal: false };
     }
     default: return state;
   }

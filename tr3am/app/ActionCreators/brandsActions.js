@@ -18,3 +18,39 @@ export const fetchBrands = () => async dispatch => {
     toast.error('❌ Failed to fetch brands');
   }
 };
+
+export const createBrand = (brand) => async (dispatch) => {
+  dispatch({ 
+    type: brands.CREATE_BRAND_START,
+  });
+  
+  try {
+    const response = await api.post('/brands', brand);
+    brand['id'] = response.data;
+    console.log('Sukruta');
+    dispatch({
+      type: brands.CREATE_BRANDS_SUCCESS,
+      payload: brand,
+    });
+    console.log('Išdispatchinta');
+    toast.success('✅ Brand created successfully');
+  } catch (e) {
+    console.log('Errrrorroorooror');
+    dispatch({ 
+      type: brands.CREATE_BRAND_ERROR, 
+      payload: e.response.data.message, 
+    });
+    toast.error(`❌ Failed to create brand: ${e.response.data.message}`);
+  }
+};
+
+export const showCreateBrandModal = () => dispatch => {
+  dispatch ({ 
+    type: brands.SHOW_CREATE_BRAND_MODAL, 
+    payload: { showCreateBrandModal: true }, 
+  });
+};
+
+export const hideCreateBrandModal = () => {
+  return { type: brands.HIDE_CREATE_BRAND_MODAL };
+};
