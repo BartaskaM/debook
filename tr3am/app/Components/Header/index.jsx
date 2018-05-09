@@ -11,7 +11,7 @@ import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import { withStyles } from 'material-ui/styles';
 import Menu, { MenuItem } from 'material-ui/Menu';
-import { AccountCircle } from 'material-ui-icons';
+import Avatar from 'material-ui/Avatar';
 
 import Styles from './Styles';
 import PathsWithLists from 'Constants/PathsWithLists';
@@ -96,16 +96,17 @@ class Header extends React.Component {
   }
 
   renderProfileMenu() {
-    const { classes } = this.props;
+    const { classes, user } = this.props;
     return  this.props.user ? (
       <span>
         <IconButton
           aria-owns={this.state.userMenuOpen ? 'menu-appbar' : null}
           aria-haspopup="true"
           onClick={this.handleMenu}
-          color="inherit"
         >
-          <AccountCircle className={classes.menuButton} />
+          <Avatar className={classes.avatarButton} >
+            {user.firstName[0] + user.lastName[0]}
+          </Avatar>
         </IconButton>
         <Menu
           id="menu-appbar"

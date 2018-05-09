@@ -6,8 +6,9 @@ const Styles = theme => ({
   appBar: {
     backgroundColor: 'white',
   },
-  menuButton: {
-    fontSize: 32,
+  avatarButton: {
+    fontSize: 21,
+    backgroundColor: theme.palette.primary.main,
   },
   leftMargin: {
     marginLeft: 50,
