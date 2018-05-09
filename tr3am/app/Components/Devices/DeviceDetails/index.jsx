@@ -50,10 +50,10 @@ class DeviceDetails extends React.Component {
   }
 
   componentDidMount() {
-    const { match, fetchDevice, user } = this.props;
+    const { match, fetchDeviceWithId, user, history } = this.props;
     const id = parseInt(match.params.id);
     if (id) {
-      fetchDevice(id, user.id);
+      fetchDeviceWithId(id, user.id, history);
       this.interval = setInterval(this.getBookButtonValue, 10000);
     }
   }
@@ -369,7 +369,7 @@ DeviceDetails.propTypes = {
     slack: PropTypes.string,
   }),
   removeReservationFromDevice: PropTypes.func.isRequired,
-  fetchDevice: PropTypes.func.isRequired,
+  fetchDeviceWithId: PropTypes.func.isRequired,
   fetchDeviceLoading: PropTypes.bool.isRequired,
   resetDevice: PropTypes.func.isRequired,
 };

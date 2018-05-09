@@ -135,7 +135,7 @@ class Header extends React.Component {
             className={classes.fontSize}
             onClick={() => {
               this.handleClose();
-              this.props.logOutUser();
+              this.props.logOutUser(history);
             }}
           >
             Logout

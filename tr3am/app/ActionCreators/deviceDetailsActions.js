@@ -17,7 +17,7 @@ export const changeDevice = (device) => {
   return { type: deviceDetails.SET_DEVICE_DETAILS, payload: device };
 };
 
-export const fetchDevice = (deviceId, userId) => async dispatch => {
+export const fetchDeviceWithId = (deviceId, userId, history) => async dispatch => {
   dispatch({type: deviceDetails.FETCH_DEVICE_START});
   try{
     const response = await api.get(`/devices/${deviceId}`);
@@ -52,7 +52,11 @@ export const fetchDevice = (deviceId, userId) => async dispatch => {
       },
     });
   } catch(e) {
-    toast.error('❌ Failed to fetch device');
+    const errorMessageSplit = e.toString().split(' ');
+    const errorCode = parseInt(errorMessageSplit[errorMessageSplit.length - 1]);
+    history.push(`/${errorCode}`);
+
+    toast.error('❌ Failed to fetch device details');
   }
 };
 

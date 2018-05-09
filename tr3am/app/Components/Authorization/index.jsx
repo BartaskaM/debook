@@ -18,7 +18,7 @@ const Authorization = ({ component: Component, allowedRoles, user, location }) =
         <Component /> :
         <Redirect
           to={{
-            pathname: '/error',
+            pathname: '/forbidden',
             state: { from: location },
           }}
         />
