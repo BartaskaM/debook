@@ -18,11 +18,13 @@ namespace tr3am.Controllers
     {
         private readonly IDevicesRepository _devicesRepository;
         private readonly IReservationsRepository _reservationsRepository;
+        private readonly IModelsRepository _modelsRepository;
 
-        public DevicesController(IDevicesRepository devicesRepository, IReservationsRepository reservationsRepository)
+        public DevicesController(IDevicesRepository devicesRepository, IReservationsRepository reservationsRepository, IModelsRepository modelsRepository)
         {
             _devicesRepository = devicesRepository;
             _reservationsRepository = reservationsRepository;
+            _modelsRepository = modelsRepository;
         }
 
         [HttpGet]
@@ -57,8 +59,8 @@ namespace tr3am.Controllers
             }
             try
             {
-                await _devicesRepository.Create(request);
-                return NoContent();
+                var itemId = await _devicesRepository.Create(request);
+                return CreatedAtAction(nameof(GetById), new { id = itemId }, itemId);
             }
             catch(InvalidOfficeException)
             {
@@ -73,6 +75,21 @@ namespace tr3am.Controllers
             catch (InvalidModelException)
             {
                 string errorText = String.Format("Model with ID: {0} doesn't exist", request.ModelId);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
+            catch (DuplicateDeviceSerialNumberException)
+            {
+                string errorText = String.Format("Device with Serial number: {0} already exist", request.SerialNum);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
+            catch (DuplicateModelException)
+            {
+                string errorText = String.Format("Model with name: {0} already exist", request.ModelName);
+                return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
+            }
+            catch (DuplicateDeviceIdentificationNumberException)
+            {
+                string errorText = String.Format("Device with identification number: {0} already exist", request.IdentificationNum);
                 return StatusCode(StatusCodes.Status409Conflict, new { Message = errorText });
             }
         }

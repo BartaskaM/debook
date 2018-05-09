@@ -29,7 +29,14 @@ const Styles = theme=>({
     paddingBottom: 55,
   },
   deviceItem: {
-    height: '100%',
+    height: '97%',
+  },
+  addNewButton: {
+    float: 'right',
+    height: 60,
+    width: 180,
+    fontSize: 20,
+    marginRight: 14,
   },
   noItems: {
     width: '100%',
@@ -37,6 +44,8 @@ const Styles = theme=>({
   },
   itemContainer: {
     width: '100%',
+  },
+  buttonsContainer: {
   },
 });
   

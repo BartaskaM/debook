@@ -17,6 +17,10 @@ export const DeviceDetails = [
   'user',
 ];
 
+export const CreateDevice = [
+  'admin',
+];
+
 export const Offices = [
   'admin',
 ];

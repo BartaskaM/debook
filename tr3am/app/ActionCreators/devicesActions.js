@@ -195,6 +195,27 @@ export const fetchDeviceReservations = (deviceId) => async dispatch =>{
   }
 };
 
+export const createDevice = (device, history) => async (dispatch) => {
+  dispatch({ 
+    type: devices.CREATE_DEVICE_START,
+  });
+  try {
+    const response = await api.post('/devices', device);
+    device['id'] = response.data;
+    dispatch({
+      type: devices.CREATE_DEVICE_SUCCESS,
+    });
+    dispatch(fetchDevices());
+    toast.success('✅ Device created successfully');
+    history.push(`/devices/${response.data}`);
+  } catch (e) {
+    dispatch({ 
+      type: devices.CREATE_DEVICE_ERROR, 
+    });
+    toast.error(`❌ Failed to create device: ${e.response.data.message}`);
+  }
+};
+
 export const fetchDevices = () => async dispatch =>{
   dispatch({ type: devices.FETCH_DEVICES_START });
   try{

@@ -3,11 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using tr3am.Controllers;
 using tr3am.Data.Entities;
 using tr3am.Data.Exceptions;
 using tr3am.DataContracts;
 using tr3am.DataContracts.DTO;
 using tr3am.DataContracts.Requests.Devices;
+using tr3am.DataContracts.Requests.Models;
 
 namespace tr3am.Data
 {
@@ -15,11 +17,13 @@ namespace tr3am.Data
     {
         private readonly AppDbContext _dbContext;
         private readonly IReservationsRepository _reservationsRepository;
+        private readonly IModelsRepository _modelsRepository;
 
-        public DevicesRepository(AppDbContext dbContext, IReservationsRepository reservationsRepository)
+        public DevicesRepository(AppDbContext dbContext, IReservationsRepository reservationsRepository, IModelsRepository modelsRepository)
         {
             _dbContext = dbContext;
             _reservationsRepository = reservationsRepository;
+            _modelsRepository = modelsRepository;
         }
 
         public async Task<IEnumerable<ShortDeviceDto>> GetAll(int userId)
@@ -67,9 +71,21 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.BrandId);
 
+            if (request.NewModel == true)
+            {
+                ModelItemRequest modelItem = new ModelItemRequest()
+                {
+                    Name = request.ModelName,
+                    BrandId = request.BrandId,
+                };
+                request.ModelId = await _modelsRepository.Create(modelItem);
+            }
+
             var model = _dbContext.Models
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.ModelId);
+
+
 
             await Task.WhenAll(office, brand, model);
             if (office.Result == null)
@@ -101,7 +117,14 @@ namespace tr3am.Data
                 TaxRate = request.TaxRate,
                 OfficeId = office.Result.Id,
             };
-
+            if (await DeviceWithSerialNumberExists(newItem))
+            {
+                throw new DuplicateDeviceSerialNumberException();
+            }
+            if (await DeviceWithIdentificationNumberExists(newItem))
+            {
+                throw new DuplicateDeviceIdentificationNumberException();
+            }
             _dbContext.Add(newItem);
             await _dbContext.SaveChangesAsync();
 
@@ -169,6 +192,31 @@ namespace tr3am.Data
             }
 
             item.Active = false;
+        }
+
+        private async Task<bool> DeviceWithSerialNumberExists(Device device)
+        {
+            var item = await _dbContext.Devices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x =>
+                x.SerialNum == device.SerialNum);
+
+            return item != null ? true : false;
+        }
+
+        private async Task<bool> DeviceWithIdentificationNumberExists(Device device)
+        {
+            var item = await _dbContext.Devices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x =>
+                x.IdentificationNum == device.IdentificationNum);
+
+            if (item != null)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

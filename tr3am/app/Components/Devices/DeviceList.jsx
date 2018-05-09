@@ -61,11 +61,11 @@ class DeviceList extends React.Component {
 
   static getDerivedStateFromProps(nextProps) {
     const { devices, removeReservationFromDevice } = nextProps;
-    return { 
+    return {
       bookButtonValues: DeviceList.formBookButtonValuesArray(
         devices,
         removeReservationFromDevice
-      ), 
+      ),
     };
   }
 
@@ -112,32 +112,36 @@ class DeviceList extends React.Component {
     return device.custody ?
       showReturnModal(device.id) :
       deviceUtils.canCheckIn(device.userReservation, () => removeReservationFromDevice(device.id)) ?
-        checkIn({
-          id: device.userReservation.id,
-          userId: user.id,
-          deviceId: device.id,
-          from: device.userReservation.from,
-          to: device.userReservation.to,
-          status: reservationStatus.checkedIn,
-        }, {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-        }) :
-        this.openBookDialog(device.id);
+        checkIn(
+          {
+            id: device.userReservation.id,
+            userId: user.id,
+            deviceId: device.id,
+            from: device.userReservation.from,
+            to: device.userReservation.to,
+            status: reservationStatus.checkedIn,
+          },
+          {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+          }
+        ) : this.openBookDialog(device.id);
   }
 
-  openOfficeInfo(officeId){return (e) =>{
-    e.stopPropagation();
-    this.props.history.push(`/offices/${officeId}`);
-  };
+  openOfficeInfo(officeId) {
+    return (e) => {
+      e.stopPropagation();
+      this.props.history.push(`/offices/${officeId}`);
+    };
   }
 
-  openUserInfo(userId){return (e) =>{
-    e.stopPropagation();
-    this.props.history.push(`/users/${userId}`);
-  };
+  openUserInfo(userId) {
+    return (e) => {
+      e.stopPropagation();
+      this.props.history.push(`/users/${userId}`);
+    };
   }
 
   renderDevices() {
@@ -150,7 +154,7 @@ class DeviceList extends React.Component {
     const { bookButtonValues } = this.state;
     const filteredDevices = this.filterDevices();
     return filteredDevices.length === 0 ?
-      fetchingDevices ? null : 
+      fetchingDevices ? null :
         <div className={classes.noItems}>
           <Typography align="center" variant="display3">No devices found</Typography>
         </div> :
@@ -168,9 +172,9 @@ class DeviceList extends React.Component {
                     key={device.id}
                     device={device}
                     openOfficeInfo={this.openOfficeInfo(device.location.id)}
-                    openUserInfo={device.custody ? 
-                      this.openUserInfo(device.custody.id) : undefined}/>
-                  { checkInLoading === device.id && <LinearProgress/> }
+                    openUserInfo={device.custody ?
+                      this.openUserInfo(device.custody.id) : undefined} />
+                  {checkInLoading === device.id && <LinearProgress />}
                 </div>
               </ListItem>
               <div className={classes.buttonsContainer}>
@@ -200,8 +204,8 @@ class DeviceList extends React.Component {
                       () => this.openReserveDialog(device.id)}>
                   {
                     device.userReservation ?
-                      <Description className={classes.leftIcon}/> :
-                      <Clock className={classes.leftIcon}/>
+                      <Description className={classes.leftIcon} /> :
+                      <Clock className={classes.leftIcon} />
                   }
                   {device.userReservation ? 'Reservation details' : 'Reserve'}
                 </Button>
@@ -225,21 +229,41 @@ class DeviceList extends React.Component {
     this.props.showReservationDetails(from, to, deviceId);
   }
 
-  openReturnModal(deviceId){
+  openReturnModal(deviceId) {
     this.props.showReturnModal(deviceId);
   }
 
   render() {
     const { classes, fetchingDevices } = this.props;
     return (
-      <Grid container spacing={8} className={classes.root}>
-        { fetchingDevices && <Grid item xs={12}><LinearProgress/></Grid> }
-        { this.renderDevices() }
-        <BookModal />
-        <ReserveModal />
-        <ReturnModal />
-      </Grid>
+      <div>
+        <Grid container spacing={8} className={classes.root}>
+          {fetchingDevices && <Grid item xs={12}><LinearProgress /></Grid>}
+          {this.renderDevices()}
+          <BookModal />
+          <ReserveModal />
+          <ReturnModal />
+        </Grid>
+        {this.renderButton()}
+      </div>
     );
+  }
+
+  renderButton() {
+    const { classes, userRoles, history } = this.props;
+
+    return userRoles.includes('admin') ? (
+      <span>
+        <Button
+          variant="raised"
+          color="primary"
+          className={classes.addNewButton}
+          onClick={() => history.push('/createDevice')}
+        >
+          ADD NEW
+        </Button>
+      </span>
+    ) : '';
   }
 }
 
@@ -309,6 +333,7 @@ DeviceList.propTypes = {
   checkIn: PropTypes.func.isRequired,
   checkInLoading: PropTypes.number,
   removeReservationFromDevice: PropTypes.func.isRequired,
+  userRoles: PropTypes.arrayOf(PropTypes.string),
 };
 const mapStateToProps = state => {
   return {
@@ -321,9 +346,12 @@ const mapStateToProps = state => {
     user: state.auth.user,
     fetchingDevices: state.devices.fetchingDevices,
     checkInLoading: state.devices.checkInLoading,
+    userRoles: state.auth.user.roles,
   };
 };
-export default withRouter(connect(mapStateToProps, {
-  ...devicesActions,
-  ...usersActions,
-})(withStyles(Styles)(DeviceList)));
+export default withRouter(
+  connect(mapStateToProps, {
+    ...devicesActions,
+    ...usersActions,
+  })(withStyles(Styles)(DeviceList))
+);

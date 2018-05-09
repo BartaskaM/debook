@@ -30,6 +30,8 @@ const defaultState = {
   cancelReservationErrorMessage: null,
   checkInLoading: null,
   checkInErrorMessage: null,
+  createDeviceLoading: false,
+  createDeviceError: false,
   brands: [],
   fetchBrandsLoading: false,
 };
@@ -361,6 +363,28 @@ export default (state = defaultState, action) => {
         }),
       };
     }
+
+    case devices.CREATE_DEVICE_START: {
+      return {
+        ...state,
+        createDeviceLoading: true,
+        createDeviceError: false,
+      };
+    }
+    case devices.CREATE_DEVICE_SUCCESS: {
+      return {
+        ...state,
+        createDeviceLoading: false,
+      };
+    }
+    case devices.CREATE_DEVICE_ERROR: {
+      return {
+        ...state,
+        createDeviceLoading: false,
+        createDeviceError: true,
+      };
+    }
+
     case deviceDetails.FETCH_DEVICE_SUCCESS: {
       return {...state, selectedDeviceReservations: action.payload.reservations};
     }

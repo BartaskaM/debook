@@ -20,6 +20,7 @@ import BookingEvents from 'Components/BookingEvents';
 import Error403 from 'Components/Errors/403';
 import Error404 from 'Components/Errors/404';
 import BrandList from 'Components/Brands';
+import CreateDevice from 'Components/Devices/CreateDevice';
 import * as auth from 'ActionCreators/authActions';
 import Styles from './Styles';
 
@@ -86,7 +87,9 @@ class MainContainer extends React.Component {
           <Route path='/devices/:id' render={() =>
             <Auth component={DeviceDetails} allowedRoles={RouteRoles.DeviceDetails} />
           } />
-
+          <Route exact path='/createDevice' render={() =>
+            <Auth component={CreateDevice} allowedRoles={RouteRoles.CreateDevice} />
+          } />
           <Route exact path='/offices' render={() =>
             <Auth component={() => (
               <div>

@@ -28,7 +28,7 @@ const Authorization = ({ component: Component, allowedRoles, user, location }) =
 
 Authorization.propTypes = {
   location: PropTypes.object.isRequired,
-  allowedRoles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  allowedRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
   component: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.element,
