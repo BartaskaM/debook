@@ -25,7 +25,7 @@ namespace tr3am.DataContracts.Requests.Devices
         public int OfficeId { get; set; }
         [Required]
         public bool Available { get; set; }
-        [Required]
-        public bool Active { get; set; }
+        public bool? NewModel { get; set; }
+        public string ModelName { get; set; }
     }
 }

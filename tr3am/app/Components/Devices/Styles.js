@@ -37,6 +37,7 @@ const Styles = theme=>({
     width: 180,
     fontSize: 20,
     marginRight: 14,
+    marginBottom: 14,
   },
   noItems: {
     width: '100%',
