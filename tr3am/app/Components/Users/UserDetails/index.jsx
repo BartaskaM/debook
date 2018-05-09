@@ -63,7 +63,7 @@ class UserDetails extends React.Component {
   }
 
   componentDidMount() {
-    const { setUserDetails, match, fetchUser, currentUser } = this.props;
+    const { setUserDetails, match, fetchUserWithId, currentUser, history } = this.props;
     const id = match.params.id;
     if (id) {
       // Is in /user/:id
@@ -71,7 +71,7 @@ class UserDetails extends React.Component {
       {
         setUserDetails(currentUser);
       }
-      fetchUser(id);
+      fetchUserWithId(id, history);
     }
     else {
       // Is in /profile
@@ -590,7 +590,7 @@ UserDetails.propTypes = {
     roles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   setUserDetails: PropTypes.func.isRequired,
-  fetchUser: PropTypes.func.isRequired,
+  fetchUserWithId: PropTypes.func.isRequired,
   fetchingUser: PropTypes.bool.isRequired,
   offices: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,

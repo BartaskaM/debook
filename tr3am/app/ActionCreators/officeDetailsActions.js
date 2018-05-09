@@ -2,7 +2,7 @@ import { officeDetails } from 'Constants/ActionTypes';
 import { toast } from 'react-toastify';
 import api from 'api';
 
-export const fetchOfficeWithId = (officeId) => async (dispatch) => {
+export const fetchOfficeWithId = (officeId, history) => async (dispatch) => {
   dispatch({
     type: officeDetails.FETCH_OFFICE_START,
   });
@@ -14,6 +14,10 @@ export const fetchOfficeWithId = (officeId) => async (dispatch) => {
       payload: response.data,
     });
   } catch (e) {
+    const errorMessageSplit = e.toString().split(' ');
+    const errorCode = parseInt(errorMessageSplit[errorMessageSplit.length - 1]);
+    history.push(`/${errorCode}`);
+    
     toast.error('❌ Failed to fetch office details');
   }
 };

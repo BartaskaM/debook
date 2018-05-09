@@ -2,7 +2,7 @@ import api from 'api';
 import { toast } from 'react-toastify';
 import { userDetails, auth } from 'Constants/ActionTypes';
 
-export const fetchUser = (userId) => async dispatch => {
+export const fetchUserWithId = (userId, history) => async dispatch => {
   dispatch({ type: userDetails.FETCH_USER_START });
   try{
     const response = await api.get(`/users/${userId}`);
@@ -11,6 +11,11 @@ export const fetchUser = (userId) => async dispatch => {
       payload: response.data,
     });
   } catch (e) {
+    const errorMessageSplit = e.toString().split(' ');
+    const errorCode = parseInt(errorMessageSplit[errorMessageSplit.length - 1]);
+
+    history.push(`/${errorCode}`);
+
     toast.error('❌ Failed to fetch user details');
   }
 };
