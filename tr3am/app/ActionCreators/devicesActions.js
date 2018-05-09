@@ -211,7 +211,6 @@ export const createDevice = (device, history) => async (dispatch) => {
   } catch (e) {
     dispatch({ 
       type: devices.CREATE_DEVICE_ERROR, 
-      payload: e.response.data.message, 
     });
     toast.error(`❌ Failed to create device: ${e.response.data.message}`);
   }

@@ -31,7 +31,7 @@ const defaultState = {
   checkInLoading: null,
   checkInErrorMessage: null,
   createDeviceLoading: false,
-  createDeviceErrorMessage: null,
+  createDeviceError: false,
   brands: [],
   fetchBrandsLoading: false,
 };
@@ -368,7 +368,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         createDeviceLoading: true,
-        createDeviceErrorMessage: null,
+        createDeviceError: false,
       };
     }
     case devices.CREATE_DEVICE_SUCCESS: {
@@ -381,7 +381,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         createDeviceLoading: false,
-        createDeviceErrorMessage: action.payload,
+        createDeviceError: true,
       };
     }
 
