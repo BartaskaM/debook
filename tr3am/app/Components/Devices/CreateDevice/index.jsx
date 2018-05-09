@@ -80,8 +80,8 @@ class CreateDevice extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps) {
-    const { device, fetchDeviceLoading, match } = nextProps;
-    if (device && !fetchDeviceLoading && match.params.id) {
+    const { device, fetchDeviceLoading, brands, match } = nextProps;
+    if (device && !fetchDeviceLoading && match.params.id && brands) {
       return {
         brandId: device.brand.id,
         identificationNum: device.identificationNum,
@@ -118,7 +118,23 @@ class CreateDevice extends React.Component {
   }
 
   updateDevice() {
-    // TODO: Implement
+    const updatedDevice = {
+      id: this.props.match.params.id,
+      brandId: this.state.brandId,
+      identificationNum: this.state.identificationNum,
+      image: this.state.imageURL,
+      modelId: this.state.modelId,
+      officeId: this.state.officeId,
+      purchased: this.state.purchaseDate,
+      serialNum: this.state.serialNumber,
+      os: this.state.os,
+      taxrate: this.state.taxRate,
+      vendor: this.state.vendor,
+      newModel: this.state.newModel,
+      modelName: this.state.modelName,
+    };
+
+    this.props.updateDevice(updatedDevice, this.props.history);
   }
 
   createNewDevice() {
@@ -555,6 +571,7 @@ CreateDevice.propTypes = {
     models: PropTypes.array,
   })).isRequired,
   createDevice: PropTypes.func.isRequired,
+  updateDevice: PropTypes.func.isRequired,
   fetchBrands: PropTypes.func.isRequired,
   fetchDeviceWithId: PropTypes.func.isRequired,
   fetchDeviceLoading: PropTypes.bool.isRequired,

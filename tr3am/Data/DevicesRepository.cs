@@ -176,7 +176,7 @@ namespace tr3am.Data
 
             item.BrandId = brand.Result.Id;
             item.ModelId = model.Result.Id;
-            item.Available = request.Available;
+            item.Available = true;
             item.Image = request.Image;
             item.IdentificationNum = request.IdentificationNum;
             item.SerialNum = request.SerialNum;
@@ -186,11 +186,11 @@ namespace tr3am.Data
             item.TaxRate = request.TaxRate;
             item.OfficeId = office.Result.Id;
 
-            if (await DeviceWithSerialNumberExists(item))
+            if (await DeviceWithSerialNumberExists(item, true))
             {
                 throw new DuplicateDeviceSerialNumberException();
             }
-            if (await DeviceWithIdentificationNumberExists(item))
+            if (await DeviceWithIdentificationNumberExists(item, true))
             {
                 throw new DuplicateDeviceIdentificationNumberException();
             }
@@ -210,29 +210,34 @@ namespace tr3am.Data
             item.Active = false;
         }
 
-        private async Task<bool> DeviceWithSerialNumberExists(Device device)
+        private async Task<bool> DeviceWithSerialNumberExists(Device device, bool checkSelf = false)
         {
             var item = await _dbContext.Devices
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
                 x.SerialNum == device.SerialNum);
 
+            if (checkSelf)
+            {
+                return item.Id == device.Id ? false : true;
+            }
+
             return item != null ? true : false;
         }
 
-        private async Task<bool> DeviceWithIdentificationNumberExists(Device device)
+        private async Task<bool> DeviceWithIdentificationNumberExists(Device device, bool checkSelf = false)
         {
             var item = await _dbContext.Devices
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
                 x.IdentificationNum == device.IdentificationNum);
 
-            if (item != null)
+            if (checkSelf)
             {
-                return true;
+                return item.Id == device.Id ? false : true; 
             }
 
-            return false;
+            return item != null ? true : false;
         }
     }
 }
