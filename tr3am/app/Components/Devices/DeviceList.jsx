@@ -234,7 +234,7 @@ class DeviceList extends React.Component {
   }
 
   render() {
-    const { classes, fetchingDevices, history } = this.props;
+    const { classes, fetchingDevices } = this.props;
     return (
       <div>
         <Grid container spacing={8} className={classes.root}>
@@ -244,6 +244,16 @@ class DeviceList extends React.Component {
           <ReserveModal />
           <ReturnModal />
         </Grid>
+        {this.renderButton()}
+      </div>
+    );
+  }
+
+  renderButton() {
+    const { classes, userRoles, history } = this.props;
+
+    return userRoles.includes('admin') ? (
+      <span>
         <Button
           variant="raised"
           color="primary"
@@ -252,8 +262,8 @@ class DeviceList extends React.Component {
         >
           ADD NEW
         </Button>
-      </div>
-    );
+      </span>
+    ) : '';
   }
 }
 
@@ -323,6 +333,7 @@ DeviceList.propTypes = {
   checkIn: PropTypes.func.isRequired,
   checkInLoading: PropTypes.number,
   removeReservationFromDevice: PropTypes.func.isRequired,
+  userRoles: PropTypes.arrayOf(PropTypes.string),
 };
 const mapStateToProps = state => {
   return {
@@ -335,6 +346,7 @@ const mapStateToProps = state => {
     user: state.auth.user,
     fetchingDevices: state.devices.fetchingDevices,
     checkInLoading: state.devices.checkInLoading,
+    userRoles: state.auth.user.roles,
   };
 };
 export default withRouter(

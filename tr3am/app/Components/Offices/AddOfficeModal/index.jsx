@@ -20,8 +20,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as officesActions from 'ActionCreators/officesActions';
 import Typography from 'material-ui/Typography';
-import CoordinatesRegEx from 'Constants/CoordinatesRegEx';
 import { LinearProgress } from 'material-ui/Progress';
+import  { r_LAT, r_LNG } from 'Utils/regExUtils';
 
 import Styles from './Styles';
 
@@ -79,8 +79,8 @@ class AddOfficeModal extends React.Component {
   }
 
   validateCoordinates() {
-    const regLAT = new RegExp(CoordinatesRegEx.r_LAT);
-    const regLNG = new RegExp(CoordinatesRegEx.r_LNG);
+    const regLAT = new RegExp(r_LAT);
+    const regLNG = new RegExp(r_LNG);
     if (regLAT.exec(this.state.LAT) && regLNG.exec(this.state.LNG)) {
       return true;
     } else {

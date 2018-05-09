@@ -22,6 +22,7 @@ const Styles = theme => ({
   },
   errorMessage: {
     color: 'red',
+    fontSize: 12,
   },
   wrapper: {
     marginTop: theme.spacing.unit,
@@ -30,11 +31,10 @@ const Styles = theme => ({
   button: {
     height: 50,
     fontSize: 14,
-    margin: '3%',
-    width: '20%',
+    margin: 15,
+    width: '30%',
   },
   buttonsContainer: {
-    marginBottom: 25,
     width: '100%',
     textAlign: 'center',
     display: 'inline-block',

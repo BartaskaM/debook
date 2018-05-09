@@ -1,40 +1,34 @@
 import React from 'react';
-// TODO: Seporate material-ui imports
-import {
-  Input,
-  Typography,
-  Button,
-  Select,
-  Paper,
-} from 'material-ui';
-import Grid from 'material-ui/grid';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import Input from 'material-ui/Input';
+import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
+import Select from 'material-ui/Select';
+import Paper from 'material-ui/Paper';
+import Grid from 'material-ui/grid';
 import { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import {
   FormControl,
   FormGroup,
+  FormHelperText,
 } from 'material-ui/Form';
-import { withRouter, Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
-import PropTypes from 'prop-types';
 import { DatePicker } from 'material-ui-pickers';
-import ImageRegEx from 'Constants/ImageRegEx';
-
 import Styles from './Styles';
-// import * as authActions from 'ActionCreators/authActions';
 import * as officesActions from 'ActionCreators/officesActions';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import * as brandsActions from 'ActionCreators/brandsActions';
+import  { r_url } from 'Utils/regExUtils';
 
 class CreateDevice extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      deviceActive: 1,
       brandId: '',
       modelId: '',
-      //modelForm: '',
       modelName: '',
       newModel: false,
       purchaseDate: new Date(),
@@ -45,9 +39,18 @@ class CreateDevice extends React.Component {
       vendor: '',
       taxRate: 0.00,
       imageURL: '',
-      errorInForm: '',
       modelFieldDisabled: true,
       models: [],
+      locationErrorMessage: '',
+      modelErrorMessage: '',
+      brandErrorMessage: '',
+      imageURLErrorMessage: '',
+      serialNumberErrorMessage: '',
+      identificationNumberErrorMessage: '',
+      osErrorMessage: '',
+      vendorErrorMessage: '',
+      taxRateErrorMessage: '',
+
     };
     this.inputHandler = this.inputHandler.bind(this);
     this.inputHandlerForModel = this.inputHandlerForModel.bind(this);
@@ -59,6 +62,8 @@ class CreateDevice extends React.Component {
     this.handleDateChange = this.handleDateChange.bind(this);
     this.validateImage = this.validateImage.bind(this);
     this.validateIdentificationNumber = this.validateIdentificationNumber.bind(this);
+    this.validateTaxRateNumber = this.validateTaxRateNumber.bind(this);
+    this.resetErrorMessages = this.resetErrorMessages.bind(this);
   }
 
   componentDidMount() {
@@ -70,24 +75,19 @@ class CreateDevice extends React.Component {
   }
 
   handleDateChange(date) {
-    this.setState({ ['purchaseDate']: date });
+    this.setState({ purchaseDate: date });
   }
 
   submitNewDeviceForm(e) {
     e.preventDefault();
-    if (this.areAllSelected() && this.validateImage() && this.validateIdentificationNumber()) {
-      this.setState({ ['errorInForm']: '' });
+    if (this.areAllSelected() && this.validateImage
+      && this.validateIdentificationNumber && this.validateTaxRateNumber) {
       this.createNewDevice();
     }
   }
 
   createNewDevice() {
-    // let modelId = this.state.modelId;
-    // if (this.state.newModel) {
-    //   modelId = -1;
-    // }
     const newDevice = {
-      active: this.state.deviceActive,
       brandId: this.state.brandId,
       identificationNum: this.state.identificationNum,
       image: this.state.imageURL,
@@ -112,8 +112,7 @@ class CreateDevice extends React.Component {
   inputHandlerForBrand(e) {
     this.setState({
       [e.target.name]: e.target.value,
-      // TODO: FIX ALL of the [''] where it is string
-      ['modelFieldDisabled']: false,
+      modelFieldDisabled: false,
     });
     this.loadModels(e.target.value);
   }
@@ -125,47 +124,81 @@ class CreateDevice extends React.Component {
         key = i;
     }
     if (!isNaN(key))
-      this.setState({ ['models']: this.props.brands[key].models });
+      this.setState({ models: this.props.brands[key].models });
   }
 
   inputHandlerForModel(e) {
     this.setState({
       [e.target.name]: e.target.value,
-      ['newModel']: e.target.value === -1 ? true : false,
+      newModel: e.target.value === -1 ? true : false,
+    });
+  }
+
+  resetErrorMessages()
+  {
+    this.setState({ 
+      locationErrorMessage: '',
+      modelErrorMessage: '',
+      brandErrorMessage: '' ,
+      imageURLErrorMessage: '',
+      serialNumberErrorMessage: '',
+      identificationNumberErrorMessage: '',
+      osErrorMessage: '' ,
+      vendorErrorMessage: '',
+      taxRateErrorMessage: '',
     });
   }
 
   areAllSelected() {
+    let allSelected = true;
+    this.resetErrorMessages();
     if (this.state.brandId === '') {
-      this.setState({ ['errorInForm']: 'Select device brand' });
-      return false;
+      this.setState({ brandErrorMessage: 'Select brand' });
+      allSelected = false;
     }
     if (this.state.modelId === '') {
-      this.setState({ ['errorInForm']: 'Select device model' });
-      return false;
+      this.setState({ modelErrorMessage: 'Select model' });
+      allSelected = false;
     }
     if (this.state.officeId === '') {
-      this.setState({ ['errorInForm']: 'Select location' });
-      return false;
+      this.setState({ locationErrorMessage: 'Select location' });
+      allSelected = false;
     }
-    return true;
+    return allSelected;
   }
 
   validateImage() {
-    const regImage = new RegExp(ImageRegEx.r_image);
+    const regImage = new RegExp(r_url);
     if (regImage.exec(this.state.imageURL)) {
+      this.setState({ imageURLErrorMessage: '' });
       return true;
     } else {
-      this.setState({ errorInForm: 'Wrong image URL. Make sure you entered correct URL.' });
+      this.setState({ imageURLErrorMessage: 
+        'Wrong image URL. Make sure you entered correct URL.' });
       return false;
     }
   }
 
   validateIdentificationNumber() {
     if (this.state.identificationNum > 0) {
+      this.setState({ identificationNumberErrorMessage:
+        '' });
       return true;
     } else {
-      this.setState({ errorInForm: 'Identification number must be greater than 0' });
+      this.setState({ identificationNumberErrorMessage:
+        'Identification number must be greater than 0' });
+      return false;
+    }
+  }
+
+  validateTaxRateNumber() {
+    if (this.state.taxRate >= 0 && this.state.taxRate <= 100) {
+      this.setState({ taxRateErrorMessage: '' });
+      return true;
+    } else {
+      console.log('Blogas');
+      this.setState({ taxRateErrorMessage:
+        'Tax rate must be number between 0 and 100' });
       return false;
     }
   }
@@ -175,9 +208,9 @@ class CreateDevice extends React.Component {
       classes,
       offices,
       brands,
+      history,
     } = this.props;
     const {
-      deviceActive,
       brandId,
       modelId,
       serialNumber,
@@ -190,6 +223,12 @@ class CreateDevice extends React.Component {
       modelName,
       models,
       purchaseDate,
+      brandErrorMessage,
+      modelErrorMessage,
+      locationErrorMessage,
+      imageURLErrorMessage,
+      identificationNumberErrorMessage,
+      taxRateErrorMessage,
     } = this.state;
 
     const newModelForm = this.state.newModel ?
@@ -198,6 +237,7 @@ class CreateDevice extends React.Component {
         <Input
           value={modelName}
           onChange={this.inputHandler}
+          error={brandErrorMessage.length > 0}
           inputProps={{
             name: 'modelName',
             required: 'required',
@@ -218,38 +258,16 @@ class CreateDevice extends React.Component {
                     Please fill in you details for new device in the form below
                   </Typography>
                   <FormControl className={classes.newDeviceFormField}>
-                    <InputLabel className={classes.fontSize}>Device status</InputLabel>
-                    <div className={classes.wrapper}>
-                      <Select
-                        value={deviceActive}
-                        autoWidth={true}
-                        inputProps={{
-                          name: 'deviceActive',
-                          required: 'required',
-                        }}
-                        onChange={this.inputHandler}
-                        className={classes.select}
-                      >
-                        <MenuItem
-                          value={1}
-                          className={classes.menuItemWidth}>Active</MenuItem>
-                        <MenuItem
-                          value={0}
-                          className={classes.menuItemWidth}>Non Active</MenuItem>
-                      </Select>
-                    </div>
-                  </FormControl>
-                  <FormControl className={classes.newDeviceFormField}>
                     <InputLabel className={classes.fontSize}>Brand</InputLabel>
                     <div className={classes.wrapper}>
                       <Select
                         value={brandId}
                         autoWidth={true}
+                        error={brandErrorMessage.length > 0}
                         inputProps={{
                           name: 'brandId',
                           required: 'required',
                         }}
-                        errortext={this.state.brandErrorMessage}
                         onChange={this.inputHandlerForBrand}
                         className={classes.select}
                       >
@@ -264,11 +282,11 @@ class CreateDevice extends React.Component {
                         ))}
                       </Select>
                     </div>
+                    <FormHelperText className={classes.errorMessage}>
+                      {this.state.brandErrorMessage}
+                    </FormHelperText>
                   </FormControl>
-                  {/* TODO: use <FormHelperText> for error texts */}
-                  <Typography variant='headline' className={classes.errorMessage}>
-                    {this.state.brandErrorMessage}
-                  </Typography>
+                  
                   <FormControl className={classes.newDeviceFormField}>
                     <InputLabel className={classes.fontSize}>Model</InputLabel>
                     <div className={classes.wrapper}>
@@ -276,6 +294,7 @@ class CreateDevice extends React.Component {
                         disabled={this.state.modelFieldDisabled}
                         value={modelId}
                         autoWidth={true}
+                        error={modelErrorMessage.length > 0}
                         inputProps={{
                           name: 'modelId',
                           required: 'required',
@@ -302,15 +321,17 @@ class CreateDevice extends React.Component {
                   </FormControl>
                   <FormControl>
                     {newModelForm}
-                  </FormControl>
-                  <Typography variant='headline' className={classes.errorMessage}>
-                    {this.state.modelErrorMessage}
-                  </Typography>
+                    <FormHelperText className={classes.errorMessage}>
+                      {modelErrorMessage}
+                    </FormHelperText>
+                  </FormControl> 
                   <FormControl className={classes.newDeviceFormField}>
                     <InputLabel className={classes.fontSize}>Image URL</InputLabel>
                     <Input
                       value={imageURL}
                       onChange={this.inputHandler}
+                      onBlur={this.validateImage}
+                      error={imageURLErrorMessage.length > 0}
                       inputProps={{
                         name: 'imageURL',
                         maxLength: '255',
@@ -318,10 +339,10 @@ class CreateDevice extends React.Component {
                       }}
                       className={classes.fontSize}
                     />
+                    <FormHelperText className={classes.errorMessage}>
+                      {imageURLErrorMessage}
+                    </FormHelperText>
                   </FormControl>
-                  <Typography variant='headline' className={classes.errorMessage}>
-                    {this.state.imageErrorMessage}
-                  </Typography>
                   <FormControl className={classes.newDeviceFormField}>
                     <InputLabel className={classes.fontSize}>Serial Number</InputLabel>
                     <Input
@@ -335,14 +356,16 @@ class CreateDevice extends React.Component {
                       className={classes.fontSize}
                     />
                   </FormControl>
-                  <Typography variant='headline' className={classes.errorMessage}>
+                  <FormHelperText className={classes.errorMessage}>
                     {this.state.serialErrorMessage}
-                  </Typography>
+                  </FormHelperText>
                   <FormControl className={classes.newDeviceFormField}>
-                    <InputLabel className={classes.fontSize}>Identification number</InputLabel>
+                    <InputLabel className={classes.fontSize}>Identification Number</InputLabel>
                     <Input
                       value={identificationNum}
                       onChange={this.inputHandler}
+                      onBlur={this.validateIdentificationNumber}
+                      error={identificationNumberErrorMessage.length > 0}
                       type='number'
                       inputProps={{
                         type: 'number',
@@ -354,6 +377,9 @@ class CreateDevice extends React.Component {
                       }}
                       className={classes.fontSize}
                     />
+                    <FormHelperText className={classes.errorMessage}>
+                      {identificationNumberErrorMessage}
+                    </FormHelperText>
                   </FormControl>
                   <FormControl className={classes.newDeviceFormField}>
                     <InputLabel className={classes.fontSize}>Operating system</InputLabel>
@@ -374,6 +400,7 @@ class CreateDevice extends React.Component {
                       <Select
                         value={officeId}
                         autoWidth={true}
+                        error={locationErrorMessage.length > 0}
                         inputProps={{
                           name: 'officeId',
                           required: 'required',
@@ -392,10 +419,10 @@ class CreateDevice extends React.Component {
                         ))}
                       </Select>
                     </div>
+                    <FormHelperText className={classes.errorMessage}>
+                      {locationErrorMessage}
+                    </FormHelperText>
                   </FormControl>
-                  <Typography variant='headline' className={classes.errorMessage}>
-                    {this.state.locationErrorMessage}
-                  </Typography>
                   <DatePicker
                     label="Device purchase date"
                     showTodayButton
@@ -406,14 +433,12 @@ class CreateDevice extends React.Component {
                     className={classes.inputField}
                     InputLabelProps={{ classes: { root: classes.fontSize } }}
                   />
-                  <Typography variant='headline' className={classes.errorMessage}>
-                    {this.state.dateErrorMessage}
-                  </Typography>
                   <FormControl className={classes.newDeviceFormField}>
                     <InputLabel className={classes.fontSize}>Vendor</InputLabel>
                     <Input
                       value={vendor}
                       onChange={this.inputHandler}
+                      error={taxRateErrorMessage.length > 0}
                       inputProps={{
                         name: 'vendor',
                         required: 'required',
@@ -426,6 +451,8 @@ class CreateDevice extends React.Component {
                     <Input
                       value={taxRate}
                       onChange={this.inputHandler}
+                      error={taxRateErrorMessage.length > 0}
+                      onBlur={this.validateTaxRateNumber}
                       type="number"
                       inputProps={{
                         name: 'taxRate',
@@ -436,29 +463,28 @@ class CreateDevice extends React.Component {
                       }}
                       className={classes.fontSize}
                     />
+                    <FormHelperText className={classes.errorMessage}>
+                      {taxRateErrorMessage}
+                    </FormHelperText>
                   </FormControl>
-                  <Typography variant='headline' className={classes.errorMessage}>
-                    {this.state.errorInForm}
-                  </Typography>
                   <FormControl>
                     <div className={classes.buttonsContainer}>
+                      <Button
+                        variant="raised"
+                        color="secondary"
+                        className={classes.button}
+                        onClick={() => history.push('/devices')}
+                      >
+                          CANCEL
+                      </Button>
                       <Button
                         type='submit'
                         variant="raised"
                         color="primary"
                         className={classes.button}
                       >
-                        SAVE DEVICE
+                        SUBMIT
                       </Button>
-                      <Link to={'/devices'}>
-                        <Button
-                          variant="raised"
-                          color="primary"
-                          className={classes.button}
-                        >
-                          CANCEL
-                        </Button>
-                      </Link>
                     </div>
                   </FormControl>
                 </FormGroup>
@@ -475,7 +501,6 @@ CreateDevice.propTypes = {
   history: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   fetchOffices: PropTypes.func.isRequired,
-
   offices: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     city: PropTypes.string.isRequired,
@@ -485,42 +510,16 @@ CreateDevice.propTypes = {
     name: PropTypes.string.isRequired,
     models: PropTypes.array,
   })).isRequired,
-  // devices: PropTypes.arrayOf(PropTypes.shape({
-  //   id: PropTypes.number.isRequired,
-  //   image: PropTypes.string.isRequired,
-  //   brand: PropTypes.shape({
-  //     id: PropTypes.number.isRequired,
-  //     name: PropTypes.string.isRequired,
-  //   }).isRequired,
-  //   model: PropTypes.shape({
-  //     id: PropTypes.number.isRequired,
-  //     name: PropTypes.string.isRequired,
-  //   }).isRequired,
-  //   identificationNum: PropTypes.number.isRequired,
-  //   os: PropTypes.string.isRequired,
-  //   location: PropTypes.shape({
-  //     id: PropTypes.number.isRequired,
-  //     city: PropTypes.string.isRequired,
-  //   }).isRequired,
-  //   custody: PropTypes.shape({
-  //     id: PropTypes.number.isRequired,
-  //     firstName: PropTypes.string.isRequired,
-  //     lastName: PropTypes.string.isRequired,
-  //     email: PropTypes.string.isRequired,
-  //   }),
-  // })).isRequired,
   createDevice: PropTypes.func.isRequired,
   fetchBrands: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   offices: state.offices.offices,
-  //devices: state.devices.devices,
   brands: state.brands.brands,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  // ...authActions,
   ...officesActions,
   ...devicesActions,
   ...brandsActions,
