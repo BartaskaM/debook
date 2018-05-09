@@ -45,7 +45,7 @@ export const fetchUserInfo = () => async dispatch => {
   }
 };
 
-export const logOutUser = () => async dispatch => {
+export const logOutUser = (history) => async dispatch => {
   dispatch({type: auth.LOG_OUT_USER_START});
 
   try{
@@ -54,6 +54,7 @@ export const logOutUser = () => async dispatch => {
     dispatch({
       type: auth.LOG_OUT_USER_SUCCESS,
     });
+    history.push('/');
   } catch(e) { 
     dispatch({
       type: auth.LOG_OUT_USER_ERROR,
