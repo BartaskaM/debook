@@ -27,15 +27,13 @@ export const createBrand = (brand) => async (dispatch) => {
   try {
     const response = await api.post('/brands', brand);
     brand['id'] = response.data;
-    console.log('Sukruta');
+    brand['models'] = [];
     dispatch({
-      type: brands.CREATE_BRANDS_SUCCESS,
+      type: brands.CREATE_BRAND_SUCCESS,
       payload: brand,
     });
-    console.log('Išdispatchinta');
     toast.success('✅ Brand created successfully');
   } catch (e) {
-    console.log('Errrrorroorooror');
     dispatch({ 
       type: brands.CREATE_BRAND_ERROR, 
       payload: e.response.data.message, 

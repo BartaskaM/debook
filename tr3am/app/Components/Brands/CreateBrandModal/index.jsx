@@ -47,8 +47,8 @@ class CreateBrandModal extends React.Component {
 
   createBrand() {
     const newBrand = {
-      Name: this.state.brandName,
-      Image: this.state.logoURL,
+      name: this.state.brandName,
+      image: this.state.logoURL,
     };
     this.props.createBrand(newBrand);
   }
@@ -157,11 +157,6 @@ CreateBrandModal.propTypes = {
   hideCreateBrandModal: PropTypes.func.isRequired,
   showCreateBrandDialog: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
-  brands: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-  })).isRequired,
   createBrandLoading: PropTypes.bool.isRequired,
 };
 

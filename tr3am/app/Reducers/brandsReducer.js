@@ -33,7 +33,8 @@ export default (state = defaultState, action) => {
     case brands.CREATE_BRAND_SUCCESS: {
       return {
         ...state,
-        createBrandsLoading: false,
+        createBrandLoading: false,
+        showCreateBrandModal: false,
         brands: [...state.brands, action.payload],
       };
     }
