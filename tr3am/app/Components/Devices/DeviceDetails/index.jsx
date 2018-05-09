@@ -100,7 +100,7 @@ class DeviceDetails extends React.Component {
     this.props.showReservationDetails(from, to, deviceId);
   }
 
-  openReturnModal(deviceId){
+  openReturnModal(deviceId) {
     this.props.showReturnModal(deviceId);
   }
 
@@ -125,19 +125,22 @@ class DeviceDetails extends React.Component {
         this.openBookDialog(device.id);
   }
 
-  openOfficeInfo(officeId){return () =>{
-    this.props.history.push(`/offices/${officeId}`);
-  };
+  openOfficeInfo(officeId) {
+    return () => {
+      this.props.history.push(`/offices/${officeId}`);
+    };
   }
 
-  openUserInfo(userId){return () =>{
-    this.props.history.push(`/users/${userId}`);
-  };
+  openUserInfo(userId) {
+    return () => {
+      this.props.history.push(`/users/${userId}`);
+    };
   }
 
   render() {
     const {
       classes,
+      user,
       history,
       device,
       fetchDeviceLoading,
@@ -169,9 +172,9 @@ class DeviceDetails extends React.Component {
                   </Grid>
                   <Grid container item xs={12} className={classes.custody} alignItems='center'>
                     <Grid item md={2} className={classes.label}>Custody of:</Grid>
-                    <Grid item md={9} 
+                    <Grid item md={9}
                       onClick={device.custody ? this.openUserInfo(device.custody.id) : undefined}>
-                      {device.custody ? 
+                      {device.custody ?
                         `${device.custody.firstName} ${device.custody.lastName}` : '-'}
                       {device.custody && <Tooltip
                         id="tooltip-bottom"
@@ -207,14 +210,14 @@ class DeviceDetails extends React.Component {
                     value={device.model.name} />
                   <Row
                     label="Location"
-                    value={device.location.city} 
-                    onClick={this.openOfficeInfo(device.location.id)}/>
+                    value={device.location.city}
+                    onClick={this.openOfficeInfo(device.location.id)} />
                   <Row
                     label="Purchased on:"
                     value={
                       `${device.purchased.toLocaleDateString()}, 
                       ${device.purchased.toLocaleTimeString([],
-        {hour: '2-digit', minute: '2-digit'})}`
+        { hour: '2-digit', minute: '2-digit' })}`
                     } />
                   <Row
                     label="Vendor"
@@ -248,9 +251,9 @@ class DeviceDetails extends React.Component {
                 }
                 {bookButtonValue}
               </Button>
-              <Button 
-                variant="raised" 
-                size="large" 
+              <Button
+                variant="raised"
+                size="large"
                 className={classes.button}
                 onClick={
                   device.userReservation ?
@@ -258,8 +261,8 @@ class DeviceDetails extends React.Component {
                     () => this.openReserveDialog(device.id)}>
                 {
                   device.userReservation ?
-                    <Description className={classes.leftIcon}/> :
-                    <Clock className={classes.leftIcon}/>
+                    <Description className={classes.leftIcon} /> :
+                    <Clock className={classes.leftIcon} />
                 }
                 {device.userReservation ? 'Reservation details' : 'Reserve'}
               </Button>
@@ -271,21 +274,40 @@ class DeviceDetails extends React.Component {
                 onClick={this.openLocationDialog}>
                 CHANGE LOCATION
               </Button>
+              <Divider className={classes.adminButtonDivider} />
+              {user.roles.includes('admin') &&
+                <div>
+                  <Button
+                    variant="raised"
+                    size="large"
+                    className={classes.editButton}
+                    onClick={() => console.log('EDIT PRESSED')}>
+                    EDIT
+                  </Button>
+                  <Button
+                    variant="raised"
+                    size="large"
+                    className={classes.deleteButton}
+                    onClick={() => console.log('DELETE PRESSED')}>
+                    DELETE
+                  </Button>
+                </div>
+              }
               <Paper className={classes.reservationsRoot}>
                 <Grid container>
                   <Grid item xs={12}>
-                    <ReservationsCalendar styles={classes.calendar}/>
+                    <ReservationsCalendar styles={classes.calendar} />
                   </Grid>
                 </Grid>
-                <ReservationsTable/>
+                <ReservationsTable />
               </Paper>
             </Grid>
           </Grid>
-          <BookModal/>
-          <ReserveModal/>
-          <ReturnModal/>
+          <BookModal />
+          <ReserveModal />
+          <ReturnModal />
         </div>
-        : <LinearProgress/>
+        : <LinearProgress />
     );
   }
   openLocationDialog() {
@@ -384,7 +406,7 @@ const mapStateToProps = state => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, {...deviceDetailsActions, ...devicesActions})(
+  connect(mapStateToProps, { ...deviceDetailsActions, ...devicesActions })(
     withStyles(styles)(DeviceDetails)
   )
 );
