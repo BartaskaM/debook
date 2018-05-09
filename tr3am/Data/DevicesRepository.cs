@@ -85,8 +85,6 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.ModelId);
 
-
-
             await Task.WhenAll(office, brand, model);
             if (office.Result == null)
             {
@@ -109,7 +107,7 @@ namespace tr3am.Data
                 Active = true,
                 Image = request.Image,
                 UserId = null,
-                IdentificationNum = request.IdentificationNum.Value,
+                IdentificationNum = request.IdentificationNum,
                 SerialNum = request.SerialNum,
                 OS = request.OS,
                 Purchased = request.Purchased,
@@ -148,6 +146,16 @@ namespace tr3am.Data
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.BrandId);
 
+            if (request.NewModel == true)
+            {
+                ModelItemRequest modelItem = new ModelItemRequest()
+                {
+                    Name = request.ModelName,
+                    BrandId = request.BrandId,
+                };
+                request.ModelId = await _modelsRepository.Create(modelItem);
+            }
+
             var model = _dbContext.Models
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.ModelId);
@@ -169,7 +177,6 @@ namespace tr3am.Data
             item.BrandId = brand.Result.Id;
             item.ModelId = model.Result.Id;
             item.Available = request.Available;
-            item.Active = request.Active;
             item.Image = request.Image;
             item.IdentificationNum = request.IdentificationNum;
             item.SerialNum = request.SerialNum;
@@ -178,6 +185,15 @@ namespace tr3am.Data
             item.Vendor = request.Vendor;
             item.TaxRate = request.TaxRate;
             item.OfficeId = office.Result.Id;
+
+            if (await DeviceWithSerialNumberExists(item))
+            {
+                throw new DuplicateDeviceSerialNumberException();
+            }
+            if (await DeviceWithIdentificationNumberExists(item))
+            {
+                throw new DuplicateDeviceIdentificationNumberException();
+            }
 
             await _dbContext.SaveChangesAsync();
         }

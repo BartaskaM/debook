@@ -281,9 +281,10 @@ class DeviceDetails extends React.Component {
                     variant="raised"
                     size="large"
                     className={classes.editButton}
-                    onClick={() => console.log('EDIT PRESSED')}>
+                    onClick={() => history.push(`/editDevice/${device.id}`)}>
                     EDIT
                   </Button>
+                  {/* TODO: Implement deletion */}
                   <Button
                     variant="raised"
                     size="large"

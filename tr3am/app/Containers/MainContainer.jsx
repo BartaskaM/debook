@@ -90,6 +90,10 @@ class MainContainer extends React.Component {
           <Route exact path='/createDevice' render={() =>
             <Auth component={CreateDevice} allowedRoles={RouteRoles.CreateDevice} />
           } />
+          <Route exact path='/editDevice/:id' render={() =>
+            <Auth component={CreateDevice} allowedRoles={RouteRoles.EditDevice} />
+          } />
+
           <Route exact path='/offices' render={() =>
             <Auth component={() => (
               <div>
@@ -101,6 +105,7 @@ class MainContainer extends React.Component {
           <Route path='/offices/:id' render={() =>
             <Auth component={OfficeDetails} allowedRoles={RouteRoles.OfficeDetails} />
           } />
+
           <Route exact path='/events' render={() =>
             <Auth component={() => (
               <div>
@@ -109,6 +114,7 @@ class MainContainer extends React.Component {
               </div>
             )} allowedRoles={RouteRoles.Events} />
           } />
+          
           <Route exact path='/brands' render={() =>
             <Auth component={() => (
               <div>
