@@ -21,6 +21,10 @@ export const CreateDevice = [
   'admin',
 ];
 
+export const EditDevice = [
+  'admin',
+];
+
 export const Offices = [
   'admin',
 ];

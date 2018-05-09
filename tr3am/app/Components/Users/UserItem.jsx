@@ -26,7 +26,7 @@ const UserItem = ({ classes, user, history }) => {
                   e.stopPropagation();
                   history.push(`/offices/${user.office.id}`);
                 }}>
-                <Link to='#'>{user.office.city}</Link>
+                <Link to='#'  replace={true}>{user.office.city}</Link>
               </Grid>
               <Grid item xs={2}>{user.slack || '-'}</Grid>
               <Grid item xs={1}>
