@@ -18,6 +18,7 @@ const Styles = theme => ({
   },
   errorMessage: {
     color: 'red',
+    fontSize: 12,
   },
   description: {
     fontSize: 16,

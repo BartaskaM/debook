@@ -38,6 +38,7 @@ class CreateBrandModal extends React.Component {
     this.inputHandler = this.inputHandler.bind(this);
     this.createBrand = this.createBrand.bind(this);
     this.validateImage = this.validateImage.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
   }
 
   inputHandler(e) {
@@ -73,17 +74,22 @@ class CreateBrandModal extends React.Component {
       this.createBrand();
   }
 
+  closeDialog()
+  {
+    this.setState({ logoURLErrorMessage: '' });
+    this.props.hideCreateBrandModal();
+  }
+
   render() {
     const { classes,
       createBrandLoading,
       showCreateBrandDialog,
-      hideCreateBrandModal,
     } = this.props;
     return (
       <div>
         <Dialog
           open={showCreateBrandDialog}
-          onClose={hideCreateBrandModal}
+          onClose={this.closeDialog}
           aria-labelledby="form-dialog-title"
           className={classes.modalWidth}
           modal='true'>
@@ -132,7 +138,7 @@ class CreateBrandModal extends React.Component {
             </Typography>
             <DialogActions>
               <Button
-                onClick={hideCreateBrandModal}
+                onClick={this.closeDialog}
                 className={classes.button}>
                 CANCEL
               </Button>
