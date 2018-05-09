@@ -201,12 +201,7 @@ namespace tr3am.Data
                 .FirstOrDefaultAsync(x =>
                 x.SerialNum == device.SerialNum);
 
-            if (item != null)
-            {
-                return true;
-            }
-
-            return false;
+            return item != null ? true : false;
         }
 
         private async Task<bool> DeviceWithIdentificationNumberExists(Device device)

@@ -67,11 +67,8 @@ class CreateDevice extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.offices.length === 0)
-      this.props.fetchOffices();
-    if (this.props.brands.length === 0) {
-      this.props.fetchBrands();
-    }
+    this.props.fetchOffices();
+    this.props.fetchBrands();
   }
 
   handleDateChange(date) {
@@ -98,10 +95,10 @@ class CreateDevice extends React.Component {
       os: this.state.os,
       taxrate: this.state.taxRate,
       vendor: this.state.vendor,
-      available: true,
       newModel: this.state.newModel,
       modelName: this.state.modelName,
     };
+    
     this.props.createDevice(newDevice, this.props.history);
   }
 
@@ -111,20 +108,16 @@ class CreateDevice extends React.Component {
 
   inputHandlerForBrand(e) {
     this.setState({
-      [e.target.name]: e.target.value,
+      brandId: e.target.value,
       modelFieldDisabled: false,
     });
     this.loadModels(e.target.value);
   }
 
   loadModels(id) {
-    let key;
-    for (let i = 0; i < this.props.brands.length; i++) {
-      if (this.props.brands[i].id === id)
-        key = i;
-    }
-    if (!isNaN(key))
-      this.setState({ models: this.props.brands[key].models });
+    this.setState({ 
+      models: this.props.brands.find(brand => brand.id === id).models,
+    });
   }
 
   inputHandlerForModel(e) {
@@ -196,7 +189,6 @@ class CreateDevice extends React.Component {
       this.setState({ taxRateErrorMessage: '' });
       return true;
     } else {
-      console.log('Blogas');
       this.setState({ taxRateErrorMessage:
         'Tax rate must be number between 0 and 100' });
       return false;
@@ -271,9 +263,9 @@ class CreateDevice extends React.Component {
                         onChange={this.inputHandlerForBrand}
                         className={classes.select}
                       >
-                        {brands.map((brand, i) => (
+                        {brands.map((brand) => (
                           <MenuItem
-                            key={i}
+                            key={brand.id}
                             value={brand.id}
                             className={classes.menuItemWidth}
                           >
@@ -307,9 +299,9 @@ class CreateDevice extends React.Component {
                           className={classes.menuItemWidth}>
                           Other model
                         </MenuItem>
-                        {models.map((model, i) => (
+                        {models.map((model) => (
                           <MenuItem
-                            key={i}
+                            key={model.id}
                             value={model.id}
                             className={classes.menuItemWidth}
                           >
@@ -408,9 +400,9 @@ class CreateDevice extends React.Component {
                         onChange={this.inputHandler}
                         className={classes.select}
                       >
-                        {offices.map((office, i) => (
+                        {offices.map((office) => (
                           <MenuItem
-                            key={i}
+                            key={office.id}
                             value={office.id}
                             className={classes.menuItemWidth}
                           >

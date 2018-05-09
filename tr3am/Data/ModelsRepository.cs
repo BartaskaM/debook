@@ -72,25 +72,25 @@ namespace tr3am.Data
 
         public async Task Update(int id, ModelItemRequest request)
         {
-            var item = await _dbContext.Models
+            var item = _dbContext.Models
                 .FirstOrDefaultAsync(x => x.Id == id);
-            if (item == null)
-            {
-                throw new InvalidModelException();
-            }
 
             var brand = _dbContext.Brands
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.BrandId);
 
-            await Task.WhenAll(brand);
+            await Task.WhenAll(item, brand);
+            if (item == null)
+            {
+                throw new InvalidModelException();
+            }
             if (brand.Result == null)
             {
                 throw new InvalidBrandException();
             }
 
-            item.BrandId = brand.Result.Id;
-            item.Name = request.Name;
+            item.Result.BrandId = brand.Result.Id;
+            item.Result.Name = request.Name;
 
             await _dbContext.SaveChangesAsync();
         }

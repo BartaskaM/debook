@@ -32,7 +32,9 @@ const device = (props) => {
       </Typography>
       <Typography className={classes.deviceCardMainContent} onClick={openOfficeInfo}>
         Location:
-        <span className={classes.mainTextColor}> <Link to='#'> {device.location.city}</Link> </span>
+        <span className={classes.mainTextColor}> 
+          <Link to='#' replace={true}> {device.location.city}</Link> 
+        </span>
       </Typography>
       {device.available ?
         <Typography className={classes.deviceCardMainContent}></Typography>
@@ -40,7 +42,7 @@ const device = (props) => {
         <Typography className={classes.deviceCardMainContent} onClick={openUserInfo}>
           Custody of:
           <span className={classes.mainTextColor}>
-            <Link to='#'> {`${user.firstName} ${user.lastName}`}</Link>
+            <Link to='#'  replace={true}> {`${user.firstName} ${user.lastName}`}</Link>
           </span>
         </Typography>
       }
