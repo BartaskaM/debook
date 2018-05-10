@@ -36,7 +36,6 @@ export const createBrand = (brand) => async (dispatch) => {
   } catch (e) {
     dispatch({ 
       type: brands.CREATE_BRAND_ERROR, 
-      payload: e.response.data.message, 
     });
     toast.error(`❌ Failed to create brand: ${e.response.data.message}`);
   }

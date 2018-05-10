@@ -3,7 +3,7 @@ import { brands } from 'Constants/ActionTypes';
 const defaultState = {
   brands: [],
   createBrandLoading: false,
-  createBrandErrorMessage: null,
+  createBrandError: null,
   showCreateBrandModal: false,
   fetchBrandsLoading: false,
 };
@@ -27,7 +27,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         createBrandLoading: true,
-        createBrandErrorMessage: null,
+        createBrandError: false,
       };
     }
     case brands.CREATE_BRAND_SUCCESS: {
@@ -42,7 +42,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         createBrandLoading: false,
-        createBrandErrorMessage: action.payload,
+        createBrandError: true,
       };
     }
     case brands.SHOW_CREATE_BRAND_MODAL: {
