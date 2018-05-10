@@ -449,7 +449,17 @@ export default (state = defaultState, action) => {
     }
 
     case deviceDetails.FETCH_DEVICE_SUCCESS: {
-      return {...state, selectedDeviceReservations: action.payload.reservations};
+      const fetchedDevice = action.payload;
+      return {...state,
+        selectedDeviceReservations: fetchedDevice.reservations,
+        devices: state.devices.find(x => x.id === fetchedDevice.id) ?
+          state.devices.map(device => {
+            if(device.id === fetchedDevice.id){
+              return {...action.payload};
+            }
+            return device;
+          }) : [...state.devices, action.payload],
+      };
     }
     case devices.FETCH_SHORT_BRANDS_START: {
       return {
