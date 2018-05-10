@@ -284,7 +284,7 @@ class CreateDevice extends React.Component {
     const deviceId = parseInt(match.params.id);
 
     const newModelForm = this.state.newModel ?
-      <div>
+      <FormControl className={classes.otherModelField}>
         <InputLabel className={classes.fontSize}>Other model</InputLabel>
         <Input
           value={modelName}
@@ -296,7 +296,7 @@ class CreateDevice extends React.Component {
           }}
           className={classes.customField}
         />
-      </div>
+      </FormControl>
       : null;
 
     return (

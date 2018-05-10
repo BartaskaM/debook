@@ -9,6 +9,9 @@ const Styles = theme => ({
   newDeviceFormField: {
     marginTop: 25,
   },
+  otherModelField: {
+    marginTop: 15,
+  },
   fontSize: {
     fontSize: theme.typography.pxToRem(20),
   },
