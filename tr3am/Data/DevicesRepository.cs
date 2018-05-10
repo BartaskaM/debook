@@ -192,6 +192,7 @@ namespace tr3am.Data
             }
 
             item.Active = false;
+            await _dbContext.SaveChangesAsync();
         }
 
         private async Task<bool> DeviceWithSerialNumberExists(Device device)
