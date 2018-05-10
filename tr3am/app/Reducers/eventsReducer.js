@@ -28,6 +28,12 @@ export default (state = defaultState, action) => {
         rowsPerPage: pageSize,
       };
     }
+    case events.FETCH_EVENTS_ERROR: {
+      return {
+        ...state,
+        fetchEventsLoading: false,
+      };
+    }
     case events.RESET_PAGINATION_INFO: {
       return {
         ...state,

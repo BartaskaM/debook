@@ -26,6 +26,9 @@ export default (state = defaultState, action) => {
     case deviceDetails.FETCH_DEVICE_SUCCESS: {
       return {...state, fetchDeviceLoading: false, device: action.payload};
     }
+    case deviceDetails.FETCH_DEVICE_ERROR: {
+      return {...state, fetchDeviceLoading: false };
+    }
     case devices.BOOK_SUCCESS: {
       const { user, userBooking } = action.payload;
       return state.device ? {

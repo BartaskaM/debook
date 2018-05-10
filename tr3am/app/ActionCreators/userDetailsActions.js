@@ -11,6 +11,7 @@ export const fetchUserWithId = (userId, history) => async dispatch => {
       payload: response.data,
     });
   } catch (e) {
+    dispatch({ type: userDetails.FETCH_USER_ERROR });
     const errorMessageSplit = e.toString().split(' ');
     const errorCode = parseInt(errorMessageSplit[errorMessageSplit.length - 1]);
 

@@ -187,11 +187,11 @@ namespace tr3am.Data
             item.TaxRate = request.TaxRate;
             item.OfficeId = office.Result.Id;
 
-            if (await DeviceWithSerialNumberExists(item, true))
+            if (await DeviceWithSerialNumberExists(item))
             {
                 throw new DuplicateDeviceSerialNumberException();
             }
-            if (await DeviceWithIdentificationNumberExists(item, true))
+            if (await DeviceWithIdentificationNumberExists(item))
             {
                 throw new DuplicateDeviceIdentificationNumberException();
             }
@@ -212,34 +212,24 @@ namespace tr3am.Data
             await _dbContext.SaveChangesAsync();
         }
 
-        private async Task<bool> DeviceWithSerialNumberExists(Device device, bool checkSelf = false)
+        private async Task<bool> DeviceWithSerialNumberExists(Device device)
         {
             var item = await _dbContext.Devices
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
                 x.SerialNum == device.SerialNum);
 
-            if (checkSelf)
-            {
-                return item.Id == device.Id ? false : true;
-            }
-
-            return item != null ? true : false;
+            return item != null && item.Id != device.Id;
         }
 
-        private async Task<bool> DeviceWithIdentificationNumberExists(Device device, bool checkSelf = false)
+        private async Task<bool> DeviceWithIdentificationNumberExists(Device device)
         {
             var item = await _dbContext.Devices
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
                 x.IdentificationNum == device.IdentificationNum);
 
-            if (checkSelf)
-            {
-                return item.Id == device.Id ? false : true; 
-            }
-
-            return item != null ? true : false;
+            return item != null && item.Id != device.Id;
         }
     }
 }

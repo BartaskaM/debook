@@ -21,6 +21,12 @@ export default (state = defaultState, action) => {
         brands: action.payload,
       };
     }
+    case brands.FETCH_BRANDS_ERROR: {
+      return {
+        ...state,
+        fetchBrandsLoading: false,
+      };
+    }
     default: return state;
   }
 };

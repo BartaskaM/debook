@@ -21,6 +21,12 @@ export default (state = defaultState, action) => {
         users: action.payload,
       };
     }
+    case users.FETCH_USERS_ERROR: {
+      return {
+        ...state,
+        fetchUsersLoading: false,
+      };
+    }
     default: return state;
   }
 };
