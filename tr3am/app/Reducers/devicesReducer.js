@@ -32,6 +32,8 @@ const defaultState = {
   checkInErrorMessage: null,
   createDeviceLoading: false,
   createDeviceError: false,
+  updateDeviceLoading: false,
+  updateDeviceError: false,
   brands: [],
   fetchBrandsLoading: false,
 };
@@ -382,6 +384,27 @@ export default (state = defaultState, action) => {
         ...state,
         createDeviceLoading: false,
         createDeviceError: true,
+      };
+    }
+
+    case devices.UPDATE_DEVICE_START: {
+      return {
+        ...state,
+        updateDeviceLoading: true,
+        updateDeviceError: false,
+      };
+    }
+    case devices.UPDATE_DEVICE_SUCCESS: {
+      return {
+        ...state,
+        updateDeviceLoading: false,
+      };
+    }
+    case devices.UPDATE_DEVICE_ERROR: {
+      return {
+        ...state,
+        updateDeviceLoading: false,
+        updateDeviceError: true,
       };
     }
 

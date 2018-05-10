@@ -201,11 +201,12 @@ export const createDevice = (device, history) => async (dispatch) => {
   });
   try {
     const response = await api.post('/devices', device);
-    device['id'] = response.data;
     dispatch({
       type: devices.CREATE_DEVICE_SUCCESS,
     });
+
     dispatch(fetchDevices());
+
     toast.success('✅ Device created successfully');
     history.push(`/devices/${response.data}`);
   } catch (e) {
@@ -213,6 +214,29 @@ export const createDevice = (device, history) => async (dispatch) => {
       type: devices.CREATE_DEVICE_ERROR, 
     });
     toast.error(`❌ Failed to create device: ${e.response.data.message}`);
+  }
+};
+
+export const updateDevice = (device, history) => async dispatch => {
+  dispatch({ 
+    type: devices.UPDATE_DEVICE_START,
+  });
+  try {
+    await api.put(`/devices/${device.id}`, device);
+
+    dispatch({
+      type: devices.UPDATE_DEVICE_SUCCESS,
+    });
+
+    dispatch(fetchDevices());
+    
+    toast.success('✅ Device updated successfully');
+    history.push(`/devices/${device.id}`);
+  } catch (e) {
+    dispatch({ 
+      type: devices.UPDATE_DEVICE_ERROR, 
+    });
+    toast.error(`❌ Failed to update device: ${e.response.data.message}`);
   }
 };
 

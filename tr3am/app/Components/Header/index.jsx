@@ -154,7 +154,7 @@ class Header extends React.Component {
           {this.renderBranding()}
 
           <div className={classes.rightMenu}>
-            {this.renderSearchForm()}
+            {/*this.renderSearchForm()*/}
             {this.renderProfileMenu()}
           </div>
         </Toolbar>

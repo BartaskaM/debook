@@ -27,6 +27,20 @@ export const styles = {
     marginBottom: 25,
     textAlign: 'center',
   },
+  adminButtonDivider: {
+    marginTop: -10,
+    marginBottom: 10,
+  },
+  editButton: {
+    width: '48%',
+    float: 'left',
+    marginBottom: 25,
+  },
+  deleteButton: {
+    width: '48%',
+    float: 'right',
+    marginBottom: 25,
+  },
   title: {
     marginTop: 10,
     marginBottom: 10,

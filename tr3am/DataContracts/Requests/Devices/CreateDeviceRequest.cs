@@ -10,8 +10,7 @@ namespace tr3am.DataContracts.Requests.Devices
         [Required]
         public int ModelId { get; set; }
         public string Image { get; set; }
-        [Required]
-        public int? IdentificationNum { get; set; }
+        public int IdentificationNum { get; set; }
         [Required]
         [MaxLength(255)]
         public string SerialNum { get; set; }
