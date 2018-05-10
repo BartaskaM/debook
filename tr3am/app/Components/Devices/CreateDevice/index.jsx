@@ -309,6 +309,9 @@ class CreateDevice extends React.Component {
                 : (
                   <form method='POST' onSubmit={this.submitDeviceForm}>
                     <FormGroup>
+                      <Typography variant='display3'>
+                        Device form:
+                      </Typography>
                       <Typography variant='headline'>
                         {deviceId ?
                           'Please update the device details in the form below:' :

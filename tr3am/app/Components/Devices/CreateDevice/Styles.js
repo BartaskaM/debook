@@ -1,6 +1,6 @@
 const Styles = theme => ({
   root: {
-    padding: 20,
+    padding: 25,
     margin: 20,
   },
   createDevicePaper: {
