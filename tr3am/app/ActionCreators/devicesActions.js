@@ -302,6 +302,7 @@ export const returnDevice = (booking, office) => async dispatch =>{
     dispatch({ 
       type: devices.RETURN_DEVICE_SUCCESS,
       payload: {
+        bookingId: booking.id,
         deviceId: booking.deviceId,
         office: {
           id: office.id,

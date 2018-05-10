@@ -278,7 +278,9 @@ export default (state = defaultState, action) => {
       };
     }
     case devices.RETURN_DEVICE_SUCCESS: {
-      const { office, deviceId } = action.payload;
+      const { office, deviceId, bookingId } = action.payload;
+      const index = state.selectedDeviceReservations
+        .findIndex(reservation => reservation.id === bookingId);
       return {
         ...state,
         devices: state.devices.map(dev => {
@@ -293,6 +295,10 @@ export default (state = defaultState, action) => {
           }
           return dev;
         }),
+        selectedDeviceReservations: [
+          ...state.selectedDeviceReservations.slice(0, index),
+          ...state.selectedDeviceReservations.slice(index + 1),
+        ],
         returningDevice: false,
         showReturnModal: false,
       };
