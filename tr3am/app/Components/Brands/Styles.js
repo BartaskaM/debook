@@ -18,7 +18,6 @@ const Styles = {
     textAlign: 'center',
   },
   brandLogo: {
-    width: '50px',
     height: '50px',
   },
 };

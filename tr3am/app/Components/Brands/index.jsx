@@ -13,11 +13,20 @@ import Styles from './Styles';
 import StylesUtils from 'Utils/StylesUtils';
 import BrandsItem from './BrandsItem';
 import * as brandsActions from 'ActionCreators/brandsActions';
+import CreateBrandModal from './CreateBrandModal';
 
 class BrandList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.openCreateBrandDialog = this.openCreateBrandDialog.bind(this);
+  }
 
   componentDidMount() {
     this.props.fetchBrands();
+  }
+
+  openCreateBrandDialog() {
+    this.props.showCreateBrandModal();
   }
 
   renderListHeader() {
@@ -41,6 +50,7 @@ class BrandList extends React.Component {
     const { classes, brands, fetchBrandsLoading } = this.props;
     return (
       <div className={classes.root}>
+        <CreateBrandModal />
         <Grid container spacing={16}>
           {this.renderListHeader()}
           {fetchBrandsLoading ?
@@ -62,6 +72,7 @@ class BrandList extends React.Component {
                     variant="raised"
                     color="primary"
                     className={classes.addNewButton}
+                    onClick={this.openCreateBrandDialog}
                   >
                   ADD NEW
                   </Button>
@@ -83,6 +94,7 @@ BrandList.propTypes = {
     models: PropTypes.array,
   })).isRequired,
   fetchBrandsLoading: PropTypes.bool.isRequired,
+  showCreateBrandModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
