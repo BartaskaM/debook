@@ -114,7 +114,6 @@ class SignUp extends React.Component {
   }
 
   validatePassword() {
-    //call api to check if email is used
     const { password, confirmPassword } = this.state;
     if (password === confirmPassword) {
       this.setState({
@@ -209,7 +208,7 @@ class SignUp extends React.Component {
               />
               {
                 passwordErrorMessage.length > 0 && 
-              <FormHelperText>
+              <FormHelperText className={classes.errorMessage}>
                 {passwordErrorMessage}
               </FormHelperText>
               }
@@ -288,9 +287,15 @@ class SignUp extends React.Component {
                 }}
               />
             </FormControl>
-            <Typography variant="display1">
-              {signUpError}
-            </Typography>
+
+            <br />
+            
+            {signUpError && signUpError.split('\n').map((errorMessage, i) => (
+              <Typography key={i} variant="display1" className={classes.errorMessage}>
+                {errorMessage}
+              </Typography>
+            ))}
+            
             <FormControl className={classes.signUpFormField}>
               {fetchingSignUp && <LinearProgress className={classes.progressBar}/>}
               <Button

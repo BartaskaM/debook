@@ -68,6 +68,7 @@ class Login extends React.Component {
                   name: 'email',
                   maxLength: '64',
                   required: 'required',
+                  autoFocus: 'autoFocus',
                 }}
                 className={classes.fontSize}
                 onChange={this.inputHandler} />

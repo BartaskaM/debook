@@ -20,7 +20,10 @@ const Row = ({ first, second, styleClass, addDivider = false}) => {
 
 Row.propTypes = {
   first: PropTypes.string.isRequired,
-  second: PropTypes.string.isRequired,
+  second: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+  ]).isRequired,
   styleClass: PropTypes.string.isRequired,
   addDivider: PropTypes.bool,
 };

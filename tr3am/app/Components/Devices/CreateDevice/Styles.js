@@ -1,6 +1,6 @@
 const Styles = theme => ({
   root: {
-    padding: 20,
+    padding: 25,
     margin: 20,
   },
   createDevicePaper: {
@@ -8,6 +8,9 @@ const Styles = theme => ({
   },
   newDeviceFormField: {
     marginTop: 25,
+  },
+  otherModelField: {
+    marginTop: 15,
   },
   fontSize: {
     fontSize: theme.typography.pxToRem(20),

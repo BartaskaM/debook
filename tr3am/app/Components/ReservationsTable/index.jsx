@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import List, { ListItem } from 'material-ui/List';
 import Grid from 'material-ui/Grid';
 import Divider from 'material-ui/Divider';
@@ -32,7 +33,7 @@ class ReservationsTable extends React.Component {
           .map((res, i) => {
             const { from, to, user } = res;
             return <Row key={i} first={`${dateToHours(from)} - ${dateToHours(to)}`} 
-              second={`${user.firstName} ${user.lastName}`} 
+              second={<Link to={`/users/${user.id}`}>{`${user.firstName} ${user.lastName}`}</Link>} 
               styleClass={classes.row}
               addDivider={true}/>;
           }
