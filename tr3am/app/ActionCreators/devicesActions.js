@@ -136,6 +136,7 @@ export const bookDevice = (bookRequest, user) => async dispatch =>{
         userBooking,
       },
     });
+    dispatch(fetchDeviceReservations(bookRequest.deviceId));
     toast.success('✅ Device booked successfully');
   } catch(e) {
     dispatch({ 
@@ -167,6 +168,7 @@ export const reserveDevice = (reserveRequest) => async dispatch =>{
         userReservation,
       },
     });
+    dispatch(fetchDeviceReservations(reserveRequest.deviceId));
     toast.success('✅ Device reserved successfully');
   } catch(e) {
     dispatch({ 
@@ -357,6 +359,7 @@ export const checkIn = (reservation, user) => async dispatch => {
         user,
       },
     });
+    dispatch(fetchDeviceReservations(reservation.deviceId));
     toast.success('✅ Checked in successfully');
   } catch(e) {
     dispatch({ 
