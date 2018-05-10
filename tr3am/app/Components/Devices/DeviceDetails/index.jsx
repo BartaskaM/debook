@@ -30,6 +30,7 @@ import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
 import * as devicesActions from 'ActionCreators/devicesActions';
 import { reservationStatus } from 'Constants/Enums';
 import * as deviceUtils from 'Utils/deviceUtils';
+import ConfirmationModal from 'Components/ConfirmationModal';
 
 class DeviceDetails extends React.Component {
   constructor(props) {
@@ -43,9 +44,12 @@ class DeviceDetails extends React.Component {
     this.getBookButtonValue = this.getBookButtonValue.bind(this);
     this.openOfficeInfo = this.openUserInfo.bind(this);
     this.openUserInfo = this.openUserInfo.bind(this);
+    this.deleteDeviceConfirmed = this.deleteDeviceConfirmed.bind(this);
+    this.closeConfirmationDialog = this.closeConfirmationDialog.bind(this);
 
     this.state = {
       bookButtonValue: null,
+      showConfirmationDialog: false,
     };
   }
 
@@ -102,6 +106,18 @@ class DeviceDetails extends React.Component {
 
   openReturnModal(deviceId) {
     this.props.showReturnModal(deviceId);
+  }
+
+  deleteDeviceConfirmed() {
+    const { match, history, deleteDevice } = this.props;
+    const id = parseInt(match.params.id);
+
+    deleteDevice(id, history);
+    this.setState({ showConfirmationDialog: false });
+  }
+
+  closeConfirmationDialog() {
+    this.setState({ showConfirmationDialog: false });
   }
 
   handleBookClick(device) {
@@ -289,7 +305,7 @@ class DeviceDetails extends React.Component {
                     variant="raised"
                     size="large"
                     className={classes.deleteButton}
-                    /*onClick={() => console.log('DELETE PRESSED')}*/>
+                    onClick={() => this.setState({ showConfirmationDialog: true })}>
                     DELETE
                   </Button>
                 </div>
@@ -307,6 +323,12 @@ class DeviceDetails extends React.Component {
           <BookModal />
           <ReserveModal />
           <ReturnModal />
+          <ConfirmationModal 
+            showDialog={this.state.showConfirmationDialog}
+            headerMessage='Are you sure you want to delete this device?'
+            onConfirm={this.deleteDeviceConfirmed}
+            onCancel={this.closeConfirmationDialog}
+          />
         </div>
         : <LinearProgress />
     );
@@ -319,6 +341,7 @@ class DeviceDetails extends React.Component {
 DeviceDetails.propTypes = {
   classes: PropTypes.object.isRequired,
   showLocationModal: PropTypes.func.isRequired,
+  deleteDevice: PropTypes.func.isRequired,
   device: PropTypes.shape({
     id: PropTypes.number.isRequired,
     image: PropTypes.string.isRequired,

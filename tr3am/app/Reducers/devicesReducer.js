@@ -34,6 +34,8 @@ const defaultState = {
   createDeviceError: false,
   updateDeviceLoading: false,
   updateDeviceError: false,
+  deleteDeviceLoading: false,
+  deleteDeviceError: false,
   brands: [],
   fetchBrandsLoading: false,
 };
@@ -417,6 +419,32 @@ export default (state = defaultState, action) => {
         ...state,
         updateDeviceLoading: false,
         updateDeviceError: true,
+      };
+    }
+
+    case devices.DELETE_DEVICE_START: {
+      return {
+        ...state,
+        deleteDeviceLoading: true,
+        deleteDeviceError: false,
+      };
+    }
+    case devices.DELETE_DEVICE_SUCCESS: {
+      const index = state.devices.findIndex(device => device.id === action.payload);
+      return {
+        ...state,
+        devices: [
+          ...state.devices.slice(0, index),
+          ...state.devices.slice(index + 1),
+        ],
+        deleteDeviceLoading: false,
+      };
+    }
+    case devices.DELETE_DEVICE_ERROR: {
+      return {
+        ...state,
+        deleteDeviceLoading: false,
+        deleteDeviceError: true,
       };
     }
 
