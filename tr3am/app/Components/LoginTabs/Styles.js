@@ -23,6 +23,7 @@ const Styles = theme => ({
   },
   errorMessage: {
     color: 'red',
+    fontSize: 12,
   },
   wrapper: {
     marginTop: theme.spacing.unit,
