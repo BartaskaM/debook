@@ -4,6 +4,7 @@ const defaultState = {
   userDetails: null,
   fetchingUser: false,
   updatingUser: false,
+  updateUserError: '',
 };
 
 export default (state = defaultState, action) => {

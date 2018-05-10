@@ -303,7 +303,7 @@ class UserDetails extends React.Component {
   renderProfileEdit(){
     const { 
       classes,
-      currentUser,
+      //currentUser,
       offices,
       fetchOfficesLoading,
       updateUserError,
@@ -312,13 +312,13 @@ class UserDetails extends React.Component {
       validFirstName, 
       validLastName, 
       validEmail, 
-      oldPassword, 
-      newPassword, 
-      repeatPassword,
+      //oldPassword, 
+      //newPassword, 
+      //repeatPassword,
       user,
-      validNewPassword,
-      validOldPassword,
-      newPasswordMatch,
+      //validNewPassword,
+      //validOldPassword,
+      //newPasswordMatch,
       emailErrorMessage,
     } = this.state;
     const { 
@@ -327,7 +327,7 @@ class UserDetails extends React.Component {
       lastName, 
       slack, 
       office, 
-      id, 
+      //id, 
     } = user;
     return (
       <Grid item xs={12}>
@@ -452,7 +452,7 @@ class UserDetails extends React.Component {
               </FormControl>
             </Grid>
           </Grid>
-          {currentUser.id === id && <div>
+          {/*currentUser.id === id && <div>
             <Grid container>
               <Grid item xs={2} className={classes.label}>Old password</Grid>
               <Grid item xs={10}>
@@ -516,7 +516,7 @@ class UserDetails extends React.Component {
                 </FormControl>
               </Grid>
             </Grid>
-          </div>}
+                  </div>*/}
         </FormGroup>          
       </Grid>           
     );
