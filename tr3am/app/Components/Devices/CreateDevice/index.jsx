@@ -81,7 +81,7 @@ class CreateDevice extends React.Component {
 
   static getDerivedStateFromProps(nextProps) {
     const { device, fetchDeviceLoading, brands, match } = nextProps;
-    if (device && !fetchDeviceLoading && match.params.id && brands) {
+    if (device && !fetchDeviceLoading && match.params.id && brands.length > 0) {
       return {
         brandId: device.brand.id,
         identificationNum: device.identificationNum,

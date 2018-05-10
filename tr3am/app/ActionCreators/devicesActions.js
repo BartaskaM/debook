@@ -241,6 +241,28 @@ export const updateDevice = (device, history) => async dispatch => {
   }
 };
 
+export const deleteDevice = (id, history) => async dispatch => {
+  dispatch({ 
+    type: devices.DELETE_DEVICE_START,
+  });
+  try {
+    await api.delete(`/devices/${id}`);
+
+    dispatch({
+      type: devices.DELETE_DEVICE_SUCCESS,
+      payload: id,
+    });
+    
+    toast.success('✅ Device deleted successfully');
+    history.push('/devices');
+  } catch (e) {
+    dispatch({ 
+      type: devices.DELETE_DEVICE_ERROR, 
+    });
+    toast.error(`❌ Failed to delete device: ${e.response.data.message}`);
+  }
+};
+
 export const fetchDevices = () => async dispatch =>{
   dispatch({ type: devices.FETCH_DEVICES_START });
   try{
