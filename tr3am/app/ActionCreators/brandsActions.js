@@ -23,11 +23,10 @@ export const createBrand = (brand) => async (dispatch) => {
   dispatch({ 
     type: brands.CREATE_BRAND_START,
   });
-  
   try {
     const response = await api.post('/brands', brand);
-    brand['id'] = response.data;
-    brand['models'] = [];
+    brand.id = response.data;
+    brand.models = [];
     dispatch({
       type: brands.CREATE_BRAND_SUCCESS,
       payload: brand,
