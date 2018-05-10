@@ -312,7 +312,9 @@ export default (state = defaultState, action) => {
       };
     }
     case devices.CANCEL_RESERVATION_SUCCESS: {
-      const { deviceId } = action.payload;
+      const { deviceId, reservationId } = action.payload;
+      const index = state.selectedDeviceReservations
+        .findIndex(reservation => reservation.id === reservationId);
       return {
         ...state,
         devices: state.devices.map(device => {
@@ -324,6 +326,10 @@ export default (state = defaultState, action) => {
           }
           return device;
         }),
+        selectedDeviceReservations: [
+          ...state.selectedDeviceReservations.slice(0, index),
+          ...state.selectedDeviceReservations.slice(index + 1),
+        ],
         cancelReservationLoading: false,
         showReserveModal: false,
       };

@@ -28,6 +28,7 @@ import { styles } from './Styles';
 import LocationModal from 'Components/LocationModal';
 import * as deviceDetailsActions from 'ActionCreators/deviceDetailsActions';
 import * as devicesActions from 'ActionCreators/devicesActions';
+import { fetchOffices } from 'ActionCreators/officesActions';
 import { reservationStatus } from 'Constants/Enums';
 import * as deviceUtils from 'Utils/deviceUtils';
 import ConfirmationModal from 'Components/ConfirmationModal';
@@ -54,10 +55,11 @@ class DeviceDetails extends React.Component {
   }
 
   componentDidMount() {
-    const { match, fetchDeviceWithId, user, history } = this.props;
+    const { match, fetchDeviceWithId, user, history, fetchOffices } = this.props;
     const id = parseInt(match.params.id);
     if (id) {
       fetchDeviceWithId(id, user.id, history);
+      fetchOffices();
       this.interval = setInterval(this.getBookButtonValue, 10000);
     }
   }
@@ -418,6 +420,7 @@ DeviceDetails.propTypes = {
   fetchDeviceWithId: PropTypes.func.isRequired,
   fetchDeviceLoading: PropTypes.bool.isRequired,
   resetDevice: PropTypes.func.isRequired,
+  fetchOffices: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -430,7 +433,7 @@ const mapStateToProps = state => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, { ...deviceDetailsActions, ...devicesActions })(
+  connect(mapStateToProps, { ...deviceDetailsActions, ...devicesActions, fetchOffices })(
     withStyles(styles)(DeviceDetails)
   )
 );

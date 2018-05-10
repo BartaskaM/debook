@@ -327,6 +327,7 @@ export const cancelReservation = (reservation) => async dispatch => {
       type: devices.CANCEL_RESERVATION_SUCCESS,
       payload: {
         deviceId: reservation.deviceId,
+        reservationId: reservation.id,
       },
     });
     toast.success('✅ Device reservation canceled successfully');
