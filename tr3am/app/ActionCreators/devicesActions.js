@@ -249,6 +249,7 @@ export const deleteDevice = (id, history) => async dispatch => {
 
     dispatch({
       type: devices.DELETE_DEVICE_SUCCESS,
+      payload: id,
     });
 
     dispatch(fetchDevices());

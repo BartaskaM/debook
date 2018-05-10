@@ -418,8 +418,13 @@ export default (state = defaultState, action) => {
       };
     }
     case devices.DELETE_DEVICE_SUCCESS: {
+      const index = state.devices.findIndex(device => device.id === action.payload);
       return {
         ...state,
+        devices: [
+          ...state.devices.slice(0, index),
+          ...state.devices.slice(index + 1),
+        ],
         deleteDeviceLoading: false,
       };
     }

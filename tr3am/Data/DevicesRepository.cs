@@ -52,6 +52,7 @@ namespace tr3am.Data
                 .Include(x => x.Model)
                 .Include(x => x.Reservations)
                 .ThenInclude(x => x.User)
+                .Where(x => x.Active)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
             {
