@@ -287,9 +287,15 @@ class SignUp extends React.Component {
                 }}
               />
             </FormControl>
-            <Typography variant="display1">
-              {signUpError}
-            </Typography>
+
+            <br />
+            
+            {signUpError && signUpError.split('\n').map((errorMessage, i) => (
+              <Typography key={i} variant="display1" className={classes.errorMessage}>
+                {errorMessage}
+              </Typography>
+            ))}
+            
             <FormControl className={classes.signUpFormField}>
               {fetchingSignUp && <LinearProgress className={classes.progressBar}/>}
               <Button
