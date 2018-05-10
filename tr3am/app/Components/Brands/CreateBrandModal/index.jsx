@@ -19,7 +19,6 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Typography from 'material-ui/Typography';
 import { LinearProgress } from 'material-ui/Progress';
 import * as brandsActions from 'ActionCreators/brandsActions';
 import { r_url } from 'Utils/regExUtils';
@@ -42,7 +41,6 @@ class CreateBrandModal extends React.Component {
   }
 
   inputHandler(e) {
-    this.setState({ errorMessage: '' });
     this.setState({ [e.target.name]: e.target.value });
   }
 
@@ -133,9 +131,6 @@ class CreateBrandModal extends React.Component {
                 <LinearProgress className={classes.createBrandLoadingBar} />
               }
             </DialogContent>
-            <Typography variant='headline' className={classes.errorMessage}>
-              {this.state.errorMessage}
-            </Typography>
             <DialogActions>
               <Button
                 onClick={this.closeDialog}
