@@ -95,7 +95,7 @@ class CreateBrandModal extends React.Component {
             <DialogTitle className={classes.title} disableTypography>Add new brand</DialogTitle>
             <DialogContent>
               <DialogContentText className={classes.description}>
-                Please enter all needed data into fields,
+                Please enter all needed data into fields.
               </DialogContentText>
               <form
                 onSubmit={this.submitBrand}
