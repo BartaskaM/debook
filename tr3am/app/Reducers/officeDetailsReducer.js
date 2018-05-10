@@ -4,7 +4,6 @@ const defaultState = {
   office: null,
 
   fetchOfficeLoading: false,
-  fetchOfficeErrorMessage: null,
 
   updateOfficeLoading: false,
   updateOfficeErrorMessage: null,
@@ -16,7 +15,6 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         fetchOfficeLoading: true,
-        fetchOfficeErrorMessage: null,
       };
     }
     case officeDetails.FETCH_OFFICE_SUCCESS: {
@@ -24,6 +22,12 @@ export default (state = defaultState, action) => {
         ...state,
         fetchOfficeLoading: false,
         office: action.payload,
+      };
+    }
+    case officeDetails.FETCH_OFFICE_ERROR: {
+      return {
+        ...state,
+        fetchOfficeLoading: false,
       };
     }
     case officeDetails.UPDATE_OFFICE_START: {

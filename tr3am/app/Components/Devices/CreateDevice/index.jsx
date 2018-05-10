@@ -7,7 +7,7 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import Select from 'material-ui/Select';
 import Paper from 'material-ui/Paper';
-import Grid from 'material-ui/grid';
+import Grid from 'material-ui/Grid';
 import { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import {

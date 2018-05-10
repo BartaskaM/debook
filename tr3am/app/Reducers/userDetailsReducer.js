@@ -4,7 +4,6 @@ const defaultState = {
   userDetails: null,
   fetchingUser: false,
   updatingUser: false,
-  updateUserError: '',
 };
 
 export default (state = defaultState, action) => {
@@ -13,10 +12,13 @@ export default (state = defaultState, action) => {
       return { ...state, userDetails: action.payload };
     }
     case userDetails.FETCH_USER_START: {
-      return { ...state, fetchingUser: true, fetchUserError: '' };
+      return { ...state, fetchingUser: true };
     }
     case userDetails.FETCH_USER_SUCCESS: {
       return { ...state, fetchingUser: false, userDetails: action.payload };
+    }
+    case userDetails.FETCH_USER_ERROR: {
+      return { ...state, fetchingUser: false };
     }
     case userDetails.UPDATE_USER_START: {
       return { ...state, updatingUser: true, updateError: '' };

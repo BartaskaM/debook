@@ -15,6 +15,9 @@ export const fetchOffices = () => async dispatch => {
       payload: response.data,
     });
   } catch (e) {
+    dispatch({
+      type: offices.FETCH_OFFICES_ERROR,
+    });
     toast.error('❌ Failed to fetch offices');
   }
 };

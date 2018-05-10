@@ -51,6 +51,12 @@ export default (state = defaultState, action) => {
     case brands.HIDE_CREATE_BRAND_MODAL: {
       return { ...state, showCreateBrandModal: false };
     }
+    case brands.FETCH_BRANDS_ERROR: {
+      return {
+        ...state,
+        fetchBrandsLoading: false,
+      };
+    }
     default: return state;
   }
 };
