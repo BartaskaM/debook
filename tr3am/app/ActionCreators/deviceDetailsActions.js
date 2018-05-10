@@ -52,6 +52,7 @@ export const fetchDeviceWithId = (deviceId, userId, history) => async dispatch =
       },
     });
   } catch(e) {
+    dispatch({type: deviceDetails.FETCH_DEVICE_START});
     const errorMessageSplit = e.toString().split(' ');
     const errorCode = parseInt(errorMessageSplit[errorMessageSplit.length - 1]);
     history.push(`/${errorCode}`);

@@ -14,6 +14,9 @@ export const fetchOfficeWithId = (officeId, history) => async (dispatch) => {
       payload: response.data,
     });
   } catch (e) {
+    dispatch({
+      type: officeDetails.FETCH_OFFICE_ERROR,
+    });
     const errorMessageSplit = e.toString().split(' ');
     const errorCode = parseInt(errorMessageSplit[errorMessageSplit.length - 1]);
     history.push(`/${errorCode}`);

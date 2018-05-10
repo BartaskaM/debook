@@ -243,6 +243,12 @@ export default (state = defaultState, action) => {
         fetchingDeviceReservations: false,
       };
     }
+    case devices.FETCH_DEVICE_RESERVATIONS_ERROR: {
+      return {
+        ...state,
+        fetchingDeviceReservations: false,
+      };
+    }
     case devices.FETCH_DEVICES_START: {
       return {
         ...state,
@@ -253,6 +259,12 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         devices: action.payload,
+        fetchingDevices: false,
+      };
+    }
+    case devices.FETCH_DEVICES_ERROR: {
+      return {
+        ...state,
         fetchingDevices: false,
       };
     }
@@ -422,6 +434,12 @@ export default (state = defaultState, action) => {
         ...state,
         fetchBrandsLoading: false,
         brands: action.payload,
+      };
+    }
+    case devices.FETCH_SHORT_BRANDS_ERROR: {
+      return {
+        ...state,
+        fetchBrandsLoading: false,
       };
     }
     case deviceDetails.UPDATE_DEVICE_LOCATION_SUCCESS: {

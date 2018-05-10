@@ -289,7 +289,7 @@ class DeviceDetails extends React.Component {
                     variant="raised"
                     size="large"
                     className={classes.deleteButton}
-                    onClick={() => console.log('DELETE PRESSED')}>
+                    /*onClick={() => console.log('DELETE PRESSED')}*/>
                     DELETE
                   </Button>
                 </div>

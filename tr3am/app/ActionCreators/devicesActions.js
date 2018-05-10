@@ -191,6 +191,7 @@ export const fetchDeviceReservations = (deviceId) => async dispatch =>{
       payload: fetchedReservations,
     });
   } catch(e) {
+    dispatch({ type: devices.FETCH_DEVICE_RESERVATIONS_ERROR });
     toast.error('❌ Failed to fetch device reservations');
   }
 };
@@ -243,7 +244,6 @@ export const updateDevice = (device, history) => async dispatch => {
 export const fetchDevices = () => async dispatch =>{
   dispatch({ type: devices.FETCH_DEVICES_START });
   try{
-    //Use identity later on
     const response = await api.get('/devices');
     const fetchedDevices = response.data.map(dev => ({
       ...dev,
@@ -268,7 +268,6 @@ export const fetchDevices = () => async dispatch =>{
   } catch(e) {
     dispatch({ 
       type: devices.FETCH_DEVICES_ERROR,
-      payload: e.response.data.message,
     });
     toast.error('❌ Failed to fetch devices');
   }
@@ -364,6 +363,9 @@ export const fetchBrands = () => async dispatch => {
       payload: response.data,
     });
   } catch (e) {
+    dispatch({
+      type: devices.FETCH_SHORT_BRANDS_ERROR,
+    });
     toast.error('❌ Failed to fetch brands');
   }
 };

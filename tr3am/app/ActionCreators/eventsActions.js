@@ -29,6 +29,9 @@ export const fetchEvents = (page, pageSize) => async dispatch => {
     });
     animateScroll.scrollToTop({smooth: 'easeInOutQuint'});
   } catch (e) {
+    dispatch({
+      type: events.FETCH_EVENTS_ERROR,
+    });
     toast.error('❌ Failed to fetch events');
   }
 };
