@@ -251,8 +251,6 @@ export const deleteDevice = (id, history) => async dispatch => {
       type: devices.DELETE_DEVICE_SUCCESS,
       payload: id,
     });
-
-    dispatch(fetchDevices());
     
     toast.success('✅ Device deleted successfully');
     history.push('/devices');
