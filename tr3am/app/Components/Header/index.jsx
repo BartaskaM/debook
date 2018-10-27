@@ -60,16 +60,8 @@ class Header extends React.Component {
     const { classes } = this.props;
     return (
       <span className={classes.homeButton} onClick={() => this.props.history.push('/devices')}>
-        <img
-          className={classes.leftMargin}
-          src={'https://i.imgur.com/GPSkF0s.png'}
-          height="40px"
-          width='40px'
-        />
         <Typography variant="title" color="inherit" className={classes.text}>
-          DEVBRIDGE
-          <br />
-          GROUP
+          DEBOOK
         </Typography>
       </span>
     );
