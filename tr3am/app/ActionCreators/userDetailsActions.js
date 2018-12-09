@@ -26,6 +26,30 @@ export const setUserDetails = (user) => ({
   payload: user,
 });
 
+export const toggleModeratorRole = (userId, finish) => async dispatch => {
+  //dispatch({ type: userDetails.TOGGLE_MODERATOR_START });
+  dispatch({ type: userDetails.UPDATE_USER_START });
+  try {
+    await api.post(`/users/${userId}/moderator/toggle`);
+
+    dispatch({
+      type: userDetails.UPDATE_USER_SUCCESS,
+    });
+    /* dispatch({
+      type: userDetails.TOGGLE_MODERATOR_SUCCESS,
+    }); */
+
+    toast.success('✏️ User updated successfully');
+    finish();
+  } catch (e) {
+    dispatch({
+      type: userDetails.UPDATE_USER_ERROR,
+      payload: e.response.data.message,
+    });
+    toast.error(`❌ Failed to update user details: ${e.response.data.message}`);
+  }
+};
+
 export const updateUser = (userInfo, finish, self) => async dispatch => {
   dispatch({ type: userDetails.UPDATE_USER_START });
   try{

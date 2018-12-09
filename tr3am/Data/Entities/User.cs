@@ -18,5 +18,6 @@ namespace tr3am.Data.Entities
         public List<Device> Devices { get; set; }
         public List<Reservation> Reservations { get; set; }
         public List<Event> Events { get; set; }
+        public List<Request> Requests { get; set; }
     }
 }

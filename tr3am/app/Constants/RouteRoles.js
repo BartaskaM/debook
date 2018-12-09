@@ -42,3 +42,12 @@ export const Events = [
   'admin',
   'user',
 ];
+
+export const Requests = [
+  'admin',
+  'user',
+];
+
+export const NewRequest = [
+  'user',
+];

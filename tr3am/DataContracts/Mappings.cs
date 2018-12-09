@@ -20,6 +20,9 @@ namespace tr3am.DataContracts
                 cfg.CreateMap<Brand, ShortBrandDto>();
                 cfg.CreateMap<BrandDto, Brand>();
                 cfg.CreateMap<Office, OfficeDto>();
+                cfg.CreateMap<Request, RequestDto>();
+                cfg.CreateMap<Message, MessageDto>().ForMember(dest => dest.CreatedAt,
+                    opt => opt.MapFrom(src => DateTime.SpecifyKind(src.CreatedAt, DateTimeKind.Utc)));
                 cfg.CreateMap<Office, ShortOfficeDto>();
                 cfg.CreateMap<OfficeDto, Office>();
                 cfg.CreateMap<User, UserDTO>();

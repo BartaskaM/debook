@@ -53,6 +53,7 @@ class UserDetails extends React.Component {
     this.validateAllPasswords = this.validateAllPasswords.bind(this);
     this.validateAll = this.validateAll.bind(this);
     this.goBackToInfo = this.goBackToInfo.bind(this);
+    this.handlePromotion = this.handlePromotion.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, previousState){
@@ -255,6 +256,12 @@ class UserDetails extends React.Component {
       </Grid>);
   }
 
+  handlePromotion() {
+    const { toggleModeratorRole, user } = this.props;
+
+    toggleModeratorRole(user.id, this.goBackToInfo);
+  }
+
   renderButtons(){
     const { edit } = this.state;
     const { currentUser, user } = this.props;
@@ -262,15 +269,25 @@ class UserDetails extends React.Component {
       <Grid item xs={12}>
         <Grid container >
           <Grid item xs={8}></Grid>
+          {(edit || currentUser.roles.includes('admin')) &&
           <Grid item xs={2}>
-            {edit && <Button
+            <Button
               variant="raised"
               color="secondary"
-              onClick={this.handleCancelClick}
+              onClick={edit ?
+                this.handleCancelClick :
+                currentUser.roles.includes('admin') &&
+              this.handlePromotion}
             >
-              <span>Cancel</span>
-            </Button>}
+              <span>{edit ? 'Cancel' :
+                currentUser.roles.includes('moderator') ?
+                  'Remove moderator' :
+                  'Make moderator'
+              }
+              </span>
+            </Button>
           </Grid>
+          }
           <Grid item xs={2}>
             <Button
               variant="raised"
@@ -601,6 +618,7 @@ UserDetails.propTypes = {
   updateUser: PropTypes.func.isRequired,
   updatingUser: PropTypes.bool.isRequired,
   updateUserError: PropTypes.string.isRequired,
+  toggleModeratorRole: PropTypes.func,
 };
 
 const mapStateToProps = store => ({

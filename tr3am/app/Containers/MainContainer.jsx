@@ -21,6 +21,8 @@ import Error403 from 'Components/Errors/403';
 import Error404 from 'Components/Errors/404';
 import BrandList from 'Components/Brands';
 import CreateDevice from 'Components/Devices/CreateDevice';
+import RequestList from 'Components/Requests';
+import Request from 'Components/Requests/Request';
 import * as auth from 'ActionCreators/authActions';
 import Styles from './Styles';
 
@@ -32,7 +34,7 @@ class MainContainer extends React.Component {
      * to fetch the user. 
      */
     this.state = {
-      allowRendering: false,
+      allowRendering: true,
     };
   }
 
@@ -124,6 +126,23 @@ class MainContainer extends React.Component {
             )} allowedRoles={RouteRoles.Brands} />
           } />
 
+          <Route exact path='/requests' render={() =>
+            <div>
+              <MainTabs tabIndex='/requests' />
+              <RequestList />
+            </div>
+          } />
+
+          <Route path='/requests/:id' render={() =>
+            <Auth component={Request} allowedRoles={RouteRoles.Requests} />
+          } />
+
+          { /* <Auth component={() => (
+              <div>
+                <MainTabs tabIndex='/requests' />
+                <RequestList />
+              </div>
+            )} allowedRoles={RouteRoles.Requests} /> */ }
           <Route component={Error404} />
         </Switch>
       </div>
