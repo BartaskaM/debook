@@ -4,38 +4,40 @@ export const Users = [
 
 export const UserDetails = [
   'admin',
+  'moderator',
   'user',
 ];
 
 export const Devices = [
-  'admin',
   'user',
+  'admin',
+  'moderator',
 ];
 
 export const DeviceDetails = [
-  'admin',
+  'moderator',
   'user',
 ];
 
 export const CreateDevice = [
-  'admin',
+  'moderator',
 ];
 
 export const EditDevice = [
-  'admin',
+  'moderator',
 ];
 
 export const Offices = [
-  'admin',
+  'moderator',
 ];
 
 export const OfficeDetails = [
-  'admin',
   'user',
+  'moderator',
 ];
 
 export const Brands = [
-  'admin',
+  'moderator',
 ];
 
 export const Events = [

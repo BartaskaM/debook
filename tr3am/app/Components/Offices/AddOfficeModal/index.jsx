@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { withRouter } from 'react-router-dom';
 import {
   Input,
@@ -19,10 +19,9 @@ import Dialog, {
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as officesActions from 'ActionCreators/officesActions';
-import Typography from 'material-ui/Typography';
 import { LinearProgress } from 'material-ui/Progress';
 import  { r_LAT, r_LNG } from 'Utils/regExUtils';
-
+import { toast } from 'react-toastify';
 import Styles from './Styles';
 
 class AddOfficeModal extends React.Component {
@@ -94,6 +93,9 @@ class AddOfficeModal extends React.Component {
     if (this.validateCoordinates()) {
       if (!this.officeExists()) {
         this.createNewOffice();
+      }
+      else {
+        toast.error('❌ Office already exists');
       }
     }
   }
@@ -173,15 +175,12 @@ class AddOfficeModal extends React.Component {
                       }}
                       onChange={this.inputHandler} />
                   </FormControl>
-                </FormGroup>
+                </FormGroup>               
               </form>
               {createOfficeLoading &&
                 <LinearProgress className={classes.createOfficeLoadingBar} />
               }
             </DialogContent>
-            <Typography variant='headline' className={classes.errorMessage}>
-              {this.state.errorMessage}
-            </Typography>
             <DialogActions>
               <Button
                 onClick={() => this.props.showAddOfficeModal(false)}

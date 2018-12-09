@@ -49,7 +49,7 @@ namespace tr3am.Controllers
             } 
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "moderator")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]CreateDeviceRequest request)
         {
@@ -94,7 +94,7 @@ namespace tr3am.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "moderator")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateDeviceRequest request)
         {
@@ -144,7 +144,7 @@ namespace tr3am.Controllers
 
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "moderator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
