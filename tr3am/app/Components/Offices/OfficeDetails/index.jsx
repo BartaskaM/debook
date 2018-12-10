@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -17,6 +17,7 @@ import { IsAllowedRole } from 'Utils/routingUtils';
 import * as RouteRoles from 'Constants/RouteRoles';
 import * as officeDetailsActions from 'ActionCreators/officeDetailsActions';
 import Map from './Map';
+import { toast } from 'react-toastify';
 
 class OfficeDetails extends React.Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class OfficeDetails extends React.Component {
       address: null,
       lat: null,
       lng: null,
-
+      errorMessage: '',
       isEditMode: false,
     };
 
@@ -49,6 +50,20 @@ class OfficeDetails extends React.Component {
 
   resetStateFromProps() {
     this.setState({ ...this.props.office });
+    this.setState({ errorMessage: '' });
+  }
+
+  officeExists() {
+    const { offices } = this.props;
+    const specificOffice = (offices.find(x => x.city === this.state.city));
+    if (specificOffice != null &&
+            specificOffice.country === this.state.country &&
+            specificOffice.address === this.state.address) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   saveEditedDetails() {
@@ -60,8 +75,12 @@ class OfficeDetails extends React.Component {
       lat: this.state.lat,
       lng: this.state.lng,
     };
-
-    this.props.updateOfficeWithId(editedOffice);
+    if (!this.officeExists()) {
+      this.props.updateOfficeWithId(editedOffice);
+    }
+    else {
+      toast.error('❌ Office already exists');
+    }
   }
 
   renderInformation() {
@@ -192,7 +211,9 @@ class OfficeDetails extends React.Component {
           }}
         />
         <br />
-
+        <Typography variant='headline' className={classes.errorMessage}>
+          {this.state.errorMessage}
+        </Typography>
         {updateOfficeLoading &&
           <Grid item xs={12}>
             <LinearProgress className={classes.updateOfficeLoadingBar} />
@@ -207,7 +228,7 @@ class OfficeDetails extends React.Component {
   renderButtons() {
     const { classes, userRoles } = this.props;
 
-    return userRoles.includes('admin') ? this.state.isEditMode ? (
+    return userRoles.includes('moderator') ? this.state.isEditMode ? (
       <span>
         <Button variant="raised"
           color="secondary"
@@ -299,6 +320,14 @@ OfficeDetails.propTypes = {
     lat: PropTypes.number,
     lng: PropTypes.number,
   }),
+  offices: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
+  })).isRequired,
   fetchOfficeLoading: PropTypes.bool.isRequired,
   updateOfficeLoading: PropTypes.bool.isRequired,
 };
@@ -307,6 +336,7 @@ const mapStateToProps = state => {
   return {
     userRoles: state.auth.user.roles,
     office: state.officeDetails.office,
+    offices: state.offices.offices,
     fetchOfficeLoading: state.officeDetails.fetchOfficeLoading,
     updateOfficeLoading: state.officeDetails.updateOfficeLoading,
   };

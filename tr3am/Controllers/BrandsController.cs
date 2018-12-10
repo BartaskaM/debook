@@ -20,7 +20,7 @@ namespace tr3am.Controllers
             _brandsRepository = brandsRepository;
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "moderator")]
         [HttpGet]
         public async Task<IEnumerable<BrandDto>> GetAll()
         {
@@ -34,7 +34,7 @@ namespace tr3am.Controllers
             return await _brandsRepository.GetAllShort();
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "moderator")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -48,7 +48,7 @@ namespace tr3am.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "moderator")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]BrandItemRequest request)
         {
@@ -67,7 +67,7 @@ namespace tr3am.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "moderator")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] BrandItemRequest request)
         {
@@ -86,7 +86,7 @@ namespace tr3am.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "moderator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
