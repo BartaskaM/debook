@@ -143,5 +143,60 @@ namespace tr3am.Data
             _dbContext.Remove(item);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async void ToggleModerator(int id)
+        {
+            List<string> userRoles = new List<string>();
+
+         /*   var roles = await _dbContext.UserRoles
+                .Where(x => x.UserId == id)
+                .ToListAsync(); */
+
+            await _dbContext.UserRoles
+                .AsNoTracking()
+                .Where(x => x.UserId == id)
+                .ForEachAsync(async x =>
+                {
+                    userRoles.Add(await _dbContext.Roles
+                        .AsNoTracking()
+                        .Where(y => y.Id == x.RoleId)
+                        .Select(y => y.Name)
+                        .FirstOrDefaultAsync());
+                });
+
+            int moderatorIndex = await RoleIndex("moderator");
+
+            if (userRoles.Contains("moderator"))
+            {
+                var role = await _dbContext.UserRoles
+                            .AsNoTracking()
+                            .Where(x => x.UserId == id && x.RoleId == moderatorIndex)
+                            .FirstOrDefaultAsync();
+
+                _dbContext.UserRoles.Remove(role);
+              //  roles = roles.Where(role => role.RoleId != moderatorIndex).ToList();
+            }
+            else
+            {
+                var newRole = new IdentityUserRole<int>
+                {
+                    UserId = id,
+                    RoleId = moderatorIndex
+                };
+
+                _dbContext.UserRoles.Add(newRole);
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task<int> RoleIndex(string roleName)
+        {
+            var item = await _dbContext.Roles
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Name == roleName);
+
+            return item.Id;
+        }
     }
 }

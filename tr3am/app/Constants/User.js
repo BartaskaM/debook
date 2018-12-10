@@ -1,12 +1,14 @@
+import Offices from './Offices';
+
 const User = [
   {
     id: 1,
     firstName: 'John',
     lastName: 'Snow',
     email: 'admin@admin.com',
-    office: 'Vilnius',
+    office: Offices[0],
     slack: 'LordCommander2',
-    role: 'admin',
+    roles: 'admin',
     password: 'admin',
   },
   {
@@ -14,9 +16,9 @@ const User = [
     firstName: 'Petras',
     lastName: 'Petraitis',
     email: 'user@user.com',
-    office: 'Kawnas',
+    office: Offices[1],
     slack: 'pStandsForPeasant',
-    role: 'user',
+    roles: 'user',
     password: 'user',
   },
   {
@@ -24,9 +26,9 @@ const User = [
     firstName: 'Augustas Nojus',
     lastName: 'Grebliauskas',
     email: 'noah.grebliauskas@gmail.com',
-    office: 'Kawnas',
+    office: Offices[0],
     slack: 'Humpero',
-    role: 'admin',
+    roles: 'admin',
     password: 'password',
   },
 ];

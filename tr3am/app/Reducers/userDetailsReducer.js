@@ -30,6 +30,15 @@ export default (state = defaultState, action) => {
     case userDetails.UPDATE_USER_ERROR: {
       return { ...state, updatingUser: false, updateUserError: action.payload };
     }
+    case userDetails.TOGGLE_MODERATOR_START: {
+      return { ...state, updatingUser: true, updateError: '' };
+    }
+    case userDetails.TOGGLE_MODERATOR_SUCCESS: {
+      return { ...state, updatingUser: false };
+    }
+    case userDetails.TOGGLE_MODERATOR_ERROR: {
+      return { ...state, updatingUser: false, updateUserError: action.payload };
+    }
     default: return state;
   }
 };

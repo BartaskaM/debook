@@ -11,5 +11,6 @@ namespace tr3am.DataContracts
         Task<UserDTO> GetById(int id);
         Task Update(int id, UpdateUserRequest request);
         Task Delete(int id);
+        void ToggleModerator(int id);
     }
 }

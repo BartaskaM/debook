@@ -30,6 +30,10 @@ namespace tr3am
         {
             Mappings.SetupMappings();
             services.AddMvc();
+                  /*  .AddJsonOptions(
+                        options => options.SerializerSettings.ReferenceLoopHandling =
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    );*/
 
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("Tr3amConnection")));
@@ -62,6 +66,8 @@ namespace tr3am
             services.AddScoped<IEventsRepository, EventsRepository>();
             services.AddScoped<IReservationsRepository, ReservationsRepository>();
             services.AddScoped<IModelsRepository, ModelsRepository>();
+            services.AddScoped<IRequestsRepository, RequestsRepository>();
+            services.AddScoped<IMessagesRepository, MessagesRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

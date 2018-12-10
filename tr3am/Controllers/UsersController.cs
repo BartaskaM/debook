@@ -94,5 +94,20 @@ namespace tr3am.Controllers
                 return NotFound();
             }
         }
+
+        [Authorize(Roles = "admin")]
+        [Route("{id}/moderator/toggle")]
+        public async Task<IActionResult> ToggleModerator(int id)
+        {
+            try
+            {
+                _usersRepository.ToggleModerator(id);
+                return NoContent();
+            }
+            catch (InvalidUserException)
+            {
+                return NotFound();
+            }
+        }
     }
 }

@@ -9,6 +9,9 @@ import devices from './devicesReducer';
 import deviceDetails from './deviceDetailsReducer';
 import brands from './brandsReducer';
 import events from './eventsReducer';
+import requests from './requestsReducer';
+import messages from './messagesReducer';
+import requestDetails from './requestDetailsReducer';
 import { auth as authConst } from 'Constants/ActionTypes';
 
 //If needed, import other reducers here and add them to function below.
@@ -22,6 +25,9 @@ const appReducers = combineReducers({
   deviceDetails,
   brands,
   events,
+  requests,
+  requestDetails,
+  messages,
 });
 
 export default (state, action) => {

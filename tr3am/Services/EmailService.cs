@@ -16,19 +16,23 @@ namespace tr3am.Services
         public EmailService(SendGridOptions sendGridOptions)
         {
             _sendGridOptions = sendGridOptions;
-            
         }
 
         public async void SendReminder(string text, string htmlText, string email)
         {
-            var client = new SendGridClient(_sendGridOptions.ApiKey);
-            var from = new EmailAddress(_sendGridOptions.Email);
             var subject = "Your device booking has expired";
-            var to = new EmailAddress(email);
             var plainTextContent = text;
             var htmlContent = htmlText;
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-            var response = await client.SendEmailAsync(msg);
+            await Send(plainTextContent, subject, htmlContent, email);
+        }
+
+        public async Task<Response> Send(string text, string subject, string htmlText, string email)
+        {
+            var client = new SendGridClient(_sendGridOptions.ApiKey);
+            var from = new EmailAddress(_sendGridOptions.Email);
+            var to = new EmailAddress(email);
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, text, htmlText);
+            return await client.SendEmailAsync(msg);
         }
     }
 }

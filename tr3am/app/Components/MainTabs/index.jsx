@@ -38,6 +38,7 @@ class MainTabs extends React.Component {
             {IsAllowedRole(RouteRoles.Users, this.props.user.roles) &&
               <Tab value='/users' label='USER LIST' classes={{ label: classes.fontSize }} />
             }
+            <Tab value='/requests' label='REQUESTS' classes={{ label: classes.fontSize }} />
             {IsAllowedRole(RouteRoles.Offices, this.props.user.roles) &&
               <Tab value='/offices' label='OFFICE LIST' classes={{ label: classes.fontSize }} />
             }

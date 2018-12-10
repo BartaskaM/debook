@@ -2,6 +2,16 @@ import { auth } from 'Constants/ActionTypes';
 
 const defaultState = {
   user: null,
+  /*  user: {
+    firstName: 'vardas',
+    lastName: 'pav',
+    email: 'em@mail.com',
+    office: {
+      id: 1,
+      city: 'kaunas',
+    },
+    roles: ['user'],
+  }, */
   logInLoading: false,
   logInError: false,
   currentTab: 0,
